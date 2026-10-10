@@ -1,0 +1,48 @@
+{
+  "environment": "REAL_LOCAL_SERVICES",
+  "started_at": "2026-10-10T01:56:35.235071+00:00",
+  "prior_report": "outputs/earned-authority-kit/reports/clean-reference-connected.json",
+  "agent_id": "agt-idem-e1dc179c69394bd9ba7f2984877dc3dc",
+  "checks": [
+    {
+      "check": "pre_restart_all_receipts_verify",
+      "passed": true,
+      "evidence": {
+        "count": 39
+      }
+    },
+    {
+      "check": "passport_signer_preserved",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "foundation_identity_preserved",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "passport_authority_revision_scopes_preserved",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "registry_mutations_preserved",
+      "passed": true,
+      "evidence": {
+        "mutation_count": 2
+      }
+    },
+    {
+      "check": "ledger_receipts_preserved_and_verify",
+      "passed": true,
+      "evidence": {
+        "event_count": 39
+      }
+    }
+  ],
+  "scope": "Same-host full process/container restart with durable volumes and installer-managed keys retained; not backup disaster recovery or second-person acceptance",
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "finished_at": "2026-10-10T01:56:54.995031+00:00"
+}

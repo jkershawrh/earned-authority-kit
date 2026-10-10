@@ -1,0 +1,17 @@
+{
+  "review": "Parallel peer review of contract and readiness tooling",
+  "resolved": [
+    "Artifact verification recomputes file hashes; caller flags are ignored",
+    "Newer UNKNOWN or unexecuted SKIP supersedes earlier PASS",
+    "Release aggregation requires an explicit complete requirement set",
+    "Digest schema rejects trailing newlines",
+    "Integral floats are rejected at the canonical contract boundary",
+    "BDD local-outbox policy aligned with roadmap D8"
+  ],
+  "remaining": [
+    "CUT terminology unconfirmed",
+    "Cross-service contract and trust adoption pending",
+    "BDD bindings and EDD runs pending",
+    "Foundation source patch not applied"
+  ]
+}

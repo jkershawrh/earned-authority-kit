@@ -1,0 +1,1399 @@
+diff --git a/api/openapi.yaml b/api/openapi.yaml
+--- a/api/openapi.yaml
++++ b/api/openapi.yaml
+@@ -150,6 +150,7 @@
+       tags: [passports]
+       operationId: issuePassport
+       summary: Issue scoped authority.
++      x-canonical-mutation-headers: [X-ARE-Expected-Active-Passport-ID, X-ARE-Expected-Agent-Revision]
+       description: Issues a scoped passport for a known actor. The response is a public-safe authority summary, not a secret credential.
+       security:
+         - bearerAuth: []
+@@ -194,6 +195,7 @@
+       tags: [passports]
+       operationId: listPassportsByAgent
+       summary: List public-safe passport summaries for an agent.
++      description: In canonical delegation mode returns the current passport only, or an empty list with X-ARE-Agent-Revision.
+       security:
+         - bearerAuth: []
+       parameters:
+@@ -216,6 +218,52 @@
+           $ref: "#/components/responses/BadRequest"
+         "401":
+           $ref: "#/components/responses/Unauthorized"
++  /v1/passports:revoke:
++    post:
++      tags: [passports]
++      operationId: revokePassport
++      summary: Revoke passport authority.
++      description: Delegated mode requires both canonical CAS headers and forwards revocation to the canonical service.
++      security:
++        - bearerAuth: []
++      parameters:
++        - $ref: "#/components/parameters/RequestID"
++        - $ref: "#/components/parameters/AgentID"
++        - $ref: "#/components/parameters/IdempotencyKey"
++        - name: X-ARE-Expected-Active-Passport-ID
++          in: header
++          schema:
++            type: string
++          description: Required by canonical durable mode; current UUID or none.
++        - name: X-ARE-Expected-Agent-Revision
++          in: header
++          schema:
++            type: string
++            pattern: '^[0-9]+$'
++          description: Required by canonical durable mode; current aggregate generation.
++      requestBody:
++        required: true
++        content:
++          application/json:
++            schema:
++              type: object
++              required: [passport_id, reason]
++              properties:
++                passport_id:
++                  type: string
++                reason:
++                  type: string
++                revoked_by:
++                  type: string
++      responses:
++        "200":
++          description: Authority revoked; canonical generation returned in X-ARE-Agent-Revision when delegated.
++        "400":
++          $ref: "#/components/responses/BadRequest"
++        "401":
++          $ref: "#/components/responses/Unauthorized"
++        "404":
++          $ref: "#/components/responses/NotFound"
+   /v1/passports:verify:
+     post:
+       tags: [passports]
+@@ -778,6 +826,10 @@
+           $ref: "#/components/schemas/PolicyDecision"
+     PolicyDecision:
+       type: object
++      description: >-
++        OPA-backed responses also include the exact evaluated input and policy binding.
++        The reference executor requires these fields and rejects legacy stub responses.
++        Policy identity/digest originate from immutable OPA data activated alongside Rego.
+       required: [decision_id, effect, reason]
+       properties:
+         decision_id:
+@@ -787,6 +839,17 @@
+           enum: [ALLOW, DENY]
+         reason:
+           type: string
++        agent_id:
++          type: string
++        action_class:
++          type: string
++        resource:
++          type: string
++        policy_id:
++          type: string
++        policy_digest:
++          type: string
++          pattern: '^sha256:[a-f0-9]{64}$'
+     DeploymentMetaResponse:
+       type: object
+       required: [deployment_stage, request_id]
+diff --git a/docs/api-contract.md b/docs/api-contract.md
+--- a/docs/api-contract.md
++++ b/docs/api-contract.md
+@@ -321,3 +321,68 @@
+ Use `api/openapi.yaml` as the source for client generation. The API is small on
+ purpose; consumers should model register, issue, verify, scope, and policy as
+ one authority-check workflow rather than independent dashboard calls.
++
++## Canonical Passport Delegation
++
++When a passport gRPC delegate is configured, the REST facade uses that service
++for issuance, current lookup, verification, revocation, and scope authority.
++It neither updates nor trusts the local passport replica for these operations.
++An unavailable canonical service returns an error; it does not fall back to
++local ACTIVE records. Scope checks read the canonical record, verify it there,
++and require a stable agent revision across those reads before checking scope.
++These calls remain reference checks with `executed=false`.
++
++Configure `ARE_S0S1_PASSPORT_GRPC_ADDR`, enable S0 delegation, and supply the
++canonical mutation secret through `ARE_S0S1_PASSPORT_MUTATION_TOKEN`. The BFF
++uses this service credential; it does not forward the gateway caller's bearer
++token as a canonical mutation credential. For the durable canonical service,
++issuance and revocation requests must include both HTTP headers:
++
++```text
++X-ARE-Expected-Active-Passport-ID: <current UUID, or none>
++X-ARE-Expected-Agent-Revision: <current unsigned generation, initially 0>
++```
++
++The gateway forwards these comparison conditions. Responses forward
++`X-ARE-Agent-Revision` so clients can recover after conflicts. The idempotency
++header remains required by the HTTP perimeter, but delegated mutations use
++canonical compare-and-swap and do not replay local issuance caches. After an
++uncertain mutation response, read current canonical state and reconcile the
++result before retrying; a stale comparison cannot create another grant.
++
++In delegated mode `GET /v1/passports/by-agent/{agent_id}` returns the current
++canonical passport or an empty list with its current revision. It is not a
++historical list. `POST /v1/passports:revoke` accepts `passport_id`, `reason`, and
++`revoked_by` (or the authenticated perimeter's caller header for attribution).
++Revocation is sent to the canonical service, not a local JSON status update.
++
++The HTTP facade returns public summaries without raw signing keys or
++signatures. Consumers that independently verify cryptography use the canonical
++gRPC service and its signed-envelope metadata with a separately trusted issuer
++key. The REST facade does not claim to perform that independent verification.
++
++
++### Canonical policy decision binding
++
++The OPA-backed BFF requires every evaluated result to contain `decision_id`,
++`agent_id`, `action_class`, `resource`, `policy_id`, `policy_digest`, `effect`, and
++`reason`. It validates the request fields against the exact request and forwards
++OPA's policy identity and digest unchanged. Missing metadata, wrong inputs, or a
++malformed digest fail closed with HTTP 502. Explicitly configured fixture stubs
++retain the legacy decision shape and cannot satisfy the connected executor.
++
++Load a JSON document `{"are_policy_binding":{"policy_id":"<loaded module ID>",
++"policy_digest":"sha256:<exact Rego UTF-8 SHA256>"}}` alongside the Rego in one
++immutable OPA directory/bundle activation. The digest covers the policy source,
++excluding this metadata document. Disable OPA administrative writes and reload
++source plus metadata together. The deployment must pin the expected source digest;
++the executor checks that digest and every input echo in the returned decision.
++Do not populate the binding from request input or append it in the BFF. This is a
++single-host immutable deployment guarantee, not proof against a privileged host
++or OPA administrator replacing both code and its trust metadata.
++
++The reference kit generates that binding document from the final source. Other
++OPA deployments must provide it too; the hardened policy intentionally produces
++no decision if binding data is absent. Regression tests under
++`sx/s0s1-rest-bff/policy-tests` run with `opa test policy policy-tests` and are not
++loaded into the production policy inventory.
+diff --git a/sx/are-api-gateway/internal/gateway/canonical_metadata_test.go b/sx/are-api-gateway/internal/gateway/canonical_metadata_test.go
+new file mode 100644
+--- /dev/null
++++ b/sx/are-api-gateway/internal/gateway/canonical_metadata_test.go
+@@ -0,0 +1,32 @@
++package gateway
++
++import (
++	"net/http"
++	"net/http/httptest"
++	"testing"
++)
++
++func TestCanonicalCASMetadataRoundTrip(t *testing.T) {
++	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		if r.Header.Get("X-ARE-Expected-Active-Passport-ID") != "none" || r.Header.Get("X-ARE-Expected-Agent-Revision") != "3" {
++			t.Errorf("canonical CAS metadata lost: %v", r.Header)
++		}
++		w.Header().Set("X-ARE-Agent-Revision", "4")
++		w.WriteHeader(http.StatusCreated)
++		_, _ = w.Write([]byte(`{"passport":{}}`))
++	}))
++	defer server.Close()
++	proxy, err := NewRESTProxyUpstream(server.URL, server.Client())
++	if err != nil {
++		t.Fatal(err)
++	}
++	gateway := NewGateway(allowToken{}, proxy, nil)
++	req := foundationRequest(http.MethodPost, "/v1/passports", `{}`, "issue")
++	req.Header.Set("X-ARE-Expected-Active-Passport-ID", "none")
++	req.Header.Set("X-ARE-Expected-Agent-Revision", "3")
++	rec := httptest.NewRecorder()
++	gateway.Handler().ServeHTTP(rec, req)
++	if rec.Code != http.StatusCreated || rec.Header().Get("X-ARE-Agent-Revision") != "4" {
++		t.Fatalf("canonical revision response lost: %d %v", rec.Code, rec.Header())
++	}
++}
+diff --git a/sx/are-api-gateway/internal/gateway/gateway.go b/sx/are-api-gateway/internal/gateway/gateway.go
+--- a/sx/are-api-gateway/internal/gateway/gateway.go
++++ b/sx/are-api-gateway/internal/gateway/gateway.go
+@@ -20,23 +20,26 @@
+ 
+ // UpstreamRequest carries pass-through request state.
+ type UpstreamRequest struct {
+-	Method         string
+-	Path           string
+-	RawQuery       string
+-	Body           []byte
+-	AgentID        string
+-	RequestID      string
+-	Identity       string
+-	IdempotencyKey string
+-	Authorization  string // full Authorization header value, e.g. "Bearer …", for upstream forwarding
+-	ContentType    string
+-	Traceparent    string
++	ExpectedActivePassportID string
++	ExpectedAgentRevision    string
++	Method                   string
++	Path                     string
++	RawQuery                 string
++	Body                     []byte
++	AgentID                  string
++	RequestID                string
++	Identity                 string
++	IdempotencyKey           string
++	Authorization            string // full Authorization header value, e.g. "Bearer …", for upstream forwarding
++	ContentType              string
++	Traceparent              string
+ }
+ 
+ // UpstreamResponse holds routed response.
+ type UpstreamResponse struct {
+-	StatusCode int
+-	Body       []byte
++	AgentRevision string
++	StatusCode    int
++	Body          []byte
+ }
+ 
+ // Gateway handles external API traffic.
+@@ -218,17 +221,19 @@
+ 		return
+ 	}
+ 	resp, err := g.upstream.Call(r.Context(), UpstreamRequest{
+-		Method:         r.Method,
+-		Path:           r.URL.Path,
+-		RawQuery:       r.URL.RawQuery,
+-		Body:           body,
+-		AgentID:        agentID,
+-		RequestID:      requestID,
+-		Identity:       identity,
+-		IdempotencyKey: idempotencyKey,
+-		Authorization:  authz,
+-		ContentType:    r.Header.Get("Content-Type"),
+-		Traceparent:    trace.traceparent(),
++		ExpectedActivePassportID: r.Header.Get("X-ARE-Expected-Active-Passport-ID"),
++		ExpectedAgentRevision:    r.Header.Get("X-ARE-Expected-Agent-Revision"),
++		Method:                   r.Method,
++		Path:                     r.URL.Path,
++		RawQuery:                 r.URL.RawQuery,
++		Body:                     body,
++		AgentID:                  agentID,
++		RequestID:                requestID,
++		Identity:                 identity,
++		IdempotencyKey:           idempotencyKey,
++		Authorization:            authz,
++		ContentType:              r.Header.Get("Content-Type"),
++		Traceparent:              trace.traceparent(),
+ 	})
+ 	if err != nil {
+ 		status = http.StatusServiceUnavailable
+@@ -237,6 +242,9 @@
+ 		return
+ 	}
+ 	status = resp.StatusCode
++	if resp.AgentRevision != "" {
++		w.Header().Set("X-ARE-Agent-Revision", resp.AgentRevision)
++	}
+ 	w.WriteHeader(resp.StatusCode)
+ 	_, _ = w.Write(resp.Body)
+ }
+diff --git a/sx/are-api-gateway/internal/gateway/s0s1_http_proxy.go b/sx/are-api-gateway/internal/gateway/s0s1_http_proxy.go
+--- a/sx/are-api-gateway/internal/gateway/s0s1_http_proxy.go
++++ b/sx/are-api-gateway/internal/gateway/s0s1_http_proxy.go
+@@ -160,6 +160,12 @@
+ 	if err != nil {
+ 		return UpstreamResponse{}, err
+ 	}
++	if req.ExpectedActivePassportID != "" {
++		hr.Header.Set("X-ARE-Expected-Active-Passport-ID", req.ExpectedActivePassportID)
++	}
++	if req.ExpectedAgentRevision != "" {
++		hr.Header.Set("X-ARE-Expected-Agent-Revision", req.ExpectedAgentRevision)
++	}
+ 	if req.Authorization != "" {
+ 		hr.Header.Set("Authorization", req.Authorization)
+ 	}
+@@ -185,7 +191,7 @@
+ 	if err != nil {
+ 		return UpstreamResponse{}, err
+ 	}
+-	return UpstreamResponse{StatusCode: resp.StatusCode, Body: body}, nil
++	return UpstreamResponse{StatusCode: resp.StatusCode, Body: body, AgentRevision: resp.Header.Get("X-ARE-Agent-Revision")}, nil
+ }
+ 
+ type s0s1SelectingUpstream struct {
+diff --git a/sx/s0s1-rest-bff/cmd/are-s0s1-rest-bff/main.go b/sx/s0s1-rest-bff/cmd/are-s0s1-rest-bff/main.go
+--- a/sx/s0s1-rest-bff/cmd/are-s0s1-rest-bff/main.go
++++ b/sx/s0s1-rest-bff/cmd/are-s0s1-rest-bff/main.go
+@@ -88,13 +88,14 @@
+ 		passAddr := strings.TrimSpace(os.Getenv("ARE_S0S1_PASSPORT_GRPC_ADDR"))
+ 		if regAddr != "" || passAddr != "" {
+ 			b, derr := s0delegate.Dial(s0delegate.Config{
+-				RegistryAddr:  regAddr,
+-				PassportAddr:  passAddr,
+-				CertFile:      certFile,
+-				KeyFile:       keyFile,
+-				CAFile:        caFile,
+-				TLSServerName: strings.TrimSpace(os.Getenv("ARE_S0S1_S0_GRPC_TLS_SERVER_NAME")),
+-				Insecure:      os.Getenv("ARE_S0S1_S0_GRPC_INSECURE") == "1",
++				RegistryAddr:          regAddr,
++				PassportMutationToken: os.Getenv("ARE_S0S1_PASSPORT_MUTATION_TOKEN"),
++				PassportAddr:          passAddr,
++				CertFile:              certFile,
++				KeyFile:               keyFile,
++				CAFile:                caFile,
++				TLSServerName:         strings.TrimSpace(os.Getenv("ARE_S0S1_S0_GRPC_TLS_SERVER_NAME")),
++				Insecure:              os.Getenv("ARE_S0S1_S0_GRPC_INSECURE") == "1",
+ 			})
+ 			if derr != nil {
+ 				return fmt.Errorf("s0 delegate dial: %w", derr)
+@@ -178,7 +179,7 @@
+ 		}
+ 		if strings.EqualFold(r.Method, http.MethodPost) {
+ 			switch r.URL.Path {
+-			case "/v1/identity/agents", "/v1/passports", "/v1/passports:verify", "/v1/enforcement/scope:evaluate", "/v1/policy/evaluations":
++			case "/v1/identity/agents", "/v1/passports", "/v1/passports:verify", "/v1/passports:revoke", "/v1/enforcement/scope:evaluate", "/v1/policy/evaluations":
+ 				if r.Header.Get("Idempotency-Key") == "" {
+ 					http.Error(w, "missing idempotency key", http.StatusBadRequest)
+ 					return
+diff --git a/sx/s0s1-rest-bff/internal/api/api.go b/sx/s0s1-rest-bff/internal/api/api.go
+--- a/sx/s0s1-rest-bff/internal/api/api.go
++++ b/sx/s0s1-rest-bff/internal/api/api.go
+@@ -381,16 +381,19 @@
+ 	}
+ 	key := "IssuePassport:" + idem
+ 
+-	prev, ok, err := rp.GetPassportIdem(ctx, key)
+-	if err != nil {
+-		jsonError(w, rid, "INTERNAL", "storage error", false, http.StatusInternalServerError)
+-		return
+-	}
+-	if ok {
+-		w.Header().Set("Content-Type", "application/json")
+-		w.WriteHeader(http.StatusCreated)
+-		_, _ = w.Write(prev)
+-		return
++	if !canonicalEnabled(cfg) {
++		prev, ok, err := rp.GetPassportIdem(ctx, key)
++		if err != nil {
++			jsonError(w, rid, "INTERNAL", "storage error", false, http.StatusInternalServerError)
++			return
++		}
++		if ok {
++			w.Header().Set("Content-Type", "application/json")
++			w.WriteHeader(http.StatusCreated)
++			_, _ = w.Write(prev)
++			return
++		}
++
+ 	}
+ 
+ 	var payload map[string]any
+@@ -496,6 +499,19 @@
+ 		}
+ 	}
+ 
++	if canonicalEnabled(cfg) {
++		req := s0delegate.BuildIssueRequest(agentID, passportType, issuedBy, reason, ttl, scopeRows, forceReissue)
++		body, revision, err := s0delegate.IssueCanonicalPassport(canonicalMutationContext(r, cfg), cfg.S0.Pass, req)
++		canonicalRevision(w, revision)
++		if err != nil {
++			writeS0DelegateError(w, rid, err)
++			return
++		}
++		w.Header().Set("Content-Type", "application/json")
++		w.WriteHeader(http.StatusCreated)
++		_, _ = w.Write(body)
++		return
++	}
+ 	conflict, err := rp.CheckAndRevokeActive(ctx, agentID, forceReissue, "superseded_by_force_reissue")
+ 	if err != nil {
+ 		jsonError(w, rid, "INTERNAL", "storage error", false, http.StatusInternalServerError)
+@@ -503,28 +519,6 @@
+ 	}
+ 	if conflict {
+ 		jsonError(w, rid, "ALREADY_EXISTS", "agent already has an active passport; use force=true to supersede", false, http.StatusConflict)
+-		return
+-	}
+-
+-	if cfg.S0 != nil && cfg.S0.Pass != nil {
+-		pReq := s0delegate.BuildIssueRequest(agentID, passportType, issuedBy, reason, ttl, scopeRows, forceReissue)
+-		body, err := s0delegate.IssuePassportJSON(ctx, cfg.S0.Pass, pReq)
+-		if err != nil {
+-			writeS0DelegateError(w, rid, err)
+-			return
+-		}
+-		out, err := rp.FinishPassport(ctx, key, agentID, body)
+-		if err != nil {
+-			if err == repo.ErrAgentNotFound {
+-				jsonError(w, rid, "NOT_FOUND", "unknown agent_id", false, http.StatusNotFound)
+-				return
+-			}
+-			jsonError(w, rid, "INTERNAL", "storage error", false, http.StatusInternalServerError)
+-			return
+-		}
+-		w.Header().Set("Content-Type", "application/json")
+-		w.WriteHeader(http.StatusCreated)
+-		_, _ = w.Write(out)
+ 		return
+ 	}
+ 
+@@ -604,6 +598,11 @@
+ 		jsonError(w, rid, "INVALID_ARGUMENT", "passport_id and reason are required", false, http.StatusBadRequest)
+ 		return
+ 	}
++	if canonicalEnabled(cfg) {
++		actor, _ := payload["revoked_by"].(string)
++		revokeDelegatedPassport(w, r, cfg, passportID, reason, actor)
++		return
++	}
+ 	if err := rp.RevokePassport(r.Context(), passportID, reason); err != nil {
+ 		if errors.Is(err, repo.ErrAgentNotFound) {
+ 			jsonError(w, rid, "NOT_FOUND", "passport not found or already revoked", false, http.StatusNotFound)
+@@ -629,6 +628,10 @@
+ 		jsonError(w, rid, "INVALID_ARGUMENT", "agent id required", false, http.StatusBadRequest)
+ 		return
+ 	}
++	if canonicalEnabled(cfg) {
++		listDelegatedPassports(w, r, cfg, agentID)
++		return
++	}
+ 	bodies, err := cfg.Repo.ListPassportBodiesByAgent(r.Context(), agentID)
+ 	if err != nil {
+ 		jsonError(w, rid, "INTERNAL", "storage error", false, http.StatusInternalServerError)
+@@ -660,6 +663,10 @@
+ 	agentID, _ := payload["agent_id"].(string)
+ 	if strings.TrimSpace(passportID) == "" || strings.TrimSpace(agentID) == "" {
+ 		jsonError(w, rid, "INVALID_ARGUMENT", "passport_id and agent_id are required", false, http.StatusBadRequest)
++		return
++	}
++	if canonicalEnabled(cfg) {
++		verifyDelegatedPassport(w, r, cfg, agentID, passportID)
+ 		return
+ 	}
+ 	body, found, err := cfg.Repo.GetPassportBody(r.Context(), passportID)
+@@ -710,7 +717,28 @@
+ 			return
+ 		}
+ 	}
+-	allowed, reason, err := scopeAllows(r.Context(), cfg.Repo, agentID, passportID, actionClass, resource, requestContext, cfg.now())
++	var allowed bool
++	var reason string
++	var err error
++	if canonicalEnabled(cfg) {
++		var passport map[string]any
++		var verified bool
++		var revision string
++		passport, verified, reason, revision, err = canonicalVerifiedPassport(r.Context(), cfg, agentID, passportID)
++		canonicalRevision(w, revision)
++		if err != nil {
++			writeS0DelegateError(w, rid, err)
++			return
++		}
++		allowed = verified && passportAllows(passport, agentID, actionClass, resource, requestContext, cfg.now())
++		if allowed {
++			reason = "scope matched canonical passport"
++		} else if verified {
++			reason = "canonical scope missing, expired, or context mismatched"
++		}
++	} else {
++		allowed, reason, err = scopeAllows(r.Context(), cfg.Repo, agentID, passportID, actionClass, resource, requestContext, cfg.now())
++	}
+ 	if err != nil {
+ 		jsonError(w, rid, "INTERNAL", "storage error", false, http.StatusInternalServerError)
+ 		return
+@@ -746,24 +774,28 @@
+ 	return envelope.Passport
+ }
+ 
++func passportAllows(passport map[string]any, agentID, actionClass, resource string, requestContext map[string]string, now time.Time) bool {
++	if !passportUsable(passport, agentID, now) {
++		return false
++	}
++	scopes, _ := passport["scope_set"].([]any)
++	for _, item := range scopes {
++		row, _ := item.(map[string]any)
++		if row == nil {
++			continue
++		}
++		ac, _ := row["action_class"].(string)
++		rp, _ := row["resource_pattern"].(string)
++		if ac == actionClass && resourcePatternMatches(rp, resource) && authorityUnexpired(row, now, false) && scopeContextMatches(row, requestContext) {
++			return true
++		}
++	}
++	return false
++}
++
+ func scopeAllows(ctx context.Context, rp repo.Repository, agentID, passportID, actionClass, resource string, requestContext map[string]string, now time.Time) (bool, string, error) {
+ 	matches := func(passport map[string]any) bool {
+-		if !passportUsable(passport, agentID, now) {
+-			return false
+-		}
+-		scopes, _ := passport["scope_set"].([]any)
+-		for _, item := range scopes {
+-			row, _ := item.(map[string]any)
+-			if row == nil {
+-				continue
+-			}
+-			ac, _ := row["action_class"].(string)
+-			rp, _ := row["resource_pattern"].(string)
+-			if ac == actionClass && resourcePatternMatches(rp, resource) && authorityUnexpired(row, now, false) && scopeContextMatches(row, requestContext) {
+-				return true
+-			}
+-		}
+-		return false
++		return passportAllows(passport, agentID, actionClass, resource, requestContext, now)
+ 	}
+ 	if strings.TrimSpace(passportID) != "" {
+ 		body, found, err := rp.GetPassportBody(ctx, passportID)
+@@ -817,7 +849,17 @@
+ 		jsonError(w, rid, "INVALID_ARGUMENT", "decision_id, agent_id, and action_class are required", false, http.StatusBadRequest)
+ 		return
+ 	}
+-	effect, reason, err := eval.Evaluate(r.Context(), decisionID, agentID, actionClass, resource)
++	var effect, reason string
++	var err error
++	var decision any
++	if canonical, ok := eval.(policy.DecisionEvaluator); ok {
++		var result policy.Evaluation
++		result, err = canonical.EvaluateBound(r.Context(), decisionID, agentID, actionClass, resource)
++		effect, reason, decision = result.Effect, result.Reason, result
++	} else {
++		effect, reason, err = eval.Evaluate(r.Context(), decisionID, agentID, actionClass, resource)
++		decision = map[string]any{"decision_id": decisionID, "effect": effect, "reason": reason}
++	}
+ 	if err != nil {
+ 		if errors.Is(err, policy.ErrDependencyTimeout) {
+ 			jsonError(w, rid, "DEPENDENCY_TIMEOUT", "policy engine timeout", true, http.StatusGatewayTimeout)
+@@ -831,11 +873,7 @@
+ 		return
+ 	}
+ 	body, err := json.Marshal(map[string]any{
+-		"decision": map[string]any{
+-			"decision_id": decisionID,
+-			"effect":      effect,
+-			"reason":      reason,
+-		},
++		"decision": decision,
+ 	})
+ 	if err != nil {
+ 		jsonError(w, rid, "INTERNAL", "marshal failed", false, http.StatusInternalServerError)
+diff --git a/sx/s0s1-rest-bff/internal/api/api_canonical.go b/sx/s0s1-rest-bff/internal/api/api_canonical.go
+new file mode 100644
+--- /dev/null
++++ b/sx/s0s1-rest-bff/internal/api/api_canonical.go
+@@ -0,0 +1,93 @@
++package api
++
++import (
++	"context"
++	"encoding/json"
++	"net/http"
++
++	"are-s0s1-rest-bff/internal/s0delegate"
++	"google.golang.org/grpc/codes"
++	"google.golang.org/grpc/status"
++)
++
++func canonicalEnabled(cfg *Config) bool { return cfg.S0 != nil && cfg.S0.Pass != nil }
++func canonicalRevision(w http.ResponseWriter, revision string) {
++	if revision != "" {
++		w.Header().Set("X-ARE-Agent-Revision", revision)
++	}
++}
++func canonicalMutationContext(r *http.Request, cfg *Config) context.Context {
++	return s0delegate.MutationContext(r.Context(), cfg.S0.PassportMutationToken, r.Header.Get("X-ARE-Expected-Active-Passport-ID"), r.Header.Get("X-ARE-Expected-Agent-Revision"))
++}
++func canonicalVerifiedPassport(ctx context.Context, cfg *Config, agentID, passportID string) (map[string]any, bool, string, string, error) {
++	var passport map[string]any
++	var revision string
++	var err error
++	if passportID != "" {
++		passport, revision, err = s0delegate.ReadCanonicalPassport(ctx, cfg.S0.Pass, passportID)
++	} else {
++		passport, revision, err = s0delegate.ReadCanonicalAgentPassport(ctx, cfg.S0.Pass, agentID)
++	}
++	if status.Code(err) == codes.NotFound {
++		return nil, false, "passport not found", revision, nil
++	}
++	if err != nil {
++		return nil, false, "", revision, err
++	}
++	if passport["agent_id"] != agentID {
++		return passport, false, "passport is not bound to agent", revision, nil
++	}
++	id, _ := passport["passport_id"].(string)
++	verified, reason, verifiedRevision, err := s0delegate.VerifyCanonicalPassport(ctx, cfg.S0.Pass, id)
++	if err != nil {
++		return nil, false, "", verifiedRevision, err
++	}
++	if revision != verifiedRevision {
++		return nil, false, "", verifiedRevision, status.Error(codes.Aborted, "authority changed during check")
++	}
++	if !verified {
++		return passport, false, reason, revision, nil
++	}
++	return passport, true, "passport verified by canonical service", revision, nil
++}
++func verifyDelegatedPassport(w http.ResponseWriter, r *http.Request, cfg *Config, agentID, passportID string) {
++	_, verified, reason, revision, err := canonicalVerifiedPassport(r.Context(), cfg, agentID, passportID)
++	canonicalRevision(w, revision)
++	if err != nil {
++		writeS0DelegateError(w, requestID(r), err)
++		return
++	}
++	w.Header().Set("Content-Type", "application/json")
++	_ = json.NewEncoder(w).Encode(map[string]any{"verified": verified, "reason": reason, "passport_id": passportID, "agent_id": agentID, "request_id": requestID(r), "executed": false, "proof_status": "reference_only"})
++}
++func listDelegatedPassports(w http.ResponseWriter, r *http.Request, cfg *Config, agentID string) {
++	passport, revision, err := s0delegate.ReadCanonicalAgentPassport(r.Context(), cfg.S0.Pass, agentID)
++	canonicalRevision(w, revision)
++	if err != nil && status.Code(err) != codes.NotFound {
++		writeS0DelegateError(w, requestID(r), err)
++		return
++	}
++	passports := []map[string]any{}
++	if err == nil {
++		passports = append(passports, passport)
++	}
++	w.Header().Set("Content-Type", "application/json")
++	_ = json.NewEncoder(w).Encode(map[string]any{"agent_id": agentID, "passports": passports, "request_id": requestID(r)})
++}
++func revokeDelegatedPassport(w http.ResponseWriter, r *http.Request, cfg *Config, passportID, reason, actor string) {
++	if actor == "" {
++		actor = r.Header.Get("X-ARE-Agent-ID")
++	}
++	if actor == "" {
++		jsonError(w, requestID(r), "INVALID_ARGUMENT", "revoked_by or caller agent header required", false, http.StatusBadRequest)
++		return
++	}
++	result, revision, err := s0delegate.RevokeCanonicalPassport(canonicalMutationContext(r, cfg), cfg.S0.Pass, passportID, reason, actor)
++	canonicalRevision(w, revision)
++	if err != nil {
++		writeS0DelegateError(w, requestID(r), err)
++		return
++	}
++	w.Header().Set("Content-Type", "application/json")
++	_ = json.NewEncoder(w).Encode(result)
++}
+diff --git a/sx/s0s1-rest-bff/internal/api/api_test.go b/sx/s0s1-rest-bff/internal/api/api_test.go
+--- a/sx/s0s1-rest-bff/internal/api/api_test.go
++++ b/sx/s0s1-rest-bff/internal/api/api_test.go
+@@ -2,6 +2,7 @@
+ 
+ import (
+ 	"bytes"
++	"encoding/json"
+ 	"fmt"
+ 	"net/http"
+ 	"net/http/httptest"
+@@ -161,7 +162,20 @@
+ 			http.NotFound(w, r)
+ 			return
+ 		}
+-		_, _ = w.Write([]byte(`{"result":{"effect":"DENY","reason":"forbidden action class for demo"}}`))
++		var payload struct {
++			Input map[string]any `json:"input"`
++		}
++		if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
++			t.Error(err)
++			w.WriteHeader(400)
++			return
++		}
++		result := payload.Input
++		result["effect"] = "DENY"
++		result["reason"] = "forbidden action class for demo"
++		result["policy_id"] = "policy/test.rego"
++		result["policy_digest"] = "sha256:" + strings.Repeat("a", 64)
++		_ = json.NewEncoder(w).Encode(map[string]any{"result": result})
+ 	}))
+ 	defer srv.Close()
+ 	c := policy.NewOPAClient(srv.URL, time.Second)
+diff --git a/sx/s0s1-rest-bff/internal/api/authority_checks.go b/sx/s0s1-rest-bff/internal/api/authority_checks.go
+--- a/sx/s0s1-rest-bff/internal/api/authority_checks.go
++++ b/sx/s0s1-rest-bff/internal/api/authority_checks.go
+@@ -64,6 +64,9 @@
+ }
+ 
+ func stringObject(raw any) (map[string]string, bool) {
++	if typed, ok := raw.(map[string]string); ok && typed != nil {
++		return typed, true
++	}
+ 	object, ok := raw.(map[string]any)
+ 	if !ok || object == nil {
+ 		return nil, false
+diff --git a/sx/s0s1-rest-bff/internal/api/canonical_delegation_test.go b/sx/s0s1-rest-bff/internal/api/canonical_delegation_test.go
+new file mode 100644
+--- /dev/null
++++ b/sx/s0s1-rest-bff/internal/api/canonical_delegation_test.go
+@@ -0,0 +1,180 @@
++package api
++
++import (
++	"context"
++	"encoding/json"
++	"net/http"
++	"net/http/httptest"
++	"strings"
++	"testing"
++	"time"
++
++	"are-s0s1-rest-bff/internal/repo"
++	"are-s0s1-rest-bff/internal/s0delegate"
++	pb "github.com/srex-dev/are-foundation/s0/passport-issuance-engine/proto"
++	"google.golang.org/grpc"
++	"google.golang.org/grpc/codes"
++	"google.golang.org/grpc/metadata"
++	"google.golang.org/grpc/status"
++)
++
++type canonicalClient struct {
++	pb.PassportIssuanceServiceClient
++	unavailable bool
++	current     *pb.Passport
++	revoked     bool
++	revokeCalls int
++	issueCalls  int
++	mutation    metadata.MD
++}
++
++func canonicalMetadata(options []grpc.CallOption) {
++	for _, option := range options {
++		switch o := option.(type) {
++		case grpc.HeaderCallOption:
++			*o.HeaderAddr = metadata.Pairs("x-are-agent-revision", "4")
++		case grpc.TrailerCallOption:
++			*o.TrailerAddr = metadata.Pairs("x-are-agent-revision", "4")
++		}
++	}
++}
++func (c *canonicalClient) GetPassport(_ context.Context, _ *pb.GetPassportRequest, options ...grpc.CallOption) (*pb.GetPassportResponse, error) {
++	if c.unavailable {
++		return nil, status.Error(codes.Unavailable, "offline")
++	}
++	canonicalMetadata(options)
++	return &pb.GetPassportResponse{Passport: c.current}, nil
++}
++func (c *canonicalClient) GetAgentPassport(_ context.Context, _ *pb.GetAgentPassportRequest, options ...grpc.CallOption) (*pb.GetAgentPassportResponse, error) {
++	if c.unavailable {
++		return nil, status.Error(codes.Unavailable, "offline")
++	}
++	canonicalMetadata(options)
++	return &pb.GetAgentPassportResponse{Passport: c.current}, nil
++}
++func (c *canonicalClient) VerifyPassport(_ context.Context, _ *pb.VerifyPassportRequest, options ...grpc.CallOption) (*pb.VerifyPassportResponse, error) {
++	if c.unavailable {
++		return nil, status.Error(codes.Unavailable, "offline")
++	}
++	canonicalMetadata(options)
++	return &pb.VerifyPassportResponse{PassportId: c.current.PassportId, Valid: !c.revoked, Status: c.current.Status, FailureReason: "revoked"}, nil
++}
++func (c *canonicalClient) RevokePassport(ctx context.Context, _ *pb.RevokePassportRequest, options ...grpc.CallOption) (*pb.RevokePassportResponse, error) {
++	c.revokeCalls++
++	c.mutation, _ = metadata.FromOutgoingContext(ctx)
++	if c.unavailable {
++		return nil, status.Error(codes.Unavailable, "offline")
++	}
++	canonicalMetadata(options)
++	return &pb.RevokePassportResponse{PassportId: "passport", Status: "REVOKED", RevokedTs: time.Now().UnixMilli()}, nil
++}
++func (c *canonicalClient) IssuePassport(ctx context.Context, _ *pb.IssuePassportRequest, options ...grpc.CallOption) (*pb.IssuePassportResponse, error) {
++	c.issueCalls++
++	c.mutation, _ = metadata.FromOutgoingContext(ctx)
++	if c.unavailable {
++		return nil, status.Error(codes.Unavailable, "offline")
++	}
++	canonicalMetadata(options)
++	return &pb.IssuePassportResponse{Passport: c.current}, nil
++}
++func delegationFixture(t *testing.T) (http.Handler, *canonicalClient, *repo.Memory) {
++	t.Helper()
++	mem := repo.NewMemory()
++	_, err := mem.FinishRegister(context.Background(), "register", "agent", []byte(`{}`), repo.AgentRec{Status: "ACTIVE"})
++	if err != nil {
++		t.Fatal(err)
++	}
++	p := baseAuthorityPassport()
++	p["expires_at"] = time.Now().Add(time.Hour).Format(time.RFC3339Nano)
++	body, _ := json.Marshal(map[string]any{"passport": p})
++	if _, err = mem.FinishPassport(context.Background(), "issue", "agent", body); err != nil {
++		t.Fatal(err)
++	}
++	client := &canonicalClient{current: &pb.Passport{PassportId: "passport", AgentId: "agent", Status: "ACTIVE", ExpiresTs: time.Now().Add(time.Hour).UnixMilli(), ScopeSet: []*pb.PassportScope{{ScopeId: "scope", ActionClass: "READ", ResourcePattern: "model/*", ExpiresTs: time.Now().Add(time.Hour).UnixMilli()}}}}
++	h, err := Handler(Config{Repo: mem, S0: &s0delegate.Backend{Pass: client}})
++	if err != nil {
++		t.Fatal(err)
++	}
++	return h, client, mem
++}
++func TestCanonicalDelegationVerifyRejectsRevokedReplica(t *testing.T) {
++	h, client, _ := delegationFixture(t)
++	client.revoked = true
++	code, result := authorityRequest(t, h, "/v1/passports:verify", map[string]any{"agent_id": "agent", "passport_id": "passport"})
++	if code != 200 || result["verified"] != false {
++		t.Fatalf("stale replica verified: %d %v", code, result)
++	}
++}
++func TestCanonicalDelegationUnavailableNeverFallsBack(t *testing.T) {
++	for _, path := range []string{"/v1/passports:verify", "/v1/enforcement/scope:evaluate", "/v1/passports:revoke"} {
++		t.Run(path, func(t *testing.T) {
++			h, client, _ := delegationFixture(t)
++			client.unavailable = true
++			code, result := authorityRequest(t, h, path, map[string]any{"agent_id": "agent", "passport_id": "passport", "action_class": "model.promote", "resource": "model/candidate", "reason": "drift", "revoked_by": "operator"})
++			if code < 500 {
++				t.Fatalf("unavailable canonical service fell back: %d %v", code, result)
++			}
++		})
++	}
++}
++func TestCanonicalDelegationScopeUsesCurrentService(t *testing.T) {
++	h, _, _ := delegationFixture(t)
++	code, result := authorityRequest(t, h, "/v1/enforcement/scope:evaluate", map[string]any{"agent_id": "agent", "action_class": "model.promote", "resource": "model/candidate"})
++	decision, _ := result["decision"].(map[string]any)
++	if code != 200 || decision["effect"] != "DENY" {
++		t.Fatalf("replica scope authorized: %d %v", code, result)
++	}
++}
++func TestCanonicalDelegationRevokeMutatesServiceNotReplica(t *testing.T) {
++	h, client, mem := delegationFixture(t)
++	code, result := authorityRequest(t, h, "/v1/passports:revoke", map[string]any{"passport_id": "passport", "reason": "drift", "revoked_by": "operator"})
++	if code != 200 || client.revokeCalls != 1 {
++		t.Fatalf("canonical revoke absent: %d %v calls=%d", code, result, client.revokeCalls)
++	}
++	body, _, _ := mem.GetPassportBody(context.Background(), "passport")
++	if !strings.Contains(string(body), `"ACTIVE"`) {
++		t.Fatal("local authority replica mutated")
++	}
++}
++
++func TestCanonicalDelegationForwardsCASAndIgnoresLocalPassportConflict(t *testing.T) {
++	_, client, mem := delegationFixture(t)
++	h, err := Handler(Config{Repo: mem, S0: &s0delegate.Backend{Pass: client, PassportMutationToken: "canonical-secret"}})
++	if err != nil {
++		t.Fatal(err)
++	}
++	body := `{"agent_id":"agent","passport_type":"STANDARD","requested_scopes":[{"action_class":"READ","resource_pattern":"model/*"}],"ttl_seconds":3600,"issued_by":"operator","reason":"qualified"}`
++	req := httptest.NewRequest(http.MethodPost, "/v1/passports", strings.NewReader(body))
++	req.Header.Set("Idempotency-Key", "new-grant")
++	req.Header.Set("X-ARE-Expected-Active-Passport-ID", "none")
++	req.Header.Set("X-ARE-Expected-Agent-Revision", "3")
++	rec := httptest.NewRecorder()
++	h.ServeHTTP(rec, req)
++	if rec.Code != http.StatusCreated || client.issueCalls != 1 {
++		t.Fatalf("local active replica blocked canonical issuance: %d %s", rec.Code, rec.Body.String())
++	}
++	if client.mutation.Get("authorization")[0] != "Bearer canonical-secret" || client.mutation.Get("x-are-expected-active-passport-id")[0] != "none" || client.mutation.Get("x-are-expected-agent-revision")[0] != "3" || rec.Header().Get("X-ARE-Agent-Revision") != "4" {
++		t.Fatalf("metadata lost: %v %v", client.mutation, rec.Header())
++	}
++	passports, _ := mem.ListPassportBodiesByAgent(context.Background(), "agent")
++	if len(passports) != 1 {
++		t.Fatal("canonical passport written into local authority store")
++	}
++}
++func TestCanonicalDelegationValidContextAndCurrentList(t *testing.T) {
++	h, client, _ := delegationFixture(t)
++	client.current.PassportId = "current"
++	client.current.ScopeSet[0].ContextConstraints = map[string]string{"site": "A"}
++	// Match the verification response identity to this canonical current record.
++	code, result := authorityRequest(t, h, "/v1/enforcement/scope:evaluate", map[string]any{"agent_id": "agent", "action_class": "READ", "resource": "model/candidate", "context": map[string]any{"site": "A"}})
++	decision, _ := result["decision"].(map[string]any)
++	if code != 200 || decision["effect"] != "ALLOW" {
++		t.Fatalf("valid delegated scope denied: %d %v", code, result)
++	}
++	req := httptest.NewRequest(http.MethodGet, "/v1/passports/by-agent/agent", nil)
++	rec := httptest.NewRecorder()
++	h.ServeHTTP(rec, req)
++	if rec.Code != 200 || !strings.Contains(rec.Body.String(), `"passport_id":"current"`) || strings.Contains(rec.Body.String(), `"passport_id":"passport"`) {
++		t.Fatal("list used replica", rec.Code, rec.Body.String())
++	}
++}
+diff --git a/sx/s0s1-rest-bff/internal/api/policy_binding_test.go b/sx/s0s1-rest-bff/internal/api/policy_binding_test.go
+new file mode 100644
+--- /dev/null
++++ b/sx/s0s1-rest-bff/internal/api/policy_binding_test.go
+@@ -0,0 +1,62 @@
++package api
++
++import (
++	"are-s0s1-rest-bff/internal/policy"
++	"are-s0s1-rest-bff/internal/repo"
++	"encoding/json"
++	"net/http"
++	"net/http/httptest"
++	"strings"
++	"testing"
++	"time"
++)
++
++func TestPolicyDecisionForwardsEvaluatedBinding(t *testing.T) {
++	expected := map[string]any{"decision_id": "d1", "agent_id": "agent1", "action_class": "demo.read", "resource": "urn:dataset/test", "policy_id": "policy/test.rego", "policy_digest": "sha256:" + strings.Repeat("a", 64), "effect": "ALLOW", "reason": "evaluated"}
++	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		_ = json.NewEncoder(w).Encode(map[string]any{"result": expected})
++	}))
++	defer srv.Close()
++	h, err := Handler(Config{Repo: repo.NewMemory(), Policy: policy.NewOPAClient(srv.URL, time.Second)})
++	if err != nil {
++		t.Fatal(err)
++	}
++	req := httptest.NewRequest(http.MethodPost, "/v1/policy/evaluations", strings.NewReader(`{"decision_id":"d1","agent_id":"agent1","action_class":"demo.read","resource":"urn:dataset/test"}`))
++	req.Header.Set("X-Request-ID", "req1")
++	req.Header.Set("Idempotency-Key", "idem1")
++	rec := httptest.NewRecorder()
++	h.ServeHTTP(rec, req)
++	if rec.Code != http.StatusOK {
++		t.Fatalf("status %d: %s", rec.Code, rec.Body.String())
++	}
++	var body struct {
++		Decision map[string]any `json:"decision"`
++	}
++	if err = json.Unmarshal(rec.Body.Bytes(), &body); err != nil {
++		t.Fatal(err)
++	}
++	for key, want := range expected {
++		if body.Decision[key] != want {
++			t.Errorf("%s: got %v want %v", key, body.Decision[key], want)
++		}
++	}
++}
++
++func TestPolicyEvaluationMissingBindingFailsClosed(t *testing.T) {
++	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		_, _ = w.Write([]byte(`{"result":{"effect":"ALLOW","reason":"legacy unbound"}}`))
++	}))
++	defer srv.Close()
++	h, err := Handler(Config{Repo: repo.NewMemory(), Policy: policy.NewOPAClient(srv.URL, time.Second)})
++	if err != nil {
++		t.Fatal(err)
++	}
++	req := httptest.NewRequest(http.MethodPost, "/v1/policy/evaluations", strings.NewReader(`{"decision_id":"d1","agent_id":"agent1","action_class":"demo.read","resource":"urn:dataset/test"}`))
++	req.Header.Set("X-Request-ID", "req1")
++	req.Header.Set("Idempotency-Key", "idem1")
++	rec := httptest.NewRecorder()
++	h.ServeHTTP(rec, req)
++	if rec.Code != http.StatusBadGateway {
++		t.Fatalf("unbound result must fail closed: %d %s", rec.Code, rec.Body.String())
++	}
++}
+diff --git a/sx/s0s1-rest-bff/internal/policy/binding_test.go b/sx/s0s1-rest-bff/internal/policy/binding_test.go
+new file mode 100644
+--- /dev/null
++++ b/sx/s0s1-rest-bff/internal/policy/binding_test.go
+@@ -0,0 +1,31 @@
++package policy
++
++import (
++	"context"
++	"encoding/json"
++	"net/http"
++	"net/http/httptest"
++	"strings"
++	"testing"
++)
++
++func TestOPARejectsUnboundDecision(t *testing.T) {
++	for _, field := range []string{"policy_id", "policy_digest", "decision_id", "agent_id", "action_class", "resource", "effect"} {
++		t.Run(field, func(t *testing.T) {
++			result := map[string]any{"decision_id": "d1", "agent_id": "agent1", "action_class": "demo.read", "resource": "urn:dataset/test", "policy_id": "policy/test.rego", "policy_digest": "sha256:" + strings.Repeat("a", 64), "effect": "ALLOW", "reason": "evaluated"}
++			if field == "policy_id" {
++				delete(result, field)
++			} else {
++				result[field] = "wrong"
++			}
++			srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++				_ = json.NewEncoder(w).Encode(map[string]any{"result": result})
++			}))
++			defer srv.Close()
++			c := &OPAClient{BaseURL: srv.URL, HTTPClient: srv.Client()}
++			if _, _, err := c.Evaluate(context.Background(), "d1", "agent1", "demo.read", "urn:dataset/test"); err == nil {
++				t.Fatal("unbound or malformed decision accepted")
++			}
++		})
++	}
++}
+diff --git a/sx/s0s1-rest-bff/internal/policy/evaluate.go b/sx/s0s1-rest-bff/internal/policy/evaluate.go
+--- a/sx/s0s1-rest-bff/internal/policy/evaluate.go
++++ b/sx/s0s1-rest-bff/internal/policy/evaluate.go
+@@ -3,6 +3,7 @@
+ import (
+ 	"bytes"
+ 	"context"
++	"encoding/hex"
+ 	"encoding/json"
+ 	"errors"
+ 	"fmt"
+@@ -16,6 +17,25 @@
+ // Evaluator decides policy effect for EvaluatePolicy REST payloads.
+ type Evaluator interface {
+ 	Evaluate(ctx context.Context, decisionID, agentID, actionClass, resource string) (effect string, reason string, err error)
++}
++
++// Evaluation binds a decision to its evaluated input and immutable loaded policy.
++// Policy binding comes from OPA data activated alongside the Rego, never input.
++type Evaluation struct {
++	DecisionID   string `json:"decision_id"`
++	AgentID      string `json:"agent_id"`
++	ActionClass  string `json:"action_class"`
++	Resource     string `json:"resource"`
++	PolicyID     string `json:"policy_id"`
++	PolicyDigest string `json:"policy_digest"`
++	Effect       string `json:"effect"`
++	Reason       string `json:"reason"`
++}
++
++// DecisionEvaluator provides the stronger canonical service contract. The legacy
++// Evaluator remains available for deliberately configured local stub fixtures.
++type DecisionEvaluator interface {
++	EvaluateBound(context.Context, string, string, string, string) (Evaluation, error)
+ }
+ 
+ // Stub matches sx/are-api-gateway StaticUpstreamClient.handleEvaluatePolicy (no OPA).
+@@ -52,17 +72,22 @@
+ 	HTTPClient *http.Client
+ }
+ 
+-func (c *OPAClient) Evaluate(ctx context.Context, decisionID, agentID, actionClass, resource string) (effect string, reason string, err error) {
++func (c *OPAClient) Evaluate(ctx context.Context, decisionID, agentID, actionClass, resource string) (string, string, error) {
++	result, err := c.EvaluateBound(ctx, decisionID, agentID, actionClass, resource)
++	return result.Effect, result.Reason, err
++}
++
++func (c *OPAClient) EvaluateBound(ctx context.Context, decisionID, agentID, actionClass, resource string) (Evaluation, error) {
+ 	if strings.Contains(strings.ToLower(resource), "timeout") {
+-		return "", "", ErrDependencyTimeout
++		return Evaluation{}, ErrDependencyTimeout
+ 	}
+ 	base := strings.TrimRight(strings.TrimSpace(c.BaseURL), "/")
+ 	if base == "" {
+-		return "", "", fmt.Errorf("opa: empty base url")
++		return Evaluation{}, fmt.Errorf("opa: empty base url")
+ 	}
+ 	u, err := url.Parse(base + "/v1/data/are/evaluatepolicy/decision")
+ 	if err != nil {
+-		return "", "", fmt.Errorf("opa: parse url: %w", err)
++		return Evaluation{}, fmt.Errorf("opa: parse url: %w", err)
+ 	}
+ 	body, err := json.Marshal(map[string]any{
+ 		"input": map[string]any{
+@@ -73,11 +98,11 @@
+ 		},
+ 	})
+ 	if err != nil {
+-		return "", "", err
++		return Evaluation{}, err
+ 	}
+ 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u.String(), bytes.NewReader(body))
+ 	if err != nil {
+-		return "", "", err
++		return Evaluation{}, err
+ 	}
+ 	req.Header.Set("Content-Type", "application/json")
+ 	client := c.HTTPClient
+@@ -86,29 +111,40 @@
+ 	}
+ 	resp, err := client.Do(req)
+ 	if err != nil {
+-		return "", "", fmt.Errorf("opa: request: %w", err)
++		return Evaluation{}, fmt.Errorf("opa: request: %w", err)
+ 	}
+ 	defer resp.Body.Close()
+ 	raw, err := io.ReadAll(resp.Body)
+ 	if err != nil {
+-		return "", "", fmt.Errorf("opa: read body: %w", err)
++		return Evaluation{}, fmt.Errorf("opa: read body: %w", err)
+ 	}
+ 	if resp.StatusCode != http.StatusOK {
+-		return "", "", fmt.Errorf("opa: status %d: %s", resp.StatusCode, strings.TrimSpace(string(raw)))
++		return Evaluation{}, fmt.Errorf("opa: status %d: %s", resp.StatusCode, strings.TrimSpace(string(raw)))
+ 	}
+ 	var envelope struct {
+-		Result *struct {
+-			Effect string `json:"effect"`
+-			Reason string `json:"reason"`
+-		} `json:"result"`
++		Result *Evaluation `json:"result"`
+ 	}
+ 	if err := json.Unmarshal(raw, &envelope); err != nil {
+-		return "", "", fmt.Errorf("opa: decode: %w", err)
++		return Evaluation{}, fmt.Errorf("opa: decode: %w", err)
+ 	}
+-	if envelope.Result == nil || strings.TrimSpace(envelope.Result.Effect) == "" {
+-		return "", "", fmt.Errorf("opa: missing result.effect")
++	if envelope.Result == nil {
++		return Evaluation{}, fmt.Errorf("opa: missing bound result")
+ 	}
+-	return strings.ToUpper(strings.TrimSpace(envelope.Result.Effect)), envelope.Result.Reason, nil
++	result := *envelope.Result
++	if result.DecisionID != decisionID || result.AgentID != agentID || result.ActionClass != actionClass || result.Resource != resource {
++		return Evaluation{}, fmt.Errorf("opa: evaluated request binding mismatch")
++	}
++	digest := strings.TrimPrefix(result.PolicyDigest, "sha256:")
++	if strings.TrimSpace(result.PolicyID) == "" || !strings.HasPrefix(result.PolicyDigest, "sha256:") || len(digest) != 64 || digest != strings.ToLower(digest) {
++		return Evaluation{}, fmt.Errorf("opa: missing or malformed evaluated policy binding")
++	}
++	if _, err := hex.DecodeString(digest); err != nil {
++		return Evaluation{}, fmt.Errorf("opa: malformed evaluated policy digest")
++	}
++	if result.Effect != "ALLOW" && result.Effect != "DENY" {
++		return Evaluation{}, fmt.Errorf("opa: invalid effect")
++	}
++	return result, nil
+ }
+ 
+ // NewOPAClient returns an Evaluator backed by OPA. baseURL is e.g. http://opa:8181.
+diff --git a/sx/s0s1-rest-bff/internal/policy/evaluate_test.go b/sx/s0s1-rest-bff/internal/policy/evaluate_test.go
+--- a/sx/s0s1-rest-bff/internal/policy/evaluate_test.go
++++ b/sx/s0s1-rest-bff/internal/policy/evaluate_test.go
+@@ -62,7 +62,7 @@
+ 			return
+ 		}
+ 		w.Header().Set("Content-Type", "application/json")
+-		_, _ = w.Write([]byte(`{"result":{"effect":"ALLOW","reason":"opa"}}`))
++		_, _ = w.Write([]byte(`{"result":{"effect":"ALLOW","reason":"opa","decision_id":"1","agent_id":"agt","action_class":"OTHER","resource":"urn:x","policy_id":"policy/test.rego","policy_digest":"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}`))
+ 	}))
+ 	defer srv.Close()
+ 
+diff --git a/sx/s0s1-rest-bff/internal/s0delegate/dial.go b/sx/s0s1-rest-bff/internal/s0delegate/dial.go
+--- a/sx/s0s1-rest-bff/internal/s0delegate/dial.go
++++ b/sx/s0s1-rest-bff/internal/s0delegate/dial.go
+@@ -18,8 +18,9 @@
+ 
+ // Backend holds optional gRPC clients. Zero value is valid (no delegation).
+ type Backend struct {
+-	Reg  registryv1.AgentRegistryServiceClient
+-	Pass passportv1.PassportIssuanceServiceClient
++	PassportMutationToken string
++	Reg                   registryv1.AgentRegistryServiceClient
++	Pass                  passportv1.PassportIssuanceServiceClient
+ 	// conns closed on Close
+ 	conns []*grpc.ClientConn
+ }
+@@ -40,8 +41,9 @@
+ 
+ // Config for Dial.
+ type Config struct {
+-	RegistryAddr string
+-	PassportAddr string
++	PassportMutationToken string
++	RegistryAddr          string
++	PassportAddr          string
+ 	// mTLS (default): use these PEM files for client cert and server trust.
+ 	CertFile, KeyFile, CAFile string
+ 	// TLSServerName overrides SNI / verify hostname (optional).
+@@ -88,7 +90,7 @@
+ 		return grpc.NewClient(addr, grpc.WithTransportCredentials(creds))
+ 	}
+ 
+-	var b Backend
++	b := Backend{PassportMutationToken: cfg.PassportMutationToken}
+ 	if regAddr != "" {
+ 		c, err := dialOne(regAddr)
+ 		if err != nil {
+diff --git a/sx/s0s1-rest-bff/internal/s0delegate/passport_canonical.go b/sx/s0s1-rest-bff/internal/s0delegate/passport_canonical.go
+new file mode 100644
+--- /dev/null
++++ b/sx/s0s1-rest-bff/internal/s0delegate/passport_canonical.go
+@@ -0,0 +1,127 @@
++package s0delegate
++
++import (
++	"context"
++	"encoding/json"
++	"strconv"
++	"time"
++
++	passportv1 "github.com/srex-dev/are-foundation/s0/passport-issuance-engine/proto"
++	"google.golang.org/grpc"
++	"google.golang.org/grpc/codes"
++	"google.golang.org/grpc/metadata"
++	"google.golang.org/grpc/status"
++)
++
++func MutationContext(ctx context.Context, token, expectedID, expectedRevision string) context.Context {
++	pairs := []string{}
++	if token != "" {
++		pairs = append(pairs, "authorization", "Bearer "+token)
++	}
++	if expectedID != "" {
++		pairs = append(pairs, "x-are-expected-active-passport-id", expectedID)
++	}
++	if expectedRevision != "" {
++		pairs = append(pairs, "x-are-expected-agent-revision", expectedRevision)
++	}
++	return metadata.AppendToOutgoingContext(ctx, pairs...)
++}
++func sourceRevision(header, trailer metadata.MD) (string, error) {
++	values := header.Get("x-are-agent-revision")
++	if len(values) == 0 {
++		values = trailer.Get("x-are-agent-revision")
++	}
++	if len(values) != 1 {
++		return "", status.Error(codes.Unavailable, "canonical agent revision missing")
++	}
++	if _, err := strconv.ParseUint(values[0], 10, 64); err != nil {
++		return "", status.Error(codes.Unavailable, "canonical agent revision invalid")
++	}
++	return values[0], nil
++}
++func ReadCanonicalPassport(ctx context.Context, c passportv1.PassportIssuanceServiceClient, id string) (map[string]any, string, error) {
++	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
++	defer cancel()
++	var header, trailer metadata.MD
++	response, err := c.GetPassport(ctx, &passportv1.GetPassportRequest{PassportId: id}, grpc.Header(&header), grpc.Trailer(&trailer))
++	revision, metaErr := sourceRevision(header, trailer)
++	if err != nil {
++		return nil, revision, err
++	}
++	if metaErr != nil {
++		return nil, "", metaErr
++	}
++	if response == nil || response.Passport == nil || response.Passport.PassportId != id {
++		return nil, revision, status.Error(codes.Unavailable, "canonical passport identity mismatch")
++	}
++	return passportToMap(response.Passport), revision, nil
++}
++func ReadCanonicalAgentPassport(ctx context.Context, c passportv1.PassportIssuanceServiceClient, agent string) (map[string]any, string, error) {
++	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
++	defer cancel()
++	var header, trailer metadata.MD
++	response, err := c.GetAgentPassport(ctx, &passportv1.GetAgentPassportRequest{AgentId: agent}, grpc.Header(&header), grpc.Trailer(&trailer))
++	revision, metaErr := sourceRevision(header, trailer)
++	if err != nil {
++		return nil, revision, err
++	}
++	if metaErr != nil {
++		return nil, "", metaErr
++	}
++	if response == nil || response.Passport == nil || response.Passport.AgentId != agent {
++		return nil, revision, status.Error(codes.Unavailable, "canonical agent identity mismatch")
++	}
++	return passportToMap(response.Passport), revision, nil
++}
++func VerifyCanonicalPassport(ctx context.Context, c passportv1.PassportIssuanceServiceClient, id string) (bool, string, string, error) {
++	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
++	defer cancel()
++	var header, trailer metadata.MD
++	response, err := c.VerifyPassport(ctx, &passportv1.VerifyPassportRequest{PassportId: id}, grpc.Header(&header), grpc.Trailer(&trailer))
++	revision, metaErr := sourceRevision(header, trailer)
++	if err != nil {
++		return false, "", revision, err
++	}
++	if metaErr != nil {
++		return false, "", "", metaErr
++	}
++	if response == nil || response.PassportId != id {
++		return false, "", revision, status.Error(codes.Unavailable, "canonical verification identity mismatch")
++	}
++	return response.Valid, response.FailureReason, revision, nil
++}
++func IssueCanonicalPassport(ctx context.Context, c passportv1.PassportIssuanceServiceClient, req *passportv1.IssuePassportRequest) ([]byte, string, error) {
++	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
++	defer cancel()
++	var header, trailer metadata.MD
++	response, err := c.IssuePassport(ctx, req, grpc.Header(&header), grpc.Trailer(&trailer))
++	revision, metaErr := sourceRevision(header, trailer)
++	if err != nil {
++		return nil, revision, err
++	}
++	if metaErr != nil {
++		return nil, "", metaErr
++	}
++	if response == nil || response.Passport == nil || response.Passport.AgentId != req.AgentId {
++		return nil, revision, status.Error(codes.Unavailable, "canonical issuance identity mismatch")
++	}
++	body, err := json.Marshal(map[string]any{"passport": passportToMap(response.Passport)})
++	return body, revision, err
++}
++func RevokeCanonicalPassport(ctx context.Context, c passportv1.PassportIssuanceServiceClient, id, reason, actor string) (map[string]any, string, error) {
++	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
++	defer cancel()
++	var header, trailer metadata.MD
++	response, err := c.RevokePassport(ctx, &passportv1.RevokePassportRequest{PassportId: id, Reason: reason, RevokedBy: actor}, grpc.Header(&header), grpc.Trailer(&trailer))
++	revision, metaErr := sourceRevision(header, trailer)
++	if err != nil {
++		return nil, revision, err
++	}
++	if metaErr != nil {
++		return nil, "", metaErr
++	}
++	if response == nil || response.PassportId != id || response.Status != "REVOKED" {
++		return nil, revision, status.Error(codes.Unavailable, "canonical revocation response invalid")
++	}
++	return map[string]any{"revoked": true, "passport_id": response.PassportId, "status": response.Status, "revoked_ts": response.RevokedTs, "reason": reason}, revision, nil
++}
+diff --git a/sx/s0s1-rest-bff/internal/s0delegate/passport_ops.go b/sx/s0s1-rest-bff/internal/s0delegate/passport_ops.go
+--- a/sx/s0s1-rest-bff/internal/s0delegate/passport_ops.go
++++ b/sx/s0s1-rest-bff/internal/s0delegate/passport_ops.go
+@@ -40,12 +40,8 @@
+ 		"issued_ts":              p.GetIssuedTs(),
+ 		"expires_ts":             p.GetExpiresTs(),
+ 		"credential_id":          p.GetCredentialId(),
+-		"public_key_pem":         p.GetPublicKeyPem(),
+ 		"policy_id_at_issuance":  p.GetPolicyIdAtIssuance(),
+ 		"policy_ver_at_issuance": p.GetPolicyVerAtIssuance(),
+-	}
+-	if len(p.GetSignature()) > 0 {
+-		out["signature"] = string(p.GetSignature())
+ 	}
+ 	if rs := p.GetRevocationReason(); rs != "" {
+ 		out["revocation_reason"] = rs
+diff --git a/sx/s0s1-rest-bff/policy-tests/are_evaluatepolicy_test.rego b/sx/s0s1-rest-bff/policy-tests/are_evaluatepolicy_test.rego
+new file mode 100644
+--- /dev/null
++++ b/sx/s0s1-rest-bff/policy-tests/are_evaluatepolicy_test.rego
+@@ -0,0 +1,27 @@
++package are.evaluatepolicy
++
++test_decision_binds_evaluated_input_and_policy {
++    request := {"decision_id":"d1", "agent_id":"a1", "action_class":"model.promote_to_production", "resource":"model/champion"}
++    binding := {"policy_id":"policy/are_evaluatepolicy.rego", "policy_digest":"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}
++    result := decision with input as request with data.are_policy_binding as binding
++    result.effect == "ALLOW"
++    result.decision_id == request.decision_id
++    result.agent_id == request.agent_id
++    result.action_class == request.action_class
++    result.resource == request.resource
++    result.policy_id == binding.policy_id
++    result.policy_digest == binding.policy_digest
++}
++
++test_missing_policy_binding_does_not_produce_allow {
++    request := {"decision_id":"d1", "agent_id":"a1", "action_class":"model.promote_to_production", "resource":"model/champion"}
++    not decision with input as request with data.are_policy_binding as {}
++}
++
++test_request_cannot_supply_policy_digest {
++    request := {"decision_id":"d1", "agent_id":"a1", "action_class":"model.promote_to_production", "resource":"model/champion", "policy_digest":"forged"}
++    binding := {"policy_id":"policy/are_evaluatepolicy.rego", "policy_digest":"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}
++    result := decision with input as request with data.are_policy_binding as binding
++    result.policy_digest == binding.policy_digest
++    result.policy_digest != request.policy_digest
++}
+diff --git a/sx/s0s1-rest-bff/policy/are_evaluatepolicy.rego b/sx/s0s1-rest-bff/policy/are_evaluatepolicy.rego
+--- a/sx/s0s1-rest-bff/policy/are_evaluatepolicy.rego
++++ b/sx/s0s1-rest-bff/policy/are_evaluatepolicy.rego
+@@ -6,9 +6,9 @@
+ # resources and remains check-only at the API boundary.
+ package are.evaluatepolicy
+ 
+-default decision = {"effect": "DENY", "reason": "no policy matched action class"}
++default outcome = {"effect": "DENY", "reason": "no policy matched action class"}
+ 
+-decision = {"effect": "DENY", "reason": "forbidden action class for demo"} {
++outcome = {"effect": "DENY", "reason": "forbidden action class for demo"} {
+ 	input.action_class == "demo.forbidden_action"
+ } else = {"effect": "ALLOW", "reason": "read scope allowed"} {
+ 	input.action_class == "demo.read"
+@@ -45,3 +45,17 @@
+ } else = {"effect": "DENY", "reason": "action class contains deny"} {
+ 	contains(upper(input.action_class), "DENY")
+ } else = {"effect": "ALLOW", "reason": "policy-evaluated"}
++
++# Binding metadata is loaded in the same immutable directory/bundle activation as
++# this module. Omitting it leaves decision undefined (the BFF fails closed).
++# Never populate these fields from the request or mutable external discovery.
++decision = {
++    "effect": outcome.effect,
++    "reason": outcome.reason,
++    "decision_id": input.decision_id,
++    "agent_id": input.agent_id,
++    "action_class": input.action_class,
++    "resource": input.resource,
++    "policy_id": data.are_policy_binding.policy_id,
++    "policy_digest": data.are_policy_binding.policy_digest,
++}

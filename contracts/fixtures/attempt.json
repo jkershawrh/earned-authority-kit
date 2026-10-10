@@ -1,0 +1,20 @@
+{
+  "schema_version": "0.1.0-draft.1",
+  "attempt_id": "attempt-001",
+  "correlation_id": "flow-001",
+  "idempotency_key": "intent-001",
+  "agent_id": "agent-001",
+  "skill_id": "registry-release-v1",
+  "skill_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "context_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "passport_id": "passport-001",
+  "authority_revision": 1,
+  "grant_id": "grant-001",
+  "policy_decision_id": "policy-001",
+  "policy_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "action_class": "model.promote_to_production",
+  "resource": "model/demo",
+  "arguments_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "requested_at_ms": 2500,
+  "state": "REQUESTED"
+}

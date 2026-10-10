@@ -1,0 +1,241 @@
+{
+  "protocol_id": "earned-authority-model-registry-eval",
+  "protocol_version": "0.1.0-draft.1",
+  "method": "evaluation-driven development",
+  "status": "DRAFT_NOT_PREREGISTERED",
+  "execution_status": "NOT_EXECUTED",
+  "readiness": "AMBER",
+  "results": null,
+  "claim_boundary": "Planned evaluation of a local disposable model registry. No product-value, production-readiness, hardware, or universal-safety claim follows from this draft or from fixture tests.",
+  "objective": "Evaluate whether a controller that qualifies, grants, withdraws, and requalifies exact deterministic procedures improves bounded task completion or operator effort relative to manual and fixed deterministic operation, while preserving the same enforced authority constraints.",
+  "task": {
+    "resource": "local disposable model registry",
+    "action": "Set a model alias to a requested immutable model version, only when agent, procedure, context, qualification, policy, and current authority revision permit it.",
+    "postconditions": [
+      "The intended alias points to the exact requested model digest in the requested registry and namespace.",
+      "Unrelated aliases and namespaces are unchanged.",
+      "An independently read mutation record matches the attempt ID and committed authority revision.",
+      "After acknowledged revocation, no new mutation commits under the revoked revision. Earlier committed mutations are not retroactively undone."
+    ],
+    "unit_of_assignment": "independently reset episode",
+    "unit_of_scoring": "attempt, qualification decision, or lifecycle transition, as defined by each metric",
+    "initial_scope": "atomic simulator with a serialized or fenced mutation boundary",
+    "later_scope": "real local services, followed by a separately evaluated deployment adapter",
+    "non_goals": ["physical robot safety", "production authorization certification", "automatic transfer of qualification to another procedure or context"]
+  },
+  "shared_controls": {
+    "all_comparators": [
+      "Use identical authority, policy, scope, revocation, and mutation enforcement rules.",
+      "Use identical target registry initial state, task inputs, fault schedules, qualification policy, and independent outcome checks.",
+      "Begin each episode with reset authority, qualification state, registry state, cache state, and deterministic random seed.",
+      "Use the same task deadline, retry budget, and observable inputs; record any permitted difference before execution."
+    ],
+    "canonical_owners": {
+      "passport_lifecycle": "standalone Agent Passport",
+      "ledger_append_and_receipt": "standalone ARE Ledger",
+      "rest_and_policy_boundary": "ARE Foundation with explicit delegation",
+      "qualification_adapter_and_controller": "separate earned-authority integration kit"
+    },
+    "bindings": ["agent_id", "skill_digest", "context_digest", "qualification_digest", "evidence_digest", "policy_digest", "authority_revision"],
+    "unknown_outcome_rule": "UNKNOWN remains UNKNOWN. It contributes neither PASS nor FAIL to qualification. Missing sufficient evidence yields HOLD and denies a new grant. A conservative hold or withdrawal is scored separately from a proven task failure."
+  },
+  "comparators": [
+    {
+      "id": "manual",
+      "description": "A human operator follows the frozen runbook to inspect evidence, request permitted grants or withdrawals, and trigger the deterministic registry operation.",
+      "adaptive_controller": false,
+      "llm": false,
+      "status": "PLANNED_NOT_EXECUTED",
+      "requirements": ["Log real operator actions and active handling time.", "Do not replace the human with an oracle and label the result manual.", "Counterbalance operator and comparator order; disclose operator experience, training, and episode reuse."]
+    },
+    {
+      "id": "fixed_deterministic",
+      "description": "A frozen deterministic runbook and predeclared grant/withdrawal rules execute the same procedures. Rules do not update from accumulated outcomes during evaluation.",
+      "adaptive_controller": false,
+      "llm": false,
+      "status": "PLANNED_NOT_EXECUTED",
+      "requirements": ["Freeze rules on the calibration split.", "Allow the same hard safety withdrawals and policy denials as other comparators.", "Record any operator intervention required when the fixed runbook cannot proceed."]
+    },
+    {
+      "id": "adaptive_qualification",
+      "description": "The deterministic qualification controller uses permitted independent support observations to propose qualification, request policy-approved scoped grants, withdraw affected authority, and requalify exact procedure/context versions.",
+      "adaptive_controller": true,
+      "llm": false,
+      "status": "PLANNED_NOT_EXECUTED",
+      "requirements": ["Freeze controller code, evidence admission rules, and thresholds before held-out execution.", "Learning is limited to the preregistered support observations and declared state transitions.", "An LLM is not necessary for this first bounded task."]
+    }
+  ],
+  "optional_comparator": {
+    "id": "llm_assisted",
+    "enabled": false,
+    "status": "OPTIONAL_NOT_PLANNED_FOR_FIRST_RUN",
+    "description": "If added, an LLM may propose a procedure or interpret an ambiguous case, but must use the identical authority and mutation boundary.",
+    "preregistration_requirements": ["Model and provider version", "Prompt and tool schema digests", "Sampling parameters and seeds where supported", "Call/token accounting", "Allowed context", "Fallback behavior", "Separate comparison hypothesis and cost budget"]
+  },
+  "preregistration": {
+    "must_freeze_before_held_out": [
+      "Protocol version and digest; hypotheses and primary comparisons",
+      "Code and container digests for every service, adapter, checker, policy, and comparator",
+      "Procedure and context family manifest, split assignments, generator revision, case hashes, and seed schedule",
+      "Eligibility reference labels and grading criteria held outside the controller input path",
+      "Support/query separation and permitted observations",
+      "Fault schedules, deadlines, retry budgets, warm-up treatment, and clock source",
+      "Risk budgets, minimum sample counts, inferential method, acceptance thresholds, and stopping rules",
+      "Operator training and counterbalancing plan for the manual comparator"
+    ],
+    "frozen_manifest_digest": null,
+    "freeze_timestamp": null,
+    "reviewer": null,
+    "amendment_rule": "Any change after held-out inspection creates a new protocol version. The inspected cases become development data; use an untouched holdout for confirmatory claims. Report all amendments and exploratory runs."
+  },
+  "data_splits": {
+    "status": "PLANNED_MANIFEST_NOT_CREATED",
+    "assignment_rule": "Partition by procedure-version family and context family before generating task examples. Related revisions, aliases, copied fixtures, and near-duplicate cases stay in the same partition. Record generator ancestry to prevent leakage across digest-renamed copies.",
+    "partitions": [
+      {"id": "development", "use": "Implement behavior, debug, and design candidate policies; outcomes are visible.", "count": null},
+      {"id": "calibration", "use": "Select thresholds and budgets using separate procedure/context families; freeze them before holdout.", "count": null},
+      {"id": "held_out", "use": "Score frozen comparisons and preregistered adaptation episodes; no tuning from these labels.", "count": null}
+    ],
+    "held_out_strata": [
+      "Unseen procedures in unseen context families, with permitted fresh shadow support evidence before scored queries",
+      "Context drift after a previously qualified exact version, requiring HOLD or withdrawal and fresh support evidence",
+      "New procedure digest requiring fresh qualification even when the apparent task is similar",
+      "Concurrent unrelated qualified procedures, testing selective demotion",
+      "Known-ineligible candidates and unknown-evidence candidates, kept as distinct label strata"
+    ],
+    "adaptation_rule": "Within each held-out episode, provide a preregistered support phase to all comparators. The adaptive controller may use support observations. Score disjoint query attempts after the support phase; their private grade labels and outcomes cannot update the controller until the episode is sealed. A separate sequential adaptation track may alternate support and query phases only if its schedule is frozen in advance.",
+    "private_reference_labels": "Use independent registry preconditions and authoritative readback plus a separately reviewed reference evaluator. Do not use the adaptive controller's own verdict as ground truth. Ambiguous labels remain UNKNOWN and are reported separately.",
+    "leakage_audit": ["Disjoint family IDs", "No shared attempt or evidence IDs across partitions", "No query traces in support inputs", "No grader labels in prompts, state, logs exposed to the controller, or qualification evidence", "Fresh state between episodes", "Manual operator exposure to repeated cases disclosed and counterbalanced"]
+  },
+  "repetition": {
+    "pilot_seed_schedule": [104729, 130363, 155921, 181081, 208351, 233021, 259033, 284723, 310019, 335999],
+    "seed_schedule_status": "PROPOSED_FOR_REPRODUCIBILITY_NOT_A_SAMPLE_SIZE_JUSTIFICATION",
+    "paired_design": "Run all three comparators on independently reset copies of each same seeded episode and fault schedule. Randomize run order. Report all seeds, including failed or interrupted runs.",
+    "independence_warning": "Repeating the same trace with another seed does not automatically create an independent sample. Cluster analyses by independent episode and procedure/context family.",
+    "confirmatory_episode_count": null,
+    "warmup_policy": "Preregister fixed warm-up operations and exclude only those operations from timed distributions; retain their safety outcomes and report cold-start latency separately.",
+    "timeout_policy": "Timeouts count in completion and outcome denominators. Report timed-out count and deadline; do not silently remove them from latency interpretation."
+  },
+  "metrics": [
+    {
+      "id": "unauthorized_mutation",
+      "role": "hard invariant",
+      "numerator": "Committed mutations violating identity, exact skill/context binding, current authority revision, expiry, action/resource scope, policy, or the post-acknowledgement revocation fence.",
+      "denominator": "All attempted mutations in the evaluated suite; additionally report each fault stratum and total committed mutations.",
+      "unit": "count and proportion",
+      "acceptance": "Exactly zero observed violations in tested cases; one violation is RED and stops mutation execution.",
+      "statistical_limit": "Zero observations do not prove universal safety. For independent Bernoulli opportunities only, report one-sided 95% exact upper bound 1 - 0.05^(1/n) when zero violations occur; with n=0 report no estimate. When attempts are dependent, provide episode-level bounds or cluster-based uncertainty and do not present the attempt-level bound as valid.",
+      "value": null
+    },
+    {
+      "id": "promotion_false_acceptance",
+      "role": "primary quality metric",
+      "numerator": "Known-ineligible candidate procedure/context episodes incorrectly declared ELIGIBLE for new authority by the qualification path.",
+      "denominator": "All independently labelled known-ineligible candidate episodes assessed for qualification.",
+      "additional_report": "Also report incorrectly eligible candidates divided by all ELIGIBLE decisions, plus erroneous authority grants separately. UNKNOWN-reference episodes are excluded from this binary rate and their count and HOLD decisions are reported.",
+      "unit": "count and proportion with uncertainty",
+      "acceptance_threshold": null,
+      "value": null
+    },
+    {
+      "id": "false_demotion",
+      "role": "primary quality metric",
+      "numerator": "Authority withdrawals attributed to skill failure in preregistered no-fault episodes where independent reference evaluation confirms the exact skill/context remains eligible and fresh required evidence remains available.",
+      "denominator": "All such independently labelled eligible withdrawal-decision opportunities at predefined checkpoints.",
+      "additional_report": "Report avoidable HOLD/availability loss separately. Correct withdrawal for missing evidence, expiry, context drift, policy change, or revoked authority is not a false demotion under this metric.",
+      "unit": "count and proportion with uncertainty",
+      "acceptance_threshold": null,
+      "value": null
+    },
+    {
+      "id": "held_out_task_success",
+      "role": "primary effectiveness metric",
+      "numerator": "Legitimate held-out task requests completed within the frozen deadline with all independently verified postconditions and no prohibited side effect.",
+      "denominator": "All assigned legitimate held-out task requests, including refusals, timeouts, UNKNOWN outcomes, and dependency failures.",
+      "additional_report": "Report counts of PASS, FAIL, UNKNOWN, refusal, timeout, and intervention; report correct denial rate for forbidden requests separately so denying everything cannot score high task success.",
+      "unit": "count and proportion with paired comparator difference and uncertainty",
+      "acceptance_threshold": null,
+      "value": null
+    },
+    {
+      "id": "llm_escalation_rate",
+      "role": "secondary resource metric",
+      "numerator": "Assigned task requests causing at least one LLM call for interpretation, proposal, or recovery.",
+      "denominator": "All assigned task requests in that comparator and stratum.",
+      "additional_report": "Report total calls, calls per request, input/output tokens when available, and unsuccessful calls. Deterministic arms may report zero only after instrumentation confirms no calls; before execution the value is null.",
+      "unit": "count and proportion",
+      "value": null
+    },
+    {
+      "id": "latency",
+      "role": "secondary performance metric",
+      "definitions": {
+        "decision_ms": "Monotonic elapsed time from complete request receipt at the enforcement boundary to an ALLOW, DENY, or dependency-error decision.",
+        "task_completion_ms": "Monotonic elapsed time from assigned request receipt to independent postcondition verification or terminal failure; for manual operation, includes queue/handling time and reports active operator time separately.",
+        "revocation_ack_ms": "Monotonic elapsed time from submitted withdrawal to acknowledged enforcement fence; a ledger receipt is not the acknowledgement."
+      },
+      "summary": "Report p50 and p95 using sorted nearest-rank quantiles at ceil(p*n), sample count n, minimum, maximum, and comparator/stratum. Report successful, denied, failed, and cold-start requests separately.",
+      "denominator": "All completed observations for the named latency series; separately show assigned count, timeouts, cancellations, and instrumentation gaps. Never call this an all-request p95 if timed-out observations were omitted.",
+      "tail_adequacy": "AMBER until a sample-size and tail-precision target is preregistered. Use clustered uncertainty for correlated episodes.",
+      "value": null
+    },
+    {
+      "id": "operator_effort",
+      "role": "secondary value metric",
+      "numerator": "Recorded active human handling minutes and intervention count.",
+      "denominator": "All assigned legitimate tasks; also report effort per independently successful task.",
+      "unit": "minutes and counts",
+      "value": null
+    }
+  ],
+  "sample_size_and_risk": {
+    "status": "AMBER",
+    "reason": "No domain risk budget, minimum meaningful effect, statistical power target, or independent family count has been selected.",
+    "required_choices": ["Maximum tolerable promotion false acceptance", "Maximum tolerable false demotion or avoidable availability loss", "Minimum task-success improvement or noninferiority margin", "Acceptable operator-effort and latency tradeoffs", "Independent episode/family counts and fault-stratum coverage", "Multiplicity handling for confirmatory comparisons"],
+    "confidence_level": 0.95,
+    "confidence_level_status": "PROPOSED_MUST_FREEZE_WITH_RISK_BUDGET",
+    "sample_size_rule": "Select confirmatory counts before held-out runs from the chosen risk/effect targets. For zero-event independent Bernoulli observations and target upper bound p_max, require n >= ceil(log(alpha)/log(1-p_max)); this formula is inapplicable to clustered dependent attempts without an appropriate design.",
+    "risk_budget": null,
+    "sample_size_calculation": null,
+    "no_claim_rule": "A few successful scenarios or fixture passes do not establish reliability, statistical adequacy, or customer value."
+  },
+  "fault_injection": [
+    {"id": "revoke_race", "schedule": "Revoke before decision, between decision and mutation, concurrently with commit, and after commit; control barriers and record their order.", "expected": "No old-revision commit after revocation acknowledgement. Earlier committed work is retained. Unrelated skill authority remains usable."},
+    {"id": "stale_context", "schedule": "Change registry namespace, environment metadata, policy/context digest, or requested model between qualification and mutation.", "expected": "Reject mismatched or stale binding; do not transfer prior evidence; fresh qualification required when applicable."},
+    {"id": "unavailable_dependencies", "schedule": "Independently interrupt passport, policy, outcome checker, and ledger; include timeout and partial recovery.", "expected": "Authority/policy uncertainty prevents mutation. Missing outcome is UNKNOWN/HOLD. Ledger unavailability yields pending evidence and does not block withdrawal; no receipt is invented."},
+    {"id": "corrupted_evidence", "schedule": "Alter evidence bytes, issuer identity, payload hash, skill/context binding, timestamp, policy/checker version, or ledger receipt; replay and duplicate observations.", "expected": "Reject invalid evidence for qualification; duplicates do not increase sample count; receipt integrity alone does not establish truthful or authorized evidence."},
+    {"id": "replacement_failure", "schedule": "Fail signing or policy resolution during selective scope replacement; concurrently request two revisions.", "expected": "One committed authority revision, no stale-active alias to a revoked credential, and no affected-skill mutation during an unresolved withdrawal."},
+    {"id": "warm_cache_revocation", "schedule": "Populate evaluator and executor caches, then withdraw authority and retry before cache TTL expires.", "expected": "Current revision/fence prevents old cached authority from enabling mutation."}
+  ],
+  "ablations": [
+    {"id": "no_adaptive_requalification", "purpose": "Separate the value of requalification from static grants; preserve all enforcement invariants.", "status": "PLANNED_NOT_EXECUTED"},
+    {"id": "agent_wide_withdrawal", "purpose": "Compare selective skill withdrawal with withdrawing the entire agent's authority; measure unrelated task availability and operator effort.", "status": "PLANNED_NOT_EXECUTED"},
+    {"id": "no_receipt_reuse", "purpose": "Compare always re-running an accepted check with policy-permitted receipt reuse; retain exact binding, trust, and freshness validation.", "status": "OPTIONAL_AFTER_BASELINE"},
+    {"id": "defective_admission_negative_control", "purpose": "In an isolated mutation-disabled checker test only, deliberately accept self-reported or stale evidence to show the evaluator detects false acceptance. Never treat this as a deployable comparator or permit mutations.", "status": "PLANNED_NEGATIVE_CONTROL"}
+  ],
+  "stopping_rules": [
+    "Stop mutation execution on the first unauthorized commit; mark the gate RED, preserve the entire trace, and diagnose before a new versioned run. Do not erase earlier failures with retries.",
+    "Stop confirmatory scoring if leakage, grader corruption, missing critical instrumentation, or a manifest mismatch is found; mark affected evidence INVALID or INCONCLUSIVE, not PASS.",
+    "End each episode at its preregistered deadline, attempt budget, or unrecoverable fault; retain it in denominators.",
+    "Do not stop early for a favorable observed result or add samples until a target is achieved. Complete the fixed confirmatory plan unless a preregistered sequential design explicitly permits otherwise.",
+    "If safety holds but value criteria fail or uncertainty is too large, report that result; do not adjust thresholds on the held-out set."
+  ],
+  "evidence_reporting": {
+    "required_dimensions": {
+      "execution_state": ["PLANNED", "RUNNING", "COMPLETED", "ABORTED", "NOT_RUN"],
+      "environment": ["FIXTURE", "LOCAL_SIMULATOR", "REAL_LOCAL_SERVICES", "DEPLOYMENT_ADAPTER"],
+      "observation_state": ["UNOBSERVED", "SELF_REPORTED", "INDEPENDENTLY_OBSERVED", "INVALID", "INCONCLUSIVE"],
+      "integrity_state": ["NOT_CHECKED", "VERIFIED", "FAILED"],
+      "outcome": ["PASS", "FAIL", "UNKNOWN"],
+      "acceptance_color": ["RED", "AMBER", "GREEN"]
+    },
+    "color_rules": {
+      "RED": "A required behavior demonstrably fails, an unauthorized mutation occurs, or evidence is misrepresented.",
+      "AMBER": "Planned/unrun, missing or invalid evidence, incomplete integration, insufficient sampling, or an unresolved acceptance threshold. Fixture-only evidence remains limited to fixture conformance.",
+      "GREEN": "The named behavior and predefined acceptance criteria pass with adequate evidence in the explicitly stated scope. Overall value remains AMBER until its risk, sample-size, and comparator criteria are set and met."
+    },
+    "per_run_manifest": ["protocol_digest", "source_and_artifact_digests", "comparator_id", "episode_and_family_ids", "seed", "split", "fault_schedule_digest", "timestamps_and_clock", "attempt_ids", "authority_revisions", "observation_and_evidence_refs", "metric_numerators_and_denominators", "uncertainty_method", "execution_environment", "operator_actions", "amendments_and_failures"],
+    "separation_rule": "A score, a completed run, independent observation, and ledger integrity verification are separate properties. A fixture pass is not observed product value; a valid receipt is not an authorization or proof of truth."
+  },
+  "next_gate": "Review and freeze the held-out design, select a risk budget and sample-size plan, implement instrumentation and independent grading, then run the first pilot. No EDD evaluation was executed in this increment."
+}

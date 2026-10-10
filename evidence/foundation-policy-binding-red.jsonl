@@ -1,0 +1,57 @@
+{"Time":"2026-10-09T20:51:28.312558-05:00","Action":"start","Package":"are-s0s1-rest-bff/internal/policy"}
+{"Time":"2026-10-09T20:51:28.983975-05:00","Action":"start","Package":"are-s0s1-rest-bff/internal/api"}
+{"Time":"2026-10-09T20:51:29.034649-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision"}
+{"Time":"2026-10-09T20:51:29.034914-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision","Output":"=== RUN   TestOPARejectsUnboundDecision\n"}
+{"Time":"2026-10-09T20:51:29.034939-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/policy_id"}
+{"Time":"2026-10-09T20:51:29.034947-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/policy_id","Output":"=== RUN   TestOPARejectsUnboundDecision/policy_id\n"}
+{"Time":"2026-10-09T20:51:29.035882-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/policy_id","Output":"    binding_test.go:20: unbound or malformed decision accepted\n"}
+{"Time":"2026-10-09T20:51:29.035979-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/policy_id","Output":"--- FAIL: TestOPARejectsUnboundDecision/policy_id (0.00s)\n"}
+{"Time":"2026-10-09T20:51:29.035989-05:00","Action":"fail","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/policy_id","Elapsed":0}
+{"Time":"2026-10-09T20:51:29.035999-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/policy_digest"}
+{"Time":"2026-10-09T20:51:29.036003-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/policy_digest","Output":"=== RUN   TestOPARejectsUnboundDecision/policy_digest\n"}
+{"Time":"2026-10-09T20:51:29.036328-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/policy_digest","Output":"    binding_test.go:20: unbound or malformed decision accepted\n"}
+{"Time":"2026-10-09T20:51:29.036355-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/policy_digest","Output":"--- FAIL: TestOPARejectsUnboundDecision/policy_digest (0.00s)\n"}
+{"Time":"2026-10-09T20:51:29.036368-05:00","Action":"fail","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/policy_digest","Elapsed":0}
+{"Time":"2026-10-09T20:51:29.036374-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/decision_id"}
+{"Time":"2026-10-09T20:51:29.036377-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/decision_id","Output":"=== RUN   TestOPARejectsUnboundDecision/decision_id\n"}
+{"Time":"2026-10-09T20:51:29.036583-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/decision_id","Output":"    binding_test.go:20: unbound or malformed decision accepted\n"}
+{"Time":"2026-10-09T20:51:29.036607-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/decision_id","Output":"--- FAIL: TestOPARejectsUnboundDecision/decision_id (0.00s)\n"}
+{"Time":"2026-10-09T20:51:29.036612-05:00","Action":"fail","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/decision_id","Elapsed":0}
+{"Time":"2026-10-09T20:51:29.036616-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/agent_id"}
+{"Time":"2026-10-09T20:51:29.036619-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/agent_id","Output":"=== RUN   TestOPARejectsUnboundDecision/agent_id\n"}
+{"Time":"2026-10-09T20:51:29.036924-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/agent_id","Output":"    binding_test.go:20: unbound or malformed decision accepted\n"}
+{"Time":"2026-10-09T20:51:29.036949-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/agent_id","Output":"--- FAIL: TestOPARejectsUnboundDecision/agent_id (0.00s)\n"}
+{"Time":"2026-10-09T20:51:29.036956-05:00","Action":"fail","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/agent_id","Elapsed":0}
+{"Time":"2026-10-09T20:51:29.036962-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/action_class"}
+{"Time":"2026-10-09T20:51:29.036966-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/action_class","Output":"=== RUN   TestOPARejectsUnboundDecision/action_class\n"}
+{"Time":"2026-10-09T20:51:29.037236-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/action_class","Output":"    binding_test.go:20: unbound or malformed decision accepted\n"}
+{"Time":"2026-10-09T20:51:29.037257-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/action_class","Output":"--- FAIL: TestOPARejectsUnboundDecision/action_class (0.00s)\n"}
+{"Time":"2026-10-09T20:51:29.037263-05:00","Action":"fail","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/action_class","Elapsed":0}
+{"Time":"2026-10-09T20:51:29.037278-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/resource"}
+{"Time":"2026-10-09T20:51:29.037288-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/resource","Output":"=== RUN   TestOPARejectsUnboundDecision/resource\n"}
+{"Time":"2026-10-09T20:51:29.037469-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/resource","Output":"    binding_test.go:20: unbound or malformed decision accepted\n"}
+{"Time":"2026-10-09T20:51:29.037496-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/resource","Output":"--- FAIL: TestOPARejectsUnboundDecision/resource (0.00s)\n"}
+{"Time":"2026-10-09T20:51:29.0375-05:00","Action":"fail","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/resource","Elapsed":0}
+{"Time":"2026-10-09T20:51:29.037504-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/effect"}
+{"Time":"2026-10-09T20:51:29.037507-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/effect","Output":"=== RUN   TestOPARejectsUnboundDecision/effect\n"}
+{"Time":"2026-10-09T20:51:29.037687-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/effect","Output":"    binding_test.go:20: unbound or malformed decision accepted\n"}
+{"Time":"2026-10-09T20:51:29.037738-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/effect","Output":"--- FAIL: TestOPARejectsUnboundDecision/effect (0.00s)\n"}
+{"Time":"2026-10-09T20:51:29.037743-05:00","Action":"fail","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision/effect","Elapsed":0}
+{"Time":"2026-10-09T20:51:29.037747-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision","Output":"--- FAIL: TestOPARejectsUnboundDecision (0.00s)\n"}
+{"Time":"2026-10-09T20:51:29.037753-05:00","Action":"fail","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPARejectsUnboundDecision","Elapsed":0}
+{"Time":"2026-10-09T20:51:29.037798-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Output":"FAIL\n"}
+{"Time":"2026-10-09T20:51:29.038641-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Output":"FAIL\tare-s0s1-rest-bff/internal/policy\t0.725s\n"}
+{"Time":"2026-10-09T20:51:29.038656-05:00","Action":"fail","Package":"are-s0s1-rest-bff/internal/policy","Elapsed":0.726}
+{"Time":"2026-10-09T20:51:29.676275-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPolicyDecisionForwardsEvaluatedBinding"}
+{"Time":"2026-10-09T20:51:29.676349-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPolicyDecisionForwardsEvaluatedBinding","Output":"=== RUN   TestPolicyDecisionForwardsEvaluatedBinding\n"}
+{"Time":"2026-10-09T20:51:29.677977-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPolicyDecisionForwardsEvaluatedBinding","Output":"2026/10/09 20:51:29 INFO s0s1_bff_request request_id=req1 method=POST path=/v1/policy/evaluations response_code=200 latency_ms=1\n"}
+{"Time":"2026-10-09T20:51:29.67803-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPolicyDecisionForwardsEvaluatedBinding","Output":"    policy_binding_test.go:26: resource: got \u003cnil\u003e want urn:dataset/test\n"}
+{"Time":"2026-10-09T20:51:29.678039-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPolicyDecisionForwardsEvaluatedBinding","Output":"    policy_binding_test.go:26: policy_id: got \u003cnil\u003e want policy/test.rego\n"}
+{"Time":"2026-10-09T20:51:29.678046-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPolicyDecisionForwardsEvaluatedBinding","Output":"    policy_binding_test.go:26: policy_digest: got \u003cnil\u003e want sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n"}
+{"Time":"2026-10-09T20:51:29.678053-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPolicyDecisionForwardsEvaluatedBinding","Output":"    policy_binding_test.go:26: agent_id: got \u003cnil\u003e want agent1\n"}
+{"Time":"2026-10-09T20:51:29.678059-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPolicyDecisionForwardsEvaluatedBinding","Output":"    policy_binding_test.go:26: action_class: got \u003cnil\u003e want demo.read\n"}
+{"Time":"2026-10-09T20:51:29.67814-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPolicyDecisionForwardsEvaluatedBinding","Output":"--- FAIL: TestPolicyDecisionForwardsEvaluatedBinding (0.00s)\n"}
+{"Time":"2026-10-09T20:51:29.678147-05:00","Action":"fail","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPolicyDecisionForwardsEvaluatedBinding","Elapsed":0}
+{"Time":"2026-10-09T20:51:29.678158-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Output":"FAIL\n"}
+{"Time":"2026-10-09T20:51:29.678986-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Output":"FAIL\tare-s0s1-rest-bff/internal/api\t0.695s\n"}
+{"Time":"2026-10-09T20:51:29.679009-05:00","Action":"fail","Package":"are-s0s1-rest-bff/internal/api","Elapsed":0.695}

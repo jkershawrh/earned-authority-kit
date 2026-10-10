@@ -1,0 +1,48 @@
+{
+  "review": "connected-authority-boundaries",
+  "completed_at": "2026-10-10T01:56:08.234233+00:00",
+  "environment": "UNIT_TRANSPORT_SEAMS_AND_SOURCE_REVIEW",
+  "reviewed_sha256": {
+    "earned_authority/connected.py": "9ec015cd8d4b0da2c79a9a09716223e5ddf02ca35fde34e25d898fed6e385a4f",
+    "earned_authority/passport_client.py": "3d215eac0063e03cff5baa9a481cd0643612568e171c967676a4073120c53a13",
+    "earned_authority/runtime.py": "f3b2bdd351a64e8168c7bf5771ca0d4bd460b6505dea595e288d0c68326969ce",
+    "tests/test_connected_security.py": "eac8f66df1e118d292f2ca50d658715e98c3e34809852d41bc43b5a6fb27fa1f"
+  },
+  "regressions": [
+    {
+      "boundary": "Verify result must match independently verified current snapshot",
+      "red_log": "evidence/passport-client-snapshot-red.log",
+      "green_log": "evidence/passport-client-snapshot-green.log",
+      "red_negative_failures": 4,
+      "positive_controls": 1,
+      "status": "FIXED_BY_ROOT"
+    },
+    {
+      "boundary": "Policy evaluation cannot cross scope/qualification expiry before local commit",
+      "green_log": "evidence/connected-deadline-withdrawal-green.log",
+      "status": "FIXED_BY_ROOT_VERIFIED",
+      "red_caveat": "Regression first executed after root implemented fix; no separate observed-red claim."
+    },
+    {
+      "boundary": "Subsecond requested grant cannot silently disappear when another skill survives",
+      "green_log": "evidence/connected-deadline-withdrawal-green.log",
+      "status": "FIXED_BY_ROOT_VERIFIED"
+    },
+    {
+      "boundary": "Delayed old withdrawal cannot remove independently requalified grant",
+      "green_log": "evidence/connected-deadline-withdrawal-green.log",
+      "status": "FIXED_BY_ROOT_VERIFIED"
+    }
+  ],
+  "latest_isolated_tests": {
+    "passed": 8,
+    "failed": 0,
+    "test_file": "tests/test_connected_security.py"
+  },
+  "remaining_limitations": [
+    "Real-service end-to-end adversarial and fresh-deployment gates belong to root/packaging, not this unit report.",
+    "Single-host immutable policy/fence guarantee requires trusted local host/configuration; not distributed authorization.",
+    "Authority service mutation and local lifecycle-event persistence are separate commits; crash between them can require authority reconciliation and leave incomplete transition evidence absent durable operation intent."
+  ],
+  "production_readiness_claim": false
+}

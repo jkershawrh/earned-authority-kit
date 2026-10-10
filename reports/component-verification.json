@@ -1,0 +1,961 @@
+{
+  "scope": "LOCAL_COMPONENT_TESTS_AND_CANONICAL_IN_PROCESS_ADAPTERS",
+  "started_at_ms": 1791597535024,
+  "finished_at_ms": 1791597541466,
+  "tests_run": 203,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "source_hashes_before": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/connected.py": "sha256:9ec015cd8d4b0da2c79a9a09716223e5ddf02ca35fde34e25d898fed6e385a4f",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:3d215eac0063e03cff5baa9a481cd0643612568e171c967676a4073120c53a13",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:f3b2bdd351a64e8168c7bf5771ca0d4bd460b6505dea595e288d0c68326969ce",
+    "earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "tests/test_connected_binding.py": "sha256:77ec256328ce208eb4627969de4b3da67b27645088d55d0f31591b61f257e9e8",
+    "tests/test_connected_security.py": "sha256:eac8f66df1e118d292f2ca50d658715e98c3e34809852d41bc43b5a6fb27fa1f",
+    "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
+    "tests/test_ledger_client.py": "sha256:6a05dce90f5dfa0627c188000ad12951dbbb96e7df7f7f149cd4e640438765f2",
+    "tests/test_lifecycle_bdd.py": "sha256:a376b2d47c059aea4ae5ffc79ef007eb9eff7eed1964702ec643a564c4866cdc",
+    "tests/test_passport_client.py": "sha256:d86ff13cf90f3fdae60f68de7ab85af51d1ca55777245c72478d531a361153b7",
+    "tests/test_qualification_client.py": "sha256:fa875d69b98440ce13545e17517f986cc4c045cbecf214c316cbe34bde9392b1",
+    "tests/test_rubric.py": "sha256:845e476cc97af2be8c4f913a60b1cae6ae76f0a0c81a217f4b581c5712a213db",
+    "tests/test_runtime_security.py": "sha256:76ea516ef8d41bdd974a084ba8ea6a83071745bd09e1a51783668d0b9d60b025",
+    "tests/test_wire_contracts.py": "sha256:69b1d2a86b3decb724d832de0caf601d67ab89a227b075df936e86afcadbe280",
+    "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
+    "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
+    "contracts/fixtures/attempt.json": "sha256:d6a7e3571ab9b4698f01175b21e128fa45a01acadc69f507ffc6c1bcb58e9041",
+    "contracts/fixtures/authority.json": "sha256:d36365cb845dc72a1c52550cff017282a5f69d5b00a9472bf173bd2e5626979a",
+    "contracts/fixtures/lifecycle-event.json": "sha256:075e93e0e71ec0ff30ed8929ed989795b60ab1b7161c9d11b716e265050a7057",
+    "contracts/fixtures/outcome.json": "sha256:bd8bfaba9be520fe2c9c6cb8d5eb5fde843c1b553424923640dafed181142f16",
+    "contracts/fixtures/passport-canonical-v2.json": "sha256:40b5c68eb6333ed1fdd6a4db28bc5013253ac17f20e0f1efa85c2d23699dff66",
+    "contracts/fixtures/qualification-client-cases.json": "sha256:5d201b632a3a1a323136fdcad0905f258492988fb7a79e1051eb0675f114742e",
+    "contracts/fixtures/qualification.json": "sha256:c0b8c64ec3860f9a7aa785892bef5aef4e188962275880b069ab6df3114f93bb",
+    "contracts/fixtures/runtime-wire-records.json": "sha256:cbe6c1b5bed7c50ae739983fea588a45986ce3b2a12abb7f1f771e7906e4537d",
+    "contracts/lifecycle-event.schema.json": "sha256:4032643e426de95c0ccd08ac9da535c8929dfff4dbb8e69b61a79effa7c2b4a3",
+    "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
+    "contracts/qualification.schema.json": "sha256:2a4a4f6921a3f839b6b4a554f0c8fa019600d14411d5cfd8355f119aa28449b3",
+    "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
+    "features/concurrency.feature": "sha256:a593d6b2ee5ceb79260f97e0dbfd768843c2c7f4fcd5b6705e11797f023f0e27",
+    "features/execution_and_evidence.feature": "sha256:5c03e38759cae3c8d84536efdd463c91492183e72ce0d3941a9b8ae7b8a23ded",
+    "features/future_robot_simulation.feature": "sha256:916435ba5489e20024f589161dc3a4e3a5df5c23f211a211a9baab8a6ea33771",
+    "features/ledger_integrity.feature": "sha256:6f3039c21f36f2b0d052b168d30547d3a5ec76ca39b2046f653a59b3a4e442a6",
+    "features/qualification.feature": "sha256:8545997b35e1600c7f2e63e4e743ca5f3563aa4ef295cb6b395fda614a286629",
+    "features/withdrawal_and_requalification.feature": "sha256:417a22c6940ab6b0fb70e2c0e44d27646da5c18d9ac10e242b7f8a27bc7fa8da",
+    "requirements-dev.txt": "sha256:1a4272ec830941ecba77716e4b18e0588ec0de3c63e368fe712c6ac0354091c3",
+    "deploy/reference/requirements.lock.txt": "sha256:ccc6272d5f11ef46daba25236ea4c0436a8569109851873f6f85b2a867ab2aa2",
+    "tools/verify.py": "sha256:f50c482fdc25ae553c3d1dc3753a5af7ad89828f299868e972b61a9fcb3bf1da"
+  },
+  "source_hashes": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/connected.py": "sha256:9ec015cd8d4b0da2c79a9a09716223e5ddf02ca35fde34e25d898fed6e385a4f",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:3d215eac0063e03cff5baa9a481cd0643612568e171c967676a4073120c53a13",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:f3b2bdd351a64e8168c7bf5771ca0d4bd460b6505dea595e288d0c68326969ce",
+    "earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "tests/test_connected_binding.py": "sha256:77ec256328ce208eb4627969de4b3da67b27645088d55d0f31591b61f257e9e8",
+    "tests/test_connected_security.py": "sha256:eac8f66df1e118d292f2ca50d658715e98c3e34809852d41bc43b5a6fb27fa1f",
+    "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
+    "tests/test_ledger_client.py": "sha256:6a05dce90f5dfa0627c188000ad12951dbbb96e7df7f7f149cd4e640438765f2",
+    "tests/test_lifecycle_bdd.py": "sha256:a376b2d47c059aea4ae5ffc79ef007eb9eff7eed1964702ec643a564c4866cdc",
+    "tests/test_passport_client.py": "sha256:d86ff13cf90f3fdae60f68de7ab85af51d1ca55777245c72478d531a361153b7",
+    "tests/test_qualification_client.py": "sha256:fa875d69b98440ce13545e17517f986cc4c045cbecf214c316cbe34bde9392b1",
+    "tests/test_rubric.py": "sha256:845e476cc97af2be8c4f913a60b1cae6ae76f0a0c81a217f4b581c5712a213db",
+    "tests/test_runtime_security.py": "sha256:76ea516ef8d41bdd974a084ba8ea6a83071745bd09e1a51783668d0b9d60b025",
+    "tests/test_wire_contracts.py": "sha256:69b1d2a86b3decb724d832de0caf601d67ab89a227b075df936e86afcadbe280",
+    "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
+    "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
+    "contracts/fixtures/attempt.json": "sha256:d6a7e3571ab9b4698f01175b21e128fa45a01acadc69f507ffc6c1bcb58e9041",
+    "contracts/fixtures/authority.json": "sha256:d36365cb845dc72a1c52550cff017282a5f69d5b00a9472bf173bd2e5626979a",
+    "contracts/fixtures/lifecycle-event.json": "sha256:075e93e0e71ec0ff30ed8929ed989795b60ab1b7161c9d11b716e265050a7057",
+    "contracts/fixtures/outcome.json": "sha256:bd8bfaba9be520fe2c9c6cb8d5eb5fde843c1b553424923640dafed181142f16",
+    "contracts/fixtures/passport-canonical-v2.json": "sha256:40b5c68eb6333ed1fdd6a4db28bc5013253ac17f20e0f1efa85c2d23699dff66",
+    "contracts/fixtures/qualification-client-cases.json": "sha256:5d201b632a3a1a323136fdcad0905f258492988fb7a79e1051eb0675f114742e",
+    "contracts/fixtures/qualification.json": "sha256:c0b8c64ec3860f9a7aa785892bef5aef4e188962275880b069ab6df3114f93bb",
+    "contracts/fixtures/runtime-wire-records.json": "sha256:cbe6c1b5bed7c50ae739983fea588a45986ce3b2a12abb7f1f771e7906e4537d",
+    "contracts/lifecycle-event.schema.json": "sha256:4032643e426de95c0ccd08ac9da535c8929dfff4dbb8e69b61a79effa7c2b4a3",
+    "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
+    "contracts/qualification.schema.json": "sha256:2a4a4f6921a3f839b6b4a554f0c8fa019600d14411d5cfd8355f119aa28449b3",
+    "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
+    "features/concurrency.feature": "sha256:a593d6b2ee5ceb79260f97e0dbfd768843c2c7f4fcd5b6705e11797f023f0e27",
+    "features/execution_and_evidence.feature": "sha256:5c03e38759cae3c8d84536efdd463c91492183e72ce0d3941a9b8ae7b8a23ded",
+    "features/future_robot_simulation.feature": "sha256:916435ba5489e20024f589161dc3a4e3a5df5c23f211a211a9baab8a6ea33771",
+    "features/ledger_integrity.feature": "sha256:6f3039c21f36f2b0d052b168d30547d3a5ec76ca39b2046f653a59b3a4e442a6",
+    "features/qualification.feature": "sha256:8545997b35e1600c7f2e63e4e743ca5f3563aa4ef295cb6b395fda614a286629",
+    "features/withdrawal_and_requalification.feature": "sha256:417a22c6940ab6b0fb70e2c0e44d27646da5c18d9ac10e242b7f8a27bc7fa8da",
+    "requirements-dev.txt": "sha256:1a4272ec830941ecba77716e4b18e0588ec0de3c63e368fe712c6ac0354091c3",
+    "deploy/reference/requirements.lock.txt": "sha256:ccc6272d5f11ef46daba25236ea4c0436a8569109851873f6f85b2a867ab2aa2",
+    "tools/verify.py": "sha256:f50c482fdc25ae553c3d1dc3753a5af7ad89828f299868e972b61a9fcb3bf1da"
+  },
+  "source_unchanged_during_run": true,
+  "cases": [
+    {
+      "test": "outputs/earned-authority-kit/tests/test_connected_binding.py::BindingRegression::test_a_signed_grant_cannot_borrow_another_skills_qualification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_connected_binding.py::PolicyDecisionBinding::test_another_evaluated_policy_denies",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_connected_binding.py::PolicyDecisionBinding::test_decision_for_another_subject_denies",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_connected_binding.py::PolicyDecisionBinding::test_matching_evaluation_binding_passes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_connected_binding.py::PolicyDecisionBinding::test_missing_evaluated_policy_binding_denies",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_connected_security.py::PassportVerificationSnapshotBoundary::test_matching_verification_snapshot_is_accepted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_connected_security.py::PassportVerificationSnapshotBoundary::test_other_passport_at_same_agent_generation_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_connected_security.py::PassportVerificationSnapshotBoundary::test_second_rpc_notfound_is_not_an_empty_aggregate",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_connected_security.py::PassportVerificationSnapshotBoundary::test_verify_envelope_different_from_signed_snapshot_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_connected_security.py::PassportVerificationSnapshotBoundary::test_verify_expiry_different_from_signed_snapshot_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_connected_security.py::ConnectedDeadlineAndWithdrawalBoundary::test_delayed_old_withdrawal_does_not_revoke_requalified_grant",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_connected_security.py::ConnectedDeadlineAndWithdrawalBoundary::test_scope_expiring_during_policy_call_cannot_commit",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_connected_security.py::ConnectedDeadlineAndWithdrawalBoundary::test_short_requested_grant_cannot_disappear_behind_other_live_skill",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::ContractTests::test_committed_attempt_requires_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::ContractTests::test_duplicate_grants_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::ContractTests::test_duplicate_observation_cannot_inflate_reference_count",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::ContractTests::test_each_schema_and_its_individual_fixture_are_valid",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::ContractTests::test_float_and_ambiguous_duplicate_json_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::ContractTests::test_malformed_binding_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::ContractTests::test_order_independent_digest_binds_changed_context",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::ContractTests::test_pending_ledger_is_not_recorded",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::ContractTests::test_scope_cannot_outlive_parent_authority",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::ContractTests::test_unknown_contract_version_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::ContractTests::test_unknown_fields_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::ContractTests::test_validity_window_must_follow_observations",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::EncodingRegressions::test_integral_float_timestamp_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::EncodingRegressions::test_trailing_newline_in_digest_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::RuntimeShapeRegressions::test_actual_runtime_intent_and_canonical_evaluation_events_validate",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::RuntimeShapeRegressions::test_eligible_cannot_have_empty_evidence",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::RuntimeShapeRegressions::test_empty_evidence_cannot_invent_observation_time",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::RuntimeShapeRegressions::test_every_grant_requires_exact_policy_digest",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::RuntimeShapeRegressions::test_evidence_refs_require_observation_time",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::RuntimeShapeRegressions::test_hold_without_observations_is_representable",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::RuntimeShapeRegressions::test_ineligible_without_observations_is_representable",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::RuntimeShapeRegressions::test_noneligible_late_evidence_does_not_extend_expired_authority",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::RuntimeShapeRegressions::test_noneligible_window_still_cannot_be_reversed",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::RuntimeShapeRegressions::test_partial_null_window_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::RuntimeShapeRegressions::test_pending_event_cannot_claim_ledger_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_contracts.py::RuntimeShapeRegressions::test_requested_attempt_cannot_claim_mutation_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_round_trip_and_idempotent_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_conflicting_idempotent_content_fails",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_receipt_cannot_be_rebound_to_changed_event[attempt_id-another]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_receipt_cannot_be_rebound_to_changed_event[agent_id-other]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_receipt_cannot_be_rebound_to_changed_event[authority_revision-9]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_receipt_cannot_be_rebound_to_changed_event[outcome-FAIL]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_changed_receipt_fails[entry_hash]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_changed_receipt_fails[entry_id]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_changed_receipt_fails[input_hash]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_changed_receipt_fails[writer_signature]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_changed_receipt_fails[signer_key_reference]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_changed_receipt_fails[attempt_id]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_changed_receipt_fails[content_sha256]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_changed_receipt_fails[idempotency_key]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_changed_receipt_fails[correlation_id]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_changed_receipt_fails[agent_id]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_stored_bytes_tampering_fails_independent_hash_check",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_untrusted_writer_is_not_accepted_even_when_ledger_proof_passes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_valid_hash_does_not_make_a_bad_signature_valid",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_remote_failure_or_unsupported_hash_version_fails_closed",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_no_append_without_explicit_authentication_and_signer",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_required_attempt_binding_and_nonfinite_json_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_dependency_outage_is_unknown_not_tamper",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_expired_receipt_is_stale_not_tamper",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_ledger_client.py::test_positive_content_mismatch_is_distinct_from_missing_trust",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_001_fresh_independent_outcomes_qualify_only",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_002_self_report_is_not_independent_evidence",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_003_changed_environment",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_003_changed_skill",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_004_unknown_is_neither_pass_nor_failure",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_005_stale_passes_hold_qualification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_006_duplicate_attempt_cannot_inflate_qualification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_007_known_failure_prevents_qualification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_008_policy_grants_exact_bounded_authority",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_009_qualification_cannot_override_policy_denial",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_010_changed_revision",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_010_wrong_action",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_010_wrong_context",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_010_wrong_resource",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_011_expiry_equality_denies_passport",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_012_scope_expiry_precedes_passport",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_013_revocation_invalidates_prior_admission",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_014_invalid_expiry",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_014_missing_expiry",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_015_unconfirmed_authority_denies_new_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_016_independent_postcondition_and_correlation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_017_correct_version_with_unhealthy_state_is_failure",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_017_wrong_observed_postcondition_is_failure",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_018_unavailable_observer_is_unknown_and_holds",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_019_completed_retry_returns_result_without_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_020_changed_retry_payload_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_021_crash_after_mutation_before_observation_reconciles",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_021_lost_response_reconciles_after_restart",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_021_unavailable_reconciliation_never_blindly_repeats",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_022_foundation_check_only_is_not_execution",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_023_known_failure_demotes_despite_remote_outage",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_024_selective_withdrawal_preserves_other_grant",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_025_missing_result",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_025_old_result",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_026_revised_skill_requalifies_under_new_grant",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_027_manual_reactivation_cannot_bypass_qualification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_028_concurrent_issue_has_one_current_revision",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_029_acknowledged_revocation_fences_paused_commit",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_030_prior_commit_remains_completed_after_revocation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_031_stale_update_cannot_revive_revoked_skill",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_032_concurrent_duplicate_attempt_commits_once",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_033_local_store_down",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_033_unauthenticated_writer",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_034_after_commit",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_034_before_intent_send",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_034_remote_audit_unavailable_preserves_known_outcome",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_035_modified_ledger_evidence_fails_verification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_036_expired_proof",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_036_old_skill",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_036_other_attempt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_037_untrusted_signer_cannot_qualify",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_lifecycle_bdd.py::BindingCoverage::test_all_current_scenarios_have_explicit_bindings",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_passport_client.py::PassportConsumer::test_active_read_revision_mismatch_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_passport_client.py::PassportConsumer::test_boolean_expiry_is_not_a_timestamp",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_passport_client.py::PassportConsumer::test_cross_agent_replay_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_passport_client.py::PassportConsumer::test_loopback_allowed",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_passport_client.py::PassportConsumer::test_remote_plaintext_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_passport_client.py::PassportConsumer::test_scope_outliving_passport_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_passport_client.py::PassportConsumer::test_unknown_mandatory_field_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_passport_client.py::PassportConsumer::test_unpinned_key_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_passport_client.py::PassportConsumer::test_valid_exact_envelope",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_passport_client.py::CanonicalProviderVector::test_go_v2_signature_verifies_in_python",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q01_actual_cascade_promotes_demo_three_verified_passes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q02_actual_gcl_capacity_gate_is_advisory_and_network_free",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q03_real_gcl_capacity_failure_blocks_eligibility_not_outcome",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q04_missing_gcl_is_not_claimed_as_pass",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q05_changed_capacity_cannot_reuse_context_qualification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q06_unknown_does_not_enter_cascade_failure_counts",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q07_known_miss_calls_canonical_instant_demotion",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q08_untrusted_signed_observations_cannot_promote",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q09_authenticated_self_report_is_not_independent",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q10_duplicate_delivery_does_not_inflate_canonical_samples",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q11_changed_signed_evidence_cannot_be_counted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q12_stale_evidence_holds_without_failure",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q13_referenced_outcome_cannot_be_silently_omitted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q14_new_skill_revision_requires_fresh_canonical_metrics",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q15_canonical_threshold_defaults_remain_unchanged",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q16_portable_capacity_fixtures_use_actual_canonical_checks",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q17_changed_canonical_source_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::RubricTests::test_complete_current_evidence_is_green",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::RubricTests::test_component_pass_cannot_satisfy_integration",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::RubricTests::test_different_requirement_does_not_count",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::RubricTests::test_empty_required_methods_are_invalid",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::RubricTests::test_future_timestamp_is_amber",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::RubricTests::test_known_failure_dominates_pass",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::RubricTests::test_missing_evidence_is_amber",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::RubricTests::test_no_artifact_digest_cannot_be_green",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::RubricTests::test_one_missing_method_is_amber",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::RubricTests::test_previous_revision_cannot_satisfy_current",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::RubricTests::test_release_is_worst_required_status",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::RubricTests::test_stale_failure_remains_red_until_revision_changes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::RubricTests::test_stale_pass_is_amber",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::RubricTests::test_unexecuted_scenario_is_amber",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::RubricTests::test_unknown_and_skipped_are_amber",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::ArtifactTests::test_external_artifacts_cannot_satisfy_local_manifest",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::ArtifactTests::test_hash_is_recomputed_and_tampering_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::ArtifactTests::test_unverified_pass_cannot_turn_green",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::ReviewRegressions::test_claimed_artifact_verification_cannot_forge_green",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::ReviewRegressions::test_newer_unknown_supersedes_old_pass",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_rubric.py::SkippedRunRegression::test_newer_unexecuted_skip_blocks_old_pass",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_runtime_security.py::RecoverySecurity::test_observation_digest_is_verified_not_trusted_as_unsigned_label",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_runtime_security.py::RecoverySecurity::test_recovery_cannot_attribute_a_later_mutation_to_old_attempt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_runtime_security.py::RecoverySecurity::test_tampered_local_outbox_is_not_resigned_and_delivered",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_runtime_security.py::QualificationHistory::test_failure_keeps_earlier_grant_evidence_and_records_trigger",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_runtime_security.py::QualificationHistory::test_shadow_retry_at_later_time_reuses_original_observation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_all_five_actual_producers_validate_and_consume",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_changed_context_in_valid_shape_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_changed_policy_decision_in_valid_shape_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_changed_source_and_rehashed_envelope_still_need_external_trust",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_committed_attempt_cannot_omit_local_commit_lifecycle_record",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_committed_attempt_uses_actual_boundary_policy_decision",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_current_authority_revocation_invalidates_active_credential_export",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_each_skill_keeps_its_exact_policy_binding",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_empty_bundle_cannot_report_verification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_empty_hold_has_null_window_and_no_fabricated_evidence",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_expired_active_credential_is_rejected_at_consumer_time",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_historical_attempt_binds_original_eligible_revision_after_fail",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_historical_qualification_digest_substitution_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_historical_unknown_remains_hold_without_a_fail_count",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_late_failure_readback_does_not_extend_expired_qualification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_missing_proof_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_new_draft_events_export_without_fabricated_mutable_revision",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_pending_delivery_cannot_claim_recorded_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_pending_ledger_keeps_confirmed_pass_and_local_commit_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_public_records_omit_raw_signature_material",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_qualification_cannot_omit_its_outcome_records",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_qualification_digest_preserves_authenticated_raw_source_binding",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_qualification_revision_change_invalidates_old_source",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_raw_evidence_tamper_is_rejected_even_before_cross_binding",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_read_outcome_uses_health_condition_without_registry_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_remote_tamper_is_rejected_by_receipt_verification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_replayed_ledger_receipt_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_requested_attempt_is_not_a_commit",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_revoked_authority_has_no_fabricated_active_credential",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_signed_but_wrong_postcondition_label_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_source_digest_tampering_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_unknown_is_hold_without_failure_evidence",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::WireContractTests::test_wrong_qualification_digest_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/tests/test_wire_contracts.py::CapturedWireFixtureTests::test_actual_capture_is_only_shape_example_not_transferable_authority",
+      "outcome": "PASS"
+    }
+  ],
+  "modules": {
+    "test_connected_binding": {
+      "count": 5,
+      "status": "PASS"
+    },
+    "test_connected_security": {
+      "count": 8,
+      "status": "PASS"
+    },
+    "test_contracts": {
+      "count": 26,
+      "status": "PASS"
+    },
+    "test_ledger_client": {
+      "count": 25,
+      "status": "PASS"
+    },
+    "test_lifecycle_bdd": {
+      "count": 52,
+      "status": "PASS"
+    },
+    "test_passport_client": {
+      "count": 10,
+      "status": "PASS"
+    },
+    "test_qualification_client": {
+      "count": 17,
+      "status": "PASS"
+    },
+    "test_rubric": {
+      "count": 21,
+      "status": "PASS"
+    },
+    "test_runtime_security": {
+      "count": 5,
+      "status": "PASS"
+    },
+    "test_wire_contracts": {
+      "count": 34,
+      "status": "PASS"
+    }
+  },
+  "status": "PASS",
+  "exclusions": [
+    "Live-service acceptance runs are separate",
+    "No held-out product-value comparison",
+    "No OpenShift or physical robot deployment"
+  ]
+}

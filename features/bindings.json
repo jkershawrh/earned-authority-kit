@@ -1,0 +1,139 @@
+{
+  "schema_version": "0.1.0-draft.1",
+  "scope": "M1_LOCAL_FIXTURE",
+  "binding_type": "explicit unittest acceptance bindings; not a Gherkin step interpreter",
+  "suite": "tests/test_lifecycle_bdd.py",
+  "scenario_count": 37,
+  "behavioral_test_count": 51,
+  "excluded": {
+    "BDD-038": "Future robot simulation, outside M1/M2/M3 release gates"
+  },
+  "bindings": {
+    "BDD-001": [
+      "LifecycleBDD.test_BDD_001_fresh_independent_outcomes_qualify_only"
+    ],
+    "BDD-002": [
+      "LifecycleBDD.test_BDD_002_self_report_is_not_independent_evidence"
+    ],
+    "BDD-003": [
+      "LifecycleBDD.test_BDD_003_changed_environment",
+      "LifecycleBDD.test_BDD_003_changed_skill"
+    ],
+    "BDD-004": [
+      "LifecycleBDD.test_BDD_004_unknown_is_neither_pass_nor_failure"
+    ],
+    "BDD-005": [
+      "LifecycleBDD.test_BDD_005_stale_passes_hold_qualification"
+    ],
+    "BDD-006": [
+      "LifecycleBDD.test_BDD_006_duplicate_attempt_cannot_inflate_qualification"
+    ],
+    "BDD-007": [
+      "LifecycleBDD.test_BDD_007_known_failure_prevents_qualification"
+    ],
+    "BDD-008": [
+      "LifecycleBDD.test_BDD_008_policy_grants_exact_bounded_authority"
+    ],
+    "BDD-009": [
+      "LifecycleBDD.test_BDD_009_qualification_cannot_override_policy_denial"
+    ],
+    "BDD-010": [
+      "LifecycleBDD.test_BDD_010_changed_revision",
+      "LifecycleBDD.test_BDD_010_wrong_action",
+      "LifecycleBDD.test_BDD_010_wrong_context",
+      "LifecycleBDD.test_BDD_010_wrong_resource"
+    ],
+    "BDD-011": [
+      "LifecycleBDD.test_BDD_011_expiry_equality_denies_passport"
+    ],
+    "BDD-012": [
+      "LifecycleBDD.test_BDD_012_scope_expiry_precedes_passport"
+    ],
+    "BDD-013": [
+      "LifecycleBDD.test_BDD_013_revocation_invalidates_prior_admission"
+    ],
+    "BDD-014": [
+      "LifecycleBDD.test_BDD_014_invalid_expiry",
+      "LifecycleBDD.test_BDD_014_missing_expiry"
+    ],
+    "BDD-015": [
+      "LifecycleBDD.test_BDD_015_unconfirmed_authority_denies_new_mutation"
+    ],
+    "BDD-016": [
+      "LifecycleBDD.test_BDD_016_independent_postcondition_and_correlation"
+    ],
+    "BDD-017": [
+      "LifecycleBDD.test_BDD_017_correct_version_with_unhealthy_state_is_failure",
+      "LifecycleBDD.test_BDD_017_wrong_observed_postcondition_is_failure"
+    ],
+    "BDD-018": [
+      "LifecycleBDD.test_BDD_018_unavailable_observer_is_unknown_and_holds"
+    ],
+    "BDD-019": [
+      "LifecycleBDD.test_BDD_019_completed_retry_returns_result_without_mutation"
+    ],
+    "BDD-020": [
+      "LifecycleBDD.test_BDD_020_changed_retry_payload_is_rejected"
+    ],
+    "BDD-021": [
+      "LifecycleBDD.test_BDD_021_crash_after_mutation_before_observation_reconciles",
+      "LifecycleBDD.test_BDD_021_lost_response_reconciles_after_restart",
+      "LifecycleBDD.test_BDD_021_unavailable_reconciliation_never_blindly_repeats"
+    ],
+    "BDD-022": [
+      "LifecycleBDD.test_BDD_022_foundation_check_only_is_not_execution"
+    ],
+    "BDD-023": [
+      "LifecycleBDD.test_BDD_023_known_failure_demotes_despite_remote_outage"
+    ],
+    "BDD-024": [
+      "LifecycleBDD.test_BDD_024_selective_withdrawal_preserves_other_grant"
+    ],
+    "BDD-025": [
+      "LifecycleBDD.test_BDD_025_missing_result",
+      "LifecycleBDD.test_BDD_025_old_result"
+    ],
+    "BDD-026": [
+      "LifecycleBDD.test_BDD_026_revised_skill_requalifies_under_new_grant"
+    ],
+    "BDD-027": [
+      "LifecycleBDD.test_BDD_027_manual_reactivation_cannot_bypass_qualification"
+    ],
+    "BDD-028": [
+      "LifecycleBDD.test_BDD_028_concurrent_issue_has_one_current_revision"
+    ],
+    "BDD-029": [
+      "LifecycleBDD.test_BDD_029_acknowledged_revocation_fences_paused_commit"
+    ],
+    "BDD-030": [
+      "LifecycleBDD.test_BDD_030_prior_commit_remains_completed_after_revocation"
+    ],
+    "BDD-031": [
+      "LifecycleBDD.test_BDD_031_stale_update_cannot_revive_revoked_skill"
+    ],
+    "BDD-032": [
+      "LifecycleBDD.test_BDD_032_concurrent_duplicate_attempt_commits_once"
+    ],
+    "BDD-033": [
+      "LifecycleBDD.test_BDD_033_local_store_down",
+      "LifecycleBDD.test_BDD_033_unauthenticated_writer"
+    ],
+    "BDD-034": [
+      "LifecycleBDD.test_BDD_034_after_commit",
+      "LifecycleBDD.test_BDD_034_before_intent_send",
+      "LifecycleBDD.test_BDD_034_remote_audit_unavailable_preserves_known_outcome"
+    ],
+    "BDD-035": [
+      "LifecycleBDD.test_BDD_035_modified_ledger_evidence_fails_verification"
+    ],
+    "BDD-036": [
+      "LifecycleBDD.test_BDD_036_expired_proof",
+      "LifecycleBDD.test_BDD_036_old_skill",
+      "LifecycleBDD.test_BDD_036_other_attempt"
+    ],
+    "BDD-037": [
+      "LifecycleBDD.test_BDD_037_untrusted_signer_cannot_qualify"
+    ]
+  },
+  "execution_status": "See current runner report; binding presence is not a pass"
+}

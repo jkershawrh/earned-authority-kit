@@ -1,0 +1,13 @@
+test_delayed_old_withdrawal_does_not_revoke_requalified_grant (test_connected_security.ConnectedDeadlineAndWithdrawalBoundary.test_delayed_old_withdrawal_does_not_revoke_requalified_grant) ... ok
+test_scope_expiring_during_policy_call_cannot_commit (test_connected_security.ConnectedDeadlineAndWithdrawalBoundary.test_scope_expiring_during_policy_call_cannot_commit) ... ok
+test_short_requested_grant_cannot_disappear_behind_other_live_skill (test_connected_security.ConnectedDeadlineAndWithdrawalBoundary.test_short_requested_grant_cannot_disappear_behind_other_live_skill) ... ok
+test_matching_verification_snapshot_is_accepted (test_connected_security.PassportVerificationSnapshotBoundary.test_matching_verification_snapshot_is_accepted) ... ok
+test_other_passport_at_same_agent_generation_is_rejected (test_connected_security.PassportVerificationSnapshotBoundary.test_other_passport_at_same_agent_generation_is_rejected) ... ok
+test_second_rpc_notfound_is_not_an_empty_aggregate (test_connected_security.PassportVerificationSnapshotBoundary.test_second_rpc_notfound_is_not_an_empty_aggregate) ... ok
+test_verify_envelope_different_from_signed_snapshot_is_rejected (test_connected_security.PassportVerificationSnapshotBoundary.test_verify_envelope_different_from_signed_snapshot_is_rejected) ... ok
+test_verify_expiry_different_from_signed_snapshot_is_rejected (test_connected_security.PassportVerificationSnapshotBoundary.test_verify_expiry_different_from_signed_snapshot_is_rejected) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.087s
+
+OK

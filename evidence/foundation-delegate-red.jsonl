@@ -1,0 +1,9 @@
+{"Time":"2026-10-09T20:28:31.39221-05:00","Action":"start","Package":"are-s0s1-rest-bff/internal/s0delegate"}
+{"Time":"2026-10-09T20:28:32.099539-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/s0delegate","Test":"TestPassportMapPreservesZeroScopeExpiry"}
+{"Time":"2026-10-09T20:28:32.099639-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/s0delegate","Test":"TestPassportMapPreservesZeroScopeExpiry","Output":"=== RUN   TestPassportMapPreservesZeroScopeExpiry\n"}
+{"Time":"2026-10-09T20:28:32.099751-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/s0delegate","Test":"TestPassportMapPreservesZeroScopeExpiry","Output":"    passport_ops_test.go:14: delegated expiry lost: map[action_class: resource_pattern: scope_id:]\n"}
+{"Time":"2026-10-09T20:28:32.099807-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/s0delegate","Test":"TestPassportMapPreservesZeroScopeExpiry","Output":"--- FAIL: TestPassportMapPreservesZeroScopeExpiry (0.00s)\n"}
+{"Time":"2026-10-09T20:28:32.099814-05:00","Action":"fail","Package":"are-s0s1-rest-bff/internal/s0delegate","Test":"TestPassportMapPreservesZeroScopeExpiry","Elapsed":0}
+{"Time":"2026-10-09T20:28:32.099819-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/s0delegate","Output":"FAIL\n"}
+{"Time":"2026-10-09T20:28:32.101762-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/s0delegate","Output":"FAIL\tare-s0s1-rest-bff/internal/s0delegate\t0.708s\n"}
+{"Time":"2026-10-09T20:28:32.101786-05:00","Action":"fail","Package":"are-s0s1-rest-bff/internal/s0delegate","Elapsed":0.71}

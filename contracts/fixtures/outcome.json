@@ -1,0 +1,17 @@
+{
+  "schema_version": "0.1.0-draft.1",
+  "observation_id": "observation-001",
+  "attempt_id": "attempt-001",
+  "correlation_id": "flow-001",
+  "skill_id": "registry-release-v1",
+  "skill_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "context_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "verifier_id": "fixture-readback",
+  "verifier_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "verifier_attestation_ref": "fixture-not-a-real-attestation",
+  "independence": "UNVERIFIED",
+  "observed_at_ms": 2600,
+  "outcome": "UNKNOWN",
+  "postcondition_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "evidence_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}

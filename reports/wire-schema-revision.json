@@ -1,0 +1,19 @@
+{
+  "schema_version": "0.1.0-draft.1",
+  "published": false,
+  "revision_reason": "Runtime producer and consumer mapping; nullable noneligible evidence windows, per-skill policy binding, real intent and canonical qualification lifecycle events, no fabricated receipt for pending delivery.",
+  "before": {
+    "contracts/attempt.schema.json": "sha256:2443ce25ce6cef19682a0b83c98f935303fe26bcba0c382c626381628c650a36",
+    "contracts/authority.schema.json": "sha256:97fe28e163aec99ef98fc21a97b42576b20ac6ff91d01ca382df21b7ec522a0b",
+    "contracts/lifecycle-event.schema.json": "sha256:0b95fe69c0028b5bd5ab4cd0fe1579092050964be6454de1a41828e92d8c3264",
+    "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
+    "contracts/qualification.schema.json": "sha256:416bc1f014bafa56a73690748b137b2540416921285067449ff17ce6e4928a6d"
+  },
+  "after": {
+    "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
+    "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
+    "contracts/lifecycle-event.schema.json": "sha256:4032643e426de95c0ccd08ac9da535c8929dfff4dbb8e69b61a79effa7c2b4a3",
+    "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
+    "contracts/qualification.schema.json": "sha256:2a4a4f6921a3f839b6b4a554f0c8fa019600d14411d5cfd8355f119aa28449b3"
+  }
+}

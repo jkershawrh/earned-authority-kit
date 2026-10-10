@@ -1,0 +1,29 @@
+.FF.F
+======================================================================
+FAIL: test_another_evaluated_policy_denies (test_connected_binding.PolicyDecisionBinding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_connected_binding.py", line 44, in test_another_evaluated_policy_denies
+    with self.assertRaises(Denied):p.check('agent','release','model/champion')
+AssertionError: Denied not raised
+
+======================================================================
+FAIL: test_decision_for_another_subject_denies (test_connected_binding.PolicyDecisionBinding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_connected_binding.py", line 41, in test_decision_for_another_subject_denies
+    with self.assertRaises(Denied):p.check('agent','release','model/champion')
+AssertionError: Denied not raised
+
+======================================================================
+FAIL: test_missing_evaluated_policy_binding_denies (test_connected_binding.PolicyDecisionBinding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_connected_binding.py", line 38, in test_missing_evaluated_policy_binding_denies
+    with self.assertRaises(Denied):p.check('agent','release','model/champion')
+AssertionError: Denied not raised
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.001s
+
+FAILED (failures=3)

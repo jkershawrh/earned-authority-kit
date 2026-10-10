@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.1.0-draft.1",
+  "scope": "supporting-deployment-capacity",
+  "policy_profile": "demo-three-pass",
+  "statistical_adequacy_claim": false,
+  "cases": [
+    {
+      "id": "capacity-available",
+      "context": {"environment": "demo-a", "model_version": "model-v2", "desired_replicas": 1, "max_replicas": 2},
+      "expected_disposition": "ELIGIBLE",
+      "expected_gcl_verdict": "survives",
+      "independent_outcome": "PASS"
+    },
+    {
+      "id": "capacity-overcommit",
+      "context": {"environment": "demo-a", "model_version": "model-v2", "desired_replicas": 3, "max_replicas": 2},
+      "expected_disposition": "INELIGIBLE",
+      "expected_gcl_verdict": "fails",
+      "independent_outcome": "PASS"
+    }
+  ]
+}

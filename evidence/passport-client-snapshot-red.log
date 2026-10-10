@@ -1,0 +1,46 @@
+test_matching_verification_snapshot_is_accepted (test_connected_security.PassportVerificationSnapshotBoundary.test_matching_verification_snapshot_is_accepted) ... ok
+test_other_passport_at_same_agent_generation_is_rejected (test_connected_security.PassportVerificationSnapshotBoundary.test_other_passport_at_same_agent_generation_is_rejected) ... FAIL
+test_second_rpc_notfound_is_not_an_empty_aggregate (test_connected_security.PassportVerificationSnapshotBoundary.test_second_rpc_notfound_is_not_an_empty_aggregate) ... FAIL
+test_verify_envelope_different_from_signed_snapshot_is_rejected (test_connected_security.PassportVerificationSnapshotBoundary.test_verify_envelope_different_from_signed_snapshot_is_rejected) ... FAIL
+test_verify_expiry_different_from_signed_snapshot_is_rejected (test_connected_security.PassportVerificationSnapshotBoundary.test_verify_expiry_different_from_signed_snapshot_is_rejected) ... FAIL
+
+======================================================================
+FAIL: test_other_passport_at_same_agent_generation_is_rejected (test_connected_security.PassportVerificationSnapshotBoundary.test_other_passport_at_same_agent_generation_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_connected_security.py", line 62, in test_other_passport_at_same_agent_generation_is_rejected
+    with self.assertRaises(Denied): self.verify_call()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Denied not raised
+
+======================================================================
+FAIL: test_second_rpc_notfound_is_not_an_empty_aggregate (test_connected_security.PassportVerificationSnapshotBoundary.test_second_rpc_notfound_is_not_an_empty_aggregate)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_connected_security.py", line 74, in test_second_rpc_notfound_is_not_an_empty_aggregate
+    with self.assertRaises(Denied): self.client.current(self.body['agent_id'])
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Denied not raised
+
+======================================================================
+FAIL: test_verify_envelope_different_from_signed_snapshot_is_rejected (test_connected_security.PassportVerificationSnapshotBoundary.test_verify_envelope_different_from_signed_snapshot_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_connected_security.py", line 70, in test_verify_envelope_different_from_signed_snapshot_is_rejected
+    with self.assertRaises(Denied): self.verify_call(payload=json.dumps(other).encode())
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Denied not raised
+
+======================================================================
+FAIL: test_verify_expiry_different_from_signed_snapshot_is_rejected (test_connected_security.PassportVerificationSnapshotBoundary.test_verify_expiry_different_from_signed_snapshot_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_connected_security.py", line 66, in test_verify_expiry_different_from_signed_snapshot_is_rejected
+    with self.assertRaises(Denied): self.verify_call()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Denied not raised
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.021s
+
+FAILED (failures=4)

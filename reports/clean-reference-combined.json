@@ -1,0 +1,58 @@
+{
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "environment": "REAL_LOCAL_SERVICES",
+  "command_exit_code": 0,
+  "command": [
+    "python3",
+    "deploy/reference/bootstrap.py",
+    "--workspace",
+    "work/clean-reference",
+    "--instance",
+    "ea-clean",
+    "--port-offset",
+    "1000",
+    "--validate"
+  ],
+  "completed_at": "2026-10-10T01:58:08.270022+00:00",
+  "components": {
+    "policy": {
+      "report": "reports/clean-reference-combined-policy.json",
+      "status": "GREEN",
+      "checks": 8,
+      "source_stable": null
+    },
+    "services": {
+      "report": "reports/clean-reference-combined-services.json",
+      "status": "GREEN",
+      "checks": 7,
+      "source_stable": null
+    },
+    "connected": {
+      "report": "reports/clean-reference-combined-connected.json",
+      "status": "GREEN",
+      "checks": 23,
+      "source_stable": true
+    },
+    "adversarial": {
+      "report": "reports/clean-reference-combined-adversarial.json",
+      "status": "GREEN",
+      "checks": 17,
+      "source_stable": true
+    },
+    "restore": {
+      "report": "reports/clean-reference-combined-restore.json",
+      "status": "GREEN",
+      "checks": 6,
+      "source_stable": null
+    }
+  },
+  "source_manifest_sha256": "d7ed23a08f0a5048bfc3a9531b969f13181a89b3d1312e80003af246fb54afd3",
+  "scope": "Same host; independently fetched and patched canonical sources, distinct virtual environment, keys, state, networks, ports and volumes; documented combined pipeline rerun against verified reconstructed sources.",
+  "limits": [
+    "Not a different host or independent human installer",
+    "No statistical held-out product-value claim",
+    "No backup/disk-loss recovery claim",
+    "No hardware or production deployment claim"
+  ]
+}

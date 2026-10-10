@@ -1,0 +1,410 @@
+[
+  {
+    "kind": "qualification",
+    "source_digest": "sha256:0c1e11ca1ca4dcdaaed6f6b4c2232190390b28b2d5d0da1f1d22aa71f3e5c4de",
+    "primary": "qualification",
+    "inputs": {
+      "qualification": "source:sha256:c7dcf08941ee80fc44d59187a02291b8cd02a05cb9ab448d54fca4bd4d9226e2",
+      "observations": [
+        "source:sha256:1ca802b49052797f0470953d66949ba30879b7083b93f08afd9fda40b269fe8b",
+        "source:sha256:ee90613069a74fa955c15da8a68b46626099c5dae20303dc9e364614143c2dc8",
+        "source:sha256:a000b19fe435ea5316dce938a74635768432a73791a51bf17965e0e9e31d1bb4"
+      ]
+    },
+    "value": {
+      "schema_version": "0.1.0-draft.1",
+      "qualification_id": "qualification-f7b900bb0f5a430c893b9fcd046c4c63",
+      "skill_id": "release-model",
+      "qualification_revision": 1,
+      "outcome_refs": [
+        "observation:observation-5a91bf6e4ecb4f9784d9f2be357b4d0a",
+        "observation:observation-c6aa1ff1603d4e82b4381f9aa33b9b2c",
+        "observation:observation-d5c485ab95dd43579f1697920c165401"
+      ],
+      "observed_from_ms": 1791597345058,
+      "observed_until_ms": 1791597345062,
+      "evidence_digest": "sha256:81eac34f5a577989c7d2eb8b46314d1408e99709d1bb0633de82eec3c30913b8",
+      "skill_digest": "sha256:4087ec4d671d615d612ffe2cc5b769f61fb26c5946c3283ad2bea729745f4697",
+      "context_digest": "sha256:2f7452c0735233bda48fb35c9567b0460d6ae427206db12d57b4e1a1c7a17f1f",
+      "evaluator_digest": "sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15",
+      "policy_digest": "sha256:ed8bf9d7aaaaa0598759c60dfaa3b627dde46eaf474acba90337d9ba33686048",
+      "expires_at_ms": 1791597945058,
+      "disposition": "ELIGIBLE"
+    }
+  },
+  {
+    "kind": "authority",
+    "source_digest": "sha256:ba09399291cb13497260573cbdfab8a402f90452dd3118243cd335db946e94e7",
+    "primary": "authority",
+    "inputs": {
+      "authority": "source:sha256:165e84e5b84f788bebcfaaee9bbb0dc6bd0b82c98f472d444877b655f0da8b70"
+    },
+    "value": {
+      "schema_version": "0.1.0-draft.1",
+      "passport_id": "09c4dd4c-afb0-423f-b0f1-43a16b11f033",
+      "agent_id": "agt-idem-e1dc179c69394bd9ba7f2984877dc3dc",
+      "authority_revision": 1,
+      "issued_at_ms": 1791597346386,
+      "expires_at_ms": 1791597646386,
+      "status": "ACTIVE",
+      "grants": [
+        {
+          "grant_id": "grant-36cae63648d845a98a7147e168352c5b",
+          "skill_digest": "sha256:4087ec4d671d615d612ffe2cc5b769f61fb26c5946c3283ad2bea729745f4697",
+          "context_digest": "sha256:2f7452c0735233bda48fb35c9567b0460d6ae427206db12d57b4e1a1c7a17f1f",
+          "qualification_id": "qualification-f7b900bb0f5a430c893b9fcd046c4c63",
+          "qualification_digest": "sha256:0c1e11ca1ca4dcdaaed6f6b4c2232190390b28b2d5d0da1f1d22aa71f3e5c4de",
+          "policy_digest": "sha256:272b8a64f27947d4fc0bf5c6b2749a665d7442556a13db31f524e0f721ab41da",
+          "resource": "model/champion",
+          "expires_at_ms": 1791597646377,
+          "skill_id": "release-model",
+          "action_class": "release"
+        }
+      ],
+      "policy_digest": "sha256:cebbc14abe677b79d3ec8c8db6873058d297290f81dd285cccda7ba8f16eda6c",
+      "issuer_ref": "earned-authority-coordinator",
+      "signature_ref": "signature:sha256:fc382086e54a8a36db86bc8107bc243c1e05e89631128c03a2a3a55d6a73dc44"
+    }
+  },
+  {
+    "kind": "attempt",
+    "source_digest": "sha256:5459f42b3db5cc3529584e53b3c5c79f2029ba79a1869465aea753dbcd7ebb2e",
+    "primary": "attempt",
+    "inputs": {
+      "attempt": "source:sha256:893aea1b7b7ba76543a6a9b65efd1410182b9ab8ca13cf25f805fbfd49422c5a",
+      "commits": [
+        "source:sha256:03ff1b0ff4ccb979290b6e34d7a3cdbfc50432d3524b09d6f857473d701c69f5"
+      ],
+      "qualification": "source:sha256:6ab2af88431563ba8c4c9f3671f189b2b8c3d3e653bf301ea5e449a13b48e1af"
+    },
+    "value": {
+      "schema_version": "0.1.0-draft.1",
+      "attempt_id": "attempt-951fecfeef7944f189bbabe521656223",
+      "correlation_id": "attempt-951fecfeef7944f189bbabe521656223",
+      "idempotency_key": "attempt-951fecfeef7944f189bbabe521656223",
+      "agent_id": "agt-idem-e1dc179c69394bd9ba7f2984877dc3dc",
+      "skill_id": "release-model",
+      "action_class": "release",
+      "arguments_digest": "sha256:81aefa965854d867f4159aabc6a99cd070d42c6433ebb8f12be615b717cfa0c2",
+      "state": "COMMITTED",
+      "policy_decision_id": "decision-691ebd5ba5bf4e77852f54769bcb413f",
+      "skill_digest": "sha256:4087ec4d671d615d612ffe2cc5b769f61fb26c5946c3283ad2bea729745f4697",
+      "context_digest": "sha256:2f7452c0735233bda48fb35c9567b0460d6ae427206db12d57b4e1a1c7a17f1f",
+      "passport_id": "09c4dd4c-afb0-423f-b0f1-43a16b11f033",
+      "authority_revision": 1,
+      "grant_id": "grant-36cae63648d845a98a7147e168352c5b",
+      "policy_digest": "sha256:272b8a64f27947d4fc0bf5c6b2749a665d7442556a13db31f524e0f721ab41da",
+      "resource": "model/champion",
+      "requested_at_ms": 1791597346470,
+      "mutation_receipt_ref": "local-event:event-f646cfb095cb4e88b2d3de0a00ffd7a9:sha256:ffccaf371726982037bbc465532751883a0c24bb43b55f7fed35dff27e94ef8e"
+    }
+  },
+  {
+    "kind": "outcome",
+    "source_digest": "sha256:f0e5edbe9ba9611e9101eda9e35285e6cbda1fc6d6224a072412fd0b078f512f",
+    "primary": "observation",
+    "inputs": {
+      "observation": "source:sha256:6c125a6c33342f59c2b981502be0d5322c3378040b49c5f2eed1328a5a0c2a9a",
+      "attempt": "source:sha256:893aea1b7b7ba76543a6a9b65efd1410182b9ab8ca13cf25f805fbfd49422c5a"
+    },
+    "value": {
+      "schema_version": "0.1.0-draft.1",
+      "observation_id": "observation-440539a9eec940f4842ff6ce4ba0edad",
+      "attempt_id": "attempt-951fecfeef7944f189bbabe521656223",
+      "correlation_id": "attempt-951fecfeef7944f189bbabe521656223",
+      "skill_id": "release-model",
+      "skill_digest": "sha256:4087ec4d671d615d612ffe2cc5b769f61fb26c5946c3283ad2bea729745f4697",
+      "context_digest": "sha256:2f7452c0735233bda48fb35c9567b0460d6ae427206db12d57b4e1a1c7a17f1f",
+      "verifier_id": "checker",
+      "verifier_digest": "sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15",
+      "verifier_attestation_ref": "attestation:sha256:02467fd9b65c42a005c630e5fc738f54e08c211c4c09973431aa9dd922a771c9",
+      "independence": "INDEPENDENT",
+      "observed_at_ms": 1791597346544,
+      "outcome": "PASS",
+      "postcondition_digest": "sha256:67bea6339b92aaf4c0cb490ed7c9c8bac7aab8b27b025c9abf0bea342a11a6c5",
+      "evidence_digest": "sha256:02467fd9b65c42a005c630e5fc738f54e08c211c4c09973431aa9dd922a771c9"
+    }
+  },
+  {
+    "kind": "outcome",
+    "source_digest": "sha256:da8db6dbcf1126854981c2bac6a11731d562cd17b27c967060f9d3fa3b6d709b",
+    "primary": "observation",
+    "inputs": {
+      "observation": "source:sha256:1ca802b49052797f0470953d66949ba30879b7083b93f08afd9fda40b269fe8b"
+    },
+    "value": {
+      "schema_version": "0.1.0-draft.1",
+      "observation_id": "observation-5a91bf6e4ecb4f9784d9f2be357b4d0a",
+      "attempt_id": "shadow-b6b369ea7162400d9658acc312240392",
+      "correlation_id": "shadow-b6b369ea7162400d9658acc312240392",
+      "skill_id": "release-model",
+      "skill_digest": "sha256:4087ec4d671d615d612ffe2cc5b769f61fb26c5946c3283ad2bea729745f4697",
+      "context_digest": "sha256:2f7452c0735233bda48fb35c9567b0460d6ae427206db12d57b4e1a1c7a17f1f",
+      "verifier_id": "checker",
+      "verifier_digest": "sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15",
+      "verifier_attestation_ref": "attestation:sha256:118f14eae6b953b4999d265649a8aa00697427406e809ef4312b49f23a4a77a2",
+      "independence": "INDEPENDENT",
+      "observed_at_ms": 1791597345058,
+      "outcome": "PASS",
+      "postcondition_digest": "sha256:67bea6339b92aaf4c0cb490ed7c9c8bac7aab8b27b025c9abf0bea342a11a6c5",
+      "evidence_digest": "sha256:118f14eae6b953b4999d265649a8aa00697427406e809ef4312b49f23a4a77a2"
+    }
+  },
+  {
+    "kind": "outcome",
+    "source_digest": "sha256:72ed6c06d01e629a2b2847edb24c9b1fdf0f448d3918ca2cc02bdc1ca5d44f18",
+    "primary": "observation",
+    "inputs": {
+      "observation": "source:sha256:ee90613069a74fa955c15da8a68b46626099c5dae20303dc9e364614143c2dc8"
+    },
+    "value": {
+      "schema_version": "0.1.0-draft.1",
+      "observation_id": "observation-c6aa1ff1603d4e82b4381f9aa33b9b2c",
+      "attempt_id": "shadow-f8206baead854b52bd719eee31537993",
+      "correlation_id": "shadow-f8206baead854b52bd719eee31537993",
+      "skill_id": "release-model",
+      "skill_digest": "sha256:4087ec4d671d615d612ffe2cc5b769f61fb26c5946c3283ad2bea729745f4697",
+      "context_digest": "sha256:2f7452c0735233bda48fb35c9567b0460d6ae427206db12d57b4e1a1c7a17f1f",
+      "verifier_id": "checker",
+      "verifier_digest": "sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15",
+      "verifier_attestation_ref": "attestation:sha256:1b0b6216249597503feac3bcadc319bd8a5f5c5f1369489fe02ecba3ad7f8586",
+      "independence": "INDEPENDENT",
+      "observed_at_ms": 1791597345060,
+      "outcome": "PASS",
+      "postcondition_digest": "sha256:67bea6339b92aaf4c0cb490ed7c9c8bac7aab8b27b025c9abf0bea342a11a6c5",
+      "evidence_digest": "sha256:1b0b6216249597503feac3bcadc319bd8a5f5c5f1369489fe02ecba3ad7f8586"
+    }
+  },
+  {
+    "kind": "outcome",
+    "source_digest": "sha256:93138ea61d9d85d5e8e4128e00eeacd852f01115fe96907fb772c6bbaf39f7fb",
+    "primary": "observation",
+    "inputs": {
+      "observation": "source:sha256:a000b19fe435ea5316dce938a74635768432a73791a51bf17965e0e9e31d1bb4"
+    },
+    "value": {
+      "schema_version": "0.1.0-draft.1",
+      "observation_id": "observation-d5c485ab95dd43579f1697920c165401",
+      "attempt_id": "shadow-c062b084e6804a3abed9174543d91e2c",
+      "correlation_id": "shadow-c062b084e6804a3abed9174543d91e2c",
+      "skill_id": "release-model",
+      "skill_digest": "sha256:4087ec4d671d615d612ffe2cc5b769f61fb26c5946c3283ad2bea729745f4697",
+      "context_digest": "sha256:2f7452c0735233bda48fb35c9567b0460d6ae427206db12d57b4e1a1c7a17f1f",
+      "verifier_id": "checker",
+      "verifier_digest": "sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15",
+      "verifier_attestation_ref": "attestation:sha256:6c3d3507434332de027dd15d1bcd31ba6337405ea812867e4d94f12bd11af8b6",
+      "independence": "INDEPENDENT",
+      "observed_at_ms": 1791597345062,
+      "outcome": "PASS",
+      "postcondition_digest": "sha256:67bea6339b92aaf4c0cb490ed7c9c8bac7aab8b27b025c9abf0bea342a11a6c5",
+      "evidence_digest": "sha256:6c3d3507434332de027dd15d1bcd31ba6337405ea812867e4d94f12bd11af8b6"
+    }
+  },
+  {
+    "kind": "lifecycle-event",
+    "source_digest": "sha256:7f9b5993ed5177471ec0ef1522db824510f8597531c448cf4b9a7d49a6f182f4",
+    "primary": "event",
+    "inputs": {
+      "event": "source:sha256:862f797ddabaf62456b1df2d8a9e063832fc02cc9bc8e35f35657a19f2702198"
+    },
+    "value": {
+      "schema_version": "0.1.0-draft.1",
+      "event_id": "event-2bc7355cca8745729e7a07ead4f44504",
+      "correlation_id": "shadow-b6b369ea7162400d9658acc312240392",
+      "agent_id": "reference-qualification-checker",
+      "subject_id": "event-2bc7355cca8745729e7a07ead4f44504",
+      "subject_revision": 1,
+      "event_type": "OUTCOME_OBSERVED",
+      "occurred_at_ms": 1791597345059,
+      "payload_digest": "sha256:5fabd5fda4445637721be87b3d5ad0530b8cf22d7685d931bb8e629c7f376a78",
+      "actor_ref": "local-runtime-writer",
+      "reason_code": "NOT_SPECIFIED",
+      "delivery_state": "RECORDED",
+      "ledger_receipt_ref": "ledger-receipt:sha256:04bc607c0e6980219eb5f0245b5168f2222f80f60baddb6cbe659b08b3eedd5b"
+    }
+  },
+  {
+    "kind": "lifecycle-event",
+    "source_digest": "sha256:e155aa5acf7dc6d8be119907a99a73ee8ba2d727b33b2410026d87b8bffef376",
+    "primary": "event",
+    "inputs": {
+      "event": "source:sha256:411190d4915e3b9b9d9e6388e0e347a8ef3ff69ed3e280d53f4ecb549a64e8eb"
+    },
+    "value": {
+      "schema_version": "0.1.0-draft.1",
+      "event_id": "event-e7cfce33c85f4982af57d6d3414b95ca",
+      "correlation_id": "shadow-f8206baead854b52bd719eee31537993",
+      "agent_id": "reference-qualification-checker",
+      "subject_id": "event-e7cfce33c85f4982af57d6d3414b95ca",
+      "subject_revision": 1,
+      "event_type": "OUTCOME_OBSERVED",
+      "occurred_at_ms": 1791597345060,
+      "payload_digest": "sha256:3e94eda49e954d2cf6c985b23e9986c3e77551fbb02dca42fc51b34f61e9716c",
+      "actor_ref": "local-runtime-writer",
+      "reason_code": "NOT_SPECIFIED",
+      "delivery_state": "RECORDED",
+      "ledger_receipt_ref": "ledger-receipt:sha256:4023753e0e4946a6d2bb080ce9b338f1bb1218bd1ae5be1c73a2837ad2281df4"
+    }
+  },
+  {
+    "kind": "lifecycle-event",
+    "source_digest": "sha256:8fc0910e0e87715843185f6e5229e6661920d3038a73baf8a9392278bfe45673",
+    "primary": "event",
+    "inputs": {
+      "event": "source:sha256:9d1cbbf2aff88b92b0f5d6e9b21aa91c0d96b927a91437b7835a3ae8b322e2c9"
+    },
+    "value": {
+      "schema_version": "0.1.0-draft.1",
+      "event_id": "event-15c5fd10bf334a18a9190a634e43b031",
+      "correlation_id": "shadow-c062b084e6804a3abed9174543d91e2c",
+      "agent_id": "reference-qualification-checker",
+      "subject_id": "event-15c5fd10bf334a18a9190a634e43b031",
+      "subject_revision": 1,
+      "event_type": "OUTCOME_OBSERVED",
+      "occurred_at_ms": 1791597345063,
+      "payload_digest": "sha256:3e27a8df800e00bcff91395a5d33b5a79936ed4e8891f67736d53b3ff6a2bf8d",
+      "actor_ref": "local-runtime-writer",
+      "reason_code": "NOT_SPECIFIED",
+      "delivery_state": "RECORDED",
+      "ledger_receipt_ref": "ledger-receipt:sha256:399525921b40ecac480943d8225e54277c5aabd37d7b57f29053dd14b16549aa"
+    }
+  },
+  {
+    "kind": "lifecycle-event",
+    "source_digest": "sha256:379325403c7d4f65604c7464b3f7c15fe6a0233f0c2ad5dec8760159830e169c",
+    "primary": "event",
+    "inputs": {
+      "event": "source:sha256:1838b8ecca37ea20fc2fd878bc73c9749e36222d4eb79fdf97c70fb9d9b759cc"
+    },
+    "value": {
+      "schema_version": "0.1.0-draft.1",
+      "event_id": "event-5d305dc7d4fb44c698f1da2a38b1ed90",
+      "correlation_id": "lifecycle-b43600e4485140a5bab9a62f9f38e143",
+      "agent_id": "reference-qualification-checker",
+      "subject_id": "event-5d305dc7d4fb44c698f1da2a38b1ed90",
+      "subject_revision": 1,
+      "event_type": "CANONICAL_QUALIFICATION_EVALUATED",
+      "occurred_at_ms": 1791597346288,
+      "payload_digest": "sha256:1a06f1233393e4c90b37a3500d5452a61a6a5dbd8a0ffa983e01cc5009788ca8",
+      "actor_ref": "local-runtime-writer",
+      "reason_code": "NOT_SPECIFIED",
+      "delivery_state": "RECORDED",
+      "ledger_receipt_ref": "ledger-receipt:sha256:87ca7561591ec54620a225e5398fd637c71a452fd184c807d302fa457b2e2e7d"
+    }
+  },
+  {
+    "kind": "lifecycle-event",
+    "source_digest": "sha256:583db96ec7bf855f8ec1ac69a62a2dc8e403f4f934d45e2bff237ab9ec171bd8",
+    "primary": "event",
+    "inputs": {
+      "event": "source:sha256:0000a8af0dc76294a9d9d0e306e42adf5a6c1d96e77aae1edc60292699cb3f2d"
+    },
+    "value": {
+      "schema_version": "0.1.0-draft.1",
+      "event_id": "event-16984f8ed2564802ba07989c43cb5097",
+      "correlation_id": "lifecycle-ef09ef6717d14f7fb22f265c030c6f2d",
+      "agent_id": "reference-qualification-checker",
+      "subject_id": "event-16984f8ed2564802ba07989c43cb5097",
+      "subject_revision": 1,
+      "event_type": "QUALIFIED",
+      "occurred_at_ms": 1791597346288,
+      "payload_digest": "sha256:5a4c08a5a660f6ca26d93f8ebfa22758206b33a5e323404e13b9573570df580d",
+      "actor_ref": "local-runtime-writer",
+      "reason_code": "NOT_SPECIFIED",
+      "delivery_state": "RECORDED",
+      "ledger_receipt_ref": "ledger-receipt:sha256:53963bdf4e8e05af709a620995885ba3929804ffaa97a12451ba17031930db90"
+    }
+  },
+  {
+    "kind": "lifecycle-event",
+    "source_digest": "sha256:46b60f8fcf36ef30cc4bb08a75eb2a9489d3a2d4570d931271b3e7889ac33d6f",
+    "primary": "event",
+    "inputs": {
+      "event": "source:sha256:b8711745469597dc0e3d4513c84728f2ff3e7ecfa8328725ed79d299e2f9253d"
+    },
+    "value": {
+      "schema_version": "0.1.0-draft.1",
+      "event_id": "event-df0fd2e6a27142c4b79904a781ce1409",
+      "correlation_id": "lifecycle-a1d05a613293491195d34b269a4b1e47",
+      "agent_id": "agt-idem-e1dc179c69394bd9ba7f2984877dc3dc",
+      "subject_id": "event-df0fd2e6a27142c4b79904a781ce1409",
+      "subject_revision": 1,
+      "event_type": "GRANTED",
+      "occurred_at_ms": 1791597346401,
+      "payload_digest": "sha256:2297e06c7c5119d9190ea25b6642e1c0ac2ebc599f446766ed950f33c8d1da88",
+      "actor_ref": "local-runtime-writer",
+      "reason_code": "NOT_SPECIFIED",
+      "delivery_state": "RECORDED",
+      "ledger_receipt_ref": "ledger-receipt:sha256:ba4b89e3d586b720f8a0c392fd5206f3eda9b2e4ab23e9e7a5f251a8ac595af9"
+    }
+  },
+  {
+    "kind": "lifecycle-event",
+    "source_digest": "sha256:003e72be048fd5729d3fee7b35390f17591b4d7b18fe35f2a000e782a2e1c5ed",
+    "primary": "event",
+    "inputs": {
+      "event": "source:sha256:f20f7fadc31eeb05a6efeaf51abfb4431e10dc6b6245b46250481c349fc47d6e"
+    },
+    "value": {
+      "schema_version": "0.1.0-draft.1",
+      "event_id": "event-4e8a56d423cb4a358adf07a006910c61",
+      "correlation_id": "attempt-951fecfeef7944f189bbabe521656223",
+      "agent_id": "agt-idem-e1dc179c69394bd9ba7f2984877dc3dc",
+      "subject_id": "event-4e8a56d423cb4a358adf07a006910c61",
+      "subject_revision": 1,
+      "event_type": "INTENT",
+      "occurred_at_ms": 1791597346542,
+      "payload_digest": "sha256:9c0655ab80727d0d3536cbf97fb23427bce0aec1f46d9e145dfc7d4f29ad602d",
+      "actor_ref": "local-runtime-writer",
+      "reason_code": "NOT_SPECIFIED",
+      "delivery_state": "RECORDED",
+      "ledger_receipt_ref": "ledger-receipt:sha256:f0e10c1f63013ffb59e5202cfabd9a8d3c7d50c9b1752bc21d6c81c47e54254a"
+    }
+  },
+  {
+    "kind": "lifecycle-event",
+    "source_digest": "sha256:0f1ce96e7a9f90afd67d2ba8a7b2c3c1cd0e146e74cdcbb77c0fcb8ace325b9e",
+    "primary": "event",
+    "inputs": {
+      "event": "source:sha256:03ff1b0ff4ccb979290b6e34d7a3cdbfc50432d3524b09d6f857473d701c69f5"
+    },
+    "value": {
+      "schema_version": "0.1.0-draft.1",
+      "event_id": "event-f646cfb095cb4e88b2d3de0a00ffd7a9",
+      "correlation_id": "attempt-951fecfeef7944f189bbabe521656223",
+      "agent_id": "agt-idem-e1dc179c69394bd9ba7f2984877dc3dc",
+      "subject_id": "event-f646cfb095cb4e88b2d3de0a00ffd7a9",
+      "subject_revision": 1,
+      "event_type": "COMMITTED",
+      "occurred_at_ms": 1791597346543,
+      "payload_digest": "sha256:ffccaf371726982037bbc465532751883a0c24bb43b55f7fed35dff27e94ef8e",
+      "actor_ref": "local-runtime-writer",
+      "reason_code": "NOT_SPECIFIED",
+      "delivery_state": "RECORDED",
+      "ledger_receipt_ref": "ledger-receipt:sha256:f8d3b76eae16a8692af1bd89f607ddebd810e012a183545bbaeb008e4f0366ef"
+    }
+  },
+  {
+    "kind": "lifecycle-event",
+    "source_digest": "sha256:0a302455a5bcfe2134f806d62610c2c4aff18253381012854a76b774996d1916",
+    "primary": "event",
+    "inputs": {
+      "event": "source:sha256:af132e85e907baa92879c46e18632e5d184a2c07fa1d946b119fa217bc983bef"
+    },
+    "value": {
+      "schema_version": "0.1.0-draft.1",
+      "event_id": "event-517506f940ff4d15843228debc4b3c1a",
+      "correlation_id": "attempt-951fecfeef7944f189bbabe521656223",
+      "agent_id": "agt-idem-e1dc179c69394bd9ba7f2984877dc3dc",
+      "subject_id": "event-517506f940ff4d15843228debc4b3c1a",
+      "subject_revision": 1,
+      "event_type": "OUTCOME_OBSERVED",
+      "occurred_at_ms": 1791597346545,
+      "payload_digest": "sha256:07761d45e835237339ec5e829d26189732cab0eaead0596759f19c5d70ff4f97",
+      "actor_ref": "local-runtime-writer",
+      "reason_code": "NOT_SPECIFIED",
+      "delivery_state": "RECORDED",
+      "ledger_receipt_ref": "ledger-receipt:sha256:702c28dd34c9090165f01ec56344297dbed606578d90eb7db0208c434a587193"
+    }
+  }
+]

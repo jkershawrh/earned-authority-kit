@@ -1,0 +1,693 @@
+diff --git a/api/openapi.yaml b/api/openapi.yaml
+--- a/api/openapi.yaml
++++ b/api/openapi.yaml
+@@ -220,7 +220,7 @@
+     post:
+       tags: [passports]
+       operationId: verifyPassport
+-      summary: Verify passport binding and active status.
++      summary: Verify passport binding, active status, and expiry.
+       description: Returns `executed=false` and `proof_status=reference_only`; it never executes the requested business action.
+       security:
+         - bearerAuth: []
+@@ -595,6 +595,16 @@
+         resource_pattern:
+           type: string
+           example: model/*
++        context_constraints:
++          type: object
++          additionalProperties:
++            type: string
++          description: Nonempty constraints require the exact context key/value set during scope evaluation.
++        scope_ttl_seconds:
++          type: integer
++          format: int64
++          minimum: 0
++          description: Zero or omission inherits the passport TTL. Authority never extends beyond passport expiry.
+     PassportEnvelope:
+       type: object
+       required: [passport]
+@@ -625,6 +635,14 @@
+         issued_by:
+           type: string
+           example: demo-owner
++        expires_at:
++          type: string
++          format: date-time
++          description: Local REST expiry. Authority is invalid at or after this instant.
++        expires_ts:
++          type: integer
++          format: int64
++          description: Delegated S0 expiry in Unix milliseconds. All supplied expiry fields must be valid and in the future.
+     Scope:
+       type: object
+       required: [scope_id, action_class, resource_pattern]
+@@ -638,6 +656,18 @@
+         resource_pattern:
+           type: string
+           example: model/*
++        context_constraints:
++          type: object
++          additionalProperties:
++            type: string
++        expires_at:
++          type: string
++          format: date-time
++          description: Local scope expiry, additionally bounded by passport expiry.
++        expires_ts:
++          type: integer
++          format: int64
++          description: Delegated scope expiry in Unix milliseconds. An absent scope expiry inherits passport expiry; explicit invalid expiry denies.
+     PassportsByAgentResponse:
+       type: object
+       required: [agent_id, passports, request_id]
+@@ -693,6 +723,11 @@
+         resource:
+           type: string
+           example: model/champion
++        context:
++          type: object
++          additionalProperties:
++            type: string
++          description: Exact key/value match required by nonempty scope constraints. An omitted context is empty.
+     ScopeEvaluateResponse:
+       type: object
+       required: [decision, request_id, executed]
+diff --git a/docs/api-contract.md b/docs/api-contract.md
+--- a/docs/api-contract.md
++++ b/docs/api-contract.md
+@@ -258,6 +258,32 @@
+ }
+ ```
+ 
++## Passport Time And Context Bounds
++
++Passport verification and scope evaluation require an `ACTIVE` passport bound
++to the requested agent with a valid future expiry. The REST format uses
++`expires_at` (RFC3339); delegated S0 records use `expires_ts` (Unix milliseconds).
++Authority ends exactly at expiry. Missing, malformed, or expired passport
++expiry denies. When both fields exist, both must be valid and future.
++
++Requested scopes may include `scope_ttl_seconds` and `context_constraints`.
++Scope TTL is a nonnegative integer; zero or omission uses the passport TTL.
++Every scope is additionally bounded by passport expiry. Legacy scope records
++without their own expiry inherit passport expiry; an explicitly malformed or
++expired scope bound denies that scope. Missing passport expiry never inherits
++an unlimited lifetime; those records need reissuance.
++
++`context_constraints` and evaluation `context` are objects of string values.
++A nonempty constraint object requires exactly the same keys and values as the
++request context, matching the S1 runtime's contract. Empty or absent scope
++constraints impose no context restriction. Malformed request objects return
++400; malformed stored constraints cannot authorize. Local issuance preserves
++these conditions instead of discarding them.
++
++These are reference checks against stored records. They do not independently
++attest the request context, verify cryptographic credentials, refresh delegated
++revocation state, or enforce an actual executor's behavior.
++
+ ## Real OPA Policy
+ 
+ The local Compose stack loads the policy at
+diff --git a/sx/s0s1-rest-bff/internal/api/api.go b/sx/s0s1-rest-bff/internal/api/api.go
+--- a/sx/s0s1-rest-bff/internal/api/api.go
++++ b/sx/s0s1-rest-bff/internal/api/api.go
+@@ -1,6 +1,7 @@
+ package api
+ 
+ import (
++	"bytes"
+ 	"context"
+ 	"encoding/json"
+ 	"errors"
+@@ -52,10 +53,19 @@
+ 
+ // Config wires the v1 API mux (TLS / logging stay outside).
+ type Config struct {
+-	Repo   repo.Repository
++	Repo repo.Repository
++	// Now supplies the authority-check clock; nil uses time.Now.
++	Now    func() time.Time
+ 	Policy policy.Evaluator // nil => policy.Stub (same rules as gateway static upstream)
+ 	// S0 optional: when dialled from main, Register/Get/Issue can delegate to ARE-A-S0-001/005.
+ 	S0 *s0delegate.Backend
++}
++
++func (c *Config) now() time.Time {
++	if c.Now != nil {
++		return c.Now().UTC()
++	}
++	return time.Now().UTC()
+ }
+ 
+ // ErrNilRepository indicates Handler was called without a repository.
+@@ -413,6 +423,18 @@
+ 			jsonError(w, rid, "INVALID_ARGUMENT", "requested_scopes require action_class and resource_pattern", false, http.StatusBadRequest)
+ 			return
+ 		}
++		if raw, exists := row["context_constraints"]; exists {
++			if _, ok := stringObject(raw); !ok {
++				jsonError(w, rid, "INVALID_ARGUMENT", "context_constraints must be an object of string values", false, http.StatusBadRequest)
++				return
++			}
++		}
++		if raw, exists := row["scope_ttl_seconds"]; exists {
++			if scopeTTL, ok := exactInt64(raw); !ok || scopeTTL < 0 {
++				jsonError(w, rid, "INVALID_ARGUMENT", "scope_ttl_seconds must be a nonnegative integer", false, http.StatusBadRequest)
++				return
++			}
++		}
+ 		scopeRows = append(scopeRows, row)
+ 	}
+ 
+@@ -506,18 +528,27 @@
+ 		return
+ 	}
+ 
+-	now := time.Now().UTC()
++	now := cfg.now()
+ 	expiresAt := now.Add(time.Duration(ttl) * time.Second)
+ 
+ 	scopeSet := make([]map[string]any, 0, len(scopeRows))
+ 	for i, row := range scopeRows {
+ 		ac, _ := row["action_class"].(string)
+ 		resPat, _ := row["resource_pattern"].(string)
+-		scopeSet = append(scopeSet, map[string]any{
++		scopeTTL := ttl
++		if requested, ok := exactInt64(row["scope_ttl_seconds"]); ok && requested > 0 && requested < ttl {
++			scopeTTL = requested
++		}
++		scope := map[string]any{
+ 			"scope_id":         fmt.Sprintf("scp-%s-%d", idem, i),
+ 			"action_class":     ac,
+ 			"resource_pattern": resPat,
+-		})
++			"expires_at":       now.Add(time.Duration(scopeTTL) * time.Second).Format(time.RFC3339Nano),
++		}
++		if constraints, exists := row["context_constraints"]; exists {
++			scope["context_constraints"] = constraints
++		}
++		scopeSet = append(scopeSet, scope)
+ 	}
+ 
+ 	passportID := "ppt-" + idem
+@@ -637,7 +668,7 @@
+ 		return
+ 	}
+ 	passport := publicPassportFromBody(body)
+-	verified := found && passport != nil && passport["agent_id"] == agentID && passport["status"] == "ACTIVE"
++	verified := found && passportUsable(passport, agentID, cfg.now())
+ 	reason := "passport verified"
+ 	if !verified {
+ 		reason = "passport missing, revoked, expired, or not bound to agent"
+@@ -670,7 +701,16 @@
+ 		jsonError(w, rid, "INVALID_ARGUMENT", "agent_id, action_class, and resource are required", false, http.StatusBadRequest)
+ 		return
+ 	}
+-	allowed, reason, err := scopeAllows(r.Context(), cfg.Repo, agentID, passportID, actionClass, resource)
++	requestContext := map[string]string{}
++	if raw, exists := payload["context"]; exists {
++		var ok bool
++		requestContext, ok = stringObject(raw)
++		if !ok {
++			jsonError(w, rid, "INVALID_ARGUMENT", "context must be an object of string values", false, http.StatusBadRequest)
++			return
++		}
++	}
++	allowed, reason, err := scopeAllows(r.Context(), cfg.Repo, agentID, passportID, actionClass, resource, requestContext, cfg.now())
+ 	if err != nil {
+ 		jsonError(w, rid, "INTERNAL", "storage error", false, http.StatusInternalServerError)
+ 		return
+@@ -698,15 +738,17 @@
+ 	var envelope struct {
+ 		Passport map[string]any `json:"passport"`
+ 	}
+-	if len(body) == 0 || json.Unmarshal(body, &envelope) != nil || envelope.Passport == nil {
++	decoder := json.NewDecoder(bytes.NewReader(body))
++	decoder.UseNumber()
++	if !json.Valid(body) || decoder.Decode(&envelope) != nil || envelope.Passport == nil {
+ 		return nil
+ 	}
+ 	return envelope.Passport
+ }
+ 
+-func scopeAllows(ctx context.Context, rp repo.Repository, agentID, passportID, actionClass, resource string) (bool, string, error) {
++func scopeAllows(ctx context.Context, rp repo.Repository, agentID, passportID, actionClass, resource string, requestContext map[string]string, now time.Time) (bool, string, error) {
+ 	matches := func(passport map[string]any) bool {
+-		if passport == nil || passport["agent_id"] != agentID || passport["status"] != "ACTIVE" {
++		if !passportUsable(passport, agentID, now) {
+ 			return false
+ 		}
+ 		scopes, _ := passport["scope_set"].([]any)
+@@ -717,7 +759,7 @@
+ 			}
+ 			ac, _ := row["action_class"].(string)
+ 			rp, _ := row["resource_pattern"].(string)
+-			if ac == actionClass && resourcePatternMatches(rp, resource) {
++			if ac == actionClass && resourcePatternMatches(rp, resource) && authorityUnexpired(row, now, false) && scopeContextMatches(row, requestContext) {
+ 				return true
+ 			}
+ 		}
+@@ -734,7 +776,7 @@
+ 		if matches(publicPassportFromBody(body)) {
+ 			return true, "scope matched requested passport", nil
+ 		}
+-		return false, "scope missing or passport inactive", nil
++		return false, "scope missing, expired, context mismatched, or passport inactive", nil
+ 	}
+ 	bodies, err := rp.ListPassportBodiesByAgent(ctx, agentID)
+ 	if err != nil {
+diff --git a/sx/s0s1-rest-bff/internal/api/authority_checks.go b/sx/s0s1-rest-bff/internal/api/authority_checks.go
+new file mode 100644
+--- /dev/null
++++ b/sx/s0s1-rest-bff/internal/api/authority_checks.go
+@@ -0,0 +1,99 @@
++package api
++
++import (
++	"encoding/json"
++	"math"
++	"time"
++)
++
++// authorityUnexpired requires every supplied expiry to be valid and in the
++// future. Passport expiry is mandatory; a scope without its own expiry inherits
++// its passport's bound. This accepts the local REST and delegated S0 formats.
++func authorityUnexpired(record map[string]any, now time.Time, required bool) bool {
++	seen := false
++	if raw, ok := record["expires_at"]; ok {
++		seen = true
++		value, ok := raw.(string)
++		if !ok {
++			return false
++		}
++		expires, err := time.Parse(time.RFC3339Nano, value)
++		if err != nil || !now.Before(expires) {
++			return false
++		}
++	}
++	if raw, ok := record["expires_ts"]; ok {
++		seen = true
++		millis, ok := exactInt64(raw)
++		if !ok || !now.Before(time.UnixMilli(millis)) {
++			return false
++		}
++	}
++	return seen || !required
++}
++
++func passportUsable(passport map[string]any, agentID string, now time.Time) bool {
++	return passport != nil && passport["agent_id"] == agentID && passport["status"] == "ACTIVE" &&
++		authorityUnexpired(passport, now, true)
++}
++
++// Match the S1 runtime's context contract: constrained scopes require the exact
++// string key/value set, while an empty constraint object is unrestricted.
++func scopeContextMatches(scope map[string]any, request map[string]string) bool {
++	raw, exists := scope["context_constraints"]
++	if !exists {
++		return true
++	}
++	constraints, ok := stringObject(raw)
++	if !ok {
++		return false
++	}
++	if len(constraints) == 0 {
++		return true
++	}
++	if len(constraints) != len(request) {
++		return false
++	}
++	for key, value := range constraints {
++		got, ok := request[key]
++		if !ok || got != value {
++			return false
++		}
++	}
++	return true
++}
++
++func stringObject(raw any) (map[string]string, bool) {
++	object, ok := raw.(map[string]any)
++	if !ok || object == nil {
++		return nil, false
++	}
++	result := make(map[string]string, len(object))
++	for key, value := range object {
++		str, ok := value.(string)
++		if !ok {
++			return nil, false
++		}
++		result[key] = str
++	}
++	return result, true
++}
++
++func exactInt64(raw any) (int64, bool) {
++	switch value := raw.(type) {
++	case json.Number:
++		n, err := value.Int64()
++		return n, err == nil
++	case float64:
++		if math.IsNaN(value) || math.IsInf(value, 0) || math.Trunc(value) != value || value < math.MinInt64 || value >= math.MaxInt64 {
++			return 0, false
++		}
++		return int64(value), true
++	case int64:
++		return value, true
++	case int:
++		return int64(value), true
++	default:
++		return 0, false
++	}
++}
+diff --git a/sx/s0s1-rest-bff/internal/api/authority_checks_test.go b/sx/s0s1-rest-bff/internal/api/authority_checks_test.go
+new file mode 100644
+--- /dev/null
++++ b/sx/s0s1-rest-bff/internal/api/authority_checks_test.go
+@@ -0,0 +1,284 @@
++package api
++
++import (
++	"bytes"
++	"context"
++	"encoding/json"
++	"net/http"
++	"net/http/httptest"
++	"testing"
++	"time"
++
++	"are-s0s1-rest-bff/internal/repo"
++)
++
++var authorityCheckTime = time.Date(2026, 10, 9, 12, 0, 0, 0, time.UTC)
++
++func authorityRequest(t *testing.T, h http.Handler, path string, body map[string]any) (int, map[string]any) {
++	t.Helper()
++	data, err := json.Marshal(body)
++	if err != nil {
++		t.Fatal(err)
++	}
++	req := httptest.NewRequest(http.MethodPost, path, bytes.NewReader(data))
++	req.Header.Set("Idempotency-Key", "authority-test")
++	w := httptest.NewRecorder()
++	h.ServeHTTP(w, req)
++	var result map[string]any
++	if err := json.Unmarshal(w.Body.Bytes(), &result); err != nil {
++		t.Fatal(err)
++	}
++	return w.Code, result
++}
++
++func authorityHandler(t *testing.T, passport map[string]any) http.Handler {
++	t.Helper()
++	mem := repo.NewMemory()
++	_, err := mem.FinishRegister(context.Background(), "register", "agent", []byte(`{}`), repo.AgentRec{Status: "ACTIVE"})
++	if err != nil {
++		t.Fatal(err)
++	}
++	body, err := json.Marshal(map[string]any{"passport": passport})
++	if err != nil {
++		t.Fatal(err)
++	}
++	if _, err := mem.FinishPassport(context.Background(), "issue", "agent", body); err != nil {
++		t.Fatal(err)
++	}
++	h, err := Handler(Config{Repo: mem, Now: func() time.Time { return authorityCheckTime }})
++	if err != nil {
++		t.Fatal(err)
++	}
++	return h
++}
++
++func baseAuthorityPassport() map[string]any {
++	return map[string]any{
++		"passport_id": "passport", "agent_id": "agent", "status": "ACTIVE",
++		"expires_at": authorityCheckTime.Add(time.Hour).Format(time.RFC3339Nano),
++		"scope_set":  []any{map[string]any{"action_class": "model.promote", "resource_pattern": "model/*"}},
++	}
++}
++
++func TestAuthorityPassportExpiry(t *testing.T) {
++	cases := []struct {
++		name   string
++		expiry map[string]any
++		want   bool
++	}{
++		{"rfc3339_future", map[string]any{"expires_at": authorityCheckTime.Add(time.Second).Format(time.RFC3339Nano)}, true},
++		{"rfc3339_expired", map[string]any{"expires_at": authorityCheckTime.Add(-time.Second).Format(time.RFC3339Nano)}, false},
++		{"rfc3339_equal_now", map[string]any{"expires_at": authorityCheckTime.Format(time.RFC3339Nano)}, false},
++		{"milliseconds_future", map[string]any{"expires_ts": authorityCheckTime.UnixMilli() + 1}, true},
++		{"milliseconds_expired", map[string]any{"expires_ts": authorityCheckTime.UnixMilli() - 1}, false},
++		{"milliseconds_equal_now", map[string]any{"expires_ts": authorityCheckTime.UnixMilli()}, false},
++		{"missing", map[string]any{}, false},
++		{"malformed_date", map[string]any{"expires_at": "later"}, false},
++		{"null_date", map[string]any{"expires_at": nil}, false},
++		{"invalid_type", map[string]any{"expires_ts": true}, false},
++		{"fractional_milliseconds", map[string]any{"expires_ts": float64(authorityCheckTime.UnixMilli()) + 0.5}, false},
++		{"milliseconds_overflow", map[string]any{"expires_ts": json.Number("9223372036854775808")}, false},
++		{"both_future", map[string]any{"expires_at": authorityCheckTime.Add(time.Hour).Format(time.RFC3339Nano), "expires_ts": authorityCheckTime.Add(time.Minute).UnixMilli()}, true},
++		{"second_format_expired", map[string]any{"expires_at": authorityCheckTime.Add(time.Hour).Format(time.RFC3339Nano), "expires_ts": authorityCheckTime.UnixMilli() - 1}, false},
++		{"first_format_expired", map[string]any{"expires_at": authorityCheckTime.Add(-time.Hour).Format(time.RFC3339Nano), "expires_ts": authorityCheckTime.Add(time.Minute).UnixMilli()}, false},
++		{"second_format_malformed", map[string]any{"expires_at": authorityCheckTime.Add(time.Hour).Format(time.RFC3339Nano), "expires_ts": "tomorrow"}, false},
++	}
++	for _, tc := range cases {
++		t.Run(tc.name, func(t *testing.T) {
++			passport := baseAuthorityPassport()
++			delete(passport, "expires_at")
++			for k, v := range tc.expiry {
++				passport[k] = v
++			}
++			h := authorityHandler(t, passport)
++			code, result := authorityRequest(t, h, "/v1/passports:verify", map[string]any{"agent_id": "agent", "passport_id": "passport"})
++			if code != http.StatusOK || result["verified"] != tc.want {
++				t.Errorf("verify: code=%d result=%v want=%v", code, result, tc.want)
++			}
++			for _, explicit := range []bool{true, false} {
++				request := map[string]any{"agent_id": "agent", "action_class": "model.promote", "resource": "model/candidate"}
++				if explicit {
++					request["passport_id"] = "passport"
++				}
++				code, result = authorityRequest(t, h, "/v1/enforcement/scope:evaluate", request)
++				want := "DENY"
++				if tc.want {
++					want = "ALLOW"
++				}
++				decision, _ := result["decision"].(map[string]any)
++				if code != http.StatusOK || decision["effect"] != want {
++					t.Errorf("scope explicit=%v: code=%d result=%v want=%s", explicit, code, result, want)
++				}
++			}
++		})
++	}
++}
++
++func TestAuthorityScopeExpiryAndContext(t *testing.T) {
++	cases := []struct {
++		name    string
++		scope   map[string]any
++		context any
++		want    string
++	}{
++		{"unrestricted_scope_inherits_passport_expiry", nil, map[string]any{"site": "A"}, "ALLOW"},
++		{"scope_expired", map[string]any{"expires_ts": authorityCheckTime.UnixMilli() - 1}, nil, "DENY"},
++		{"scope_equal_now", map[string]any{"expires_ts": authorityCheckTime.UnixMilli()}, nil, "DENY"},
++		{"scope_future", map[string]any{"expires_ts": authorityCheckTime.UnixMilli() + 1}, nil, "ALLOW"},
++		{"scope_expired_date", map[string]any{"expires_at": authorityCheckTime.Add(-time.Second).Format(time.RFC3339Nano)}, nil, "DENY"},
++		{"scope_malformed_expiry", map[string]any{"expires_ts": "invalid"}, nil, "DENY"},
++		{"scope_null_expiry", map[string]any{"expires_ts": nil}, nil, "DENY"},
++		{"scope_context_match", map[string]any{"context_constraints": map[string]any{"site": "A"}}, map[string]any{"site": "A"}, "ALLOW"},
++		{"scope_context_wrong_site", map[string]any{"context_constraints": map[string]any{"site": "A"}}, map[string]any{"site": "B"}, "DENY"},
++		{"scope_context_missing", map[string]any{"context_constraints": map[string]any{"site": "A"}}, nil, "DENY"},
++		{"scope_context_extra_key", map[string]any{"context_constraints": map[string]any{"site": "A"}}, map[string]any{"site": "A", "mode": "other"}, "DENY"},
++		{"scope_context_invalid_type", map[string]any{"context_constraints": "site=A"}, nil, "DENY"},
++		{"scope_context_null", map[string]any{"context_constraints": nil}, nil, "DENY"},
++		{"scope_context_nonstring_value", map[string]any{"context_constraints": map[string]any{"site": 1}}, map[string]any{"site": "1"}, "DENY"},
++	}
++	for _, tc := range cases {
++		t.Run(tc.name, func(t *testing.T) {
++			passport := baseAuthorityPassport()
++			scope := passport["scope_set"].([]any)[0].(map[string]any)
++			for k, v := range tc.scope {
++				scope[k] = v
++			}
++			h := authorityHandler(t, passport)
++			for _, explicit := range []bool{true, false} {
++				request := map[string]any{"agent_id": "agent", "action_class": "model.promote", "resource": "model/candidate"}
++				if explicit {
++					request["passport_id"] = "passport"
++				}
++				if tc.context != nil {
++					request["context"] = tc.context
++				}
++				code, result := authorityRequest(t, h, "/v1/enforcement/scope:evaluate", request)
++				decision, _ := result["decision"].(map[string]any)
++				if code != http.StatusOK || decision["effect"] != tc.want {
++					t.Errorf("scope explicit=%v code=%d result=%v want=%s", explicit, code, result, tc.want)
++				}
++			}
++		})
++	}
++}
++
++func TestAuthorityScopeRejectsMalformedRequestContext(t *testing.T) {
++	for _, bad := range []any{nil, "site=A", []any{"A"}, map[string]any{"site": 1}} {
++		h := authorityHandler(t, baseAuthorityPassport())
++		code, result := authorityRequest(t, h, "/v1/enforcement/scope:evaluate", map[string]any{"agent_id": "agent", "action_class": "model.promote", "resource": "model/candidate", "context": bad})
++		if code != http.StatusBadRequest {
++			t.Errorf("context=%v code=%d result=%v", bad, code, result)
++		}
++	}
++}
++
++func TestAuthorityLocalIssuePreservesConditions(t *testing.T) {
++	mem := repo.NewMemory()
++	now := authorityCheckTime
++	h, err := Handler(Config{Repo: mem, Now: func() time.Time { return now }})
++	if err != nil {
++		t.Fatal(err)
++	}
++	code, _ := authorityRequest(t, h, "/v1/identity/agents", map[string]any{"agent_type": "demo", "owner_id": "owner"})
++	if code != http.StatusCreated {
++		t.Fatal(code)
++	}
++	code, result := authorityRequest(t, h, "/v1/passports", map[string]any{
++		"agent_id": "agt-authority-test", "passport_type": "STANDARD", "ttl_seconds": 3600, "issued_by": "operator", "reason": "qualification",
++		"requested_scopes": []any{map[string]any{"action_class": "model.promote", "resource_pattern": "model/*", "scope_ttl_seconds": 60, "context_constraints": map[string]any{"site": "A"}}},
++	})
++	if code != http.StatusCreated {
++		t.Fatalf("issue: code=%d result=%v", code, result)
++	}
++	for _, tc := range []struct {
++		name, site, want string
++		offset           time.Duration
++	}{
++		{"qualified_site_before_expiry", "A", "ALLOW", 59 * time.Second},
++		{"other_site", "B", "DENY", 59 * time.Second},
++		{"at_scope_expiry", "A", "DENY", 60 * time.Second},
++		{"after_scope_expiry", "A", "DENY", 61 * time.Second},
++	} {
++		t.Run(tc.name, func(t *testing.T) {
++			now = authorityCheckTime.Add(tc.offset)
++			code, result := authorityRequest(t, h, "/v1/enforcement/scope:evaluate", map[string]any{"agent_id": "agt-authority-test", "passport_id": "ppt-authority-test", "action_class": "model.promote", "resource": "model/candidate", "context": map[string]any{"site": tc.site}})
++			decision, _ := result["decision"].(map[string]any)
++			if code != http.StatusOK || decision["effect"] != tc.want {
++				t.Errorf("code=%d result=%v want=%s", code, result, tc.want)
++			}
++		})
++	}
++}
++
++func TestAuthorityLocalIssueRejectsMalformedConditions(t *testing.T) {
++	for _, tc := range []struct {
++		name, field string
++		value       any
++	}{
++		{"context_not_object", "context_constraints", "site=A"},
++		{"context_null", "context_constraints", nil},
++		{"context_value_not_string", "context_constraints", map[string]any{"site": 1}},
++		{"scope_ttl_fractional", "scope_ttl_seconds", 1.5},
++		{"scope_ttl_negative", "scope_ttl_seconds", -1},
++		{"scope_ttl_null", "scope_ttl_seconds", nil},
++		{"scope_ttl_overflow", "scope_ttl_seconds", json.Number("9223372036854775808")},
++	} {
++		t.Run(tc.name, func(t *testing.T) {
++			mem := repo.NewMemory()
++			h, err := Handler(Config{Repo: mem, Now: func() time.Time { return authorityCheckTime }})
++			if err != nil {
++				t.Fatal(err)
++			}
++			code, _ := authorityRequest(t, h, "/v1/identity/agents", map[string]any{"agent_type": "demo", "owner_id": "owner"})
++			if code != http.StatusCreated {
++				t.Fatal(code)
++			}
++			scope := map[string]any{"action_class": "model.promote", "resource_pattern": "model/*", tc.field: tc.value}
++			code, result := authorityRequest(t, h, "/v1/passports", map[string]any{"agent_id": "agt-authority-test", "passport_type": "STANDARD", "ttl_seconds": 3600, "issued_by": "operator", "reason": "qualification", "requested_scopes": []any{scope}})
++			if code != http.StatusBadRequest {
++				t.Fatalf("code=%d result=%v", code, result)
++			}
++			bodies, err := mem.ListPassportBodiesByAgent(context.Background(), "agt-authority-test")
++			if err != nil || len(bodies) != 0 {
++				t.Fatalf("invalid request stored authority: %v %v", bodies, err)
++			}
++		})
++	}
++}
++
++func TestAuthorityStillRequiresBindingAndActiveStatus(t *testing.T) {
++	for _, tc := range []struct{ name, field, value string }{
++		{"wrong_agent", "agent_id", "different-agent"},
++		{"revoked", "status", "REVOKED"},
++		{"expired_status", "status", "EXPIRED"},
++	} {
++		t.Run(tc.name, func(t *testing.T) {
++			passport := baseAuthorityPassport()
++			passport[tc.field] = tc.value
++			h := authorityHandler(t, passport)
++			_, result := authorityRequest(t, h, "/v1/passports:verify", map[string]any{"agent_id": "agent", "passport_id": "passport"})
++			if result["verified"] != false {
++				t.Fatalf("verify: %v", result)
++			}
++			_, result = authorityRequest(t, h, "/v1/enforcement/scope:evaluate", map[string]any{"agent_id": "agent", "passport_id": "passport", "action_class": "model.promote", "resource": "model/candidate"})
++			decision, _ := result["decision"].(map[string]any)
++			if decision["effect"] != "DENY" {
++				t.Fatalf("scope: %v", result)
++			}
++		})
++	}
++}
++
++func TestAuthorityExpiredScopeDoesNotHideOtherValidScope(t *testing.T) {
++	passport := baseAuthorityPassport()
++	passport["scope_set"] = []any{
++		map[string]any{"action_class": "model.promote", "resource_pattern": "model/*", "expires_ts": authorityCheckTime.UnixMilli() - 1},
++		map[string]any{"action_class": "model.promote", "resource_pattern": "model/*", "expires_ts": authorityCheckTime.UnixMilli() + 1, "context_constraints": map[string]any{"site": "A"}},
++	}
++	h := authorityHandler(t, passport)
++	_, result := authorityRequest(t, h, "/v1/enforcement/scope:evaluate", map[string]any{"agent_id": "agent", "action_class": "model.promote", "resource": "model/candidate", "context": map[string]any{"site": "A"}})
++	decision, _ := result["decision"].(map[string]any)
++	if decision["effect"] != "ALLOW" {
++		t.Fatalf("scope: %v", result)
++	}
++}
+diff --git a/sx/s0s1-rest-bff/internal/s0delegate/passport_ops.go b/sx/s0s1-rest-bff/internal/s0delegate/passport_ops.go
+--- a/sx/s0s1-rest-bff/internal/s0delegate/passport_ops.go
++++ b/sx/s0s1-rest-bff/internal/s0delegate/passport_ops.go
+@@ -69,15 +69,13 @@
+ 				"scope_id":         s.GetScopeId(),
+ 				"action_class":     s.GetActionClass(),
+ 				"resource_pattern": s.GetResourcePattern(),
++				"expires_ts":       s.GetExpiresTs(),
+ 			}
+ 			if cc := s.GetContextConstraints(); len(cc) > 0 {
+ 				row["context_constraints"] = cc
+ 			}
+ 			if s.GetGrantedTs() != 0 {
+ 				row["granted_ts"] = s.GetGrantedTs()
+-			}
+-			if s.GetExpiresTs() != 0 {
+-				row["expires_ts"] = s.GetExpiresTs()
+ 			}
+ 			if s.GetIsEscalation() {
+ 				row["is_escalation"] = true
+diff --git a/sx/s0s1-rest-bff/internal/s0delegate/passport_ops_test.go b/sx/s0s1-rest-bff/internal/s0delegate/passport_ops_test.go
+new file mode 100644
+--- /dev/null
++++ b/sx/s0s1-rest-bff/internal/s0delegate/passport_ops_test.go
+@@ -0,0 +1,16 @@
++package s0delegate
++
++import (
++	"testing"
++
++	passportv1 "github.com/srex-dev/are-foundation/s0/passport-issuance-engine/proto"
++)
++
++func TestPassportMapPreservesZeroScopeExpiry(t *testing.T) {
++	// A zero timestamp in a delegated scope is expired, not an omitted bound.
++	passport := passportToMap(&passportv1.Passport{ScopeSet: []*passportv1.PassportScope{{ExpiresTs: 0}}})
++	scope := passport["scope_set"].([]any)[0].(map[string]any)
++	if got, exists := scope["expires_ts"]; !exists || got != int64(0) {
++		t.Fatalf("delegated expiry lost: %v", scope)
++	}
++}

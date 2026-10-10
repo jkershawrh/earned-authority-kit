@@ -1,0 +1,26 @@
+{
+  "schema_version": "0.1.0-draft.1",
+  "passport_id": "passport-001",
+  "agent_id": "agent-001",
+  "authority_revision": 1,
+  "policy_digest": "sha256:22c5f3c3340bde5c5c4e2152d99f2a91cdf10cdafc9d4b09200810a50b4024cc",
+  "issued_at_ms": 2000,
+  "expires_at_ms": 3000,
+  "status": "ACTIVE",
+  "grants": [
+    {
+      "grant_id": "grant-001",
+      "skill_id": "registry-release-v1",
+      "skill_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "context_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "qualification_id": "qualification-001",
+      "qualification_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "action_class": "model.promote_to_production",
+      "resource": "model/demo",
+      "expires_at_ms": 3000,
+      "policy_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "issuer_ref": "fixture-issuer",
+  "signature_ref": "fixture-not-a-real-signature"
+}

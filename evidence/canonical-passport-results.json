@@ -1,0 +1,81 @@
+{
+  "track": "canonical-passport-hardening",
+  "base_head": "c5e9e4ef780a51647ebafb9f7239e75cd223b596",
+  "source_checkout_unchanged": true,
+  "patch": "patches/canonical-passport-hardening.patch",
+  "patch_manifest": "evidence/canonical-patches.json",
+  "snapshot": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/passport-track",
+  "binary": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/passport-track/bin/agent-passport",
+  "proto": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/passport-track/proto/passport_issuance.proto",
+  "golden_fixture": "contracts/fixtures/passport-canonical-v2.json",
+  "checks": {
+    "baseline": {
+      "log": "evidence/canonical-passport-baseline-tests.jsonl",
+      "test_nodes": 12,
+      "leaf_tests": 12,
+      "passed": 12,
+      "failed": 0,
+      "failures": []
+    },
+    "red": {
+      "log": "evidence/canonical-passport-red.jsonl",
+      "test_nodes": 19,
+      "leaf_tests": 16,
+      "passed": 0,
+      "failed": 16,
+      "failures": [
+        "github.com/srex-dev/agent-passport/internal/service/TestFailedForceReissueLeavesOriginalActive/signer",
+        "github.com/srex-dev/agent-passport/internal/service/TestFailedForceReissueLeavesOriginalActive/policy",
+        "github.com/srex-dev/agent-passport/internal/service/TestVerifyRejectsUnrelatedSignedPayload",
+        "github.com/srex-dev/agent-passport/internal/service/TestCanonicalSignatureBindsAuthority/passport_id",
+        "github.com/srex-dev/agent-passport/internal/service/TestCanonicalSignatureBindsAuthority/agent_id",
+        "github.com/srex-dev/agent-passport/internal/service/TestCanonicalSignatureBindsAuthority/context",
+        "github.com/srex-dev/agent-passport/internal/service/TestCanonicalSignatureBindsAuthority/scope_expiry",
+        "github.com/srex-dev/agent-passport/internal/service/TestCanonicalSignatureBindsAuthority/scope_grant",
+        "github.com/srex-dev/agent-passport/internal/service/TestCanonicalSignatureBindsAuthority/escalation",
+        "github.com/srex-dev/agent-passport/internal/service/TestCanonicalSignatureBindsAuthority/policy_id",
+        "github.com/srex-dev/agent-passport/internal/service/TestCanonicalSignatureBindsAuthority/policy_version",
+        "github.com/srex-dev/agent-passport/internal/service/TestCanonicalSignatureBindsAuthority/issuer",
+        "github.com/srex-dev/agent-passport/internal/service/TestReturnedRecordsDoNotMutateAuthority",
+        "github.com/srex-dev/agent-passport/internal/service/TestVerificationChecksCurrentIdentityAndActivePointer/suspended",
+        "github.com/srex-dev/agent-passport/internal/service/TestVerificationChecksCurrentIdentityAndActivePointer/deregistered",
+        "github.com/srex-dev/agent-passport/internal/service/TestVerificationChecksCurrentIdentityAndActivePointer/not_active_pointer"
+      ]
+    },
+    "green": {
+      "log": "evidence/canonical-passport-green.jsonl",
+      "test_nodes": 53,
+      "leaf_tests": 49,
+      "passed": 49,
+      "failed": 0,
+      "failures": []
+    },
+    "race": {
+      "log": "evidence/canonical-passport-race.jsonl",
+      "test_nodes": 53,
+      "leaf_tests": 49,
+      "passed": 49,
+      "failed": 0,
+      "failures": []
+    }
+  },
+  "EDD": "evaluation-driven development",
+  "behavior": [
+    "Failed signing, policy lookup or durable write leaves prior active credential/revision unchanged.",
+    "Verification uses stored canonical v2 bytes and stored signature; optional caller bytes must match; current active pointer and real registry identity checked.",
+    "Signature binds issuance identity/revision, signer identity, issuer/reason, all scope fields, times and policy.",
+    "Durable mode persists Ed25519 key plus single-writer atomic state; rejects corruption and ambiguous commit until restart.",
+    "Both active UUID and monotonic aggregate revision CAS required on durable mutations; empty-state ABA and stale cross-field combinations rejected.",
+    "Canonical signed bytes exposed in binary metadata; historical issuance revision is distinct from current aggregate revision.",
+    "Mutation token required in durable runnable mode; shared advisory fence taken before service mutex; reads do not acquire fence."
+  ],
+  "bounded_gate": "GREEN",
+  "whole_milestone_status": "Not assessed by this component report; real connected acceptance and deployment recovery remain root-owned.",
+  "limitations": [
+    "Single host cooperating advisory-lock guarantee, not distributed fencing or consensus.",
+    "Privileged state/key rollback is outside local persistence guarantee.",
+    "No TLS/workload identity provisioning or implicit policy authorization in passport issuance; explicit upstream policy identity/version is captured.",
+    "Lifecycle ledger delivery is performed by integration owner; durable mode does not use a fake ledger.",
+    "Legacy demo memory mode remains available and uses test signing/identity; it is excluded from real-service acceptance."
+  ]
+}

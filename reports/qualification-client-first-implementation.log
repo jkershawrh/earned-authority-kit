@@ -1,0 +1,21 @@
+test_CDD_Q01_actual_cascade_promotes_demo_three_verified_passes (test_qualification_client.QualificationClientTests) ... ok
+test_CDD_Q02_actual_gcl_capacity_gate_is_advisory_and_network_free (test_qualification_client.QualificationClientTests) ... ok
+test_CDD_Q03_real_gcl_capacity_failure_blocks_eligibility_not_outcome (test_qualification_client.QualificationClientTests) ... ok
+test_CDD_Q04_missing_gcl_is_not_claimed_as_pass (test_qualification_client.QualificationClientTests) ... ok
+test_CDD_Q05_changed_capacity_cannot_reuse_context_qualification (test_qualification_client.QualificationClientTests) ... ok
+test_CDD_Q06_unknown_does_not_enter_cascade_failure_counts (test_qualification_client.QualificationClientTests) ... ok
+test_CDD_Q07_known_miss_calls_canonical_instant_demotion (test_qualification_client.QualificationClientTests) ... Agent 'sha256:e62a8074a60071d4ead86bc84ce33759694c6e9a60957e04e78042f04a830f04:sha256:fa003ea7d3af191106fa48d7489a2cb4bd3bdf4f51c8e24a15b412cc604d7fe9' DEMOTED: nano → draft (1 false negative(s) in validation batch)
+ok
+test_CDD_Q08_untrusted_signed_observations_cannot_promote (test_qualification_client.QualificationClientTests) ... ok
+test_CDD_Q09_authenticated_self_report_is_not_independent (test_qualification_client.QualificationClientTests) ... ok
+test_CDD_Q10_duplicate_delivery_does_not_inflate_canonical_samples (test_qualification_client.QualificationClientTests) ... ok
+test_CDD_Q11_changed_signed_evidence_cannot_be_counted (test_qualification_client.QualificationClientTests) ... ok
+test_CDD_Q12_stale_evidence_holds_without_failure (test_qualification_client.QualificationClientTests) ... ok
+test_CDD_Q13_referenced_outcome_cannot_be_silently_omitted (test_qualification_client.QualificationClientTests) ... ok
+test_CDD_Q14_new_skill_revision_requires_fresh_canonical_metrics (test_qualification_client.QualificationClientTests) ... ok
+test_CDD_Q15_canonical_threshold_defaults_remain_unchanged (test_qualification_client.QualificationClientTests) ... ok
+
+----------------------------------------------------------------------
+Ran 15 tests in 5.215s
+
+OK

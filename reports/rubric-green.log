@@ -1,0 +1,23 @@
+test_external_artifacts_cannot_satisfy_local_manifest (test_rubric.ArtifactTests) ... ok
+test_hash_is_recomputed_and_tampering_is_rejected (test_rubric.ArtifactTests) ... ok
+test_unverified_pass_cannot_turn_green (test_rubric.ArtifactTests) ... ok
+test_complete_current_evidence_is_green (test_rubric.RubricTests) ... ok
+test_component_pass_cannot_satisfy_integration (test_rubric.RubricTests) ... ok
+test_different_requirement_does_not_count (test_rubric.RubricTests) ... ok
+test_empty_required_methods_are_invalid (test_rubric.RubricTests) ... ok
+test_future_timestamp_is_amber (test_rubric.RubricTests) ... ok
+test_known_failure_dominates_pass (test_rubric.RubricTests) ... ok
+test_missing_evidence_is_amber (test_rubric.RubricTests) ... ok
+test_no_artifact_digest_cannot_be_green (test_rubric.RubricTests) ... ok
+test_one_missing_method_is_amber (test_rubric.RubricTests) ... ok
+test_previous_revision_cannot_satisfy_current (test_rubric.RubricTests) ... ok
+test_release_is_worst_required_status (test_rubric.RubricTests) ... ok
+test_stale_failure_remains_red_until_revision_changes (test_rubric.RubricTests) ... ok
+test_stale_pass_is_amber (test_rubric.RubricTests) ... ok
+test_unexecuted_scenario_is_amber (test_rubric.RubricTests) ... ok
+test_unknown_and_skipped_are_amber (test_rubric.RubricTests) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.002s
+
+OK

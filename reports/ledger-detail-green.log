@@ -1,0 +1,34 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.13, pytest-9.0.2, pluggy-1.6.0 -- /Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/../../work/ledger-venv/bin/python
+cachedir: .pytest_cache
+rootdir: /Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit
+plugins: anyio-4.15.1
+collecting ... collected 25 items
+
+tests/test_ledger_client.py::test_round_trip_and_idempotent_receipt PASSED [  4%]
+tests/test_ledger_client.py::test_conflicting_idempotent_content_fails PASSED [  8%]
+tests/test_ledger_client.py::test_receipt_cannot_be_rebound_to_changed_event[attempt_id-another] PASSED [ 12%]
+tests/test_ledger_client.py::test_receipt_cannot_be_rebound_to_changed_event[agent_id-other] PASSED [ 16%]
+tests/test_ledger_client.py::test_receipt_cannot_be_rebound_to_changed_event[authority_revision-9] PASSED [ 20%]
+tests/test_ledger_client.py::test_receipt_cannot_be_rebound_to_changed_event[outcome-FAIL] PASSED [ 24%]
+tests/test_ledger_client.py::test_changed_receipt_fails[entry_hash] PASSED [ 28%]
+tests/test_ledger_client.py::test_changed_receipt_fails[entry_id] PASSED [ 32%]
+tests/test_ledger_client.py::test_changed_receipt_fails[input_hash] PASSED [ 36%]
+tests/test_ledger_client.py::test_changed_receipt_fails[writer_signature] PASSED [ 40%]
+tests/test_ledger_client.py::test_changed_receipt_fails[signer_key_reference] PASSED [ 44%]
+tests/test_ledger_client.py::test_changed_receipt_fails[attempt_id] PASSED [ 48%]
+tests/test_ledger_client.py::test_changed_receipt_fails[content_sha256] PASSED [ 52%]
+tests/test_ledger_client.py::test_changed_receipt_fails[idempotency_key] PASSED [ 56%]
+tests/test_ledger_client.py::test_changed_receipt_fails[correlation_id] PASSED [ 60%]
+tests/test_ledger_client.py::test_changed_receipt_fails[agent_id] PASSED [ 64%]
+tests/test_ledger_client.py::test_stored_bytes_tampering_fails_independent_hash_check PASSED [ 68%]
+tests/test_ledger_client.py::test_untrusted_writer_is_not_accepted_even_when_ledger_proof_passes PASSED [ 72%]
+tests/test_ledger_client.py::test_valid_hash_does_not_make_a_bad_signature_valid PASSED [ 76%]
+tests/test_ledger_client.py::test_remote_failure_or_unsupported_hash_version_fails_closed PASSED [ 80%]
+tests/test_ledger_client.py::test_no_append_without_explicit_authentication_and_signer PASSED [ 84%]
+tests/test_ledger_client.py::test_required_attempt_binding_and_nonfinite_json_rejected PASSED [ 88%]
+tests/test_ledger_client.py::test_dependency_outage_is_unknown_not_tamper PASSED [ 92%]
+tests/test_ledger_client.py::test_expired_receipt_is_stale_not_tamper PASSED [ 96%]
+tests/test_ledger_client.py::test_positive_content_mismatch_is_distinct_from_missing_trust PASSED [100%]
+
+============================== 25 passed in 0.05s ==============================

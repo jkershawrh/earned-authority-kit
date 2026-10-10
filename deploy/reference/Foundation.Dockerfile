@@ -1,0 +1,5 @@
+FROM scratch
+ARG BINARY
+COPY ${BINARY} /service
+USER 65532:65532
+ENTRYPOINT ["/service"]

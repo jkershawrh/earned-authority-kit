@@ -1,0 +1,67 @@
+{
+  "track": "foundation-policy-decision-binding",
+  "environment": "UNIT_AND_REAL_OPA_ENGINE",
+  "checks": {
+    "red": {
+      "log": "evidence/foundation-policy-binding-red.jsonl",
+      "leaf_tests": 8,
+      "passed": 0,
+      "failed": 8,
+      "failures": [
+        "are-s0s1-rest-bff/internal/policy/TestOPARejectsUnboundDecision/policy_id",
+        "are-s0s1-rest-bff/internal/policy/TestOPARejectsUnboundDecision/policy_digest",
+        "are-s0s1-rest-bff/internal/policy/TestOPARejectsUnboundDecision/decision_id",
+        "are-s0s1-rest-bff/internal/policy/TestOPARejectsUnboundDecision/agent_id",
+        "are-s0s1-rest-bff/internal/policy/TestOPARejectsUnboundDecision/action_class",
+        "are-s0s1-rest-bff/internal/policy/TestOPARejectsUnboundDecision/resource",
+        "are-s0s1-rest-bff/internal/policy/TestOPARejectsUnboundDecision/effect",
+        "are-s0s1-rest-bff/internal/api/TestPolicyDecisionForwardsEvaluatedBinding"
+      ]
+    },
+    "green": {
+      "log": "evidence/foundation-policy-binding-green.jsonl",
+      "leaf_tests": 81,
+      "passed": 81,
+      "failed": 0,
+      "failures": []
+    },
+    "race": {
+      "log": "evidence/foundation-policy-binding-race.jsonl",
+      "leaf_tests": 81,
+      "passed": 81,
+      "failed": 0,
+      "failures": []
+    },
+    "rego": {
+      "log": "evidence/foundation-policy-rego-tests.json",
+      "tests": 3,
+      "passed": 3,
+      "failed": 0,
+      "image": "docker.io/openpolicyagent/opa@sha256:2b1c4b231f6dfa6a2baea4af4109203b10cd4b65e836d72f03bfe5d8dfce7095"
+    }
+  },
+  "source_checkout_unchanged": true,
+  "policy_source_sha256": "272b8a64f27947d4fc0bf5c6b2749a665d7442556a13db31f524e0f721ab41da",
+  "bounded_gate": "GREEN",
+  "policy_binding_data": {
+    "are_policy_binding": {
+      "policy_id": "<loaded module id>",
+      "policy_digest": "sha256:<exact final policy source digest>"
+    }
+  },
+  "decision_fields": [
+    "decision_id",
+    "agent_id",
+    "action_class",
+    "resource",
+    "policy_id",
+    "policy_digest",
+    "effect",
+    "reason"
+  ],
+  "guarantee": "OPA evaluates policy and metadata loaded together from an immutable directory/bundle; BFF validates inputs and forwards the evaluated binding; consumer pins digest. Requires administrative writes disabled and trusted host/configuration.",
+  "pending": [
+    "Packaging rebuild/restart and root connected acceptance remain separate gates."
+  ],
+  "complete_patch": "patches/foundation-complete-reference.patch"
+}

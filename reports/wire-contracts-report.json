@@ -1,0 +1,39 @@
+{
+  "schema_version": "0.1.0-draft.1",
+  "scope": "CDD_RUNTIME_PRODUCER_CONSUMER_M1",
+  "executed_at_utc": "2026-10-10T01:57:27.823043+00:00",
+  "status": "PASS",
+  "tests_run": 60,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "source_unchanged_during_run": true,
+  "source_hashes": {
+    "earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/runtime.py": "sha256:f3b2bdd351a64e8168c7bf5771ca0d4bd460b6505dea595e288d0c68326969ce",
+    "tests/test_wire_contracts.py": "sha256:69b1d2a86b3decb724d832de0caf601d67ab89a227b075df936e86afcadbe280",
+    "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
+    "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
+    "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
+    "contracts/lifecycle-event.schema.json": "sha256:4032643e426de95c0ccd08ac9da535c8929dfff4dbb8e69b61a79effa7c2b4a3",
+    "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
+    "contracts/qualification.schema.json": "sha256:2a4a4f6921a3f839b6b4a554f0c8fa019600d14411d5cfd8355f119aa28449b3",
+    "contracts/fixtures/attempt.json": "sha256:d6a7e3571ab9b4698f01175b21e128fa45a01acadc69f507ffc6c1bcb58e9041",
+    "contracts/fixtures/authority.json": "sha256:d36365cb845dc72a1c52550cff017282a5f69d5b00a9472bf173bd2e5626979a",
+    "contracts/fixtures/lifecycle-event.json": "sha256:075e93e0e71ec0ff30ed8929ed989795b60ab1b7161c9d11b716e265050a7057",
+    "contracts/fixtures/outcome.json": "sha256:bd8bfaba9be520fe2c9c6cb8d5eb5fde843c1b553424923640dafed181142f16",
+    "contracts/fixtures/passport-canonical-v2.json": "sha256:40b5c68eb6333ed1fdd6a4db28bc5013253ac17f20e0f1efa85c2d23699dff66",
+    "contracts/fixtures/qualification-client-cases.json": "sha256:5d201b632a3a1a323136fdcad0905f258492988fb7a79e1051eb0675f114742e",
+    "contracts/fixtures/qualification.json": "sha256:c0b8c64ec3860f9a7aa785892bef5aef4e188962275880b069ab6df3114f93bb",
+    "contracts/fixtures/runtime-wire-records.json": "sha256:cbe6c1b5bed7c50ae739983fea588a45986ce3b2a12abb7f1f771e7906e4537d"
+  },
+  "red_evidence": "reports/wire-contracts-red.log",
+  "red_scope": "24 initial behavioral tests rejected intentional NotImplemented implementation",
+  "green_log": "reports/wire-contracts-green.log",
+  "claim": "Actual M1 producer records, authenticated runtime source resolution and semantic consumer checks; does not assert connected service execution or confer authority. Connected runner must separately exercise this same mapper.",
+  "authorizes_execution": false,
+  "artifacts": {
+    "reports/wire-contracts-green.log": "sha256:3146545d196760a6bf31027e0c1dbe2e9ea124ef6c4749aa811160469f7d47fc"
+  }
+}

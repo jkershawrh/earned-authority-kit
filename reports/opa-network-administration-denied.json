@@ -1,0 +1,67 @@
+{
+  "environment": "REAL_LOCAL_SERVICES",
+  "started_at": "2026-10-10T01:54:38.321284+00:00",
+  "checks": [
+    {
+      "check": "exact_loaded_module_set_and_digests",
+      "passed": true,
+      "evidence": {
+        "modules": {
+          "authz/authorization.rego": "sha256:d885c168086acda4556c80dd6b8911c6ada7c7b514a8632379b831179900cc52",
+          "policy/are_evaluatepolicy.rego": "sha256:272b8a64f27947d4fc0bf5c6b2749a665d7442556a13db31f524e0f721ab41da"
+        }
+      }
+    },
+    {
+      "check": "deny_PUT_/v1/policies/forbidden-probe",
+      "passed": true,
+      "evidence": {
+        "http_status": 401
+      }
+    },
+    {
+      "check": "deny_DELETE_/v1/policies/forbidden-probe",
+      "passed": true,
+      "evidence": {
+        "http_status": 401
+      }
+    },
+    {
+      "check": "deny_PUT_/v1/data/forbidden-probe",
+      "passed": true,
+      "evidence": {
+        "http_status": 401
+      }
+    },
+    {
+      "check": "deny_PATCH_/v1/data/forbidden-probe",
+      "passed": true,
+      "evidence": {
+        "http_status": 401
+      }
+    },
+    {
+      "check": "deny_POST_/v1/query",
+      "passed": true,
+      "evidence": {
+        "http_status": 401
+      }
+    },
+    {
+      "check": "deny_POST_/v1/compile",
+      "passed": true,
+      "evidence": {
+        "http_status": 401
+      }
+    },
+    {
+      "check": "decision_echoes_inputs_and_same_snapshot_binding",
+      "passed": true,
+      "evidence": {}
+    }
+  ],
+  "limit": "Immutable loaded local policy with trusted host/container administrators; not a general distributed atomic policy guarantee",
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "finished_at": "2026-10-10T01:54:38.371548+00:00"
+}

@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_a_signed_grant_cannot_borrow_another_skills_qualification (test_connected_binding.BindingRegression)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_connected_binding.py", line 22, in test_a_signed_grant_cannot_borrow_another_skills_qualification
+    with self.assertRaises(Denied) as got:rt._check(None,intent,1)
+AssertionError: Denied not raised
+
+----------------------------------------------------------------------
+Ran 1 test in 0.001s
+
+FAILED (failures=1)

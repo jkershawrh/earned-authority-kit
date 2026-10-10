@@ -1,0 +1,263 @@
+{
+  "track": "foundation-authority-checks",
+  "generated_at": "2026-10-10T01:30:30.645480+00:00",
+  "baseline": {
+    "head": "cb4e2209bcbafbbf6229ec5d096edaa296551832",
+    "source_repository": "/Users/jkershaw/Documents/are-foundation",
+    "includes_modified_tracked_files": [
+      "Makefile",
+      "deploy/compose/docker-compose.yml",
+      "s0/agent-registry-service/Dockerfile",
+      "sx/are-api-gateway/internal/gateway/phase1_contract.go",
+      "sx/s0s1-rest-bff/internal/api/api.go",
+      "sx/s0s1-rest-bff/internal/repo/memory.go",
+      "sx/s0s1-rest-bff/internal/repo/postgres.go",
+      "sx/s0s1-rest-bff/internal/repo/repo.go",
+      "sx/s0s1-rest-bff/policy/are_evaluatepolicy.rego"
+    ],
+    "excluded": "untracked and ignored source files",
+    "manifest": "evidence/foundation-baseline.json",
+    "working_diff_sha256": "e7212599cf7d78fbf2f2510f56e347a30026fbf070d1d3a00710634478f7c05e"
+  },
+  "source_checkout_unchanged": true,
+  "implementation_location": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/foundation-track",
+  "patch": {
+    "path": "patches/foundation-authority-checks.patch",
+    "sha256": "8f1b387bceaf36854cbf8d667674ba95b5735737dd873fa3797434ae1af0fa81",
+    "applies_relative_to": "committed HEAD plus the 9 initial tracked working-tree modifications; not bare HEAD",
+    "git_apply_check_exit_code": 0,
+    "files": [
+      "api/openapi.yaml",
+      "docs/api-contract.md",
+      "sx/s0s1-rest-bff/internal/api/api.go",
+      "sx/s0s1-rest-bff/internal/api/authority_checks.go",
+      "sx/s0s1-rest-bff/internal/api/authority_checks_test.go",
+      "sx/s0s1-rest-bff/internal/s0delegate/passport_ops.go",
+      "sx/s0s1-rest-bff/internal/s0delegate/passport_ops_test.go"
+    ]
+  },
+  "methodology": {
+    "TDD": "Tests failed for intended behavior before implementation, then passed. Red authority run includes only the clock injection seam before behavior fixes. Delegated zero-expiry mapping has its own red run.",
+    "EDD": "Evaluation-driven development; explicit invalid/valid authority cases test behavior, with zero observed unexpected decisions in the included green fixtures. Evidence capture supports all development methods.",
+    "CDD": "Public API schema and time/context semantics are updated; no live cross-service contract conformance claim.",
+    "BDD": "HTTP scenarios cover given scoped authority, when time or site changes, then deny; valid in-window authority still allows."
+  },
+  "checks": {
+    "baseline_bff": {
+      "command": "go test ./... -count=1 -json",
+      "directory": "foundation-track-baseline/sx/s0s1-rest-bff",
+      "exit_code": 0,
+      "log": "evidence/foundation-baseline-tests.jsonl",
+      "package_results": [
+        {
+          "Package": "are-s0s1-rest-bff/cmd/are-s0s1-rest-bff",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "are-s0s1-rest-bff/internal/repo",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "are-s0s1-rest-bff/internal/policy",
+          "Action": "pass",
+          "Elapsed": 0.604
+        },
+        {
+          "Package": "are-s0s1-rest-bff/internal/s0delegate",
+          "Action": "pass",
+          "Elapsed": 0.89
+        },
+        {
+          "Package": "are-s0s1-rest-bff/internal/api",
+          "Action": "pass",
+          "Elapsed": 1.193
+        }
+      ],
+      "test_nodes": 17,
+      "leaf_tests": 17,
+      "leaf_passed": 17,
+      "leaf_failed": 0,
+      "failed_tests": []
+    },
+    "red_authority": {
+      "command": "go test ./internal/api -run ^TestAuthority -count=1 -json",
+      "exit_code": 1,
+      "log": "evidence/foundation-red.jsonl",
+      "package_results": [
+        {
+          "Package": "are-s0s1-rest-bff/internal/api",
+          "Action": "fail",
+          "Elapsed": 0.72
+        }
+      ],
+      "test_nodes": 38,
+      "leaf_tests": 35,
+      "leaf_passed": 7,
+      "leaf_failed": 28,
+      "failed_tests": [
+        "are-s0s1-rest-bff/internal/api/TestAuthorityPassportExpiry/rfc3339_expired",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityPassportExpiry/rfc3339_equal_now",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityPassportExpiry/milliseconds_expired",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityPassportExpiry/milliseconds_equal_now",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityPassportExpiry/missing",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityPassportExpiry/malformed_date",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityPassportExpiry/null_date",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityPassportExpiry/invalid_type",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityPassportExpiry/fractional_milliseconds",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityPassportExpiry/milliseconds_overflow",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityPassportExpiry/second_format_expired",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityPassportExpiry/first_format_expired",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityPassportExpiry/second_format_malformed",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityPassportExpiry",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityScopeExpiryAndContext/scope_expired",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityScopeExpiryAndContext/scope_equal_now",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityScopeExpiryAndContext/scope_expired_date",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityScopeExpiryAndContext/scope_malformed_expiry",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityScopeExpiryAndContext/scope_null_expiry",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityScopeExpiryAndContext/scope_context_wrong_site",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityScopeExpiryAndContext/scope_context_missing",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityScopeExpiryAndContext/scope_context_extra_key",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityScopeExpiryAndContext/scope_context_invalid_type",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityScopeExpiryAndContext/scope_context_null",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityScopeExpiryAndContext/scope_context_nonstring_value",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityScopeExpiryAndContext",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityScopeRejectsMalformedRequestContext",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityLocalIssuePreservesConditions/other_site",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityLocalIssuePreservesConditions/at_scope_expiry",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityLocalIssuePreservesConditions/after_scope_expiry",
+        "are-s0s1-rest-bff/internal/api/TestAuthorityLocalIssuePreservesConditions"
+      ]
+    },
+    "red_delegate": {
+      "command": "go test ./internal/s0delegate -run TestPassportMapPreservesZeroScopeExpiry -count=1 -json",
+      "exit_code": 1,
+      "log": "evidence/foundation-delegate-red.jsonl",
+      "package_results": [
+        {
+          "Package": "are-s0s1-rest-bff/internal/s0delegate",
+          "Action": "fail",
+          "Elapsed": 0.71
+        }
+      ],
+      "test_nodes": 1,
+      "leaf_tests": 1,
+      "leaf_passed": 0,
+      "leaf_failed": 1,
+      "failed_tests": [
+        "are-s0s1-rest-bff/internal/s0delegate/TestPassportMapPreservesZeroScopeExpiry"
+      ]
+    },
+    "green_bff": {
+      "command": "go test ./... -count=1 -json",
+      "directory": "foundation-track/sx/s0s1-rest-bff",
+      "exit_code": 0,
+      "log": "evidence/foundation-green.jsonl",
+      "package_results": [
+        {
+          "Package": "are-s0s1-rest-bff/cmd/are-s0s1-rest-bff",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "are-s0s1-rest-bff/internal/repo",
+          "Action": "skip",
+          "Elapsed": 0
+        },
+        {
+          "Package": "are-s0s1-rest-bff/internal/policy",
+          "Action": "pass",
+          "Elapsed": 0.285
+        },
+        {
+          "Package": "are-s0s1-rest-bff/internal/s0delegate",
+          "Action": "pass",
+          "Elapsed": 0.777
+        },
+        {
+          "Package": "are-s0s1-rest-bff/internal/api",
+          "Action": "pass",
+          "Elapsed": 1.045
+        }
+      ],
+      "test_nodes": 69,
+      "leaf_tests": 64,
+      "leaf_passed": 64,
+      "leaf_failed": 0,
+      "failed_tests": []
+    },
+    "gateway_regression": {
+      "command": "go test ./... -count=1 -json",
+      "directory": "foundation-track/sx/are-api-gateway",
+      "exit_code": 0,
+      "log": "evidence/foundation-gateway-regression.jsonl",
+      "package_results": [
+        {
+          "Package": "are-api-gateway/internal/gateway",
+          "Action": "pass",
+          "Elapsed": 1.966
+        },
+        {
+          "Package": "are-api-gateway/cmd/are-api-gateway",
+          "Action": "pass",
+          "Elapsed": 2.082
+        }
+      ],
+      "test_nodes": 34,
+      "leaf_tests": 34,
+      "leaf_passed": 34,
+      "leaf_failed": 0,
+      "failed_tests": []
+    },
+    "race": {
+      "command": "go test -race ./internal/api ./internal/s0delegate -count=1 -json",
+      "directory": "foundation-track/sx/s0s1-rest-bff",
+      "exit_code": 0,
+      "log": "evidence/foundation-race.jsonl",
+      "package_results": [
+        {
+          "Package": "are-s0s1-rest-bff/internal/api",
+          "Action": "pass",
+          "Elapsed": 1.8279999999999998
+        },
+        {
+          "Package": "are-s0s1-rest-bff/internal/s0delegate",
+          "Action": "pass",
+          "Elapsed": 1.94
+        }
+      ],
+      "test_nodes": 63,
+      "leaf_tests": 58,
+      "leaf_passed": 58,
+      "leaf_failed": 0,
+      "failed_tests": []
+    }
+  },
+  "behavior": [
+    "Check-only verify and scope evaluation require bound ACTIVE passports with mandatory valid expiry strictly later than the injected server clock.",
+    "Both expires_at RFC3339 and expires_ts Unix milliseconds are supported; every present representation must be valid and future.",
+    "Explicit scope expiry is enforced; an omitted legacy scope expiry inherits the mandatory passport bound.",
+    "Nonempty context restrictions require exact string key/value set parity with the S1 runtime; malformed stored restrictions deny and malformed request restrictions return 400.",
+    "Local issuance preserves context restrictions and scope TTL, bounds scope TTL by passport TTL, and rejects malformed conditions before storing authority.",
+    "Delegated zero scope expiry is preserved so it cannot become an absent inherited bound."
+  ],
+  "rubric": {
+    "component_test_gate": "GREEN",
+    "integration_readiness": "AMBER",
+    "production_ready": false,
+    "reason": "Bounded local fixes verified; not applied to source checkout and not connected to real executor, authoritative delegated revocation, independent outcomes, or ledger."
+  },
+  "pending": [
+    "Existing-database status-column migration and concurrency-safe active passport replacement.",
+    "Single authoritative delegated verification/revocation flow and freshness enforcement.",
+    "Real executor enforcement, trusted environment/context observation, and revocation race behavior.",
+    "Skill/version/qualification evidence binding and complete qualify-authorize-execute-observe-revoke cycle.",
+    "Live Postgres and S0 integration, complete make test / make gate, schema conformance validation, and deployment smoke checks before merge or release.",
+    "Compatibility review for legacy passports missing expiry (now fail closed) and explicit null/non-string context fields (now rejected)."
+  ],
+  "limitations": [
+    "Reference-only stored-record checks; no cryptographic credential verification added.",
+    "No production deployment, no source commit, no publication, and no changes to other repositories."
+  ]
+}

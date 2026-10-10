@@ -1,0 +1,79 @@
+{"Time":"2026-10-09T20:34:50.961101-05:00","Action":"start","Package":"github.com/srex-dev/agent-passport/cmd/agent-passport"}
+{"Time":"2026-10-09T20:34:50.961172-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/cmd/agent-passport","Output":"?   \tgithub.com/srex-dev/agent-passport/cmd/agent-passport\t[no test files]\n"}
+{"Time":"2026-10-09T20:34:50.961193-05:00","Action":"skip","Package":"github.com/srex-dev/agent-passport/cmd/agent-passport","Elapsed":0}
+{"Time":"2026-10-09T20:34:50.961203-05:00","Action":"start","Package":"github.com/srex-dev/agent-passport/cmd/passport-grpc-probe"}
+{"Time":"2026-10-09T20:34:50.961223-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/cmd/passport-grpc-probe","Output":"?   \tgithub.com/srex-dev/agent-passport/cmd/passport-grpc-probe\t[no test files]\n"}
+{"Time":"2026-10-09T20:34:50.961234-05:00","Action":"skip","Package":"github.com/srex-dev/agent-passport/cmd/passport-grpc-probe","Elapsed":0}
+{"Time":"2026-10-09T20:34:50.961243-05:00","Action":"start","Package":"github.com/srex-dev/agent-passport/examples/grpc-client"}
+{"Time":"2026-10-09T20:34:50.961282-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/examples/grpc-client","Output":"?   \tgithub.com/srex-dev/agent-passport/examples/grpc-client\t[no test files]\n"}
+{"Time":"2026-10-09T20:34:50.961286-05:00","Action":"skip","Package":"github.com/srex-dev/agent-passport/examples/grpc-client","Elapsed":0}
+{"Time":"2026-10-09T20:34:50.961291-05:00","Action":"start","Package":"github.com/srex-dev/agent-passport/internal/config"}
+{"Time":"2026-10-09T20:34:50.961293-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/config","Output":"?   \tgithub.com/srex-dev/agent-passport/internal/config\t[no test files]\n"}
+{"Time":"2026-10-09T20:34:50.961296-05:00","Action":"skip","Package":"github.com/srex-dev/agent-passport/internal/config","Elapsed":0}
+{"Time":"2026-10-09T20:34:50.961299-05:00","Action":"start","Package":"github.com/srex-dev/agent-passport/internal/domain"}
+{"Time":"2026-10-09T20:34:50.961316-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/domain","Output":"?   \tgithub.com/srex-dev/agent-passport/internal/domain\t[no test files]\n"}
+{"Time":"2026-10-09T20:34:50.961318-05:00","Action":"skip","Package":"github.com/srex-dev/agent-passport/internal/domain","Elapsed":0}
+{"Time":"2026-10-09T20:34:50.96132-05:00","Action":"start","Package":"github.com/srex-dev/agent-passport/internal/grpc"}
+{"Time":"2026-10-09T20:34:50.961323-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/grpc","Output":"?   \tgithub.com/srex-dev/agent-passport/internal/grpc\t[no test files]\n"}
+{"Time":"2026-10-09T20:34:50.961327-05:00","Action":"skip","Package":"github.com/srex-dev/agent-passport/internal/grpc","Elapsed":0}
+{"Time":"2026-10-09T20:34:50.961332-05:00","Action":"start","Package":"github.com/srex-dev/agent-passport/internal/local"}
+{"Time":"2026-10-09T20:34:50.961336-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/local","Output":"?   \tgithub.com/srex-dev/agent-passport/internal/local\t[no test files]\n"}
+{"Time":"2026-10-09T20:34:50.961337-05:00","Action":"skip","Package":"github.com/srex-dev/agent-passport/internal/local","Elapsed":0}
+{"Time":"2026-10-09T20:34:50.96134-05:00","Action":"start","Package":"github.com/srex-dev/agent-passport/internal/metrics"}
+{"Time":"2026-10-09T20:34:50.961343-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/metrics","Output":"?   \tgithub.com/srex-dev/agent-passport/internal/metrics\t[no test files]\n"}
+{"Time":"2026-10-09T20:34:50.961344-05:00","Action":"skip","Package":"github.com/srex-dev/agent-passport/internal/metrics","Elapsed":0}
+{"Time":"2026-10-09T20:34:51.076467-05:00","Action":"start","Package":"github.com/srex-dev/agent-passport/internal/service"}
+{"Time":"2026-10-09T20:34:51.076491-05:00","Action":"start","Package":"github.com/srex-dev/agent-passport/proto"}
+{"Time":"2026-10-09T20:34:51.076505-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/proto","Output":"?   \tgithub.com/srex-dev/agent-passport/proto\t[no test files]\n"}
+{"Time":"2026-10-09T20:34:51.076516-05:00","Action":"skip","Package":"github.com/srex-dev/agent-passport/proto","Elapsed":0}
+{"Time":"2026-10-09T20:34:51.683327-05:00","Action":"run","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportSetsPolicyVersionFromBundleClient"}
+{"Time":"2026-10-09T20:34:51.683696-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportSetsPolicyVersionFromBundleClient","Output":"=== RUN   TestIssuePassportSetsPolicyVersionFromBundleClient\n"}
+{"Time":"2026-10-09T20:34:51.683736-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportSetsPolicyVersionFromBundleClient","Output":"--- PASS: TestIssuePassportSetsPolicyVersionFromBundleClient (0.00s)\n"}
+{"Time":"2026-10-09T20:34:51.683741-05:00","Action":"pass","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportSetsPolicyVersionFromBundleClient","Elapsed":0}
+{"Time":"2026-10-09T20:34:51.683753-05:00","Action":"run","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportExplicitPolicyAtIssuanceOverridesBundle"}
+{"Time":"2026-10-09T20:34:51.683758-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportExplicitPolicyAtIssuanceOverridesBundle","Output":"=== RUN   TestIssuePassportExplicitPolicyAtIssuanceOverridesBundle\n"}
+{"Time":"2026-10-09T20:34:51.683762-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportExplicitPolicyAtIssuanceOverridesBundle","Output":"--- PASS: TestIssuePassportExplicitPolicyAtIssuanceOverridesBundle (0.00s)\n"}
+{"Time":"2026-10-09T20:34:51.683765-05:00","Action":"pass","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportExplicitPolicyAtIssuanceOverridesBundle","Elapsed":0}
+{"Time":"2026-10-09T20:34:51.683768-05:00","Action":"run","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportAndVerify"}
+{"Time":"2026-10-09T20:34:51.683775-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportAndVerify","Output":"=== RUN   TestIssuePassportAndVerify\n"}
+{"Time":"2026-10-09T20:34:51.683787-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportAndVerify","Output":"--- PASS: TestIssuePassportAndVerify (0.00s)\n"}
+{"Time":"2026-10-09T20:34:51.68379-05:00","Action":"pass","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportAndVerify","Elapsed":0}
+{"Time":"2026-10-09T20:34:51.6838-05:00","Action":"run","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestOneActivePassportPerAgent"}
+{"Time":"2026-10-09T20:34:51.683803-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestOneActivePassportPerAgent","Output":"=== RUN   TestOneActivePassportPerAgent\n"}
+{"Time":"2026-10-09T20:34:51.683815-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestOneActivePassportPerAgent","Output":"--- PASS: TestOneActivePassportPerAgent (0.00s)\n"}
+{"Time":"2026-10-09T20:34:51.683824-05:00","Action":"pass","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestOneActivePassportPerAgent","Elapsed":0}
+{"Time":"2026-10-09T20:34:51.683827-05:00","Action":"run","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestForceReissueRevokesOld"}
+{"Time":"2026-10-09T20:34:51.683829-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestForceReissueRevokesOld","Output":"=== RUN   TestForceReissueRevokesOld\n"}
+{"Time":"2026-10-09T20:34:51.683832-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestForceReissueRevokesOld","Output":"--- PASS: TestForceReissueRevokesOld (0.00s)\n"}
+{"Time":"2026-10-09T20:34:51.683834-05:00","Action":"pass","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestForceReissueRevokesOld","Elapsed":0}
+{"Time":"2026-10-09T20:34:51.683841-05:00","Action":"run","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestProvisionalAllowlist"}
+{"Time":"2026-10-09T20:34:51.683843-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestProvisionalAllowlist","Output":"=== RUN   TestProvisionalAllowlist\n"}
+{"Time":"2026-10-09T20:34:51.683846-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestProvisionalAllowlist","Output":"--- PASS: TestProvisionalAllowlist (0.00s)\n"}
+{"Time":"2026-10-09T20:34:51.683849-05:00","Action":"pass","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestProvisionalAllowlist","Elapsed":0}
+{"Time":"2026-10-09T20:34:51.683851-05:00","Action":"run","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestRegistryStatusChecks"}
+{"Time":"2026-10-09T20:34:51.683853-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestRegistryStatusChecks","Output":"=== RUN   TestRegistryStatusChecks\n"}
+{"Time":"2026-10-09T20:34:51.683864-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestRegistryStatusChecks","Output":"--- PASS: TestRegistryStatusChecks (0.00s)\n"}
+{"Time":"2026-10-09T20:34:51.683867-05:00","Action":"pass","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestRegistryStatusChecks","Elapsed":0}
+{"Time":"2026-10-09T20:34:51.68387-05:00","Action":"run","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestSignFailurePreventsPersistence"}
+{"Time":"2026-10-09T20:34:51.683872-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestSignFailurePreventsPersistence","Output":"=== RUN   TestSignFailurePreventsPersistence\n"}
+{"Time":"2026-10-09T20:34:51.683875-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestSignFailurePreventsPersistence","Output":"--- PASS: TestSignFailurePreventsPersistence (0.00s)\n"}
+{"Time":"2026-10-09T20:34:51.683877-05:00","Action":"pass","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestSignFailurePreventsPersistence","Elapsed":0}
+{"Time":"2026-10-09T20:34:51.683879-05:00","Action":"run","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportTTLLimits"}
+{"Time":"2026-10-09T20:34:51.683881-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportTTLLimits","Output":"=== RUN   TestIssuePassportTTLLimits\n"}
+{"Time":"2026-10-09T20:34:51.683943-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportTTLLimits","Output":"--- PASS: TestIssuePassportTTLLimits (0.00s)\n"}
+{"Time":"2026-10-09T20:34:51.683951-05:00","Action":"pass","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportTTLLimits","Elapsed":0}
+{"Time":"2026-10-09T20:34:51.683954-05:00","Action":"run","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportRegistryUnavailable"}
+{"Time":"2026-10-09T20:34:51.683957-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportRegistryUnavailable","Output":"=== RUN   TestIssuePassportRegistryUnavailable\n"}
+{"Time":"2026-10-09T20:34:51.68396-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportRegistryUnavailable","Output":"--- PASS: TestIssuePassportRegistryUnavailable (0.00s)\n"}
+{"Time":"2026-10-09T20:34:51.683964-05:00","Action":"pass","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestIssuePassportRegistryUnavailable","Elapsed":0}
+{"Time":"2026-10-09T20:34:51.683967-05:00","Action":"run","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestVerifyPassportRevokedAndExpired"}
+{"Time":"2026-10-09T20:34:51.683969-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestVerifyPassportRevokedAndExpired","Output":"=== RUN   TestVerifyPassportRevokedAndExpired\n"}
+{"Time":"2026-10-09T20:34:51.683972-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestVerifyPassportRevokedAndExpired","Output":"--- PASS: TestVerifyPassportRevokedAndExpired (0.00s)\n"}
+{"Time":"2026-10-09T20:34:51.683975-05:00","Action":"pass","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestVerifyPassportRevokedAndExpired","Elapsed":0}
+{"Time":"2026-10-09T20:34:51.683977-05:00","Action":"run","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestRevokePassportClearsActive"}
+{"Time":"2026-10-09T20:34:51.68398-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestRevokePassportClearsActive","Output":"=== RUN   TestRevokePassportClearsActive\n"}
+{"Time":"2026-10-09T20:34:51.683982-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestRevokePassportClearsActive","Output":"--- PASS: TestRevokePassportClearsActive (0.00s)\n"}
+{"Time":"2026-10-09T20:34:51.683985-05:00","Action":"pass","Package":"github.com/srex-dev/agent-passport/internal/service","Test":"TestRevokePassportClearsActive","Elapsed":0}
+{"Time":"2026-10-09T20:34:51.683987-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Output":"PASS\n"}
+{"Time":"2026-10-09T20:34:51.684291-05:00","Action":"output","Package":"github.com/srex-dev/agent-passport/internal/service","Output":"ok  \tgithub.com/srex-dev/agent-passport/internal/service\t0.607s\n"}
+{"Time":"2026-10-09T20:34:51.684302-05:00","Action":"pass","Package":"github.com/srex-dev/agent-passport/internal/service","Elapsed":0.608}

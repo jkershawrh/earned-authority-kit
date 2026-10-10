@@ -1,0 +1,711 @@
+{
+  "generated_at_ms": 1791597770268,
+  "kit_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+  "overall_integration_readiness": "AMBER",
+  "milestones": [
+    {
+      "id": "M1",
+      "title": "Executable local fixture",
+      "status": "GREEN",
+      "scope": "Fixture behaviors, schemas and durable local evidence.",
+      "requirements": [
+        "CON-01",
+        "KIT-01",
+        "BDD-LOCAL",
+        "EXEC-LOCAL"
+      ]
+    },
+    {
+      "id": "M2",
+      "title": "Connected canonical services",
+      "status": "GREEN",
+      "scope": "Pinned local stack and specifically executed lifecycle/fault cases.",
+      "requirements": [
+        "QUAL-01",
+        "AUTH-CLIENT",
+        "LED-01",
+        "AUTH-01",
+        "POL-01",
+        "POL-LIVE",
+        "SVC-LIVE",
+        "ARC-LIVE",
+        "FAULT-LIVE"
+      ]
+    },
+    {
+      "id": "M3",
+      "title": "Deployable local reference kit",
+      "status": "GREEN",
+      "scope": "Fresh same-host reconstruction and full persistent restart.",
+      "requirements": [
+        "DEP-RESTORE",
+        "DEP-BUILD"
+      ]
+    }
+  ],
+  "kit_tests": {
+    "tests_run": 203,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "status": "PASS"
+  },
+  "CUT": "Unconfirmed; component named explicitly",
+  "EDD": "evaluation-driven development",
+  "rows": [
+    {
+      "id": "CON-01",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "LOCAL_COMPONENT",
+      "required_methods": [
+        "CDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP0",
+      "component": "Draft schemas and producer/consumer proofs",
+      "acceptance": "Actual fixture records, signed proof binding and historical qualification lookup. Draft contract; wider service adoption is separate.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M1",
+      "implementation": "60 tests; exact named modules only",
+      "artifact": "reports/component-verification.json"
+    },
+    {
+      "id": "KIT-01",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "LOCAL_COMPONENT",
+      "required_methods": [
+        "TDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP0",
+      "component": "Evidence color evaluator",
+      "acceptance": "Stale, missing, altered, unexecuted or wrong-environment evidence cannot satisfy a gate.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M1",
+      "implementation": "21 tests; exact named modules only",
+      "artifact": "reports/component-verification.json"
+    },
+    {
+      "id": "BDD-LOCAL",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "LOCAL_COMPONENT",
+      "required_methods": [
+        "BDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP5",
+      "component": "Local earned-authority lifecycle",
+      "acceptance": "BDD-001\u2013037 have fixture bindings; counts include additional cases and the coverage check.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M1",
+      "implementation": "52 tests; exact named modules only",
+      "artifact": "reports/component-verification.json"
+    },
+    {
+      "id": "EXEC-LOCAL",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "LOCAL_COMPONENT",
+      "required_methods": [
+        "TDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP3",
+      "component": "Durable registry and observation recovery",
+      "acceptance": "Mutation intent, retry attribution, authenticated outbox and immutable qualification history in local SQLite.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M1",
+      "implementation": "5 tests; exact named modules only",
+      "artifact": "reports/component-verification.json"
+    },
+    {
+      "id": "QUAL-01",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "LOCAL_COMPONENT",
+      "required_methods": [
+        "TDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP2",
+      "component": "Canonical Cascade and deterministic GCL",
+      "acceptance": "Real canonical modules; demo-three-pass policy. GCL checks declared capacity and does not establish outcome truth.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M2",
+      "implementation": "17 tests; exact named modules only",
+      "artifact": "reports/component-verification.json"
+    },
+    {
+      "id": "AUTH-CLIENT",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "LOCAL_COMPONENT",
+      "required_methods": [
+        "TDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP1",
+      "component": "Canonical authority and policy bindings",
+      "acceptance": "Signed canonical bytes, cross-skill isolation, post-policy expiry, exact requested scopes and withdrawal reconciliation.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M2",
+      "implementation": "23 tests; exact named modules only",
+      "artifact": "reports/component-verification.json"
+    },
+    {
+      "id": "LED-01",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "LOCAL_COMPONENT",
+      "required_methods": [
+        "TDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP4",
+      "component": "Canonical Ledger adapter",
+      "acceptance": "Content/signature binding, idempotency, unavailable/stale/untrusted versus positively mismatched evidence.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M2",
+      "implementation": "25 tests; exact named modules only",
+      "artifact": "reports/component-verification.json"
+    },
+    {
+      "id": "AUTH-01",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "CANONICAL_COMPONENT",
+      "required_methods": [
+        "TDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP1",
+      "component": "Passport service and race regressions",
+      "acceptance": "49 normal and 49 race-detector leaf cases; overlapping cases, not 98 unique tests.",
+      "baseline": "RED",
+      "release_required": true,
+      "milestone": "M2",
+      "implementation": "Recorded execution",
+      "artifact": "evidence/canonical-passport-results.json"
+    },
+    {
+      "id": "POL-01",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "CANONICAL_COMPONENT",
+      "required_methods": [
+        "TDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP1",
+      "component": "Foundation binding and real Rego engine",
+      "acceptance": "81 normal and 81 race leaf cases plus 3 actual OPA engine tests; overlapping cases.",
+      "baseline": "RED",
+      "release_required": true,
+      "milestone": "M2",
+      "implementation": "Recorded execution",
+      "artifact": "evidence/foundation-policy-binding-results.json"
+    },
+    {
+      "id": "POL-LIVE",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "REAL_LOCAL_SERVICES",
+      "required_methods": [
+        "CDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP1",
+      "component": "Policy administration and binding",
+      "acceptance": "8 live checks: expected policy digest and denied administrative mutations.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M2",
+      "implementation": "8 executed checks",
+      "artifact": "reports/clean-reference-combined-policy.json"
+    },
+    {
+      "id": "SVC-LIVE",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "REAL_LOCAL_SERVICES",
+      "required_methods": [
+        "CDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP1",
+      "component": "Canonical service interfaces",
+      "acceptance": "7 live checks against Foundation, Passport, OPA and Ledger.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M2",
+      "implementation": "7 executed checks",
+      "artifact": "reports/clean-reference-combined-services.json"
+    },
+    {
+      "id": "ARC-LIVE",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "REAL_LOCAL_SERVICES",
+      "required_methods": [
+        "BDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP5",
+      "component": "Connected earned-authority arc",
+      "acceptance": "23 live checks: qualify, grant, mutate, independent readback, selective withdrawal, refusal, requalification and exported proof consumption.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M2",
+      "implementation": "23 executed checks",
+      "artifact": "reports/clean-reference-combined-connected.json"
+    },
+    {
+      "id": "FAULT-LIVE",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "REAL_LOCAL_SERVICES",
+      "required_methods": [
+        "BDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP5",
+      "component": "Connected fault and race checks",
+      "acceptance": "17 live checks including process crash recovery, authority race, expiry, cross-skill binding, missing readback and ledger outage.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M2",
+      "implementation": "17 executed checks",
+      "artifact": "reports/clean-reference-combined-adversarial.json"
+    },
+    {
+      "id": "DEP-RESTORE",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "REAL_LOCAL_SERVICES",
+      "required_methods": [
+        "BDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP6",
+      "component": "Persistent full-stack stop and restore",
+      "acceptance": "6 checks preserve prior identity, authority revision/scopes, registry mutations and ledger receipts. Same host; no disk-loss claim.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M3",
+      "implementation": "6 executed checks",
+      "artifact": "reports/clean-reference-combined-restore.json"
+    },
+    {
+      "id": "DEP-BUILD",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "FRESH_SAME_HOST",
+      "required_methods": [
+        "BDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP6",
+      "component": "Fresh source reconstruction and one-command validation",
+      "acceptance": "Five pinned upstream repositories, explicit patches, distinct keys/state/volumes and 61 combined checks.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M3",
+      "implementation": "Recorded execution",
+      "artifact": "reports/clean-reference-combined.json"
+    },
+    {
+      "id": "BDD-CORE",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "SERVICE_ACCEPTANCE",
+      "required_methods": [
+        "BDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "BDD"
+      ],
+      "lane": "WP5",
+      "component": "All 37 behaviors on real service adapters",
+      "acceptance": "Fixture coverage and the connected checks are separate; complete scenario-by-scenario real coverage is not asserted.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": null,
+      "implementation": "Acceptance outstanding",
+      "artifact": null
+    },
+    {
+      "id": "AUDIT-ATOMIC",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "CROSS_SERVICE_RECOVERY",
+      "required_methods": [
+        "BDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "BDD"
+      ],
+      "lane": "WP4",
+      "component": "Authority change and lifecycle event crash recovery",
+      "acceptance": "Source review identifies a crash window after Passport change and before local GRANTED/REVOKED recording. Durable authority-operation intents and crash injection remain follow-on work.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": null,
+      "implementation": "Acceptance outstanding",
+      "artifact": null
+    },
+    {
+      "id": "EDD-PLAN",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "HELD_OUT_EVALUATION",
+      "required_methods": [
+        "EDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "EDD"
+      ],
+      "lane": "WP5",
+      "component": "Preregistered evaluation thresholds and risk budget",
+      "acceptance": "Choose value target, sample adequacy, fixed versions, family-disjoint holdout and actual human baseline before scoring.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": null,
+      "implementation": "Acceptance outstanding",
+      "artifact": null
+    },
+    {
+      "id": "EDD-RUN",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "HELD_OUT_EVALUATION",
+      "required_methods": [
+        "EDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "EDD"
+      ],
+      "lane": "WP5",
+      "component": "Measured business value and uncertainty",
+      "acceptance": "Protocol is unexecuted. Engineering acceptance does not establish reduced effort, cost or improved completion.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": null,
+      "implementation": "Acceptance outstanding",
+      "artifact": null
+    },
+    {
+      "id": "DEP-EXTERNAL",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "INDEPENDENT_REPRODUCTION",
+      "required_methods": [
+        "BDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "BDD"
+      ],
+      "lane": "WP6",
+      "component": "Independent operator / another host",
+      "acceptance": "Clean same-host reconstruction passed; a second person or different host has not reproduced the run.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": null,
+      "implementation": "Acceptance outstanding",
+      "artifact": null
+    },
+    {
+      "id": "DEP-RH",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "OPENSHIFT",
+      "required_methods": [
+        "BDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "BDD"
+      ],
+      "lane": "Later",
+      "component": "Red Hat reference profile",
+      "acceptance": "Select deployment target and validate identity, policy, persistence and mutation fencing; no compatibility/support claim.",
+      "baseline": "AMBER",
+      "release_required": false,
+      "milestone": null,
+      "implementation": "Acceptance outstanding",
+      "artifact": null
+    },
+    {
+      "id": "ROB-01",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "SIMULATION",
+      "required_methods": [
+        "EDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "EDD"
+      ],
+      "lane": "Later",
+      "component": "Robotics simulation transfer",
+      "acceptance": "Deferred BDD-038: separately governed simulator and safety/controller boundaries before any hardware consideration.",
+      "baseline": "AMBER",
+      "release_required": false,
+      "milestone": null,
+      "implementation": "Acceptance outstanding",
+      "artifact": null
+    },
+    {
+      "id": "BASE-01",
+      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "HISTORICAL_BASELINE",
+      "required_methods": [
+        "TDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "RED",
+      "reason": "Known failure on the target revision/environment",
+      "missing_methods": [],
+      "lane": "History",
+      "component": "Original canonical authority defects",
+      "acceptance": "16 retained failing baseline leaf cases; patched target checked separately.",
+      "baseline": "RED",
+      "release_required": false,
+      "milestone": null,
+      "implementation": "Historical red regression, not current target",
+      "artifact": "evidence/canonical-passport-results.json"
+    }
+  ],
+  "evidence": [
+    {
+      "requirement_id": "CON-01",
+      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "LOCAL_COMPONENT",
+      "method": "CDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791597541466,
+      "executed": true,
+      "artifact": "reports/component-verification.json",
+      "artifact_digest": "sha256:661fab3dec414ab8c94cc8d6c70bba915a15fd21b13c34d50b3b0ddd1e0e9118"
+    },
+    {
+      "requirement_id": "KIT-01",
+      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "LOCAL_COMPONENT",
+      "method": "TDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791597541466,
+      "executed": true,
+      "artifact": "reports/component-verification.json",
+      "artifact_digest": "sha256:661fab3dec414ab8c94cc8d6c70bba915a15fd21b13c34d50b3b0ddd1e0e9118"
+    },
+    {
+      "requirement_id": "BDD-LOCAL",
+      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "LOCAL_COMPONENT",
+      "method": "BDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791597541466,
+      "executed": true,
+      "artifact": "reports/component-verification.json",
+      "artifact_digest": "sha256:661fab3dec414ab8c94cc8d6c70bba915a15fd21b13c34d50b3b0ddd1e0e9118"
+    },
+    {
+      "requirement_id": "EXEC-LOCAL",
+      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "LOCAL_COMPONENT",
+      "method": "TDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791597541466,
+      "executed": true,
+      "artifact": "reports/component-verification.json",
+      "artifact_digest": "sha256:661fab3dec414ab8c94cc8d6c70bba915a15fd21b13c34d50b3b0ddd1e0e9118"
+    },
+    {
+      "requirement_id": "QUAL-01",
+      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "LOCAL_COMPONENT",
+      "method": "TDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791597541466,
+      "executed": true,
+      "artifact": "reports/component-verification.json",
+      "artifact_digest": "sha256:661fab3dec414ab8c94cc8d6c70bba915a15fd21b13c34d50b3b0ddd1e0e9118"
+    },
+    {
+      "requirement_id": "AUTH-CLIENT",
+      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "LOCAL_COMPONENT",
+      "method": "TDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791597541466,
+      "executed": true,
+      "artifact": "reports/component-verification.json",
+      "artifact_digest": "sha256:661fab3dec414ab8c94cc8d6c70bba915a15fd21b13c34d50b3b0ddd1e0e9118"
+    },
+    {
+      "requirement_id": "LED-01",
+      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "LOCAL_COMPONENT",
+      "method": "TDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791597541466,
+      "executed": true,
+      "artifact": "reports/component-verification.json",
+      "artifact_digest": "sha256:661fab3dec414ab8c94cc8d6c70bba915a15fd21b13c34d50b3b0ddd1e0e9118"
+    },
+    {
+      "requirement_id": "AUTH-01",
+      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "CANONICAL_COMPONENT",
+      "method": "TDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791596954035,
+      "executed": true,
+      "artifact": "evidence/canonical-passport-results.json",
+      "artifact_digest": "sha256:d14b9866efa5abfb93729fb9883ebd4fdfc438ae68e1c3ce50365ba6b6a390cd"
+    },
+    {
+      "requirement_id": "POL-01",
+      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "CANONICAL_COMPONENT",
+      "method": "TDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791597234282,
+      "executed": true,
+      "artifact": "evidence/foundation-policy-binding-results.json",
+      "artifact_digest": "sha256:aee2413d8e5e18be52a2bdc12ea9e4094f1eb503e5bd704affa7c4a931e195a0"
+    },
+    {
+      "requirement_id": "POL-LIVE",
+      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "REAL_LOCAL_SERVICES",
+      "method": "CDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791597444351,
+      "executed": true,
+      "artifact": "reports/clean-reference-combined-policy.json",
+      "artifact_digest": "sha256:f5821f9292be5d9dadd43cdf8a1422076b11ca772006cea7cb4c789837b9d70a"
+    },
+    {
+      "requirement_id": "SVC-LIVE",
+      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "REAL_LOCAL_SERVICES",
+      "method": "CDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791597444455,
+      "executed": true,
+      "artifact": "reports/clean-reference-combined-services.json",
+      "artifact_digest": "sha256:42f4d05ec6af96f0cdf97ff217729b6d35c39182186fe83799ec7a8cf1f9fc6a"
+    },
+    {
+      "requirement_id": "ARC-LIVE",
+      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "REAL_LOCAL_SERVICES",
+      "method": "BDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791597446617,
+      "executed": true,
+      "artifact": "reports/clean-reference-combined-connected.json",
+      "artifact_digest": "sha256:6e647b74558106fd388439681bed9a6325367c91a52f2cf067bd8e0c31ffdedf"
+    },
+    {
+      "requirement_id": "FAULT-LIVE",
+      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "REAL_LOCAL_SERVICES",
+      "method": "BDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791597451862,
+      "executed": true,
+      "artifact": "reports/clean-reference-combined-adversarial.json",
+      "artifact_digest": "sha256:72e84f7a97d5e6ac54c29f4b6e0bcda27c868d543c8fc2feeca73c157a38b4dc"
+    },
+    {
+      "requirement_id": "DEP-RESTORE",
+      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "REAL_LOCAL_SERVICES",
+      "method": "BDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791597467917,
+      "executed": true,
+      "artifact": "reports/clean-reference-combined-restore.json",
+      "artifact_digest": "sha256:1920a77e61ee5db194ec6dcfb8b6e3ac0105deffde8340df4b25d1c2bc2547ec"
+    },
+    {
+      "requirement_id": "DEP-BUILD",
+      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "FRESH_SAME_HOST",
+      "method": "BDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791597488270,
+      "executed": true,
+      "artifact": "reports/clean-reference-combined.json",
+      "artifact_digest": "sha256:9705efca81fa3fb47bc9e4f449dee2e70b09e5247be0e0d1c7a5b72aa37ad01b"
+    },
+    {
+      "requirement_id": "BASE-01",
+      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "environment": "HISTORICAL_BASELINE",
+      "method": "TDD",
+      "outcome": "FAIL",
+      "timestamp_ms": 1791596954035,
+      "executed": true,
+      "artifact": "evidence/canonical-passport-results.json",
+      "artifact_digest": "sha256:d14b9866efa5abfb93729fb9883ebd4fdfc438ae68e1c3ce50365ba6b6a390cd"
+    }
+  ],
+  "scope": "Local artifact-backed engineering acceptance; full G0\u2013G4 and product readiness remain separate. Report inputs are local records, not an externally signed attestation.",
+  "record_time_rule": "Embedded completion time where available, otherwise artifact mtime. Re-rendering does not rerun acceptance."
+}

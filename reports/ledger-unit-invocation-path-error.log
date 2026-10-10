@@ -1,0 +1,21 @@
+test_ledger_client (unittest.loader._FailedTest.test_ledger_client) ... ERROR
+
+======================================================================
+ERROR: test_ledger_client (unittest.loader._FailedTest.test_ledger_client)
+----------------------------------------------------------------------
+ImportError: Failed to import test module: test_ledger_client
+Traceback (most recent call last):
+  File "/Users/jkershaw/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/unittest/loader.py", line 396, in _find_test_path
+    module = self._get_module_from_name(name)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/unittest/loader.py", line 339, in _get_module_from_name
+    __import__(name)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_ledger_client.py", line 9, in <module>
+    from earned_authority.ledger_client import LedgerClient, LedgerError, canonical_entry_hash
+ModuleNotFoundError: No module named 'earned_authority'
+
+
+----------------------------------------------------------------------
+Ran 1 test in 0.000s
+
+FAILED (errors=1)

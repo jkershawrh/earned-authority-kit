@@ -1,0 +1,523 @@
+test_all_current_scenarios_have_explicit_bindings (test_lifecycle_bdd.BindingCoverage) ... ok
+test_BDD_001_fresh_independent_outcomes_qualify_only (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_002_self_report_is_not_independent_evidence (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_003_changed_environment (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_003_changed_skill (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_004_unknown_is_neither_pass_nor_failure (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_005_stale_passes_hold_qualification (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_006_duplicate_attempt_cannot_inflate_qualification (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_007_known_failure_prevents_qualification (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_008_policy_grants_exact_bounded_authority (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_009_qualification_cannot_override_policy_denial (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_010_changed_revision (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_010_wrong_action (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_010_wrong_context (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_010_wrong_resource (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_011_expiry_equality_denies_passport (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_012_scope_expiry_precedes_passport (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_013_revocation_invalidates_prior_admission (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_014_invalid_expiry (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_014_missing_expiry (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_015_unconfirmed_authority_denies_new_mutation (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_016_independent_postcondition_and_correlation (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_017_wrong_observed_postcondition_is_failure (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_018_unavailable_observer_is_unknown_and_holds (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_019_completed_retry_returns_result_without_mutation (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_020_changed_retry_payload_is_rejected (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_021_lost_response_reconciles_after_restart (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_022_foundation_check_only_is_not_execution (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_023_known_failure_demotes_despite_remote_outage (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_024_selective_withdrawal_preserves_other_grant (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_025_missing_result (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_025_old_result (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_026_revised_skill_requalifies_under_new_grant (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_027_manual_reactivation_cannot_bypass_qualification (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_028_concurrent_issue_has_one_current_revision (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_029_acknowledged_revocation_fences_paused_commit (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_030_prior_commit_remains_completed_after_revocation (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_031_stale_update_cannot_revive_revoked_skill (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_032_concurrent_duplicate_attempt_commits_once (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_033_local_store_down (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_033_unauthenticated_writer (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_034_after_commit (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_034_before_intent_send (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_035_modified_ledger_evidence_fails_verification (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_036_expired_proof (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_036_old_skill (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_036_other_attempt (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+test_BDD_037_untrusted_signer_cannot_qualify (test_lifecycle_bdd.LifecycleBDD) ... ERROR
+
+======================================================================
+ERROR: test_BDD_001_fresh_independent_outcomes_qualify_only (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_002_self_report_is_not_independent_evidence (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_003_changed_environment (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_003_changed_skill (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_004_unknown_is_neither_pass_nor_failure (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_005_stale_passes_hold_qualification (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_006_duplicate_attempt_cannot_inflate_qualification (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_007_known_failure_prevents_qualification (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_008_policy_grants_exact_bounded_authority (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_009_qualification_cannot_override_policy_denial (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_010_changed_revision (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_010_wrong_action (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_010_wrong_context (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_010_wrong_resource (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_011_expiry_equality_denies_passport (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_012_scope_expiry_precedes_passport (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_013_revocation_invalidates_prior_admission (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_014_invalid_expiry (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_014_missing_expiry (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_015_unconfirmed_authority_denies_new_mutation (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_016_independent_postcondition_and_correlation (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_017_wrong_observed_postcondition_is_failure (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_018_unavailable_observer_is_unknown_and_holds (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_019_completed_retry_returns_result_without_mutation (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_020_changed_retry_payload_is_rejected (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_021_lost_response_reconciles_after_restart (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_022_foundation_check_only_is_not_execution (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_023_known_failure_demotes_despite_remote_outage (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_024_selective_withdrawal_preserves_other_grant (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_025_missing_result (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_025_old_result (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_026_revised_skill_requalifies_under_new_grant (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_027_manual_reactivation_cannot_bypass_qualification (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_028_concurrent_issue_has_one_current_revision (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_029_acknowledged_revocation_fences_paused_commit (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_030_prior_commit_remains_completed_after_revocation (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_031_stale_update_cannot_revive_revoked_skill (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_032_concurrent_duplicate_attempt_commits_once (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_033_local_store_down (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_033_unauthenticated_writer (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_034_after_commit (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_034_before_intent_send (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_035_modified_ledger_evidence_fails_verification (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_036_expired_proof (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_036_old_skill (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_036_other_attempt (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+======================================================================
+ERROR: test_BDD_037_untrusted_signer_cannot_qualify (test_lifecycle_bdd.LifecycleBDD)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_lifecycle_bdd.py", line 23, in setUp
+    self.rt = Runtime(self.path, clock=self.clock)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/runtime.py", line 17, in __init__
+    raise NotImplementedError('M1 runtime TDD baseline')
+NotImplementedError: M1 runtime TDD baseline
+
+----------------------------------------------------------------------
+Ran 48 tests in 0.011s
+
+FAILED (errors=47)

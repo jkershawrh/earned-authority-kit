@@ -1,0 +1,110 @@
+{"Time":"2026-10-09T20:29:32.163208-05:00","Action":"start","Package":"are-s0s1-rest-bff/cmd/are-s0s1-rest-bff"}
+{"Time":"2026-10-09T20:29:32.163285-05:00","Action":"output","Package":"are-s0s1-rest-bff/cmd/are-s0s1-rest-bff","Output":"?   \tare-s0s1-rest-bff/cmd/are-s0s1-rest-bff\t[no test files]\n"}
+{"Time":"2026-10-09T20:29:32.163296-05:00","Action":"skip","Package":"are-s0s1-rest-bff/cmd/are-s0s1-rest-bff","Elapsed":0}
+{"Time":"2026-10-09T20:29:33.051697-05:00","Action":"start","Package":"are-s0s1-rest-bff/internal/api"}
+{"Time":"2026-10-09T20:29:33.051762-05:00","Action":"start","Package":"are-s0s1-rest-bff/internal/policy"}
+{"Time":"2026-10-09T20:29:33.051835-05:00","Action":"start","Package":"are-s0s1-rest-bff/internal/repo"}
+{"Time":"2026-10-09T20:29:33.051855-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/repo","Output":"?   \tare-s0s1-rest-bff/internal/repo\t[no test files]\n"}
+{"Time":"2026-10-09T20:29:33.051863-05:00","Action":"skip","Package":"are-s0s1-rest-bff/internal/repo","Elapsed":0}
+{"Time":"2026-10-09T20:29:33.051874-05:00","Action":"start","Package":"are-s0s1-rest-bff/internal/s0delegate"}
+{"Time":"2026-10-09T20:29:33.653415-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestStubDemoForbidden"}
+{"Time":"2026-10-09T20:29:33.653807-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestStubDemoForbidden","Output":"=== RUN   TestStubDemoForbidden\n"}
+{"Time":"2026-10-09T20:29:33.65389-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestStubDemoForbidden","Output":"--- PASS: TestStubDemoForbidden (0.00s)\n"}
+{"Time":"2026-10-09T20:29:33.653905-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestStubDemoForbidden","Elapsed":0}
+{"Time":"2026-10-09T20:29:33.653917-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestStubDemoReadAllow"}
+{"Time":"2026-10-09T20:29:33.65392-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestStubDemoReadAllow","Output":"=== RUN   TestStubDemoReadAllow\n"}
+{"Time":"2026-10-09T20:29:33.653926-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestStubDemoReadAllow","Output":"--- PASS: TestStubDemoReadAllow (0.00s)\n"}
+{"Time":"2026-10-09T20:29:33.653929-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestStubDemoReadAllow","Elapsed":0}
+{"Time":"2026-10-09T20:29:33.653951-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestStubTimeoutResource"}
+{"Time":"2026-10-09T20:29:33.653957-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestStubTimeoutResource","Output":"=== RUN   TestStubTimeoutResource\n"}
+{"Time":"2026-10-09T20:29:33.653987-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestStubTimeoutResource","Output":"--- PASS: TestStubTimeoutResource (0.00s)\n"}
+{"Time":"2026-10-09T20:29:33.653998-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestStubTimeoutResource","Elapsed":0}
+{"Time":"2026-10-09T20:29:33.654035-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestStubContractShapeGenericRead"}
+{"Time":"2026-10-09T20:29:33.65404-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestStubContractShapeGenericRead","Output":"=== RUN   TestStubContractShapeGenericRead\n"}
+{"Time":"2026-10-09T20:29:33.654062-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestStubContractShapeGenericRead","Output":"--- PASS: TestStubContractShapeGenericRead (0.00s)\n"}
+{"Time":"2026-10-09T20:29:33.654078-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestStubContractShapeGenericRead","Elapsed":0}
+{"Time":"2026-10-09T20:29:33.654083-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPAClientRoundTrip"}
+{"Time":"2026-10-09T20:29:33.654084-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPAClientRoundTrip","Output":"=== RUN   TestOPAClientRoundTrip\n"}
+{"Time":"2026-10-09T20:29:33.655153-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPAClientRoundTrip","Output":"--- PASS: TestOPAClientRoundTrip (0.00s)\n"}
+{"Time":"2026-10-09T20:29:33.65516-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPAClientRoundTrip","Elapsed":0}
+{"Time":"2026-10-09T20:29:33.655162-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPAClientDependencyTimeoutBeforeHTTP"}
+{"Time":"2026-10-09T20:29:33.655163-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPAClientDependencyTimeoutBeforeHTTP","Output":"=== RUN   TestOPAClientDependencyTimeoutBeforeHTTP\n"}
+{"Time":"2026-10-09T20:29:33.655167-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPAClientDependencyTimeoutBeforeHTTP","Output":"--- PASS: TestOPAClientDependencyTimeoutBeforeHTTP (0.00s)\n"}
+{"Time":"2026-10-09T20:29:33.655184-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/policy","Test":"TestOPAClientDependencyTimeoutBeforeHTTP","Elapsed":0}
+{"Time":"2026-10-09T20:29:33.655195-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Output":"PASS\n"}
+{"Time":"2026-10-09T20:29:33.6561-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/policy","Output":"ok  \tare-s0s1-rest-bff/internal/policy\t0.604s\n"}
+{"Time":"2026-10-09T20:29:33.65611-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/policy","Elapsed":0.604}
+{"Time":"2026-10-09T20:29:33.941535-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/s0delegate","Test":"TestUpstreamHTTP"}
+{"Time":"2026-10-09T20:29:33.941572-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/s0delegate","Test":"TestUpstreamHTTP","Output":"=== RUN   TestUpstreamHTTP\n"}
+{"Time":"2026-10-09T20:29:33.94159-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/s0delegate","Test":"TestUpstreamHTTP","Output":"=== PAUSE TestUpstreamHTTP\n"}
+{"Time":"2026-10-09T20:29:33.941598-05:00","Action":"pause","Package":"are-s0s1-rest-bff/internal/s0delegate","Test":"TestUpstreamHTTP"}
+{"Time":"2026-10-09T20:29:33.9416-05:00","Action":"cont","Package":"are-s0s1-rest-bff/internal/s0delegate","Test":"TestUpstreamHTTP"}
+{"Time":"2026-10-09T20:29:33.941601-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/s0delegate","Test":"TestUpstreamHTTP","Output":"=== CONT  TestUpstreamHTTP\n"}
+{"Time":"2026-10-09T20:29:33.941604-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/s0delegate","Test":"TestUpstreamHTTP","Output":"--- PASS: TestUpstreamHTTP (0.00s)\n"}
+{"Time":"2026-10-09T20:29:33.941606-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/s0delegate","Test":"TestUpstreamHTTP","Elapsed":0}
+{"Time":"2026-10-09T20:29:33.941609-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/s0delegate","Output":"PASS\n"}
+{"Time":"2026-10-09T20:29:33.942286-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/s0delegate","Output":"ok  \tare-s0s1-rest-bff/internal/s0delegate\t0.890s\n"}
+{"Time":"2026-10-09T20:29:33.942305-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/s0delegate","Elapsed":0.89}
+{"Time":"2026-10-09T20:29:34.242162-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/api","Test":"TestAgentRecFromRegisterResponseBody"}
+{"Time":"2026-10-09T20:29:34.242193-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestAgentRecFromRegisterResponseBody","Output":"=== RUN   TestAgentRecFromRegisterResponseBody\n"}
+{"Time":"2026-10-09T20:29:34.24222-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestAgentRecFromRegisterResponseBody","Output":"=== PAUSE TestAgentRecFromRegisterResponseBody\n"}
+{"Time":"2026-10-09T20:29:34.242225-05:00","Action":"pause","Package":"are-s0s1-rest-bff/internal/api","Test":"TestAgentRecFromRegisterResponseBody"}
+{"Time":"2026-10-09T20:29:34.242226-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIssueEvaluateFlow"}
+{"Time":"2026-10-09T20:29:34.242228-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIssueEvaluateFlow","Output":"=== RUN   TestRegisterIssueEvaluateFlow\n"}
+{"Time":"2026-10-09T20:29:34.242645-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIssueEvaluateFlow","Output":"2026/10/09 20:29:34 INFO s0s1_bff_request request_id=r1 method=POST path=/v1/identity/agents response_code=201 latency_ms=0\n"}
+{"Time":"2026-10-09T20:29:34.242736-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIssueEvaluateFlow","Output":"2026/10/09 20:29:34 INFO s0s1_bff_request request_id=r2 method=POST path=/v1/passports response_code=201 latency_ms=0\n"}
+{"Time":"2026-10-09T20:29:34.242752-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIssueEvaluateFlow","Output":"2026/10/09 20:29:34 INFO s0s1_bff_request request_id=r3 method=POST path=/v1/policy/evaluations response_code=200 latency_ms=0\n"}
+{"Time":"2026-10-09T20:29:34.24276-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIssueEvaluateFlow","Output":"--- PASS: TestRegisterIssueEvaluateFlow (0.00s)\n"}
+{"Time":"2026-10-09T20:29:34.242764-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIssueEvaluateFlow","Elapsed":0}
+{"Time":"2026-10-09T20:29:34.242769-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPassportListVerifyAndScopeEvaluation"}
+{"Time":"2026-10-09T20:29:34.242773-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPassportListVerifyAndScopeEvaluation","Output":"=== RUN   TestPassportListVerifyAndScopeEvaluation\n"}
+{"Time":"2026-10-09T20:29:34.242802-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPassportListVerifyAndScopeEvaluation","Output":"2026/10/09 20:29:34 INFO s0s1_bff_request request_id=r1 method=POST path=/v1/identity/agents response_code=201 latency_ms=0\n"}
+{"Time":"2026-10-09T20:29:34.242826-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPassportListVerifyAndScopeEvaluation","Output":"2026/10/09 20:29:34 INFO s0s1_bff_request request_id=r2 method=POST path=/v1/passports response_code=201 latency_ms=0\n"}
+{"Time":"2026-10-09T20:29:34.242868-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPassportListVerifyAndScopeEvaluation","Output":"2026/10/09 20:29:34 INFO s0s1_bff_request request_id=r3 method=GET path=/v1/passports/by-agent/agt-agent-list response_code=200 latency_ms=0\n"}
+{"Time":"2026-10-09T20:29:34.242878-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPassportListVerifyAndScopeEvaluation","Output":"2026/10/09 20:29:34 INFO s0s1_bff_request request_id=r4 method=POST path=/v1/passports:verify response_code=200 latency_ms=0\n"}
+{"Time":"2026-10-09T20:29:34.242894-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPassportListVerifyAndScopeEvaluation","Output":"2026/10/09 20:29:34 INFO s0s1_bff_request request_id=r5 method=POST path=/v1/enforcement/scope:evaluate response_code=200 latency_ms=0\n"}
+{"Time":"2026-10-09T20:29:34.242898-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPassportListVerifyAndScopeEvaluation","Output":"--- PASS: TestPassportListVerifyAndScopeEvaluation (0.00s)\n"}
+{"Time":"2026-10-09T20:29:34.242906-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/api","Test":"TestPassportListVerifyAndScopeEvaluation","Elapsed":0}
+{"Time":"2026-10-09T20:29:34.242909-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/api","Test":"TestGetAdmissionEnvelopeFlow"}
+{"Time":"2026-10-09T20:29:34.242911-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestGetAdmissionEnvelopeFlow","Output":"=== RUN   TestGetAdmissionEnvelopeFlow\n"}
+{"Time":"2026-10-09T20:29:34.242955-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestGetAdmissionEnvelopeFlow","Output":"2026/10/09 20:29:34 INFO s0s1_bff_request request_id=r1 method=POST path=/v1/identity/agents response_code=201 latency_ms=0\n"}
+{"Time":"2026-10-09T20:29:34.242958-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestGetAdmissionEnvelopeFlow","Output":"2026/10/09 20:29:34 INFO s0s1_bff_request request_id=r2 method=GET path=/v1/identity/agents/agt-idem-env-1/admission-envelope response_code=200 latency_ms=0\n"}
+{"Time":"2026-10-09T20:29:34.242961-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestGetAdmissionEnvelopeFlow","Output":"--- PASS: TestGetAdmissionEnvelopeFlow (0.00s)\n"}
+{"Time":"2026-10-09T20:29:34.242963-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/api","Test":"TestGetAdmissionEnvelopeFlow","Elapsed":0}
+{"Time":"2026-10-09T20:29:34.242966-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/api","Test":"TestGetAgentUnknown404"}
+{"Time":"2026-10-09T20:29:34.242968-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestGetAgentUnknown404","Output":"=== RUN   TestGetAgentUnknown404\n"}
+{"Time":"2026-10-09T20:29:34.24301-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestGetAgentUnknown404","Output":"2026/10/09 20:29:34 INFO s0s1_bff_request request_id=r1 method=GET path=/v1/identity/agents/nope response_code=404 latency_ms=0\n"}
+{"Time":"2026-10-09T20:29:34.24302-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestGetAgentUnknown404","Output":"--- PASS: TestGetAgentUnknown404 (0.00s)\n"}
+{"Time":"2026-10-09T20:29:34.243023-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/api","Test":"TestGetAgentUnknown404","Elapsed":0}
+{"Time":"2026-10-09T20:29:34.243025-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/api","Test":"TestEvaluatePolicyOPAClientIntegration"}
+{"Time":"2026-10-09T20:29:34.243027-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestEvaluatePolicyOPAClientIntegration","Output":"=== RUN   TestEvaluatePolicyOPAClientIntegration\n"}
+{"Time":"2026-10-09T20:29:34.244038-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestEvaluatePolicyOPAClientIntegration","Output":"2026/10/09 20:29:34 INFO s0s1_bff_request request_id=r1 method=POST path=/v1/policy/evaluations response_code=200 latency_ms=0\n"}
+{"Time":"2026-10-09T20:29:34.244127-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestEvaluatePolicyOPAClientIntegration","Output":"--- PASS: TestEvaluatePolicyOPAClientIntegration (0.00s)\n"}
+{"Time":"2026-10-09T20:29:34.244131-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/api","Test":"TestEvaluatePolicyOPAClientIntegration","Elapsed":0}
+{"Time":"2026-10-09T20:29:34.244134-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/api","Test":"TestHandlerNilRepoReturnsError"}
+{"Time":"2026-10-09T20:29:34.244135-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestHandlerNilRepoReturnsError","Output":"=== RUN   TestHandlerNilRepoReturnsError\n"}
+{"Time":"2026-10-09T20:29:34.244137-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestHandlerNilRepoReturnsError","Output":"--- PASS: TestHandlerNilRepoReturnsError (0.00s)\n"}
+{"Time":"2026-10-09T20:29:34.244138-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/api","Test":"TestHandlerNilRepoReturnsError","Elapsed":0}
+{"Time":"2026-10-09T20:29:34.244151-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIdempotency"}
+{"Time":"2026-10-09T20:29:34.244152-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIdempotency","Output":"=== RUN   TestRegisterIdempotency\n"}
+{"Time":"2026-10-09T20:29:34.244172-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIdempotency","Output":"2026/10/09 20:29:34 INFO s0s1_bff_request request_id=r method=POST path=/v1/identity/agents response_code=201 latency_ms=0\n"}
+{"Time":"2026-10-09T20:29:34.244189-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIdempotency","Output":"2026/10/09 20:29:34 INFO s0s1_bff_request request_id=r method=POST path=/v1/identity/agents response_code=201 latency_ms=0\n"}
+{"Time":"2026-10-09T20:29:34.244192-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIdempotency","Output":"--- PASS: TestRegisterIdempotency (0.00s)\n"}
+{"Time":"2026-10-09T20:29:34.244195-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIdempotency","Elapsed":0}
+{"Time":"2026-10-09T20:29:34.244196-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIdempotencyBodyConflict"}
+{"Time":"2026-10-09T20:29:34.244198-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIdempotencyBodyConflict","Output":"=== RUN   TestRegisterIdempotencyBodyConflict\n"}
+{"Time":"2026-10-09T20:29:34.24423-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIdempotencyBodyConflict","Output":"2026/10/09 20:29:34 INFO s0s1_bff_request request_id=r1 method=POST path=/v1/identity/agents response_code=201 latency_ms=0\n"}
+{"Time":"2026-10-09T20:29:34.244234-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIdempotencyBodyConflict","Output":"2026/10/09 20:29:34 INFO s0s1_bff_request request_id=r2 method=POST path=/v1/identity/agents response_code=409 latency_ms=0\n"}
+{"Time":"2026-10-09T20:29:34.244242-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIdempotencyBodyConflict","Output":"--- PASS: TestRegisterIdempotencyBodyConflict (0.00s)\n"}
+{"Time":"2026-10-09T20:29:34.244244-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/api","Test":"TestRegisterIdempotencyBodyConflict","Elapsed":0}
+{"Time":"2026-10-09T20:29:34.244245-05:00","Action":"run","Package":"are-s0s1-rest-bff/internal/api","Test":"TestIncS0DelegateError"}
+{"Time":"2026-10-09T20:29:34.244246-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestIncS0DelegateError","Output":"=== RUN   TestIncS0DelegateError\n"}
+{"Time":"2026-10-09T20:29:34.244264-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestIncS0DelegateError","Output":"--- PASS: TestIncS0DelegateError (0.00s)\n"}
+{"Time":"2026-10-09T20:29:34.244267-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/api","Test":"TestIncS0DelegateError","Elapsed":0}
+{"Time":"2026-10-09T20:29:34.244269-05:00","Action":"cont","Package":"are-s0s1-rest-bff/internal/api","Test":"TestAgentRecFromRegisterResponseBody"}
+{"Time":"2026-10-09T20:29:34.24427-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestAgentRecFromRegisterResponseBody","Output":"=== CONT  TestAgentRecFromRegisterResponseBody\n"}
+{"Time":"2026-10-09T20:29:34.244348-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Test":"TestAgentRecFromRegisterResponseBody","Output":"--- PASS: TestAgentRecFromRegisterResponseBody (0.00s)\n"}
+{"Time":"2026-10-09T20:29:34.244352-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/api","Test":"TestAgentRecFromRegisterResponseBody","Elapsed":0}
+{"Time":"2026-10-09T20:29:34.244353-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Output":"PASS\n"}
+{"Time":"2026-10-09T20:29:34.245134-05:00","Action":"output","Package":"are-s0s1-rest-bff/internal/api","Output":"ok  \tare-s0s1-rest-bff/internal/api\t1.193s\n"}
+{"Time":"2026-10-09T20:29:34.245145-05:00","Action":"pass","Package":"are-s0s1-rest-bff/internal/api","Elapsed":1.193}

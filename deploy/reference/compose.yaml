@@ -1,0 +1,73 @@
+name: earned-authority-reference
+services:
+  postgres:
+    image: docker.io/library/postgres@sha256:2c942175a1255a9abe0366e48c1b401d9f50f835b04dfea13f111609b5530df7
+    container_name: ${REFERENCE_INSTANCE:-earned-authority}-foundation-db
+    environment:
+      POSTGRES_USER: are
+      POSTGRES_PASSWORD: ${FOUNDATION_DB_PASSWORD:?run prepare.py}
+      POSTGRES_DB: are
+    ports: ["127.0.0.1:${FOUNDATION_DB_PORT:-29532}:5432"]
+    volumes: ["foundation-data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U are -d are"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+  jwks:
+    image: docker.io/library/python@sha256:2d9aefe2fef018a7eb2c13064c89c71929800fd2e5dccdbf52ea5da5bb8d929a
+    container_name: ${REFERENCE_INSTANCE:-earned-authority}-jwks
+    command: ["python", "-m", "http.server", "8088", "--directory", "/jwks"]
+    volumes: ["${REFERENCE_RUNTIME_DIR}/jwks:/jwks:ro"]
+    ports: ["127.0.0.1:${JWKS_PORT:-29588}:8088"]
+  opa:
+    image: docker.io/openpolicyagent/opa@sha256:2b1c4b231f6dfa6a2baea4af4109203b10cd4b65e836d72f03bfe5d8dfce7095
+    container_name: ${REFERENCE_INSTANCE:-earned-authority}-opa
+    command: ["run", "--server", "--authorization=basic", "--addr", "0.0.0.0:8181", "/policy", "/authz"]
+    volumes: ["${OPA_POLICY_SNAPSHOT_DIR:?run prepare_policy.py}/policy:/policy:ro", "${OPA_POLICY_SNAPSHOT_DIR:?run prepare_policy.py}/authz:/authz:ro"]
+    ports: ["127.0.0.1:${OPA_PORT:-29582}:8181"]
+  s0s1-rest-bff:
+    image: localhost/earned-authority-foundation-bff:reference
+    container_name: ${REFERENCE_INSTANCE:-earned-authority}-foundation-bff
+    depends_on:
+      postgres:
+        condition: service_healthy
+      opa:
+        condition: service_started
+    environment:
+      ARE_S0S1_TLS_CERT_FILE: /tls/foundation.crt
+      ARE_S0S1_TLS_KEY_FILE: /tls/foundation.key
+      ARE_S0S1_TLS_CA_FILE: /tls/ca.crt
+      ARE_S0S1_DATABASE_URL: "postgres://are:${FOUNDATION_DB_PASSWORD}@postgres:5432/are?sslmode=disable"
+      ARE_S0S1_OPA_URL: http://opa:8181
+      ARE_S0S1_S0_DELEGATE: "1"
+      ARE_S0S1_PASSPORT_GRPC_ADDR: host.containers.internal:${ARE_PASSPORT_GRPC_PORT:-29594}
+      ARE_S0S1_S0_GRPC_INSECURE: "1"
+      ARE_S0S1_PASSPORT_MUTATION_TOKEN: ${ARE_PASSPORT_MUTATION_TOKEN}
+      ARE_DEPLOYMENT_STAGE: stage-s0s1
+    volumes: ["${REFERENCE_RUNTIME_DIR}/tls:/tls:ro"]
+    ports: ["127.0.0.1:${FOUNDATION_BFF_PORT:-29543}:8443", "127.0.0.1:${FOUNDATION_BFF_HEALTH_PORT:-29599}:8099"]
+  gateway:
+    image: localhost/earned-authority-foundation-gateway:reference
+    container_name: ${REFERENCE_INSTANCE:-earned-authority}-foundation-gateway
+    restart: on-failure
+    depends_on: [jwks, s0s1-rest-bff]
+    environment:
+      ARE_GW_TLS_CERT_FILE: /tls/foundation.crt
+      ARE_GW_TLS_KEY_FILE: /tls/foundation.key
+      ARE_GW_TLS_CA_FILE: /tls/ca.crt
+      ARE_GW_JWKS_URL: http://jwks:8088/.well-known/jwks.json
+      ARE_GW_HTTPS_PORT: "8443"
+      ARE_GW_DEV_UNSAFE_MODE: "true"
+      ARE_GW_ALLOW_INSECURE_TEST_TOKEN: "false"
+      ARE_GW_ENABLE_INSECURE_CONFORMANCE: "true"
+      ARE_GW_S0S1_HTTP_PROXY_BASE: https://s0s1-rest-bff:8443
+      ARE_GW_S0S1_HTTP_TLS_SERVER_NAME: s0s1-rest-bff
+      ARE_GW_UPSTREAM_MODE: live
+      ARE_GATEWAY_METRICS_ALLOW_ANONYMOUS: "true"
+      ARE_DEPLOYMENT_STAGE: stage-s0s1
+    volumes: ["${REFERENCE_RUNTIME_DIR}/tls:/tls:ro"]
+    ports: ["127.0.0.1:${FOUNDATION_GATEWAY_PORT:-29585}:8085", "127.0.0.1:${FOUNDATION_GATEWAY_HEALTH_PORT:-29586}:8080"]
+volumes:
+  foundation-data:
+    name: ${REFERENCE_INSTANCE:-earned-authority}-foundation-data

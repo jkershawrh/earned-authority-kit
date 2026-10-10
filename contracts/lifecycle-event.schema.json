@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:earned-authority:lifecycle-event:0.1.0-draft.1",
+  "title": "lifecycle-event",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-draft.1"
+    },
+    "event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "correlation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agent_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subject_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "For the runtime adapter this identifies the immutable source event itself, not an inferred authority or qualification revision."
+    },
+    "subject_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "event_type": {
+      "enum": [
+        "QUALIFIED",
+        "HELD",
+        "GRANTED",
+        "COMMITTED",
+        "OUTCOME_OBSERVED",
+        "DEMOTED",
+        "REVOKED",
+        "SUPERSEDED",
+        "REQUALIFIED",
+        "INTENT",
+        "CANONICAL_QUALIFICATION_EVALUATED",
+        "WITHDRAWAL_RECONCILED"
+      ]
+    },
+    "occurred_at_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "payload_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "minLength": 71,
+      "maxLength": 71
+    },
+    "actor_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reason_code": {
+      "type": "string",
+      "minLength": 1
+    },
+    "delivery_state": {
+      "enum": [
+        "PENDING",
+        "RECORDED",
+        "FAILED"
+      ]
+    },
+    "ledger_receipt_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "schema_version",
+    "event_id",
+    "correlation_id",
+    "agent_id",
+    "subject_id",
+    "subject_revision",
+    "event_type",
+    "occurred_at_ms",
+    "payload_digest",
+    "actor_ref",
+    "reason_code",
+    "delivery_state"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "delivery_state": {
+            "const": "RECORDED"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "ledger_receipt_ref"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "ledger_receipt_ref"
+          ]
+        }
+      }
+    }
+  ]
+}

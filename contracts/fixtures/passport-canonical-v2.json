@@ -1,0 +1,77 @@
+{
+  "canonical_payload_base64": "eyJjcmVkZW50aWFsX2lkIjoiZWQyNTUxOTplYzkxZDMwZjM0MTAxZWUwMGRhYzA2NThmNzFiZWNiMTgyY2JlYjY3Mzc5YmMxYWU5N2I2YjI4N2JmMTEzMDZjIiwicHVibGljX2tleV9wZW0iOiItLS0tLUJFR0lOIFBVQkxJQyBLRVktLS0tLVxuTUNvd0JRWURLMlZ3QXlFQWxvekNqWk9Fa0k5TUVMQWZ1aEswUXhNTHNNVkRGMWpTZ0F3aG1jN2pyak09XG4tLS0tLUVORCBQVUJMSUMgS0VZLS0tLS1cbiIsImNhbm9uaWNhbF92ZXJzaW9uIjoiYXJlLnBhc3Nwb3J0LnYyIiwicGFzc3BvcnRfaWQiOiIwMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwMDciLCJhZ2VudF9pZCI6ImFnZW50LcOJXHUwMDNjXHUwMDI2XHUwMDNlIiwiaXNzdWFuY2VfcmV2aXNpb24iOjcsInBhc3Nwb3J0X3R5cGUiOiJTVEFOREFSRCIsInNjb3BlX3NldCI6W3sic2NvcGVfaWQiOiJzY29wZS0xIiwiYWN0aW9uX2NsYXNzIjoibW9kZWwucHJvbW90ZSIsInJlc291cmNlX3BhdHRlcm4iOiJtb2RlbC/OsVx1MDAzY1x1MDAyNlx1MDAzZSoiLCJjb250ZXh0X2NvbnN0cmFpbnRzIjp7ImFcdTAwM2NcdTAwMjZcdTAwM2UiOiJ2YWx1ZVx1MDAzY1x1MDAyNlx1MDAzZVx1MjAyOFx1MjAyOSIsInNpdGUiOiLDqeW3peWgtCIsInpldGEiOiJsYXN0In0sImdyYW50ZWRfdHMiOjE3OTE1NDcyMDAxMjMsImV4cGlyZXNfdHMiOjE3OTE1NDcyNjAxMjMsImlzX2VzY2FsYXRpb24iOnRydWV9XSwiaXNzdWVkX2J5IjoiaXNzdWVyXHUwMDNjXHUwMDI2XHUwMDNlw6kiLCJyZWFzb24iOiJxdWFsaWZpZWRcbmxpbmVcdFx1MDAzY1x1MDAyNlx1MDAzZVx1MjAyOOe1giIsImlzc3VlZF90cyI6MTc5MTU0NzIwMDEyMywiZXhwaXJlc190cyI6MTc5MTU1MDgwMDEyMywicG9saWN5X2lkX2F0X2lzc3VhbmNlIjoicG9saWN5XHUwMDNjXHUwMDI2XHUwMDNlIiwicG9saWN5X3Zlcl9hdF9pc3N1YW5jZSI6InYxLcOpIn0=",
+  "canonical_payload_sha256": "1ec97c4318deafcc036167afc324bb0a8bdcf9e7a9d4cdeca789a4e76dff5b55",
+  "canonical_payload_utf8": "{\"credential_id\":\"ed25519:ec91d30f34101ee00dac0658f71becb182cbeb67379bc1ae97b6b287bf11306c\",\"public_key_pem\":\"-----BEGIN PUBLIC KEY-----\\nMCowBQYDK2VwAyEAlozCjZOEkI9MELAfuhK0QxMLsMVDF1jSgAwhmc7jrjM=\\n-----END PUBLIC KEY-----\\n\",\"canonical_version\":\"are.passport.v2\",\"passport_id\":\"00000000-0000-4000-8000-000000000007\",\"agent_id\":\"agent-É\\u003c\\u0026\\u003e\",\"issuance_revision\":7,\"passport_type\":\"STANDARD\",\"scope_set\":[{\"scope_id\":\"scope-1\",\"action_class\":\"model.promote\",\"resource_pattern\":\"model/α\\u003c\\u0026\\u003e*\",\"context_constraints\":{\"a\\u003c\\u0026\\u003e\":\"value\\u003c\\u0026\\u003e\\u2028\\u2029\",\"site\":\"é工場\",\"zeta\":\"last\"},\"granted_ts\":1791547200123,\"expires_ts\":1791547260123,\"is_escalation\":true}],\"issued_by\":\"issuer\\u003c\\u0026\\u003eé\",\"reason\":\"qualified\\nline\\t\\u003c\\u0026\\u003e\\u2028終\",\"issued_ts\":1791547200123,\"expires_ts\":1791550800123,\"policy_id_at_issuance\":\"policy\\u003c\\u0026\\u003e\",\"policy_ver_at_issuance\":\"v1-é\"}",
+  "canonical_version": "are.passport.v2",
+  "current_agent_revision": 7,
+  "domain_passport": {
+    "Revision": 7,
+    "PassportID": "00000000-0000-4000-8000-000000000007",
+    "AgentID": "agent-É\u003c\u0026\u003e",
+    "PassportType": "STANDARD",
+    "ScopeSet": [
+      {
+        "ScopeID": "scope-1",
+        "ActionClass": "model.promote",
+        "ResourcePattern": "model/α\u003c\u0026\u003e*",
+        "ContextConstraints": {
+          "a\u003c\u0026\u003e": "value\u003c\u0026\u003e\u2028\u2029",
+          "site": "é工場",
+          "zeta": "last"
+        },
+        "IsEscalation": true,
+        "GrantedTS": "2026-10-09T12:00:00.123Z",
+        "ExpiresTS": "2026-10-09T12:01:00.123Z"
+      }
+    ],
+    "Status": "ACTIVE",
+    "IssuedBy": "issuer\u003c\u0026\u003eé",
+    "CredentialID": "ed25519:ec91d30f34101ee00dac0658f71becb182cbeb67379bc1ae97b6b287bf11306c",
+    "PublicKeyPEM": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAlozCjZOEkI9MELAfuhK0QxMLsMVDF1jSgAwhmc7jrjM=\n-----END PUBLIC KEY-----\n",
+    "Signature": "bJcLHVUdd+qzMbzbNqUTFGYlyc8o6USOmDdJh/nL1P8Q0duioRfPlrFBEwKAQIUiIFl8HAeMWYiI7OtD6JmjAw==",
+    "Reason": "qualified\nline\t\u003c\u0026\u003e\u2028終",
+    "IssuedTS": "2026-10-09T12:00:00.123Z",
+    "ExpiresTS": "2026-10-09T13:00:00.123Z",
+    "RevokedTS": null,
+    "RevocationReason": "",
+    "SupersededBy": "",
+    "PolicyIDAtIssuance": "policy\u003c\u0026\u003e",
+    "PolicyVerAtIssuance": "v1-é"
+  },
+  "issuance_revision": 7,
+  "passport_proto_json": {
+    "agent_id": "agent-É\u003c\u0026\u003e",
+    "credential_id": "ed25519:ec91d30f34101ee00dac0658f71becb182cbeb67379bc1ae97b6b287bf11306c",
+    "expires_ts": "1791550800123",
+    "issued_by": "issuer\u003c\u0026\u003eé",
+    "issued_ts": "1791547200123",
+    "passport_id": "00000000-0000-4000-8000-000000000007",
+    "passport_type": "STANDARD",
+    "policy_id_at_issuance": "policy\u003c\u0026\u003e",
+    "policy_ver_at_issuance": "v1-é",
+    "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAlozCjZOEkI9MELAfuhK0QxMLsMVDF1jSgAwhmc7jrjM=\n-----END PUBLIC KEY-----\n",
+    "revocation_reason": "",
+    "revoked_ts": "0",
+    "scope_set": [
+      {
+        "action_class": "model.promote",
+        "context_constraints": {
+          "a\u003c\u0026\u003e": "value\u003c\u0026\u003e\u2028\u2029",
+          "site": "é工場",
+          "zeta": "last"
+        },
+        "expires_ts": "1791547260123",
+        "granted_ts": "1791547200123",
+        "is_escalation": true,
+        "resource_pattern": "model/α\u003c\u0026\u003e*",
+        "scope_id": "scope-1"
+      }
+    ],
+    "signature": "bJcLHVUdd+qzMbzbNqUTFGYlyc8o6USOmDdJh/nL1P8Q0duioRfPlrFBEwKAQIUiIFl8HAeMWYiI7OtD6JmjAw==",
+    "status": "ACTIVE",
+    "superseded_by": ""
+  },
+  "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAlozCjZOEkI9MELAfuhK0QxMLsMVDF1jSgAwhmc7jrjM=\n-----END PUBLIC KEY-----\n",
+  "purpose": "Public deterministic interoperability test vector; never use this issuer as deployment trust.",
+  "signature_base64": "bJcLHVUdd+qzMbzbNqUTFGYlyc8o6USOmDdJh/nL1P8Q0duioRfPlrFBEwKAQIUiIFl8HAeMWYiI7OtD6JmjAw=="
+}

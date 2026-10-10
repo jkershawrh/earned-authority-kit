@@ -1,0 +1,14 @@
+{
+  "schema_version": "0.1.0-draft.1",
+  "event_id": "event-001",
+  "correlation_id": "flow-001",
+  "agent_id": "agent-001",
+  "subject_id": "passport-001",
+  "subject_revision": 1,
+  "event_type": "GRANTED",
+  "occurred_at_ms": 2000,
+  "payload_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "actor_ref": "fixture-policy-controller",
+  "reason_code": "SCHEMA_FIXTURE_ONLY",
+  "delivery_state": "PENDING"
+}

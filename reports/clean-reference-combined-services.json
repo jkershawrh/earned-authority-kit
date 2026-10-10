@@ -1,0 +1,55 @@
+{
+  "run_id": "reference-service-53358d3c-555f-49dd-87df-5afb0028fab5",
+  "environment": "REAL_LOCAL_SERVICES",
+  "checks": [
+    {
+      "check": "canonical_passport_healthy",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "foundation_registers_active_agent",
+      "passed": true,
+      "evidence": {
+        "agent_id": "agt-reference-service-53358d3c-555f-49dd-87df-5afb0028fab5"
+      }
+    },
+    {
+      "check": "foundation_registry_readback",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "policy_model.promote_to_production_ALLOW_model_champion",
+      "passed": true,
+      "evidence": {
+        "effect": "ALLOW"
+      }
+    },
+    {
+      "check": "policy_model.promote_to_production_DENY_model_experimental",
+      "passed": true,
+      "evidence": {
+        "effect": "DENY"
+      }
+    },
+    {
+      "check": "policy_demo.read_ALLOW_urn:dataset_health",
+      "passed": true,
+      "evidence": {
+        "effect": "ALLOW"
+      }
+    },
+    {
+      "check": "gateway_rejects_unauthenticated_request",
+      "passed": true,
+      "evidence": {}
+    }
+  ],
+  "started_at": "2026-10-10T01:57:24.406195+00:00",
+  "scope": "Foundation real JWT, PostgreSQL identity, OPA, and canonical Passport health; connected lifecycle validated separately",
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "agent_id": "agt-reference-service-53358d3c-555f-49dd-87df-5afb0028fab5",
+  "finished_at": "2026-10-10T01:57:24.455599+00:00"
+}

@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:earned-authority:outcome:0.1.0-draft.1",
+  "title": "outcome",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-draft.1"
+    },
+    "observation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attempt_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "correlation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "skill_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "skill_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "minLength": 71,
+      "maxLength": 71
+    },
+    "context_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "minLength": 71,
+      "maxLength": 71
+    },
+    "verifier_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verifier_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "minLength": 71,
+      "maxLength": 71
+    },
+    "verifier_attestation_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "independence": {
+      "enum": [
+        "INDEPENDENT",
+        "SELF_REPORTED",
+        "UNVERIFIED"
+      ]
+    },
+    "observed_at_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "outcome": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "UNKNOWN"
+      ]
+    },
+    "postcondition_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "minLength": 71,
+      "maxLength": 71
+    },
+    "evidence_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "minLength": 71,
+      "maxLength": 71
+    }
+  },
+  "required": [
+    "schema_version",
+    "observation_id",
+    "attempt_id",
+    "correlation_id",
+    "skill_id",
+    "skill_digest",
+    "context_digest",
+    "verifier_id",
+    "verifier_digest",
+    "verifier_attestation_ref",
+    "independence",
+    "observed_at_ms",
+    "outcome",
+    "postcondition_digest",
+    "evidence_digest"
+  ]
+}

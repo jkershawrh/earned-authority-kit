@@ -1,0 +1,33 @@
+{
+  "source": "/Users/jkershaw/Documents/agent-passport",
+  "head": "c5e9e4ef780a51647ebafb9f7239e75cd223b596",
+  "modified_tracked_files": [],
+  "files_sha256": {
+    "Dockerfile": "02d72aa3f468cb68b887bd2098f9618e980f2e6abecc37e66e8680c23e25aa91",
+    "README.md": "dcf1d215bd7ba6e048c05ea8f001c686e531176533536283f9706374552ad77d",
+    "api/openapi.yaml": "e708e882ea3f776d8d71b387f17295485bdbecc657d0d621a6961e1a4591a383",
+    "cmd/agent-passport/main.go": "e6e481c8bb9dc0380370c4bb6c4705d5ff7cc90df81f24921229f51e08a24e78",
+    "cmd/passport-grpc-probe/main.go": "09bf5ca48887f5f3c983a13b05d42ba572bceceb7ca4875c5825880f45c7a7cd",
+    "deploy/compose/docker-compose.yml": "994e524c5f5f3ed8e6650144e49ceb11e779a62499e32035c5466edfcf7f4de0",
+    "docs/white-paper.md": "1dccd5287bda2ab000a08e086eee5d31a165adfa1542bd7c103cac3cde491baa",
+    "examples/grpc-client/passport_ops.go": "bf4a39a9866753c329b0547f520f5f3d7e4d86cf1ca5720ee8be1715fbd1afa1",
+    "go.mod": "9ed8c07d51d511d28654501513e5c778e594ea32bae5b016d21daa884f6fecd2",
+    "go.sum": "bc3f9b763b85e6795b9397fac78b12a219ed063786905eed2ae3cd6f4f5e7546",
+    "internal/config/config.go": "5a68e6936c6389279fbd4b6da23410623093243378b7c3f4bae1629d2421697e",
+    "internal/domain/passport.go": "fefde45b7ad5fc8bb4d0508c874da23017ac1e4727cbcceeed40bce3e095ae76",
+    "internal/grpc/server.go": "db5fdd6365f3df46b63ae47bde4db0e6d7684b5c3930970c4f0b754c957f4991",
+    "internal/local/wiring.go": "a082622299ef2868cb48de4cec8d22b28604d06145e2ec0ff24e97e263c237f8",
+    "internal/metrics/metrics.go": "c2c5664994504a7e7698ca9025da8fbf3a923386884e8532f1576263d37103da",
+    "internal/service/service.go": "cec50271115596a4ea502c38c077c7e9e89f93458009c640ea2ab77d180ebdfe",
+    "internal/service/service_test.go": "6951e4f62b1f56adf84ef9d5ef54154a19fc9db89ac5fc9873ff2db27f4c2ff6",
+    "migrations/001_init.sql": "ef52018fb4527008856d93aa448568e4345b407dffaec24f2a6f13e5b4da7260",
+    "migrations/002_outbox.sql": "f2872f1ca22e2575e26e64263f51a4dc530eeb225a17192ed80ada2e9141699c",
+    "migrations/003_policy_version.sql": "d83d0b9c3ee217fa4ebb85b19a17aedb313cdf6f6de78424f0f6aed362c0293d",
+    "proto/passport_issuance.pb.go": "1007001832fbe8b83eb398740e46ff76e64e8bfc6f422bcde87cc793b909393c",
+    "proto/passport_issuance.proto": "42af3ee36cde53adda4d5da40efdf3e9dd4ef25ff3f2058a8e171c5c7b5054cf",
+    "proto/passport_issuance_grpc.pb.go": "1e2544979d6fc79c758d9a2a14153ca7ceb7e56aa528f06acc71772165aac966",
+    "tests/passport_deep_test.py": "38334d329f00f7abea76fedf07c6e7d71303f47413e9feffeb0032587b388b38"
+  },
+  "source_status": "",
+  "source_working_diff_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

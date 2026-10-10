@@ -1,0 +1,352 @@
+test_all_five_actual_producers_validate_and_consume (test_wire_contracts.WireContractTests.test_all_five_actual_producers_validate_and_consume) ... ERROR
+test_changed_context_in_valid_shape_is_rejected (test_wire_contracts.WireContractTests.test_changed_context_in_valid_shape_is_rejected) ... ERROR
+test_changed_policy_decision_in_valid_shape_is_rejected (test_wire_contracts.WireContractTests.test_changed_policy_decision_in_valid_shape_is_rejected) ... ERROR
+test_committed_attempt_uses_actual_boundary_policy_decision (test_wire_contracts.WireContractTests.test_committed_attempt_uses_actual_boundary_policy_decision) ... ERROR
+test_current_authority_revocation_invalidates_active_credential_export (test_wire_contracts.WireContractTests.test_current_authority_revocation_invalidates_active_credential_export) ... ERROR
+test_each_skill_keeps_its_exact_policy_binding (test_wire_contracts.WireContractTests.test_each_skill_keeps_its_exact_policy_binding) ... ERROR
+test_empty_hold_has_null_window_and_no_fabricated_evidence (test_wire_contracts.WireContractTests.test_empty_hold_has_null_window_and_no_fabricated_evidence) ... ERROR
+test_expired_active_credential_is_rejected_at_consumer_time (test_wire_contracts.WireContractTests.test_expired_active_credential_is_rejected_at_consumer_time) ... ERROR
+test_missing_proof_is_rejected (test_wire_contracts.WireContractTests.test_missing_proof_is_rejected) ... ERROR
+test_new_draft_events_export_without_fabricated_mutable_revision (test_wire_contracts.WireContractTests.test_new_draft_events_export_without_fabricated_mutable_revision) ... ERROR
+test_pending_delivery_cannot_claim_recorded_receipt (test_wire_contracts.WireContractTests.test_pending_delivery_cannot_claim_recorded_receipt) ... ERROR
+test_pending_ledger_keeps_confirmed_pass_and_local_commit_receipt (test_wire_contracts.WireContractTests.test_pending_ledger_keeps_confirmed_pass_and_local_commit_receipt) ... ERROR
+test_public_records_omit_raw_signature_material (test_wire_contracts.WireContractTests.test_public_records_omit_raw_signature_material) ... ERROR
+test_qualification_digest_preserves_authenticated_raw_source_binding (test_wire_contracts.WireContractTests.test_qualification_digest_preserves_authenticated_raw_source_binding) ... ERROR
+test_qualification_revision_change_invalidates_old_source (test_wire_contracts.WireContractTests.test_qualification_revision_change_invalidates_old_source) ... ERROR
+test_raw_evidence_tamper_is_rejected_even_before_cross_binding (test_wire_contracts.WireContractTests.test_raw_evidence_tamper_is_rejected_even_before_cross_binding) ... ERROR
+test_read_outcome_uses_health_condition_without_registry_mutation (test_wire_contracts.WireContractTests.test_read_outcome_uses_health_condition_without_registry_mutation) ... ERROR
+test_remote_tamper_is_rejected_by_receipt_verification (test_wire_contracts.WireContractTests.test_remote_tamper_is_rejected_by_receipt_verification) ... ERROR
+test_replayed_ledger_receipt_is_rejected (test_wire_contracts.WireContractTests.test_replayed_ledger_receipt_is_rejected) ... ERROR
+test_requested_attempt_is_not_a_commit (test_wire_contracts.WireContractTests.test_requested_attempt_is_not_a_commit) ... ERROR
+test_revoked_authority_has_no_fabricated_active_credential (test_wire_contracts.WireContractTests.test_revoked_authority_has_no_fabricated_active_credential) ... ERROR
+test_source_digest_tampering_is_rejected (test_wire_contracts.WireContractTests.test_source_digest_tampering_is_rejected) ... ERROR
+test_unknown_is_hold_without_failure_evidence (test_wire_contracts.WireContractTests.test_unknown_is_hold_without_failure_evidence) ... ERROR
+test_wrong_qualification_digest_is_rejected (test_wire_contracts.WireContractTests.test_wrong_qualification_digest_is_rejected) ... ERROR
+
+======================================================================
+ERROR: test_all_five_actual_producers_validate_and_consume (test_wire_contracts.WireContractTests.test_all_five_actual_producers_validate_and_consume)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 47, in test_all_five_actual_producers_validate_and_consume
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_changed_context_in_valid_shape_is_rejected (test_wire_contracts.WireContractTests.test_changed_context_in_valid_shape_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 149, in test_changed_context_in_valid_shape_is_rejected
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_changed_policy_decision_in_valid_shape_is_rejected (test_wire_contracts.WireContractTests.test_changed_policy_decision_in_valid_shape_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 156, in test_changed_policy_decision_in_valid_shape_is_rejected
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_committed_attempt_uses_actual_boundary_policy_decision (test_wire_contracts.WireContractTests.test_committed_attempt_uses_actual_boundary_policy_decision)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 127, in test_committed_attempt_uses_actual_boundary_policy_decision
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_current_authority_revocation_invalidates_active_credential_export (test_wire_contracts.WireContractTests.test_current_authority_revocation_invalidates_active_credential_export)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 202, in test_current_authority_revocation_invalidates_active_credential_export
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_each_skill_keeps_its_exact_policy_binding (test_wire_contracts.WireContractTests.test_each_skill_keeps_its_exact_policy_binding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 97, in test_each_skill_keeps_its_exact_policy_binding
+    bundle = self.bundle(attempt=False)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_empty_hold_has_null_window_and_no_fabricated_evidence (test_wire_contracts.WireContractTests.test_empty_hold_has_null_window_and_no_fabricated_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 69, in test_empty_hold_has_null_window_and_no_fabricated_evidence
+    bundle = export_runtime(self.rt, qualification_ids=[hold['qualification_id']], include_authority=False)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_expired_active_credential_is_rejected_at_consumer_time (test_wire_contracts.WireContractTests.test_expired_active_credential_is_rejected_at_consumer_time)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 213, in test_expired_active_credential_is_rejected_at_consumer_time
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_missing_proof_is_rejected (test_wire_contracts.WireContractTests.test_missing_proof_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 166, in test_missing_proof_is_rejected
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_new_draft_events_export_without_fabricated_mutable_revision (test_wire_contracts.WireContractTests.test_new_draft_events_export_without_fabricated_mutable_revision)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 218, in test_new_draft_events_export_without_fabricated_mutable_revision
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_pending_delivery_cannot_claim_recorded_receipt (test_wire_contracts.WireContractTests.test_pending_delivery_cannot_claim_recorded_receipt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 195, in test_pending_delivery_cannot_claim_recorded_receipt
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_pending_ledger_keeps_confirmed_pass_and_local_commit_receipt (test_wire_contracts.WireContractTests.test_pending_ledger_keeps_confirmed_pass_and_local_commit_receipt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 106, in test_pending_ledger_keeps_confirmed_pass_and_local_commit_receipt
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_public_records_omit_raw_signature_material (test_wire_contracts.WireContractTests.test_public_records_omit_raw_signature_material)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 142, in test_public_records_omit_raw_signature_material
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_qualification_digest_preserves_authenticated_raw_source_binding (test_wire_contracts.WireContractTests.test_qualification_digest_preserves_authenticated_raw_source_binding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 59, in test_qualification_digest_preserves_authenticated_raw_source_binding
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_qualification_revision_change_invalidates_old_source (test_wire_contracts.WireContractTests.test_qualification_revision_change_invalidates_old_source)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 207, in test_qualification_revision_change_invalidates_old_source
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_raw_evidence_tamper_is_rejected_even_before_cross_binding (test_wire_contracts.WireContractTests.test_raw_evidence_tamper_is_rejected_even_before_cross_binding)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 177, in test_raw_evidence_tamper_is_rejected_even_before_cross_binding
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_read_outcome_uses_health_condition_without_registry_mutation (test_wire_contracts.WireContractTests.test_read_outcome_uses_health_condition_without_registry_mutation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 137, in test_read_outcome_uses_health_condition_without_registry_mutation
+    bundle = export_runtime(self.rt, qualification_ids=[read_q['qualification_id']], attempt_ids=['read-1'])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_remote_tamper_is_rejected_by_receipt_verification (test_wire_contracts.WireContractTests.test_remote_tamper_is_rejected_by_receipt_verification)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 189, in test_remote_tamper_is_rejected_by_receipt_verification
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_replayed_ledger_receipt_is_rejected (test_wire_contracts.WireContractTests.test_replayed_ledger_receipt_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 183, in test_replayed_ledger_receipt_is_rejected
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_requested_attempt_is_not_a_commit (test_wire_contracts.WireContractTests.test_requested_attempt_is_not_a_commit)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 119, in test_requested_attempt_is_not_a_commit
+    bundle = export_runtime(self.rt, qualification_ids=[self.q['qualification_id']], attempt_ids=['requested'])
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_revoked_authority_has_no_fabricated_active_credential (test_wire_contracts.WireContractTests.test_revoked_authority_has_no_fabricated_active_credential)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 89, in test_revoked_authority_has_no_fabricated_active_credential
+    self.bundle(attempt=False)
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_source_digest_tampering_is_rejected (test_wire_contracts.WireContractTests.test_source_digest_tampering_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 172, in test_source_digest_tampering_is_rejected
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_unknown_is_hold_without_failure_evidence (test_wire_contracts.WireContractTests.test_unknown_is_hold_without_failure_evidence)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 80, in test_unknown_is_hold_without_failure_evidence
+    bundle = export_runtime(self.rt, qualification_ids=[hold['qualification_id']], include_authority=False)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+======================================================================
+ERROR: test_wrong_qualification_digest_is_rejected (test_wire_contracts.WireContractTests.test_wrong_qualification_digest_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 161, in test_wrong_qualification_digest_is_rejected
+    bundle = self.bundle()
+             ^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_wire_contracts.py", line 32, in bundle
+    return export_runtime(self.rt, qualification_ids=[self.q['qualification_id']],
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/wire_contracts.py", line 14, in export_runtime
+    raise NotImplementedError('wire producer/consumer bindings pending')
+NotImplementedError: wire producer/consumer bindings pending
+
+----------------------------------------------------------------------
+Ran 24 tests in 0.584s
+
+FAILED (errors=24)

@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:earned-authority:authority:0.1.0-draft.1",
+  "title": "authority",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-draft.1"
+    },
+    "passport_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agent_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authority_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "policy_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "minLength": 71,
+      "maxLength": 71,
+      "description": "Digest of the sorted grant_id/policy_digest binding set. Exact authorization policies remain in each grant."
+    },
+    "issued_at_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "expires_at_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "status": {
+      "enum": [
+        "ACTIVE",
+        "REVOKED",
+        "SUPERSEDED",
+        "EXPIRED"
+      ]
+    },
+    "grants": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "grant_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "skill_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "skill_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "minLength": 71,
+            "maxLength": 71
+          },
+          "context_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "minLength": 71,
+            "maxLength": 71
+          },
+          "qualification_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "qualification_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "minLength": 71,
+            "maxLength": 71
+          },
+          "action_class": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resource": {
+            "type": "string",
+            "minLength": 1
+          },
+          "expires_at_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "policy_digest": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$",
+            "minLength": 71,
+            "maxLength": 71
+          }
+        },
+        "required": [
+          "grant_id",
+          "skill_id",
+          "skill_digest",
+          "context_digest",
+          "qualification_id",
+          "qualification_digest",
+          "action_class",
+          "resource",
+          "expires_at_ms",
+          "policy_digest"
+        ]
+      }
+    },
+    "issuer_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "signature_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "schema_version",
+    "passport_id",
+    "agent_id",
+    "authority_revision",
+    "policy_digest",
+    "issued_at_ms",
+    "expires_at_ms",
+    "status",
+    "grants",
+    "issuer_ref",
+    "signature_ref"
+  ]
+}

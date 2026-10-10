@@ -1,0 +1,53 @@
+test_committed_attempt_requires_receipt (test_contracts.ContractTests) ... ok
+test_duplicate_grants_rejected (test_contracts.ContractTests) ... ok
+test_duplicate_observation_cannot_inflate_reference_count (test_contracts.ContractTests) ... ok
+test_each_schema_and_its_individual_fixture_are_valid (test_contracts.ContractTests) ... ok
+test_float_and_ambiguous_duplicate_json_rejected (test_contracts.ContractTests) ... ok
+test_malformed_binding_rejected (test_contracts.ContractTests) ... ok
+test_order_independent_digest_binds_changed_context (test_contracts.ContractTests) ... ok
+test_pending_ledger_is_not_recorded (test_contracts.ContractTests) ... ok
+test_scope_cannot_outlive_parent_authority (test_contracts.ContractTests) ... ok
+test_unknown_contract_version_rejected (test_contracts.ContractTests) ... ok
+test_unknown_fields_rejected (test_contracts.ContractTests) ... ok
+test_validity_window_must_follow_observations (test_contracts.ContractTests) ... ok
+test_integral_float_timestamp_is_rejected (test_contracts.EncodingRegressions) ... ok
+test_trailing_newline_in_digest_is_rejected (test_contracts.EncodingRegressions) ... ok
+test_external_artifacts_cannot_satisfy_local_manifest (test_rubric.ArtifactTests) ... ok
+test_hash_is_recomputed_and_tampering_is_rejected (test_rubric.ArtifactTests) ... ok
+test_unverified_pass_cannot_turn_green (test_rubric.ArtifactTests) ... ok
+test_claimed_artifact_verification_cannot_forge_green (test_rubric.ReviewRegressions) ... ok
+test_newer_unknown_supersedes_old_pass (test_rubric.ReviewRegressions) ... ok
+test_complete_current_evidence_is_green (test_rubric.RubricTests) ... ok
+test_component_pass_cannot_satisfy_integration (test_rubric.RubricTests) ... ok
+test_different_requirement_does_not_count (test_rubric.RubricTests) ... ok
+test_empty_required_methods_are_invalid (test_rubric.RubricTests) ... ok
+test_future_timestamp_is_amber (test_rubric.RubricTests) ... ok
+test_known_failure_dominates_pass (test_rubric.RubricTests) ... ok
+test_missing_evidence_is_amber (test_rubric.RubricTests) ... ok
+test_no_artifact_digest_cannot_be_green (test_rubric.RubricTests) ... ok
+test_one_missing_method_is_amber (test_rubric.RubricTests) ... ok
+test_previous_revision_cannot_satisfy_current (test_rubric.RubricTests) ... ok
+test_release_is_worst_required_status (test_rubric.RubricTests) ... ok
+test_stale_failure_remains_red_until_revision_changes (test_rubric.RubricTests) ... ok
+test_stale_pass_is_amber (test_rubric.RubricTests) ... ok
+test_unexecuted_scenario_is_amber (test_rubric.RubricTests) ... ok
+test_unknown_and_skipped_are_amber (test_rubric.RubricTests) ... ok
+test_newer_unexecuted_skip_blocks_old_pass (test_rubric.SkippedRunRegression) ... FAIL
+
+======================================================================
+FAIL: test_newer_unexecuted_skip_blocks_old_pass (test_rubric.SkippedRunRegression)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 137, in test_newer_unexecuted_skip_blocks_old_pass
+    case.check_status("AMBER")
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 28, in check_status
+    self.assertEqual(status, result["status"], result)
+AssertionError: 'AMBER' != 'GREEN'
+- AMBER
++ GREEN
+ : {'requirement_id': 'AUTH-01', 'status': 'GREEN', 'reason': 'All required methods passed for this revision and environment', 'missing_methods': []}
+
+----------------------------------------------------------------------
+Ran 35 tests in 0.049s
+
+FAILED (failures=1)

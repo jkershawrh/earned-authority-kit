@@ -1,0 +1,2385 @@
+diff --git a/README.md b/README.md
+--- a/README.md
++++ b/README.md
+@@ -186,3 +186,89 @@
+ ## License
+ 
+ Apache 2.0
++
++## Durable reference service mode
++
++The durable mode uses a persisted Ed25519 issuer key and an atomic local state
++snapshot containing passports, active indexes, and per-agent revisions. It
++checks agent status through the configured Foundation HTTP registry endpoint.
++It does not use the all-ACTIVE registry stub or deterministic signature stub.
++The default `memory` mode remains a disposable demonstration.
++
++Build the service with `go build -o bin/agent-passport ./cmd/agent-passport`.
++Configure these variables before starting that binary:
++
++- `ARE_PASSPORT_MODE=durable`
++- `ARE_PASSPORT_STATE_PATH`: private persistent state file path.
++- `ARE_PASSPORT_KEY_PATH`: private persistent Ed25519 key path; generated once
++  with file mode 0600, then reused. Back up the key with its state.
++- `ARE_PASSPORT_REGISTRY_URL`: Foundation HTTP base URL; reads
++  `/v1/identity/agents/{agent_id}` and rejects missing, unavailable, mismatched,
++  or inactive identities. `ARE_PASSPORT_REGISTRY_TOKEN` supplies gateway auth.
++- `ARE_PASSPORT_POLICY_ID` and `ARE_PASSPORT_POLICY_VERSION`: explicit policy
++  identity from the deployment. Issuance captures these values; this setting
++  does not evaluate policy on its own.
++- `ARE_PASSPORT_MUTATION_TOKEN`: required bearer secret for mutation RPCs.
++- `ARE_PASSPORT_FENCE_LOCK_PATH`: shared advisory lock file for the single-host
++  reference executor; its parent directory must exist.
++- `ARE_PASSPORT_BIND_HOST=127.0.0.1` for host-local operation, and optional
++  `ARE_PASSPORT_GRPC_PORT`, `ARE_PASSPORT_HEALTH_PORT`, and
++  `ARE_PASSPORT_METRICS_PORT` (defaults 9094, 8080, and 8085).
++
++Every durable-mode issuance and revocation RPC requires three metadata values:
++
++```text
++authorization: Bearer <mutation secret>
++x-are-expected-active-passport-id: <observed UUID, or none>
++x-are-expected-agent-revision: <observed unsigned generation, initially 0>
++```
++
++Both comparison fields must match the current state. This also prevents an old
++empty-state observation from issuing after an intervening grant/revoke cycle.
++Successful mutations advance the agent revision. Reads and mutation responses
++return `x-are-agent-revision` in metadata; an empty `GetAgentPassport` returns
++`NotFound` with the current revision in its trailers. Repeated revocation with
++the current empty-state CAS is idempotent. A retry with stale CAS fails closed;
++read the current state before deciding whether to retry.
++
++`VerifyPassport` verifies the stored canonical credential when request payload
++and signature are omitted. Supplied values must match that stored canonical
++payload and signature. The v2 canonical message uses named JSON fields and
++binds passport ID, agent ID, issuance revision, signing key identity, issuer,
++reason, passport type, every scope field (including context, grant and expiry,
++and escalation), overall times, and policy identity/version. It is a versioned
++closed schema implemented by `service.CanonicalPayload`, not an RFC 8785 claim.
++Mutable revocation state is checked authoritatively in addition to the signature.
++Issue, Get, GetAgent and Verify responses carry the exact signed bytes in
++`x-are-canonical-payload-bin` binary metadata. Its issuance revision stays fixed
++for historical credentials; `x-are-agent-revision` reports current aggregate
++state. Consumers must pin the issuer independently and compare immutable
++transport fields with the signed envelope. An active read requires matching
++issuance and current revisions. The public golden vector is
++`internal/service/testdata/canonical-v2.json`.
++Old signatures require reissuance. The configured Ed25519 verifier trusts its
++own persisted issuer key; an arbitrary public key is not an accepted issuer.
++
++The shared file fence is acquired before the service mutation mutex. The
++executor must acquire that same file lock across fresh authority verification
++and target commit. Read RPCs do not acquire it, avoiding lock inversion. Keep
++the same lock inode mounted for all cooperating processes. This guarantee is
++limited to a cooperating Linux/macOS single-host deployment with shared local
++storage; it is not a distributed lease or a network-wide execution guarantee.
++Client cancellation while waiting for the fence prevents that waiting mutation.
++
++A snapshot commit writes and synchronizes a temporary file, atomically renames
++it, then synchronizes its directory before success. A failed write leaves the
++previous authority intact. An uncertain commit outcome stops authority reads
++and writes until restart. A separate process lock rejects a second state owner.
++Restart checks stored signature and index consistency; missing keys, malformed
++state, and changed credentials do not silently regenerate usable authority.
++Revocations and revisions survive restart. Privileged rollback of the complete
++state/key files is outside this local persistence guarantee.
++
++This mode does not configure TLS, workload identity, distributed consensus,
++external ledger delivery, or a policy decision service. The reference executor
++must supply those integration boundaries where required. The service's legacy
++ledger/outbox interfaces remain separate; durable mode passes neither a fake
++ledger nor a claim of completed lifecycle ledger delivery. Health endpoints
++are `/healthz` and `/readyz`; SIGTERM stops the service gracefully.
+diff --git a/cmd/agent-passport/main.go b/cmd/agent-passport/main.go
+--- a/cmd/agent-passport/main.go
++++ b/cmd/agent-passport/main.go
+@@ -16,6 +16,7 @@
+ 	grpcapi "github.com/srex-dev/agent-passport/internal/grpc"
+ 	"github.com/srex-dev/agent-passport/internal/local"
+ 	"github.com/srex-dev/agent-passport/internal/metrics"
++	"github.com/srex-dev/agent-passport/internal/service"
+ 	passportv1 "github.com/srex-dev/agent-passport/proto"
+ 	"golang.org/x/sync/errgroup"
+ 	"google.golang.org/grpc"
+@@ -39,22 +40,33 @@
+ 	ctx, stop := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
+ 	defer stop()
+ 
+-	svc := local.NewInMemoryService()
+-	grpcSrv := grpc.NewServer()
++	var svc *service.Service
++	if cfg.Mode == "durable" {
++		var closeService func() error
++		svc, closeService, err = local.NewDurableService(local.DurableConfig{StatePath: cfg.StatePath, KeyPath: cfg.KeyPath, FencePath: cfg.FencePath, RegistryURL: cfg.RegistryURL, RegistryToken: cfg.RegistryToken, PolicyID: cfg.PolicyID, PolicyVersion: cfg.PolicyVersion})
++		if err != nil {
++			return err
++		}
++		defer closeService()
++	} else {
++		svc = local.NewInMemoryService()
++	}
++	log.Printf("passport mode=%s", cfg.Mode)
++	grpcSrv := grpc.NewServer(grpc.UnaryInterceptor(grpcapi.MutationTokenInterceptor(cfg.MutationToken)))
+ 	passportv1.RegisterPassportIssuanceServiceServer(grpcSrv, grpcapi.New(svc))
+ 
+ 	hs := health.NewServer()
+ 	hs.SetServingStatus("", healthpb.HealthCheckResponse_SERVING)
+ 	healthpb.RegisterHealthServer(grpcSrv, hs)
+ 
+-	grpcLis, err := net.Listen("tcp", fmt.Sprintf(":%d", cfg.GRPCPort))
++	grpcLis, err := net.Listen("tcp", net.JoinHostPort(cfg.BindHost, fmt.Sprint(cfg.GRPCPort)))
+ 	if err != nil {
+ 		return fmt.Errorf("grpc listen: %w", err)
+ 	}
+ 
+ 	metricsMux := http.NewServeMux()
+ 	metricsMux.Handle("/metrics", promhttp.Handler())
+-	metricsSrv := &http.Server{Addr: fmt.Sprintf(":%d", cfg.MetricsPort), Handler: metricsMux}
++	metricsSrv := &http.Server{Addr: net.JoinHostPort(cfg.BindHost, fmt.Sprint(cfg.MetricsPort)), Handler: metricsMux}
+ 
+ 	healthMux := http.NewServeMux()
+ 	healthMux.HandleFunc("/healthz", func(w http.ResponseWriter, _ *http.Request) {
+@@ -62,12 +74,16 @@
+ 		_, _ = w.Write([]byte("ok"))
+ 	})
+ 	healthMux.HandleFunc("/readyz", func(w http.ResponseWriter, _ *http.Request) {
++		if !svc.Ready() {
++			http.Error(w, "state unavailable", http.StatusServiceUnavailable)
++			return
++		}
+ 		w.WriteHeader(http.StatusOK)
+ 		_, _ = w.Write([]byte("ready"))
+ 	})
+-	healthSrv := &http.Server{Addr: fmt.Sprintf(":%d", cfg.HealthPort), Handler: healthMux}
++	healthSrv := &http.Server{Addr: net.JoinHostPort(cfg.BindHost, fmt.Sprint(cfg.HealthPort)), Handler: healthMux}
+ 
+-	g, _ := errgroup.WithContext(ctx)
++	g, runCtx := errgroup.WithContext(ctx)
+ 	g.Go(func() error {
+ 		log.Printf("passport gRPC listening on :%d", cfg.GRPCPort)
+ 		if serveErr := grpcSrv.Serve(grpcLis); serveErr != nil && !errors.Is(serveErr, grpc.ErrServerStopped) {
+@@ -91,10 +107,16 @@
+ 	})
+ 
+ 	go func() {
+-		<-ctx.Done()
++		<-runCtx.Done()
+ 		shutdownCtx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+ 		defer cancel()
+-		grpcSrv.GracefulStop()
++		done := make(chan struct{})
++		go func() { grpcSrv.GracefulStop(); close(done) }()
++		select {
++		case <-done:
++		case <-shutdownCtx.Done():
++			grpcSrv.Stop()
++		}
+ 		_ = metricsSrv.Shutdown(shutdownCtx)
+ 		_ = healthSrv.Shutdown(shutdownCtx)
+ 	}()
+diff --git a/internal/config/config.go b/internal/config/config.go
+--- a/internal/config/config.go
++++ b/internal/config/config.go
+@@ -8,17 +8,46 @@
+ 
+ // Config holds process listen configuration.
+ type Config struct {
+-	GRPCPort    int
+-	HealthPort  int
+-	MetricsPort int
++	Mode          string
++	StatePath     string
++	KeyPath       string
++	FencePath     string
++	RegistryURL   string
++	RegistryToken string
++	PolicyID      string
++	PolicyVersion string
++	MutationToken string
++	BindHost      string
++	GRPCPort      int
++	HealthPort    int
++	MetricsPort   int
+ }
+ 
+ // Load reads configuration from environment (defaults match k8s deployment).
+ func Load() (Config, error) {
+ 	c := Config{
+-		GRPCPort:    getenvInt("ARE_PASSPORT_GRPC_PORT", 9094),
+-		HealthPort:  getenvInt("ARE_PASSPORT_HEALTH_PORT", 8080),
+-		MetricsPort: getenvInt("ARE_PASSPORT_METRICS_PORT", 8085),
++		Mode:          os.Getenv("ARE_PASSPORT_MODE"),
++		StatePath:     os.Getenv("ARE_PASSPORT_STATE_PATH"),
++		KeyPath:       os.Getenv("ARE_PASSPORT_KEY_PATH"),
++		FencePath:     os.Getenv("ARE_PASSPORT_FENCE_LOCK_PATH"),
++		RegistryURL:   os.Getenv("ARE_PASSPORT_REGISTRY_URL"),
++		RegistryToken: os.Getenv("ARE_PASSPORT_REGISTRY_TOKEN"),
++		PolicyID:      os.Getenv("ARE_PASSPORT_POLICY_ID"),
++		PolicyVersion: os.Getenv("ARE_PASSPORT_POLICY_VERSION"),
++		MutationToken: os.Getenv("ARE_PASSPORT_MUTATION_TOKEN"),
++		BindHost:      os.Getenv("ARE_PASSPORT_BIND_HOST"),
++		GRPCPort:      getenvInt("ARE_PASSPORT_GRPC_PORT", 9094),
++		HealthPort:    getenvInt("ARE_PASSPORT_HEALTH_PORT", 8080),
++		MetricsPort:   getenvInt("ARE_PASSPORT_METRICS_PORT", 8085),
++	}
++	if c.Mode == "" {
++		c.Mode = "memory"
++	}
++	if c.Mode != "memory" && c.Mode != "durable" {
++		return Config{}, fmt.Errorf("unknown passport mode")
++	}
++	if c.Mode == "durable" && c.MutationToken == "" {
++		return Config{}, fmt.Errorf("durable mode requires mutation token")
+ 	}
+ 	if c.GRPCPort <= 0 || c.HealthPort <= 0 || c.MetricsPort <= 0 {
+ 		return Config{}, fmt.Errorf("invalid listen ports")
+diff --git a/internal/domain/passport.go b/internal/domain/passport.go
+--- a/internal/domain/passport.go
++++ b/internal/domain/passport.go
+@@ -33,6 +33,7 @@
+ 
+ // Passport represents a signed authorization artifact.
+ type Passport struct {
++	Revision            uint64
+ 	PassportID          string
+ 	AgentID             string
+ 	PassportType        PassportType
+diff --git a/internal/grpc/authority_metadata.go b/internal/grpc/authority_metadata.go
+new file mode 100644
+--- /dev/null
++++ b/internal/grpc/authority_metadata.go
+@@ -0,0 +1,76 @@
++package grpc
++
++import (
++	"context"
++	"crypto/subtle"
++	"fmt"
++	"github.com/srex-dev/agent-passport/internal/domain"
++	"github.com/srex-dev/agent-passport/internal/service"
++	"strconv"
++	"strings"
++
++	"google.golang.org/grpc"
++	"google.golang.org/grpc/codes"
++	"google.golang.org/grpc/metadata"
++	"google.golang.org/grpc/status"
++)
++
++const ExpectedActiveHeader = "x-are-expected-active-passport-id"
++const ExpectedRevisionHeader = "x-are-expected-agent-revision"
++const AgentRevisionHeader = "x-are-agent-revision"
++
++func expectedActive(ctx context.Context) (*string, error) {
++	values := metadata.ValueFromIncomingContext(ctx, ExpectedActiveHeader)
++	if len(values) == 0 {
++		return nil, nil
++	}
++	if len(values) != 1 || strings.TrimSpace(values[0]) == "" {
++		return nil, status.Error(codes.InvalidArgument, "one nonempty expected active passport is required")
++	}
++	return &values[0], nil
++}
++func expectedRevision(ctx context.Context) (*uint64, error) {
++	values := metadata.ValueFromIncomingContext(ctx, ExpectedRevisionHeader)
++	if len(values) == 0 {
++		return nil, nil
++	}
++	if len(values) != 1 {
++		return nil, status.Error(codes.InvalidArgument, "one expected agent revision is required")
++	}
++	revision, err := strconv.ParseUint(values[0], 10, 64)
++	if err != nil {
++		return nil, status.Error(codes.InvalidArgument, "invalid expected agent revision")
++	}
++	return &revision, nil
++}
++func revisionHeader(ctx context.Context, revision uint64) {
++	_ = grpc.SetHeader(ctx, metadata.Pairs(AgentRevisionHeader, fmt.Sprint(revision)))
++	_ = grpc.SetTrailer(ctx, metadata.Pairs(AgentRevisionHeader, fmt.Sprint(revision)))
++}
++
++// MutationTokenInterceptor protects administrative mutation calls in durable
++// reference mode. Transport security and caller-specific policy remain external.
++func MutationTokenInterceptor(token string) grpc.UnaryServerInterceptor {
++	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
++		method := info.FullMethod
++		mutation := strings.HasSuffix(method, "/IssuePassport") || strings.HasSuffix(method, "/RevokePassport") || strings.HasSuffix(method, "/RenewPassport")
++		if token != "" && mutation {
++			values := metadata.ValueFromIncomingContext(ctx, "authorization")
++			if len(values) != 1 || subtle.ConstantTimeCompare([]byte(values[0]), []byte("Bearer "+token)) != 1 {
++				return nil, status.Error(codes.Unauthenticated, "mutation credential required")
++			}
++		}
++		return handler(ctx, req)
++	}
++}
++
++const CanonicalPayloadHeader = "x-are-canonical-payload-bin"
++
++func canonicalHeader(ctx context.Context, p domain.Passport) {
++	if p.PassportID == "" {
++		return
++	}
++	data := string(service.CanonicalPayload(p))
++	_ = grpc.SetHeader(ctx, metadata.Pairs(CanonicalPayloadHeader, data))
++	_ = grpc.SetTrailer(ctx, metadata.Pairs(CanonicalPayloadHeader, data))
++}
+diff --git a/internal/grpc/server.go b/internal/grpc/server.go
+--- a/internal/grpc/server.go
++++ b/internal/grpc/server.go
+@@ -47,26 +47,40 @@
+ 	now := time.Now().UTC()
+ 	scopes := make([]domain.Scope, 0, len(req.RequestedScopes))
+ 	for _, sr := range req.RequestedScopes {
+-		if sr == nil {
+-			continue
++		if sr == nil || sr.ActionClass == "" || sr.ResourcePattern == "" || sr.ScopeTtlSeconds < 0 {
++			return nil, status.Error(codes.InvalidArgument, "invalid scope")
+ 		}
+ 		scopes = append(scopes, scopeFromProto(sr, req.TtlSeconds, now))
+ 	}
+ 	if len(scopes) == 0 {
+ 		return nil, status.Error(codes.InvalidArgument, "no valid scopes")
+ 	}
+-	p, err := s.svc.IssuePassport(service.IssueInput{
+-		AgentID:      req.AgentId,
+-		PassportType: pType,
+-		Scopes:       scopes,
+-		TTLSeconds:   req.TtlSeconds,
+-		IssuedBy:     req.IssuedBy,
+-		ForceReissue: req.ForceReissue,
+-		Reason:       req.Reason,
++	expected, err := expectedActive(ctx)
++	if err != nil {
++		return nil, err
++	}
++	expectedRev, err := expectedRevision(ctx)
++	if err != nil {
++		return nil, err
++	}
++	p, err := s.svc.IssuePassportContext(ctx, service.IssueInput{
++		ExpectedActivePassportID: expected,
++		ExpectedAgentRevision:    expectedRev,
++		AgentID:                  req.AgentId,
++		PassportType:             pType,
++		Scopes:                   scopes,
++		TTLSeconds:               req.TtlSeconds,
++		IssuedBy:                 req.IssuedBy,
++		ForceReissue:             req.ForceReissue,
++		Reason:                   req.Reason,
+ 	})
+ 	if err != nil {
+-		return nil, mapErr(err)
+-	}
++		_, rev, _ := s.svc.GetAgentPassportRevision(req.AgentId)
++		revisionHeader(ctx, rev)
++		return nil, mapErr(err)
++	}
++	revisionHeader(ctx, p.Revision)
++	canonicalHeader(ctx, p)
+ 	result = "success"
+ 	return &passportv1.IssuePassportResponse{Passport: passportToProto(p)}, nil
+ }
+@@ -76,10 +90,12 @@
+ 	if req == nil || req.PassportId == "" {
+ 		return nil, status.Error(codes.InvalidArgument, "passport_id required")
+ 	}
+-	p, err := s.svc.GetPassport(req.PassportId)
+-	if err != nil {
+-		return nil, mapErr(err)
+-	}
++	p, revision, err := s.svc.GetPassportRevision(req.PassportId)
++	revisionHeader(ctx, revision)
++	if err != nil {
++		return nil, mapErr(err)
++	}
++	canonicalHeader(ctx, p)
+ 	return &passportv1.GetPassportResponse{Passport: passportToProto(p)}, nil
+ }
+ 
+@@ -88,10 +104,12 @@
+ 	if req == nil || req.AgentId == "" {
+ 		return nil, status.Error(codes.InvalidArgument, "agent_id required")
+ 	}
+-	p, err := s.svc.GetAgentPassport(req.AgentId)
+-	if err != nil {
+-		return nil, mapErr(err)
+-	}
++	p, revision, err := s.svc.GetAgentPassportRevision(req.AgentId)
++	revisionHeader(ctx, revision)
++	if err != nil {
++		return nil, mapErr(err)
++	}
++	canonicalHeader(ctx, p)
+ 	return &passportv1.GetAgentPassportResponse{Passport: passportToProto(p)}, nil
+ }
+ 
+@@ -108,7 +126,10 @@
+ 		metricReason = "invalid_argument"
+ 		return nil, status.Error(codes.InvalidArgument, "passport_id required")
+ 	}
+-	ok, st, failureReason, err := s.svc.VerifyPassport(req.PassportId, req.Payload, req.Signature)
++	verification, err := s.svc.VerifySnapshot(req.PassportId, req.Payload, req.Signature)
++	ok, st, failureReason := verification.Valid, verification.Status, verification.FailureReason
++	revisionHeader(ctx, verification.Revision)
++	canonicalHeader(ctx, verification.Passport)
+ 	if err != nil {
+ 		if errors.Is(err, service.ErrNotFound) {
+ 			result = "invalid"
+@@ -138,11 +159,16 @@
+ 		result = "invalid"
+ 		return resp, nil
+ 	}
+-	p, err := s.svc.GetPassport(req.PassportId)
+-	if err == nil {
+-		resp.ExpiresTs = p.ExpiresTS.UnixMilli()
+-		resp.ActiveScopes = scopesToProto(p.ScopeSet)
+-	}
++	p := verification.Passport
++	resp.ExpiresTs = p.ExpiresTS.UnixMilli()
++	now := time.Now().UTC()
++	active := make([]domain.Scope, 0, len(p.ScopeSet))
++	for _, scope := range p.ScopeSet {
++		if !now.Before(scope.GrantedTS) && now.Before(scope.ExpiresTS) {
++			active = append(active, scope)
++		}
++	}
++	resp.ActiveScopes = scopesToProto(active)
+ 	result = "valid"
+ 	return resp, nil
+ }
+@@ -158,10 +184,19 @@
+ 	if req == nil || req.PassportId == "" || req.Reason == "" || req.RevokedBy == "" {
+ 		return nil, status.Error(codes.InvalidArgument, "passport_id, reason, revoked_by required")
+ 	}
+-	p, err := s.svc.RevokePassport(req.PassportId, req.Reason, req.RevokedBy)
+-	if err != nil {
+-		return nil, mapErr(err)
+-	}
++	expected, err := expectedActive(ctx)
++	if err != nil {
++		return nil, err
++	}
++	expectedRev, err := expectedRevision(ctx)
++	if err != nil {
++		return nil, err
++	}
++	p, revision, err := s.svc.RevokePassportConditional(ctx, req.PassportId, req.Reason, req.RevokedBy, expected, expectedRev)
++	if err != nil {
++		return nil, mapErr(err)
++	}
++	revisionHeader(ctx, revision)
+ 	result = "success"
+ 	var revokedTS int64
+ 	if p.RevokedTS != nil {
+@@ -204,6 +239,9 @@
+ 
+ func scopeFromProto(sr *passportv1.ScopeRequest, passportTTL int64, now time.Time) domain.Scope {
+ 	ttl := sr.ScopeTtlSeconds
++	if ttl > passportTTL {
++		ttl = passportTTL
++	}
+ 	if ttl <= 0 {
+ 		ttl = passportTTL
+ 	}
+diff --git a/internal/grpc/transport_test.go b/internal/grpc/transport_test.go
+new file mode 100644
+--- /dev/null
++++ b/internal/grpc/transport_test.go
+@@ -0,0 +1,140 @@
++package grpc
++
++import (
++	"context"
++	"crypto/ed25519"
++	"crypto/x509"
++	"encoding/json"
++	"encoding/pem"
++	"net"
++	"net/http"
++	"net/http/httptest"
++	"path/filepath"
++	"testing"
++	"time"
++
++	"github.com/srex-dev/agent-passport/internal/local"
++	passportv1 "github.com/srex-dev/agent-passport/proto"
++	ggrpc "google.golang.org/grpc"
++	"google.golang.org/grpc/codes"
++	"google.golang.org/grpc/credentials/insecure"
++	"google.golang.org/grpc/metadata"
++	"google.golang.org/grpc/status"
++	"google.golang.org/grpc/test/bufconn"
++)
++
++func transportClient(t *testing.T) passportv1.PassportIssuanceServiceClient {
++	t.Helper()
++	registry := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
++		_, _ = w.Write([]byte(`{"agent":{"agent_id":"agent","status":"ACTIVE"}}`))
++	}))
++	t.Cleanup(registry.Close)
++	dir := t.TempDir()
++	svc, close, err := local.NewDurableService(local.DurableConfig{StatePath: filepath.Join(dir, "state.json"), KeyPath: filepath.Join(dir, "key.pem"), RegistryURL: registry.URL, PolicyID: "p", PolicyVersion: "v1"})
++	if err != nil {
++		t.Fatal(err)
++	}
++	t.Cleanup(func() { _ = close() })
++	server := ggrpc.NewServer(ggrpc.UnaryInterceptor(MutationTokenInterceptor("test-secret")))
++	passportv1.RegisterPassportIssuanceServiceServer(server, New(svc))
++	listener := bufconn.Listen(1 << 20)
++	go func() { _ = server.Serve(listener) }()
++	t.Cleanup(server.Stop)
++	client, err := ggrpc.NewClient("passthrough:///buffer", ggrpc.WithContextDialer(func(context.Context, string) (net.Conn, error) { return listener.Dial() }), ggrpc.WithTransportCredentials(insecure.NewCredentials()))
++	if err != nil {
++		t.Fatal(err)
++	}
++	t.Cleanup(func() { _ = client.Close() })
++	return passportv1.NewPassportIssuanceServiceClient(client)
++}
++func mutationContext(id, revision string) context.Context {
++	return metadata.NewOutgoingContext(context.Background(), metadata.Pairs("authorization", "Bearer test-secret", ExpectedActiveHeader, id, ExpectedRevisionHeader, revision))
++}
++func issueRequest() *passportv1.IssuePassportRequest {
++	return &passportv1.IssuePassportRequest{AgentId: "agent", PassportType: "STANDARD", RequestedScopes: []*passportv1.ScopeRequest{{ActionClass: "WRITE", ResourcePattern: "model/*", ContextConstraints: map[string]string{"site": "A"}, ScopeTtlSeconds: 60}}, TtlSeconds: 300, IssuedBy: "authority", Reason: "qualified"}
++}
++func TestTransportCASAuthorizationAndEmptyRevision(t *testing.T) {
++	client := transportClient(t)
++	var trailer metadata.MD
++	if _, err := client.GetAgentPassport(context.Background(), &passportv1.GetAgentPassportRequest{AgentId: "agent"}, ggrpc.Trailer(&trailer)); status.Code(err) != codes.NotFound || len(trailer.Get(AgentRevisionHeader)) != 1 || trailer.Get(AgentRevisionHeader)[0] != "0" {
++		t.Fatalf("empty revision: trailer=%v err=%v", trailer, err)
++	}
++	if _, err := client.IssuePassport(context.Background(), issueRequest()); status.Code(err) != codes.Unauthenticated {
++		t.Fatal("unauthenticated mutation accepted", err)
++	}
++	tokenOnly := metadata.NewOutgoingContext(context.Background(), metadata.Pairs("authorization", "Bearer test-secret"))
++	if _, err := client.IssuePassport(tokenOnly, issueRequest()); status.Code(err) != codes.FailedPrecondition {
++		t.Fatal("missing CAS accepted", err)
++	}
++	var headers metadata.MD
++	issued, err := client.IssuePassport(mutationContext("none", "0"), issueRequest(), ggrpc.Header(&headers))
++	if err != nil || headers.Get(AgentRevisionHeader)[0] != "1" {
++		t.Fatal("initial issue failed", headers, err)
++	}
++	id := issued.Passport.PassportId
++	payloadValues := headers.Get(CanonicalPayloadHeader)
++	if len(payloadValues) != 1 {
++		t.Fatal("canonical envelope missing", headers)
++	}
++	block, _ := pem.Decode([]byte(issued.Passport.PublicKeyPem))
++	raw, err := x509.ParsePKIXPublicKey(block.Bytes)
++	if err != nil {
++		t.Fatal(err)
++	}
++	if !ed25519.Verify(raw.(ed25519.PublicKey), []byte(payloadValues[0]), issued.Passport.Signature) {
++		t.Fatal("transport canonical signature invalid")
++	}
++	verified, err := client.VerifyPassport(context.Background(), &passportv1.VerifyPassportRequest{PassportId: id})
++	if err != nil || !verified.Valid || len(verified.ActiveScopes) != 1 {
++		t.Fatal("stored credential failed verification", verified, err)
++	}
++	forged, err := client.VerifyPassport(context.Background(), &passportv1.VerifyPassportRequest{PassportId: id, Payload: []byte("forged"), Signature: issued.Passport.Signature})
++	if err != nil || forged.Valid {
++		t.Fatal("forged payload verified", forged, err)
++	}
++	for _, ctx := range []context.Context{mutationContext(id, "0"), mutationContext("wrong-id", "1")} {
++		req := issueRequest()
++		req.ForceReissue = true
++		if _, err := client.IssuePassport(ctx, req); status.Code(err) != codes.FailedPrecondition {
++			t.Fatal("cross-field CAS accepted", err)
++		}
++	}
++	_, err = client.RevokePassport(mutationContext(id, "1"), &passportv1.RevokePassportRequest{PassportId: id, Reason: "drift", RevokedBy: "authority"}, ggrpc.Header(&headers))
++	if err != nil || headers.Get(AgentRevisionHeader)[0] != "2" {
++		t.Fatal("revoke failed", headers, err)
++	}
++	if _, err := client.GetAgentPassport(context.Background(), &passportv1.GetAgentPassportRequest{AgentId: "agent"}, ggrpc.Trailer(&trailer)); status.Code(err) != codes.NotFound || trailer.Get(AgentRevisionHeader)[0] != "2" {
++		t.Fatal("empty persisted generation missing", trailer, err)
++	}
++	if _, err := client.IssuePassport(mutationContext("none", "0"), issueRequest()); status.Code(err) != codes.FailedPrecondition {
++		t.Fatal("ABA accepted", err)
++	}
++	if _, err := client.IssuePassport(mutationContext("none", "2"), issueRequest()); err != nil {
++		t.Fatal("reissue with current generation failed", err)
++	}
++	var historical metadata.MD
++	if _, err := client.GetPassport(context.Background(), &passportv1.GetPassportRequest{PassportId: id}, ggrpc.Header(&historical)); err != nil {
++		t.Fatal(err)
++	}
++	var envelope map[string]any
++	if err := json.Unmarshal([]byte(historical.Get(CanonicalPayloadHeader)[0]), &envelope); err != nil {
++		t.Fatal(err)
++	}
++	if envelope["issuance_revision"] != float64(1) || historical.Get(AgentRevisionHeader)[0] != "3" {
++		t.Fatal("historical issuance revision conflated with current generation", envelope, historical)
++	}
++}
++
++func TestTransportRejectsMalformedCASAndNegativeScopeTTL(t *testing.T) {
++	client := transportClient(t)
++	ctx, cancel := context.WithTimeout(mutationContext("none", "not-an-integer"), time.Second)
++	defer cancel()
++	if _, err := client.IssuePassport(ctx, issueRequest()); status.Code(err) != codes.InvalidArgument {
++		t.Fatal("bad revision accepted", err)
++	}
++	req := issueRequest()
++	req.RequestedScopes[0].ScopeTtlSeconds = -1
++	if _, err := client.IssuePassport(mutationContext("none", "0"), req); status.Code(err) != codes.InvalidArgument {
++		t.Fatal("bad TTL accepted", err)
++	}
++}
+diff --git a/internal/local/durable.go b/internal/local/durable.go
+new file mode 100644
+--- /dev/null
++++ b/internal/local/durable.go
+@@ -0,0 +1,195 @@
++package local
++
++import (
++	"bytes"
++	"crypto/ed25519"
++	"crypto/rand"
++	"crypto/sha256"
++	"crypto/x509"
++	"encoding/hex"
++	"encoding/json"
++	"encoding/pem"
++	"fmt"
++	"io"
++	"net/http"
++	"net/url"
++	"os"
++	"path/filepath"
++	"strings"
++	"time"
++
++	"github.com/google/uuid"
++	"github.com/srex-dev/agent-passport/internal/service"
++)
++
++type Ed25519Credentials struct {
++	private ed25519.PrivateKey
++	public  ed25519.PublicKey
++	pem     string
++	id      string
++}
++
++func OpenEd25519Credentials(path string) (*Ed25519Credentials, error) {
++	if err := os.MkdirAll(filepath.Dir(path), 0700); err != nil {
++		return nil, err
++	}
++	data, err := os.ReadFile(path)
++	if os.IsNotExist(err) {
++		_, key, err := ed25519.GenerateKey(rand.Reader)
++		if err != nil {
++			return nil, err
++		}
++		der, err := x509.MarshalPKCS8PrivateKey(key)
++		if err != nil {
++			return nil, err
++		}
++		data = pem.EncodeToMemory(&pem.Block{Type: "PRIVATE KEY", Bytes: der})
++		f, err := os.OpenFile(path, os.O_CREATE|os.O_EXCL|os.O_WRONLY, 0600)
++		if err != nil {
++			return nil, err
++		}
++		if _, err = f.Write(data); err == nil {
++			err = f.Sync()
++		}
++		closeErr := f.Close()
++		if err != nil {
++			return nil, err
++		}
++		if closeErr != nil {
++			return nil, closeErr
++		}
++		dir, err := os.Open(filepath.Dir(path))
++		if err != nil {
++			return nil, err
++		}
++		err = dir.Sync()
++		dir.Close()
++		if err != nil {
++			return nil, err
++		}
++	} else if err != nil {
++		return nil, err
++	}
++	info, err := os.Lstat(path)
++	if err != nil {
++		return nil, err
++	}
++	if !info.Mode().IsRegular() || info.Mode().Perm()&0077 != 0 {
++		return nil, fmt.Errorf("signing key must be a private regular file (0600)")
++	}
++	block, rest := pem.Decode(data)
++	if block == nil || block.Type != "PRIVATE KEY" || len(bytes.TrimSpace(rest)) != 0 {
++		return nil, fmt.Errorf("invalid signing key PEM")
++	}
++	raw, err := x509.ParsePKCS8PrivateKey(block.Bytes)
++	if err != nil {
++		return nil, err
++	}
++	key, ok := raw.(ed25519.PrivateKey)
++	if !ok {
++		return nil, fmt.Errorf("signing key must be Ed25519")
++	}
++	pub := key.Public().(ed25519.PublicKey)
++	der, err := x509.MarshalPKIXPublicKey(pub)
++	if err != nil {
++		return nil, err
++	}
++	sum := sha256.Sum256(der)
++	return &Ed25519Credentials{private: key, public: pub, pem: string(pem.EncodeToMemory(&pem.Block{Type: "PUBLIC KEY", Bytes: der})), id: "ed25519:" + hex.EncodeToString(sum[:])}, nil
++}
++func (c *Ed25519Credentials) Identity() (string, string, error) { return c.id, c.pem, nil }
++func (c *Ed25519Credentials) Sign(payload []byte) (string, string, []byte, error) {
++	return c.id, c.pem, ed25519.Sign(c.private, payload), nil
++}
++func (c *Ed25519Credentials) Verify(publicKey string, payload, signature []byte) (bool, error) {
++	block, rest := pem.Decode([]byte(publicKey))
++	if block == nil || block.Type != "PUBLIC KEY" || len(bytes.TrimSpace(rest)) != 0 {
++		return false, nil
++	}
++	raw, err := x509.ParsePKIXPublicKey(block.Bytes)
++	if err != nil {
++		return false, nil
++	}
++	key, ok := raw.(ed25519.PublicKey)
++	if !ok || !bytes.Equal(key, c.public) {
++		return false, nil
++	}
++	return ed25519.Verify(key, payload, signature), nil
++}
++
++// RegistryHTTP is a real status read; no ACTIVE fallback is used on failures.
++type RegistryHTTP struct {
++	BaseURL string
++	Token   string
++	Client  *http.Client
++}
++
++func (r RegistryHTTP) GetAgentStatus(agentID string) (service.AgentStatus, error) {
++	endpoint := strings.TrimRight(r.BaseURL, "/") + "/v1/identity/agents/" + url.PathEscape(agentID)
++	req, err := http.NewRequest(http.MethodGet, endpoint, nil)
++	if err != nil {
++		return "", err
++	}
++	req.Header.Set("X-Request-ID", uuid.NewString())
++	req.Header.Set("X-ARE-Agent-ID", "passport-authority")
++	if r.Token != "" {
++		req.Header.Set("Authorization", "Bearer "+r.Token)
++	}
++	client := r.Client
++	if client == nil {
++		client = &http.Client{Timeout: 2 * time.Second}
++	}
++	response, err := client.Do(req)
++	if err != nil {
++		return "", err
++	}
++	defer response.Body.Close()
++	if response.StatusCode != http.StatusOK {
++		return "", fmt.Errorf("registry returned %d", response.StatusCode)
++	}
++	var body struct {
++		Agent struct {
++			ID     string              `json:"agent_id"`
++			Status service.AgentStatus `json:"status"`
++		} `json:"agent"`
++	}
++	if err := json.NewDecoder(io.LimitReader(response.Body, 1<<20)).Decode(&body); err != nil {
++		return "", err
++	}
++	if body.Agent.ID != agentID {
++		return "", fmt.Errorf("registry identity mismatch")
++	}
++	switch body.Agent.Status {
++	case service.AgentActive, service.AgentPending, service.AgentSuspended, service.AgentDeregistered:
++		return body.Agent.Status, nil
++	default:
++		return "", fmt.Errorf("unknown registry status")
++	}
++}
++
++type DurableConfig struct{ StatePath, KeyPath, FencePath, RegistryURL, RegistryToken, PolicyID, PolicyVersion string }
++
++func NewDurableService(c DurableConfig) (*service.Service, func() error, error) {
++	if c.StatePath == "" || c.KeyPath == "" || c.RegistryURL == "" || c.PolicyID == "" || c.PolicyVersion == "" {
++		return nil, nil, fmt.Errorf("durable mode requires state/key paths, registry URL and policy identity/version")
++	}
++	parsed, err := url.Parse(c.RegistryURL)
++	if err != nil || parsed.Host == "" || (parsed.Scheme != "http" && parsed.Scheme != "https") {
++		return nil, nil, fmt.Errorf("invalid registry URL")
++	}
++	store, err := service.OpenFileStore(c.StatePath)
++	if err != nil {
++		return nil, nil, err
++	}
++	credentials, err := OpenEd25519Credentials(c.KeyPath)
++	if err != nil {
++		store.Close()
++		return nil, nil, err
++	}
++	svc, err := service.NewPersistent(RegistryHTTP{BaseURL: c.RegistryURL, Token: c.RegistryToken}, credentials, nil, nil, BundleStub{ID: c.PolicyID, Ver: c.PolicyVersion}, store, c.FencePath)
++	if err != nil {
++		store.Close()
++		return nil, nil, err
++	}
++	return svc, store.Close, nil
++}
+diff --git a/internal/local/durable_test.go b/internal/local/durable_test.go
+new file mode 100644
+--- /dev/null
++++ b/internal/local/durable_test.go
+@@ -0,0 +1,151 @@
++package local
++
++import (
++	"bytes"
++	"context"
++	"encoding/json"
++	"errors"
++	"net/http"
++	"net/http/httptest"
++	"os"
++	"path/filepath"
++	"strings"
++	"testing"
++	"time"
++
++	"github.com/srex-dev/agent-passport/internal/domain"
++	"github.com/srex-dev/agent-passport/internal/service"
++)
++
++func TestEd25519KeyPersistsAndPinsIssuer(t *testing.T) {
++	path := filepath.Join(t.TempDir(), "signing.pem")
++	first, err := OpenEd25519Credentials(path)
++	if err != nil {
++		t.Fatal(err)
++	}
++	id, key, sig, err := first.Sign([]byte("authority"))
++	if err != nil {
++		t.Fatal(err)
++	}
++	second, err := OpenEd25519Credentials(path)
++	if err != nil {
++		t.Fatal(err)
++	}
++	id2, key2, sig2, _ := second.Sign([]byte("authority"))
++	if id != id2 || key != key2 || !bytes.Equal(sig, sig2) {
++		t.Fatal("signing identity changed on restart")
++	}
++	valid, err := second.Verify(key, []byte("authority"), sig)
++	if err != nil || !valid {
++		t.Fatal("real signature failed", err)
++	}
++	valid, _ = second.Verify(key, []byte("tampered"), sig)
++	if valid {
++		t.Fatal("tampered message verified")
++	}
++	other, err := OpenEd25519Credentials(filepath.Join(t.TempDir(), "other.pem"))
++	if err != nil {
++		t.Fatal(err)
++	}
++	_, otherKey, otherSig, _ := other.Sign([]byte("authority"))
++	valid, _ = second.Verify(otherKey, []byte("authority"), otherSig)
++	if valid {
++		t.Fatal("untrusted signer accepted")
++	}
++	if err = os.Chmod(path, 0644); err != nil {
++		t.Fatal(err)
++	}
++	if _, err = OpenEd25519Credentials(path); err == nil {
++		t.Fatal("world-readable key accepted")
++	}
++}
++func TestRegistryHTTPFailsClosed(t *testing.T) {
++	for _, tc := range []struct {
++		name string
++		code int
++		body string
++		want service.AgentStatus
++	}{
++		{"active", 200, `{"agent":{"agent_id":"agent","status":"ACTIVE"}}`, service.AgentActive},
++		{"suspended", 200, `{"agent":{"agent_id":"agent","status":"SUSPENDED"}}`, service.AgentSuspended},
++		{"wrong_identity", 200, `{"agent":{"agent_id":"other","status":"ACTIVE"}}`, ""},
++		{"missing", 404, `{}`, ""}, {"unavailable", 503, `{}`, ""}, {"unknown_status", 200, `{"agent":{"agent_id":"agent","status":"UNKNOWN"}}`, ""},
++	} {
++		t.Run(tc.name, func(t *testing.T) {
++			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++				if r.Header.Get("Authorization") != "Bearer token" {
++					t.Error("missing registry credential")
++				}
++				w.WriteHeader(tc.code)
++				_, _ = w.Write([]byte(tc.body))
++			}))
++			defer server.Close()
++			got, err := (RegistryHTTP{BaseURL: server.URL, Token: "token"}).GetAgentStatus("agent")
++			if tc.want == "" {
++				if err == nil {
++					t.Fatal("bad registry result accepted")
++				}
++			} else if err != nil || got != tc.want {
++				t.Fatalf("status=%q err=%v", got, err)
++			}
++		})
++	}
++}
++func TestDurableRestartRetainsRevocationAndRevision(t *testing.T) {
++	registry := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		_ = json.NewEncoder(w).Encode(map[string]any{"agent": map[string]string{"agent_id": strings.TrimPrefix(r.URL.Path, "/v1/identity/agents/"), "status": "ACTIVE"}})
++	}))
++	defer registry.Close()
++	dir := t.TempDir()
++	cfg := DurableConfig{StatePath: filepath.Join(dir, "state.json"), KeyPath: filepath.Join(dir, "key.pem"), RegistryURL: registry.URL, PolicyID: "policy", PolicyVersion: "1"}
++	open := func() (*service.Service, func() error) {
++		s, close, err := NewDurableService(cfg)
++		if err != nil {
++			t.Fatal(err)
++		}
++		return s, close
++	}
++	s, close := open()
++	none := "none"
++	zero := uint64(0)
++	input := service.IssueInput{AgentID: "agent", PassportType: domain.TypeStandard, Scopes: []domain.Scope{{ScopeID: "scope", ActionClass: "WRITE", ResourcePattern: "model/*", ContextConstraints: map[string]string{"site": "A"}, GrantedTS: time.Now().UTC(), ExpiresTS: time.Now().UTC().Add(time.Hour)}}, TTLSeconds: 3600, IssuedBy: "authority", Reason: "qualified", ExpectedActivePassportID: &none, ExpectedAgentRevision: &zero}
++	p, err := s.IssuePassport(input)
++	if err != nil {
++		t.Fatal(err)
++	}
++	valid, _, _, err := s.VerifyPassport(p.PassportID, nil, nil)
++	if err != nil || !valid {
++		t.Fatal("stored real signature verification failed", err)
++	}
++	if err = close(); err != nil {
++		t.Fatal(err)
++	}
++	s, close = open()
++	got, revision, err := s.GetAgentPassportRevision("agent")
++	if err != nil || got.PassportID != p.PassportID || revision != 1 {
++		t.Fatalf("restart lost active credential: %+v %d %v", got, revision, err)
++	}
++	_, revision, err = s.RevokePassportConditional(context.Background(), p.PassportID, "changed site", "authority", &p.PassportID, &revision)
++	if err != nil || revision != 2 {
++		t.Fatal(revision, err)
++	}
++	close()
++	s, close = open()
++	defer close()
++	_, revision, err = s.GetAgentPassportRevision("agent")
++	if !errors.Is(err, service.ErrNotFound) || revision != 2 {
++		t.Fatal("revocation/revision did not survive restart", revision, err)
++	}
++	valid, _, reason, err := s.VerifyPassport(p.PassportID, nil, nil)
++	if err != nil || valid || reason != "revoked" {
++		t.Fatal("revocation did not survive", valid, reason, err)
++	}
++	if _, err = s.IssuePassport(input); !errors.Is(err, service.ErrFailedPrecondition) {
++		t.Fatal("ABA accepted after restart", err)
++	}
++	input.ExpectedAgentRevision = &revision
++	next, err := s.IssuePassport(input)
++	if err != nil || next.Revision != 3 {
++		t.Fatal("reinstatement failed", next.Revision, err)
++	}
++}
+diff --git a/internal/local/wiring.go b/internal/local/wiring.go
+--- a/internal/local/wiring.go
++++ b/internal/local/wiring.go
+@@ -17,6 +17,7 @@
+ // CredentialStub provides deterministic sign/verify (same pattern as unit tests).
+ type CredentialStub struct{}
+ 
++func (CredentialStub) Identity() (string, string, error) { return "cred-local", "pub-local", nil }
+ func (CredentialStub) Sign(payload []byte) (string, string, []byte, error) {
+ 	sig := append([]byte("sig:"), payload...)
+ 	return "cred-local", "pub-local", sig, nil
+diff --git a/internal/service/canonical.go b/internal/service/canonical.go
+new file mode 100644
+--- /dev/null
++++ b/internal/service/canonical.go
+@@ -0,0 +1,69 @@
++package service
++
++import (
++	"encoding/json"
++	"github.com/srex-dev/agent-passport/internal/domain"
++)
++
++// CanonicalPayload v2 uses named, unambiguous fields and deterministic JSON map
++// key ordering. Lifecycle status is authoritative mutable state; issuance
++// identity, revision, scope conditions, expiry, issuer, and policy are signed.
++func CanonicalPayload(p domain.Passport) []byte {
++	type canonicalScope struct {
++		ID         string            `json:"scope_id"`
++		Action     string            `json:"action_class"`
++		Resource   string            `json:"resource_pattern"`
++		Context    map[string]string `json:"context_constraints"`
++		Granted    int64             `json:"granted_ts"`
++		Expires    int64             `json:"expires_ts"`
++		Escalation bool              `json:"is_escalation"`
++	}
++	scopes := make([]canonicalScope, len(p.ScopeSet))
++	for i, s := range p.ScopeSet {
++		cc := s.ContextConstraints
++		if cc == nil {
++			cc = map[string]string{}
++		}
++		scopes[i] = canonicalScope{s.ScopeID, s.ActionClass, s.ResourcePattern, cc, s.GrantedTS.UnixMilli(), s.ExpiresTS.UnixMilli(), s.IsEscalation}
++	}
++	payload := struct {
++		CredentialID  string              `json:"credential_id"`
++		PublicKey     string              `json:"public_key_pem"`
++		Version       string              `json:"canonical_version"`
++		PassportID    string              `json:"passport_id"`
++		AgentID       string              `json:"agent_id"`
++		Revision      uint64              `json:"issuance_revision"`
++		Type          domain.PassportType `json:"passport_type"`
++		Scopes        []canonicalScope    `json:"scope_set"`
++		Issuer        string              `json:"issued_by"`
++		Reason        string              `json:"reason"`
++		Issued        int64               `json:"issued_ts"`
++		Expires       int64               `json:"expires_ts"`
++		PolicyID      string              `json:"policy_id_at_issuance"`
++		PolicyVersion string              `json:"policy_ver_at_issuance"`
++	}{p.CredentialID, p.PublicKeyPEM, "are.passport.v2", p.PassportID, p.AgentID, p.Revision, p.PassportType, scopes, p.IssuedBy, p.Reason, p.IssuedTS.UnixMilli(), p.ExpiresTS.UnixMilli(), p.PolicyIDAtIssuance, p.PolicyVerAtIssuance}
++	data, _ := json.Marshal(payload) // This closed schema has no unsupported values.
++	return data
++}
++
++func cloneScopes(scopes []domain.Scope) []domain.Scope {
++	out := append([]domain.Scope(nil), scopes...)
++	for i := range out {
++		if scopes[i].ContextConstraints != nil {
++			out[i].ContextConstraints = make(map[string]string, len(scopes[i].ContextConstraints))
++			for k, v := range scopes[i].ContextConstraints {
++				out[i].ContextConstraints[k] = v
++			}
++		}
++	}
++	return out
++}
++func clonePassport(p domain.Passport) domain.Passport {
++	p.ScopeSet = cloneScopes(p.ScopeSet)
++	p.Signature = append([]byte(nil), p.Signature...)
++	if p.RevokedTS != nil {
++		v := *p.RevokedTS
++		p.RevokedTS = &v
++	}
++	return p
++}
+diff --git a/internal/service/canonical_vector_test.go b/internal/service/canonical_vector_test.go
+new file mode 100644
+--- /dev/null
++++ b/internal/service/canonical_vector_test.go
+@@ -0,0 +1,60 @@
++package service
++
++import (
++	"bytes"
++	"crypto/ed25519"
++	"crypto/sha256"
++	"crypto/x509"
++	"encoding/base64"
++	"encoding/hex"
++	"encoding/json"
++	"encoding/pem"
++	"os"
++	"testing"
++
++	"github.com/srex-dev/agent-passport/internal/domain"
++)
++
++func TestCanonicalV2InteroperabilityVector(t *testing.T) {
++	data, err := os.ReadFile("testdata/canonical-v2.json")
++	if err != nil {
++		t.Fatal(err)
++	}
++	var fixture struct {
++		Domain    domain.Passport `json:"domain_passport"`
++		Payload   string          `json:"canonical_payload_base64"`
++		Hash      string          `json:"canonical_payload_sha256"`
++		Signature string          `json:"signature_base64"`
++		Public    string          `json:"public_key_pem"`
++	}
++	if err = json.Unmarshal(data, &fixture); err != nil {
++		t.Fatal(err)
++	}
++	expected, err := base64.StdEncoding.DecodeString(fixture.Payload)
++	if err != nil {
++		t.Fatal(err)
++	}
++	actual := CanonicalPayload(fixture.Domain)
++	if !bytes.Equal(actual, expected) {
++		t.Fatalf("canonical message changed\ngot %s\nwant %s", actual, expected)
++	}
++	sum := sha256.Sum256(actual)
++	if hex.EncodeToString(sum[:]) != fixture.Hash {
++		t.Fatal("hash mismatch")
++	}
++	signature, err := base64.StdEncoding.DecodeString(fixture.Signature)
++	if err != nil {
++		t.Fatal(err)
++	}
++	block, _ := pem.Decode([]byte(fixture.Public))
++	if block == nil {
++		t.Fatal("bad public key")
++	}
++	raw, err := x509.ParsePKIXPublicKey(block.Bytes)
++	if err != nil {
++		t.Fatal(err)
++	}
++	if !ed25519.Verify(raw.(ed25519.PublicKey), actual, signature) {
++		t.Fatal("fixture signature mismatch")
++	}
++}
+diff --git a/internal/service/file_store.go b/internal/service/file_store.go
+new file mode 100644
+--- /dev/null
++++ b/internal/service/file_store.go
+@@ -0,0 +1,104 @@
++package service
++
++import (
++	"bytes"
++	"encoding/json"
++	"errors"
++	"fmt"
++	"github.com/srex-dev/agent-passport/internal/domain"
++	"io"
++	"os"
++	"path/filepath"
++)
++
++type FileStore struct {
++	path string
++	lock *os.File
++}
++
++func OpenFileStore(path string) (*FileStore, error) {
++	if path == "" {
++		return nil, ErrInvalidArgument
++	}
++	if err := os.MkdirAll(filepath.Dir(path), 0700); err != nil {
++		return nil, err
++	}
++	lock, err := os.OpenFile(path+".lock", os.O_CREATE|os.O_RDWR, 0600)
++	if err != nil {
++		return nil, err
++	}
++	if err = lockStore(lock); err != nil {
++		lock.Close()
++		return nil, fmt.Errorf("state already owned: %w", err)
++	}
++	return &FileStore{path: path, lock: lock}, nil
++}
++func (s *FileStore) Close() error {
++	if s.lock == nil {
++		return nil
++	}
++	_ = unlockStore(s.lock)
++	err := s.lock.Close()
++	s.lock = nil
++	return err
++}
++func (s *FileStore) Load() (State, error) {
++	b, err := os.ReadFile(s.path)
++	if errors.Is(err, os.ErrNotExist) {
++		return State{Version: 1, Passports: map[string]domain.Passport{}, ActiveByAgent: map[string]string{}, Revisions: map[string]uint64{}}, nil
++	}
++	if err != nil {
++		return State{}, err
++	}
++	var state State
++	d := json.NewDecoder(bytes.NewReader(b))
++	d.DisallowUnknownFields()
++	if err = d.Decode(&state); err != nil {
++		return State{}, err
++	}
++	var extra any
++	if err = d.Decode(&extra); err != io.EOF {
++		return State{}, fmt.Errorf("invalid state trailer")
++	}
++	return state, nil
++}
++func (s *FileStore) Save(state State) error {
++	if s.lock == nil {
++		return fmt.Errorf("state store is closed")
++	}
++	b, err := json.Marshal(state)
++	if err != nil {
++		return err
++	}
++	f, err := os.CreateTemp(filepath.Dir(s.path), ".passport-state-*")
++	if err != nil {
++		return err
++	}
++	name := f.Name()
++	defer os.Remove(name)
++	defer f.Close()
++	if err = f.Chmod(0600); err != nil {
++		return err
++	}
++	if _, err = f.Write(b); err != nil {
++		return err
++	}
++	if err = f.Sync(); err != nil {
++		return err
++	}
++	if err = f.Close(); err != nil {
++		return err
++	}
++	if err = os.Rename(name, s.path); err != nil {
++		return err
++	}
++	dir, err := os.Open(filepath.Dir(s.path))
++	if err != nil {
++		return fmt.Errorf("%w: %v", ErrCommitUnknown, err)
++	}
++	defer dir.Close()
++	if err = dir.Sync(); err != nil {
++		return fmt.Errorf("%w: %v", ErrCommitUnknown, err)
++	}
++	return nil
++}
+diff --git a/internal/service/flock_other.go b/internal/service/flock_other.go
+new file mode 100644
+--- /dev/null
++++ b/internal/service/flock_other.go
+@@ -0,0 +1,18 @@
++//go:build !linux && !darwin
++
++package service
++
++import (
++	"context"
++	"fmt"
++	"os"
++)
++
++func acquireFence(_ context.Context, path string) (func(), error) {
++	if path == "" {
++		return func() {}, nil
++	}
++	return nil, fmt.Errorf("durable fencing requires Linux or macOS")
++}
++func lockStore(_ *os.File) error   { return fmt.Errorf("durable state requires Linux or macOS") }
++func unlockStore(_ *os.File) error { return nil }
+diff --git a/internal/service/flock_unix.go b/internal/service/flock_unix.go
+new file mode 100644
+--- /dev/null
++++ b/internal/service/flock_unix.go
+@@ -0,0 +1,43 @@
++//go:build linux || darwin
++
++package service
++
++import (
++	"context"
++	"errors"
++	"os"
++	"syscall"
++	"time"
++)
++
++// Fence order is shared-volume advisory file lock, then Service.mu. Reads never
++// acquire this lock so an executor can read authority while holding the fence.
++func acquireFence(ctx context.Context, path string) (func(), error) {
++	if path == "" {
++		return func() {}, nil
++	}
++	f, err := os.OpenFile(path, os.O_CREATE|os.O_RDWR, 0600)
++	if err != nil {
++		return nil, err
++	}
++	for {
++		err = syscall.Flock(int(f.Fd()), syscall.LOCK_EX|syscall.LOCK_NB)
++		if err == nil {
++			return func() { _ = syscall.Flock(int(f.Fd()), syscall.LOCK_UN); _ = f.Close() }, nil
++		}
++		if !errors.Is(err, syscall.EWOULDBLOCK) && !errors.Is(err, syscall.EAGAIN) {
++			_ = f.Close()
++			return nil, err
++		}
++		timer := time.NewTimer(10 * time.Millisecond)
++		select {
++		case <-ctx.Done():
++			timer.Stop()
++			_ = f.Close()
++			return nil, ctx.Err()
++		case <-timer.C:
++		}
++	}
++}
++func lockStore(f *os.File) error   { return syscall.Flock(int(f.Fd()), syscall.LOCK_EX|syscall.LOCK_NB) }
++func unlockStore(f *os.File) error { return syscall.Flock(int(f.Fd()), syscall.LOCK_UN) }
+diff --git a/internal/service/hardening_test.go b/internal/service/hardening_test.go
+new file mode 100644
+--- /dev/null
++++ b/internal/service/hardening_test.go
+@@ -0,0 +1,150 @@
++package service
++
++import (
++	"bytes"
++	"errors"
++	"testing"
++	"time"
++
++	"github.com/srex-dev/agent-passport/internal/domain"
++)
++
++func issueForHardening(t *testing.T, s *Service) domain.Passport {
++	t.Helper()
++	p, err := s.IssuePassport(IssueInput{AgentID: "agent", PassportType: domain.TypeStandard, Scopes: []domain.Scope{scope("WRITE")}, TTLSeconds: 3600, IssuedBy: "authority", Reason: "qualification"})
++	if err != nil {
++		t.Fatal(err)
++	}
++	return p
++}
++
++func TestFailedForceReissueLeavesOriginalActive(t *testing.T) {
++	for _, failure := range []string{"signer", "policy"} {
++		t.Run(failure, func(t *testing.T) {
++			s := New(registryMock{status: AgentActive}, credentialMock{}, ledgerMock{}, outboxMock{})
++			p := issueForHardening(t, s)
++			if failure == "signer" {
++				s.credentials = credentialMock{failSign: true}
++			} else {
++				s.policyBundles = bundleMock{err: errors.New("unavailable")}
++			}
++			_, err := s.IssuePassport(IssueInput{AgentID: "agent", PassportType: domain.TypeStandard, Scopes: []domain.Scope{scope("WRITE")}, TTLSeconds: 3600, IssuedBy: "authority", Reason: "replacement", ForceReissue: true})
++			if !errors.Is(err, ErrUnavailable) {
++				t.Fatalf("error: %v", err)
++			}
++			got, err := s.GetAgentPassport("agent")
++			if err != nil || got.PassportID != p.PassportID || got.Status != domain.StatusActive {
++				t.Fatalf("failed replacement changed authority: %+v %v", got, err)
++			}
++		})
++	}
++}
++
++func TestVerifyRejectsUnrelatedSignedPayload(t *testing.T) {
++	s := New(registryMock{status: AgentActive}, credentialMock{}, nil, outboxMock{})
++	p := issueForHardening(t, s)
++	payload := []byte("unrelated signed message")
++	_, _, sig, _ := s.credentials.Sign(payload)
++	valid, _, _, err := s.VerifyPassport(p.PassportID, payload, sig)
++	if err != nil || valid {
++		t.Fatalf("unrelated payload authorized: valid=%v err=%v", valid, err)
++	}
++}
++
++func TestCanonicalSignatureBindsAuthority(t *testing.T) {
++	cases := []struct {
++		name   string
++		mutate func(*domain.Passport)
++	}{
++		{"credential_id", func(p *domain.Passport) { p.CredentialID = "changed-key" }},
++		{"public_key", func(p *domain.Passport) { p.PublicKeyPEM = "untrusted-key" }},
++		{"revision", func(p *domain.Passport) { p.Revision++ }},
++		{"passport_id", func(p *domain.Passport) { p.PassportID = "changed" }},
++		{"agent_id", func(p *domain.Passport) { p.AgentID = "different-agent" }},
++		{"context", func(p *domain.Passport) { p.ScopeSet[0].ContextConstraints = map[string]string{"site": "B"} }},
++		{"scope_expiry", func(p *domain.Passport) { p.ScopeSet[0].ExpiresTS = p.ScopeSet[0].ExpiresTS.Add(time.Hour) }},
++		{"scope_grant", func(p *domain.Passport) { p.ScopeSet[0].GrantedTS = p.ScopeSet[0].GrantedTS.Add(-time.Hour) }},
++		{"escalation", func(p *domain.Passport) { p.ScopeSet[0].IsEscalation = true }},
++		{"policy_id", func(p *domain.Passport) { p.PolicyIDAtIssuance = "different-policy" }},
++		{"policy_version", func(p *domain.Passport) { p.PolicyVerAtIssuance = "999" }},
++		{"issuer", func(p *domain.Passport) { p.IssuedBy = "different-authority" }},
++	}
++	for _, tc := range cases {
++		t.Run(tc.name, func(t *testing.T) {
++			s := New(registryMock{status: AgentActive}, credentialMock{}, nil, outboxMock{})
++			p := issueForHardening(t, s)
++			payload := bytes.TrimPrefix(p.Signature, []byte("sig:"))
++			altered := s.passports[p.PassportID]
++			tc.mutate(&altered)
++			s.passports[p.PassportID] = altered
++			valid, _, _, err := s.VerifyPassport(p.PassportID, payload, p.Signature)
++			if err != nil || valid {
++				t.Fatalf("tampered authority authorized: %v %v", valid, err)
++			}
++		})
++	}
++}
++
++func TestReturnedRecordsDoNotMutateAuthority(t *testing.T) {
++	s := New(registryMock{status: AgentActive}, credentialMock{}, nil, outboxMock{})
++	p := issueForHardening(t, s)
++	p.ScopeSet[0].ResourcePattern = "unbounded/*"
++	got, _ := s.GetPassport(p.PassportID)
++	if got.ScopeSet[0].ResourcePattern == "unbounded/*" {
++		t.Fatal("issuer return aliases stored authority")
++	}
++	got.ScopeSet[0].ContextConstraints = map[string]string{"site": "A"}
++	got.ScopeSet[0].ResourcePattern = "mutated/*"
++	again, _ := s.GetPassport(p.PassportID)
++	if again.ScopeSet[0].ResourcePattern == "mutated/*" {
++		t.Fatal("getter return aliases stored authority")
++	}
++}
++
++func TestVerificationChecksCurrentIdentityAndActivePointer(t *testing.T) {
++	for _, change := range []string{"suspended", "deregistered", "not_active_pointer"} {
++		t.Run(change, func(t *testing.T) {
++			s := New(registryMock{status: AgentActive}, credentialMock{}, nil, outboxMock{})
++			p := issueForHardening(t, s)
++			payload := bytes.TrimPrefix(p.Signature, []byte("sig:"))
++			if change == "suspended" {
++				s.registry = registryMock{status: AgentSuspended}
++			} else if change == "deregistered" {
++				s.registry = registryMock{status: AgentDeregistered}
++			} else {
++				delete(s.activeByAgent, p.AgentID)
++			}
++			valid, _, _, err := s.VerifyPassport(p.PassportID, payload, p.Signature)
++			if err != nil || valid {
++				t.Fatalf("inactive identity/authority authorized: %v %v", valid, err)
++			}
++		})
++	}
++}
++
++func TestExpiryBoundaryAndSignatureIsolation(t *testing.T) {
++	s := New(registryMock{status: AgentActive}, credentialMock{}, nil, nil)
++	now := time.Now().UTC()
++	s.now = func() time.Time { return now }
++	input := IssueInput{AgentID: "agent", PassportType: domain.TypeStandard, Scopes: []domain.Scope{{ScopeID: "scope", ActionClass: "WRITE", ResourcePattern: "model/*", GrantedTS: now, ExpiresTS: now.Add(time.Hour), ContextConstraints: map[string]string{"site": "A"}}}, TTLSeconds: 3600, IssuedBy: "authority", Reason: "qualified"}
++	p, err := s.IssuePassport(input)
++	if err != nil {
++		t.Fatal(err)
++	}
++	input.Scopes[0].ContextConstraints["site"] = "outside"
++	p.ScopeSet[0].ContextConstraints["site"] = "outside"
++	p.Signature[0] ^= 0xff
++	stored, _ := s.GetPassport(p.PassportID)
++	if stored.ScopeSet[0].ContextConstraints["site"] != "A" {
++		t.Fatal("context map aliases authority")
++	}
++	valid, _, _, err := s.VerifyPassport(p.PassportID, nil, nil)
++	if err != nil || !valid {
++		t.Fatal("external signature mutation corrupted record", err)
++	}
++	now = stored.ExpiresTS
++	valid, status, reason, err := s.VerifyPassport(p.PassportID, nil, nil)
++	if err != nil || valid || status != domain.StatusExpired || reason != "expired" {
++		t.Fatal("expiry boundary accepted", valid, status, reason, err)
++	}
++}
+diff --git a/internal/service/persistence.go b/internal/service/persistence.go
+new file mode 100644
+--- /dev/null
++++ b/internal/service/persistence.go
+@@ -0,0 +1,90 @@
++package service
++
++import (
++	"errors"
++	"fmt"
++	"github.com/srex-dev/agent-passport/internal/domain"
++)
++
++// State is one atomically replaced single-writer snapshot. It is not a
++// distributed database and does not provide anti-rollback against its owner.
++type State struct {
++	Version       int                        `json:"version"`
++	Passports     map[string]domain.Passport `json:"passports"`
++	ActiveByAgent map[string]string          `json:"active_by_agent"`
++	Revisions     map[string]uint64          `json:"revisions"`
++}
++type StateStore interface {
++	Load() (State, error)
++	Save(State) error
++}
++
++// ErrCommitUnknown means rename succeeded but durability could not be confirmed.
++// The service stops serving until restarted from the durable snapshot.
++var ErrCommitUnknown = errors.New("commit outcome unknown")
++
++func NewPersistent(registry AgentRegistryClient, credentials CredentialStoreClient, ledger LedgerClient, outbox OutboxWriter, bundles PolicyBundleRegistryClient, store StateStore, fencePath string) (*Service, error) {
++	if registry == nil || credentials == nil || store == nil {
++		return nil, ErrInvalidArgument
++	}
++	s := New(registry, credentials, ledger, outbox, bundles)
++	s.store = store
++	s.requireCAS = true
++	s.fencePath = fencePath
++	state, err := store.Load()
++	if err != nil {
++		return nil, err
++	}
++	if state.Version != 1 || state.Passports == nil || state.ActiveByAgent == nil || state.Revisions == nil {
++		return nil, fmt.Errorf("invalid persisted state")
++	}
++	for id, p := range state.Passports {
++		if id != p.PassportID || p.AgentID == "" || p.Revision == 0 || state.Revisions[p.AgentID] < p.Revision {
++			return nil, fmt.Errorf("invalid persisted identity/revision")
++		}
++		valid, err := credentials.Verify(p.PublicKeyPEM, CanonicalPayload(p), p.Signature)
++		if err != nil || !valid {
++			return nil, fmt.Errorf("persisted signature invalid for passport %s", id)
++		}
++		if p.Status == domain.StatusActive && state.ActiveByAgent[p.AgentID] != id {
++			return nil, fmt.Errorf("unindexed active passport")
++		}
++	}
++	for agent, id := range state.ActiveByAgent {
++		p, ok := state.Passports[id]
++		if !ok || p.AgentID != agent || p.Status != domain.StatusActive || p.Revision != state.Revisions[agent] {
++			return nil, fmt.Errorf("invalid active passport index")
++		}
++	}
++	s.passports = state.Passports
++	s.activeByAgent = state.ActiveByAgent
++	s.revisions = state.Revisions
++	return s, nil
++}
++func (s *Service) snapshot() State {
++	state := State{Version: 1, Passports: make(map[string]domain.Passport, len(s.passports)), ActiveByAgent: make(map[string]string, len(s.activeByAgent)), Revisions: make(map[string]uint64, len(s.revisions))}
++	for k, v := range s.passports {
++		state.Passports[k] = clonePassport(v)
++	}
++	for k, v := range s.activeByAgent {
++		state.ActiveByAgent[k] = v
++	}
++	for k, v := range s.revisions {
++		state.Revisions[k] = v
++	}
++	return state
++}
++func (s *Service) commit(next State) error {
++	if s.store != nil {
++		if err := s.store.Save(next); err != nil {
++			if errors.Is(err, ErrCommitUnknown) {
++				s.poisoned = true
++			}
++			return fmt.Errorf("%w: persistence: %v", ErrUnavailable, err)
++		}
++	}
++	s.passports = next.Passports
++	s.activeByAgent = next.ActiveByAgent
++	s.revisions = next.Revisions
++	return nil
++}
+diff --git a/internal/service/persistence_test.go b/internal/service/persistence_test.go
+new file mode 100644
+--- /dev/null
++++ b/internal/service/persistence_test.go
+@@ -0,0 +1,211 @@
++package service
++
++import (
++	"context"
++	"errors"
++	"path/filepath"
++	"sync"
++	"testing"
++	"time"
++
++	"github.com/srex-dev/agent-passport/internal/domain"
++)
++
++type testStateStore struct {
++	state State
++	err   error
++}
++
++func newTestStateStore() *testStateStore {
++	return &testStateStore{state: State{Version: 1, Passports: map[string]domain.Passport{}, ActiveByAgent: map[string]string{}, Revisions: map[string]uint64{}}}
++}
++func (m *testStateStore) Load() (State, error) { return m.state, nil }
++func (m *testStateStore) Save(s State) error {
++	if m.err != nil {
++		return m.err
++	}
++	m.state = s
++	return nil
++}
++func expectedID(s string) *string  { return &s }
++func expectedRev(n uint64) *uint64 { return &n }
++func persistentIssue(expected string, revision uint64) IssueInput {
++	return IssueInput{AgentID: "agent", PassportType: domain.TypeStandard, Scopes: []domain.Scope{scope("WRITE")}, TTLSeconds: 3600, IssuedBy: "authority", Reason: "qualification", ExpectedActivePassportID: expectedID(expected), ExpectedAgentRevision: expectedRev(revision)}
++}
++func testPersistent(t *testing.T, store StateStore, fence string) *Service {
++	t.Helper()
++	s, err := NewPersistent(registryMock{status: AgentActive}, credentialMock{}, nil, nil, bundleMock{id: "policy", ver: "1"}, store, fence)
++	if err != nil {
++		t.Fatal(err)
++	}
++	return s
++}
++
++func TestPersistenceFailureIsAtomic(t *testing.T) {
++	store := newTestStateStore()
++	s := testPersistent(t, store, "")
++	first, err := s.IssuePassport(persistentIssue("none", 0))
++	if err != nil {
++		t.Fatal(err)
++	}
++	store.err = errors.New("disk full")
++	replacement := persistentIssue(first.PassportID, 1)
++	replacement.ForceReissue = true
++	if _, err = s.IssuePassport(replacement); !errors.Is(err, ErrUnavailable) {
++		t.Fatal(err)
++	}
++	active, rev, err := s.GetAgentPassportRevision("agent")
++	if err != nil || active.PassportID != first.PassportID || active.Status != domain.StatusActive || rev != 1 {
++		t.Fatalf("replacement changed state: %+v %d %v", active, rev, err)
++	}
++	if _, _, err = s.RevokePassportConditional(context.Background(), first.PassportID, "drift", "authority", expectedID(first.PassportID), expectedRev(1)); !errors.Is(err, ErrUnavailable) {
++		t.Fatal(err)
++	}
++	active, rev, err = s.GetAgentPassportRevision("agent")
++	if err != nil || active.Status != domain.StatusActive || rev != 1 {
++		t.Fatalf("revoke changed state: %+v %d %v", active, rev, err)
++	}
++}
++
++func TestUnknownCommitFailsClosedUntilRestart(t *testing.T) {
++	store := newTestStateStore()
++	s := testPersistent(t, store, "")
++	store.err = ErrCommitUnknown
++	if _, err := s.IssuePassport(persistentIssue("none", 0)); !errors.Is(err, ErrUnavailable) {
++		t.Fatal(err)
++	}
++	if _, _, err := s.GetAgentPassportRevision("agent"); !errors.Is(err, ErrUnavailable) {
++		t.Fatal("uncertain store remained readable", err)
++	}
++	store.err = nil
++	if _, err := s.IssuePassport(persistentIssue("none", 0)); !errors.Is(err, ErrUnavailable) {
++		t.Fatal("uncertain service resumed mutations", err)
++	}
++}
++
++func TestCASRequiresBothFieldsAndRejectsCrossFieldMismatch(t *testing.T) {
++	s := testPersistent(t, newTestStateStore(), "")
++	for _, missing := range []string{"id", "revision"} {
++		in := persistentIssue("none", 0)
++		if missing == "id" {
++			in.ExpectedActivePassportID = nil
++		} else {
++			in.ExpectedAgentRevision = nil
++		}
++		if _, err := s.IssuePassport(in); !errors.Is(err, ErrFailedPrecondition) {
++			t.Fatalf("missing %s: %v", missing, err)
++		}
++	}
++	p, err := s.IssuePassport(persistentIssue("none", 0))
++	if err != nil {
++		t.Fatal(err)
++	}
++	for _, in := range []IssueInput{persistentIssue("wrong-id", 1), persistentIssue(p.PassportID, 0)} {
++		in.ForceReissue = true
++		if _, err := s.IssuePassport(in); !errors.Is(err, ErrFailedPrecondition) {
++			t.Fatal(err)
++		}
++	}
++	_, rev, err := s.RevokePassportConditional(context.Background(), p.PassportID, "drift", "authority", expectedID(p.PassportID), expectedRev(1))
++	if err != nil || rev != 2 {
++		t.Fatalf("revoke rev=%d err=%v", rev, err)
++	}
++	if _, err := s.IssuePassport(persistentIssue("none", 0)); !errors.Is(err, ErrFailedPrecondition) {
++		t.Fatal("empty-state ABA authorized", err)
++	}
++	p, err = s.IssuePassport(persistentIssue("none", 2))
++	if err != nil || p.Revision != 3 {
++		t.Fatalf("fresh empty CAS failed: %+v %v", p, err)
++	}
++}
++
++func TestConcurrentCASHasSingleWinner(t *testing.T) {
++	s := testPersistent(t, newTestStateStore(), "")
++	var wg sync.WaitGroup
++	results := make(chan error, 16)
++	for i := 0; i < 16; i++ {
++		wg.Add(1)
++		go func() { defer wg.Done(); _, err := s.IssuePassport(persistentIssue("none", 0)); results <- err }()
++	}
++	wg.Wait()
++	close(results)
++	winners := 0
++	for err := range results {
++		if err == nil {
++			winners++
++		} else if !errors.Is(err, ErrFailedPrecondition) {
++			t.Fatal(err)
++		}
++	}
++	if winners != 1 {
++		t.Fatalf("CAS winners=%d", winners)
++	}
++}
++
++func TestFenceBlocksMutationButNotReadsAndHonorsCancellation(t *testing.T) {
++	path := filepath.Join(t.TempDir(), "authority.fence")
++	s := testPersistent(t, newTestStateStore(), path)
++	p, err := s.IssuePassport(persistentIssue("none", 0))
++	if err != nil {
++		t.Fatal(err)
++	}
++	unlock, err := acquireFence(context.Background(), path)
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer unlock()
++	ctx, cancel := context.WithTimeout(context.Background(), 100*time.Millisecond)
++	defer cancel()
++	result := make(chan error, 1)
++	go func() {
++		_, _, err := s.RevokePassportConditional(ctx, p.PassportID, "drift", "authority", expectedID(p.PassportID), expectedRev(1))
++		result <- err
++	}()
++	active, rev, err := s.GetAgentPassportRevision("agent")
++	if err != nil || active.PassportID != p.PassportID || rev != 1 {
++		t.Fatalf("fenced read failed: %+v %d %v", active, rev, err)
++	}
++	select {
++	case err := <-result:
++		if !errors.Is(err, ErrUnavailable) {
++			t.Fatal(err)
++		}
++	case <-time.After(2 * time.Second):
++		t.Fatal("mutation deadlocked instead of observing context")
++	}
++	active, _, _ = s.GetAgentPassportRevision("agent")
++	if active.Status != domain.StatusActive {
++		t.Fatal("canceled fenced mutation applied")
++	}
++}
++
++func TestFileStoreSingleWriterAndCorruption(t *testing.T) {
++	path := filepath.Join(t.TempDir(), "state.json")
++	store, err := OpenFileStore(path)
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer store.Close()
++	if second, err := OpenFileStore(path); err == nil {
++		second.Close()
++		t.Fatal("second writer accepted")
++	}
++	s := testPersistent(t, store, "")
++	p, err := s.IssuePassport(persistentIssue("none", 0))
++	if err != nil {
++		t.Fatal(err)
++	}
++	state, err := store.Load()
++	if err != nil {
++		t.Fatal(err)
++	}
++	changed := state.Passports[p.PassportID]
++	changed.ScopeSet[0].ContextConstraints = map[string]string{"site": "forged"}
++	state.Passports[p.PassportID] = changed
++	if err = store.Save(state); err != nil {
++		t.Fatal(err)
++	}
++	if _, err = NewPersistent(registryMock{status: AgentActive}, credentialMock{}, nil, nil, nil, store, ""); err == nil {
++		t.Fatal("tampered persistent credential loaded")
++	}
++}
+diff --git a/internal/service/service.go b/internal/service/service.go
+--- a/internal/service/service.go
++++ b/internal/service/service.go
+@@ -1,8 +1,9 @@
+ package service
+ 
+ import (
+-	"crypto/sha256"
+-	"encoding/hex"
++	"bytes"
++	"context"
++
+ 	"errors"
+ 	"fmt"
+ 	"sync"
+@@ -51,6 +52,11 @@
+ 	Verify(publicKey string, payload, signature []byte) (bool, error)
+ }
+ 
++// SigningIdentity allows one signing operation with a preselected trusted key.
++type SigningIdentity interface {
++	Identity() (credentialID, publicKey string, error error)
++}
++
+ // LedgerClient represents non-blocking write calls.
+ type LedgerClient interface {
+ 	WritePassportLifecycle(agentID, passportID, eventType, reason string) error
+@@ -63,20 +69,28 @@
+ 
+ // IssueInput carries IssuePassport request parameters.
+ type IssueInput struct {
+-	AgentID             string
+-	PassportType        domain.PassportType
+-	Scopes              []domain.Scope
+-	TTLSeconds          int64
+-	IssuedBy            string
+-	ForceReissue        bool
+-	Reason              string
+-	PolicyIDAtIssuance  string
+-	PolicyVerAtIssuance string
++	AgentID                  string
++	PassportType             domain.PassportType
++	Scopes                   []domain.Scope
++	TTLSeconds               int64
++	IssuedBy                 string
++	ForceReissue             bool
++	Reason                   string
++	ExpectedActivePassportID *string
++	ExpectedAgentRevision    *uint64
++	PolicyIDAtIssuance       string
++	PolicyVerAtIssuance      string
+ }
+ 
+ // Service performs passport issuance operations.
+ type Service struct {
+ 	mu                           sync.RWMutex
++	revisions                    map[string]uint64
++	store                        StateStore
++	requireCAS                   bool
++	fencePath                    string
++	poisoned                     bool
++	now                          func() time.Time
+ 	passports                    map[string]domain.Passport
+ 	activeByAgent                map[string]string
+ 	registry                     AgentRegistryClient
+@@ -95,6 +109,8 @@
+ 	}
+ 	return &Service{
+ 		passports:     make(map[string]domain.Passport),
++		revisions:     make(map[string]uint64),
++		now:           time.Now,
+ 		activeByAgent: make(map[string]string),
+ 		registry:      registry,
+ 		policyBundles: bundles,
+@@ -109,185 +125,297 @@
+ 	}
+ }
+ 
+-// IssuePassport issues a signed passport with enforced invariants.
++// IssuePassport is the compatibility entry point. Durable mode requires CAS.
+ func (s *Service) IssuePassport(input IssueInput) (domain.Passport, error) {
+-	if input.AgentID == "" || input.IssuedBy == "" || input.Reason == "" || len(input.Scopes) == 0 {
++	return s.IssuePassportContext(context.Background(), input)
++}
++
++func (s *Service) IssuePassportContext(ctx context.Context, input IssueInput) (domain.Passport, error) {
++	if input.AgentID == "" || input.IssuedBy == "" || input.Reason == "" || len(input.Scopes) == 0 || (input.PassportType != domain.TypeStandard && input.PassportType != domain.TypeProvisional) {
+ 		return domain.Passport{}, ErrInvalidArgument
+ 	}
+-	if input.TTLSeconds < 300 {
+-		return domain.Passport{}, fmt.Errorf("%w: ttl too low", ErrInvalidArgument)
+-	}
+-	if input.PassportType == domain.TypeProvisional && input.TTLSeconds > 86400 {
+-		return domain.Passport{}, fmt.Errorf("%w: ttl too high for provisional", ErrInvalidArgument)
+-	}
+-	if input.PassportType == domain.TypeStandard && input.TTLSeconds > 2592000 {
+-		return domain.Passport{}, fmt.Errorf("%w: ttl too high for standard", ErrInvalidArgument)
+-	}
+-
+-	status, err := s.registry.GetAgentStatus(input.AgentID)
+-	if err != nil {
+-		return domain.Passport{}, ErrUnavailable
+-	}
+-	if status == AgentDeregistered || status == AgentSuspended {
+-		return domain.Passport{}, ErrFailedPrecondition
+-	}
+-	if status != AgentActive && status != AgentPending {
+-		return domain.Passport{}, ErrFailedPrecondition
+-	}
+-
+-	if input.PassportType == domain.TypeProvisional {
+-		for _, scope := range input.Scopes {
+-			if !s.provisionalAllowedActionType[scope.ActionClass] {
+-				return domain.Passport{}, fmt.Errorf("%w: action not allowed for provisional", ErrInvalidArgument)
+-			}
+-		}
+-	}
+-
++	if input.TTLSeconds < 300 || input.TTLSeconds > 2592000 || (input.PassportType == domain.TypeProvisional && input.TTLSeconds > 86400) {
++		return domain.Passport{}, ErrInvalidArgument
++	}
++	for _, scope := range input.Scopes {
++		if scope.ActionClass == "" || scope.ResourcePattern == "" || !scope.ExpiresTS.After(scope.GrantedTS) {
++			return domain.Passport{}, ErrInvalidArgument
++		}
++		if input.PassportType == domain.TypeProvisional && !s.provisionalAllowedActionType[scope.ActionClass] {
++			return domain.Passport{}, ErrInvalidArgument
++		}
++	}
++	unlock, err := acquireFence(ctx, s.fencePath)
++	if err != nil {
++		return domain.Passport{}, fmt.Errorf("%w: fence: %v", ErrUnavailable, err)
++	}
++	defer unlock()
+ 	s.mu.Lock()
+ 	defer s.mu.Unlock()
+-
+-	if currentID, ok := s.activeByAgent[input.AgentID]; ok {
+-		if !input.ForceReissue {
+-			return domain.Passport{}, fmt.Errorf("%w: active passport %s", ErrAlreadyExists, currentID)
+-		}
+-		p := s.passports[currentID]
+-		now := time.Now().UTC()
+-		p.Status = domain.StatusRevoked
+-		p.RevokedTS = &now
+-		p.RevocationReason = "superseded_by_force_reissue"
+-		s.passports[currentID] = p
+-		_ = s.outbox.Enqueue("PASSPORT_REVOKED", p.AgentID, p.PassportID, p.RevocationReason)
+-	}
+-
+-	passportID := uuid.NewString()
+-	now := time.Now().UTC()
+-	expires := now.Add(time.Duration(input.TTLSeconds) * time.Second)
+-	payload := canonicalPayload(input.AgentID, input.PassportType, input.Scopes, now, expires)
+-	credentialID, publicKey, signature, err := s.credentials.Sign(payload)
++	if err := s.checkMutable(); err != nil {
++		return domain.Passport{}, err
++	}
++	if err := s.checkCAS(input.AgentID, input.ExpectedActivePassportID, input.ExpectedAgentRevision); err != nil {
++		return domain.Passport{}, err
++	}
++	if err := ctx.Err(); err != nil {
++		return domain.Passport{}, fmt.Errorf("%w: %v", ErrUnavailable, err)
++	}
++	status, err := s.registry.GetAgentStatus(input.AgentID)
+ 	if err != nil {
+ 		return domain.Passport{}, ErrUnavailable
+ 	}
+-
++	if status != AgentActive && !(status == AgentPending && input.PassportType == domain.TypeProvisional) {
++		return domain.Passport{}, ErrFailedPrecondition
++	}
++	currentID := s.activeByAgent[input.AgentID]
++	if currentID != "" && !input.ForceReissue {
++		return domain.Passport{}, ErrAlreadyExists
++	}
+ 	policyID, policyVer := input.PolicyIDAtIssuance, input.PolicyVerAtIssuance
+-	if policyID == "" && policyVer == "" && s.policyBundles != nil {
+-		var errBundle error
+-		policyID, policyVer, errBundle = s.policyBundles.ActivePolicyBundle()
+-		if errBundle != nil {
++	if (policyID == "") != (policyVer == "") {
++		return domain.Passport{}, ErrInvalidArgument
++	}
++	if policyID == "" && s.policyBundles != nil {
++		policyID, policyVer, err = s.policyBundles.ActivePolicyBundle()
++		if err != nil {
+ 			return domain.Passport{}, ErrUnavailable
+ 		}
+ 	}
+-
+-	passport := domain.Passport{
+-		PassportID:          passportID,
+-		AgentID:             input.AgentID,
+-		PassportType:        input.PassportType,
+-		ScopeSet:            input.Scopes,
+-		Status:              domain.StatusActive,
+-		IssuedBy:            input.IssuedBy,
+-		CredentialID:        credentialID,
+-		PublicKeyPEM:        publicKey,
+-		Signature:           signature,
+-		Reason:              input.Reason,
+-		IssuedTS:            now,
+-		ExpiresTS:           expires,
+-		PolicyIDAtIssuance:  policyID,
+-		PolicyVerAtIssuance: policyVer,
+-	}
+-	s.passports[passportID] = passport
+-	s.activeByAgent[input.AgentID] = passportID
+-	_ = s.outbox.Enqueue("PASSPORT_ISSUED", input.AgentID, passportID, input.Reason)
+-	if s.ledger != nil {
+-		_ = s.ledger.WritePassportLifecycle(input.AgentID, passportID, "PASSPORT_ISSUED", input.Reason)
+-	}
+-	return passport, nil
+-}
+-
+-// GetPassport returns a passport by id.
++	now := s.now().UTC().Truncate(time.Millisecond)
++	passport := domain.Passport{Revision: s.revisions[input.AgentID] + 1, PassportID: uuid.NewString(), AgentID: input.AgentID, PassportType: input.PassportType, ScopeSet: cloneScopes(input.Scopes), Status: domain.StatusActive, IssuedBy: input.IssuedBy, Reason: input.Reason, IssuedTS: now, ExpiresTS: now.Add(time.Duration(input.TTLSeconds) * time.Second), PolicyIDAtIssuance: policyID, PolicyVerAtIssuance: policyVer}
++	if passport.Revision == 0 {
++		return domain.Passport{}, ErrFailedPrecondition
++	}
++	for i := range passport.ScopeSet {
++		scope := &passport.ScopeSet[i]
++		scope.GrantedTS = scope.GrantedTS.UTC().Truncate(time.Millisecond)
++		scope.ExpiresTS = scope.ExpiresTS.UTC().Truncate(time.Millisecond)
++		if scope.ExpiresTS.After(passport.ExpiresTS) {
++			scope.ExpiresTS = passport.ExpiresTS
++		}
++		if !now.Before(scope.ExpiresTS) || !scope.ExpiresTS.After(scope.GrantedTS) {
++			return domain.Passport{}, ErrInvalidArgument
++		}
++	}
++	if identity, ok := s.credentials.(SigningIdentity); ok {
++		passport.CredentialID, passport.PublicKeyPEM, err = identity.Identity()
++	} else {
++		passport.CredentialID, passport.PublicKeyPEM, _, err = s.credentials.Sign(nil)
++	}
++	if err != nil {
++		return domain.Passport{}, ErrUnavailable
++	}
++	credentialID, publicKey, signature, err := s.credentials.Sign(CanonicalPayload(passport))
++	if err != nil || credentialID != passport.CredentialID || publicKey != passport.PublicKeyPEM {
++		return domain.Passport{}, ErrUnavailable
++	}
++	passport.Signature = signature
++	if err := ctx.Err(); err != nil {
++		return domain.Passport{}, fmt.Errorf("%w: %v", ErrUnavailable, err)
++	}
++	// All dependencies succeed before a candidate state is persisted or published.
++	next := s.snapshot()
++	if currentID != "" {
++		old := next.Passports[currentID]
++		old.Status = domain.StatusRevoked
++		old.RevokedTS = &now
++		old.RevocationReason = "superseded_by_force_reissue"
++		old.SupersededBy = passport.PassportID
++		next.Passports[currentID] = old
++	}
++	next.Passports[passport.PassportID] = clonePassport(passport)
++	next.ActiveByAgent[input.AgentID] = passport.PassportID
++	next.Revisions[input.AgentID] = passport.Revision
++	if err := s.commit(next); err != nil {
++		return domain.Passport{}, err
++	}
++	if currentID != "" {
++		s.emit(input.AgentID, currentID, "PASSPORT_REVOKED", "superseded_by_force_reissue")
++	}
++	s.emit(input.AgentID, passport.PassportID, "PASSPORT_ISSUED", input.Reason)
++	return clonePassport(passport), nil
++}
++
+ func (s *Service) GetPassport(passportID string) (domain.Passport, error) {
++	p, _, err := s.GetPassportRevision(passportID)
++	return p, err
++}
++func (s *Service) GetPassportRevision(passportID string) (domain.Passport, uint64, error) {
+ 	s.mu.RLock()
+ 	defer s.mu.RUnlock()
++	if s.poisoned {
++		return domain.Passport{}, 0, ErrUnavailable
++	}
+ 	p, ok := s.passports[passportID]
+ 	if !ok {
+-		return domain.Passport{}, ErrNotFound
+-	}
+-	return p, nil
+-}
+-
+-// GetAgentPassport returns active passport for an agent.
++		return domain.Passport{}, 0, ErrNotFound
++	}
++	return clonePassport(p), s.revisions[p.AgentID], nil
++}
+ func (s *Service) GetAgentPassport(agentID string) (domain.Passport, error) {
++	p, _, err := s.GetAgentPassportRevision(agentID)
++	return p, err
++}
++func (s *Service) GetAgentPassportRevision(agentID string) (domain.Passport, uint64, error) {
+ 	s.mu.RLock()
+ 	defer s.mu.RUnlock()
++	if s.poisoned {
++		return domain.Passport{}, 0, ErrUnavailable
++	}
+ 	id, ok := s.activeByAgent[agentID]
+ 	if !ok {
+-		return domain.Passport{}, ErrNotFound
+-	}
+-	return s.passports[id], nil
+-}
+-
+-// VerifyPassport verifies signature and status.
++		return domain.Passport{}, s.revisions[agentID], ErrNotFound
++	}
++	return clonePassport(s.passports[id]), s.revisions[agentID], nil
++}
++
++type Verification struct {
++	Valid         bool
++	Passport      domain.Passport
++	Status        domain.PassportStatus
++	FailureReason string
++	Revision      uint64
++}
++
+ func (s *Service) VerifyPassport(passportID string, payload, signature []byte) (bool, domain.PassportStatus, string, error) {
+-	p, err := s.GetPassport(passportID)
+-	if err != nil {
+-		return false, "", "", err
+-	}
++	v, err := s.VerifySnapshot(passportID, payload, signature)
++	return v.Valid, v.Status, v.FailureReason, err
++}
++func (s *Service) VerifySnapshot(passportID string, payload, signature []byte) (Verification, error) {
++	s.mu.RLock()
++	defer s.mu.RUnlock()
++	if s.poisoned {
++		return Verification{}, ErrUnavailable
++	}
++	p, exists := s.passports[passportID]
++	if !exists {
++		return Verification{}, ErrNotFound
++	}
++	v := Verification{Passport: clonePassport(p), Status: p.Status, Revision: s.revisions[p.AgentID]}
+ 	if p.Status == domain.StatusRevoked {
+-		return false, p.Status, "revoked", nil
+-	}
+-	if p.Status == domain.StatusExpired || time.Now().UTC().After(p.ExpiresTS) {
+-		return false, domain.StatusExpired, "expired", nil
+-	}
+-	ok, err := s.credentials.Verify(p.PublicKeyPEM, payload, signature)
+-	if err != nil {
+-		return false, p.Status, "verify_error", ErrUnavailable
+-	}
+-	if !ok {
+-		return false, p.Status, "signature_invalid", nil
+-	}
+-	return true, p.Status, "", nil
+-}
+-
+-// RevokePassport marks a passport revoked and clears it as the agent's active passport when applicable.
++		v.FailureReason = "revoked"
++		return v, nil
++	}
++	if p.Status == domain.StatusExpired || !s.now().Before(p.ExpiresTS) {
++		v.Status = domain.StatusExpired
++		v.FailureReason = "expired"
++		return v, nil
++	}
++	if p.Status != domain.StatusActive || p.PassportID != passportID || s.activeByAgent[p.AgentID] != passportID || p.Revision != s.revisions[p.AgentID] {
++		v.FailureReason = "not_active"
++		return v, nil
++	}
++	state, err := s.registry.GetAgentStatus(p.AgentID)
++	if err != nil {
++		return v, ErrUnavailable
++	}
++	if state != AgentActive && !(state == AgentPending && p.PassportType == domain.TypeProvisional) {
++		v.FailureReason = "agent_inactive"
++		return v, nil
++	}
++	canonical := CanonicalPayload(p)
++	if (len(payload) > 0 && !bytes.Equal(payload, canonical)) || (len(signature) > 0 && !bytes.Equal(signature, p.Signature)) {
++		v.FailureReason = "signature_invalid"
++		return v, nil
++	}
++	valid, err := s.credentials.Verify(p.PublicKeyPEM, canonical, p.Signature)
++	if err != nil {
++		v.FailureReason = "verify_error"
++		return v, ErrUnavailable
++	}
++	if !valid {
++		v.FailureReason = "signature_invalid"
++		return v, nil
++	}
++	v.Valid = true
++	return v, nil
++}
++
+ func (s *Service) RevokePassport(passportID, reason, revokedBy string) (domain.Passport, error) {
++	p, _, err := s.RevokePassportConditional(context.Background(), passportID, reason, revokedBy, nil, nil)
++	return p, err
++}
++func (s *Service) RevokePassportConditional(ctx context.Context, passportID, reason, revokedBy string, expected *string, expectedRevision *uint64) (domain.Passport, uint64, error) {
+ 	if passportID == "" || reason == "" || revokedBy == "" {
+-		return domain.Passport{}, ErrInvalidArgument
+-	}
++		return domain.Passport{}, 0, ErrInvalidArgument
++	}
++	unlock, err := acquireFence(ctx, s.fencePath)
++	if err != nil {
++		return domain.Passport{}, 0, fmt.Errorf("%w: fence: %v", ErrUnavailable, err)
++	}
++	defer unlock()
+ 	s.mu.Lock()
+ 	defer s.mu.Unlock()
+-	p, ok := s.passports[passportID]
+-	if !ok {
+-		return domain.Passport{}, ErrNotFound
++	if err := s.checkMutable(); err != nil {
++		return domain.Passport{}, 0, err
++	}
++	p, exists := s.passports[passportID]
++	if !exists {
++		return domain.Passport{}, 0, ErrNotFound
++	}
++	if err := s.checkCAS(p.AgentID, expected, expectedRevision); err != nil {
++		return domain.Passport{}, 0, err
++	}
++	if err := ctx.Err(); err != nil {
++		return domain.Passport{}, 0, fmt.Errorf("%w: %v", ErrUnavailable, err)
+ 	}
+ 	if p.Status == domain.StatusRevoked {
+-		return p, nil
+-	}
+-	now := time.Now().UTC()
++		return clonePassport(p), s.revisions[p.AgentID], nil
++	}
++	now := s.now().UTC().Truncate(time.Millisecond)
+ 	p.Status = domain.StatusRevoked
+ 	p.RevokedTS = &now
+ 	p.RevocationReason = reason
+-	s.passports[passportID] = p
+-	if activeID, ok := s.activeByAgent[p.AgentID]; ok && activeID == passportID {
+-		delete(s.activeByAgent, p.AgentID)
+-	}
+-	_ = s.outbox.Enqueue("PASSPORT_REVOKED", p.AgentID, passportID, reason)
++	next := s.snapshot()
++	next.Passports[passportID] = p
++	if next.ActiveByAgent[p.AgentID] == passportID {
++		delete(next.ActiveByAgent, p.AgentID)
++	}
++	next.Revisions[p.AgentID]++
++	if next.Revisions[p.AgentID] == 0 {
++		return domain.Passport{}, 0, ErrFailedPrecondition
++	}
++	if err := s.commit(next); err != nil {
++		return domain.Passport{}, 0, err
++	}
++	s.emit(p.AgentID, passportID, "PASSPORT_REVOKED", reason)
++	return clonePassport(p), next.Revisions[p.AgentID], nil
++}
++
++func (s *Service) checkMutable() error {
++	if s.poisoned {
++		return ErrUnavailable
++	}
++	return nil
++}
++func (s *Service) checkCAS(agentID string, expected *string, expectedRevision *uint64) error {
++	if s.requireCAS && (expected == nil || expectedRevision == nil) {
++		return fmt.Errorf("%w: expected active passport and agent revision are required", ErrFailedPrecondition)
++	}
++	if expected != nil {
++		want := *expected
++		if want == "none" {
++			want = ""
++		}
++		if s.activeByAgent[agentID] != want {
++			return fmt.Errorf("%w: active passport changed", ErrFailedPrecondition)
++		}
++	}
++	if expectedRevision != nil && s.revisions[agentID] != *expectedRevision {
++		return fmt.Errorf("%w: agent revision changed", ErrFailedPrecondition)
++	}
++	return nil
++}
++
++func (s *Service) emit(agentID, passportID, event, reason string) {
++	if s.outbox != nil {
++		_ = s.outbox.Enqueue(event, agentID, passportID, reason)
++	}
+ 	if s.ledger != nil {
+-		_ = s.ledger.WritePassportLifecycle(p.AgentID, passportID, "PASSPORT_REVOKED", reason)
+-	}
+-	return p, nil
+-}
+-
+-func canonicalPayload(agentID string, pType domain.PassportType, scopes []domain.Scope, issued, expires time.Time) []byte {
+-	h := sha256.New()
+-	h.Write([]byte(agentID))
+-	h.Write([]byte(string(pType)))
+-	for _, s := range scopes {
+-		h.Write([]byte(s.ScopeID))
+-		h.Write([]byte(s.ActionClass))
+-		h.Write([]byte(s.ResourcePattern))
+-	}
+-	h.Write([]byte(issued.Format(time.RFC3339Nano)))
+-	h.Write([]byte(expires.Format(time.RFC3339Nano)))
+-	sum := h.Sum(nil)
+-	out := make([]byte, hex.EncodedLen(len(sum)))
+-	hex.Encode(out, sum)
+-	return out
+-}
++		_ = s.ledger.WritePassportLifecycle(agentID, passportID, event, reason)
++	}
++}
++
++// Ready reports whether durable commit state is known.
++func (s *Service) Ready() bool { s.mu.RLock(); defer s.mu.RUnlock(); return !s.poisoned }
+diff --git a/internal/service/testdata/canonical-v2.json b/internal/service/testdata/canonical-v2.json
+new file mode 100644
+--- /dev/null
++++ b/internal/service/testdata/canonical-v2.json
+@@ -0,0 +1,77 @@
++{
++  "canonical_payload_base64": "eyJjcmVkZW50aWFsX2lkIjoiZWQyNTUxOTplYzkxZDMwZjM0MTAxZWUwMGRhYzA2NThmNzFiZWNiMTgyY2JlYjY3Mzc5YmMxYWU5N2I2YjI4N2JmMTEzMDZjIiwicHVibGljX2tleV9wZW0iOiItLS0tLUJFR0lOIFBVQkxJQyBLRVktLS0tLVxuTUNvd0JRWURLMlZ3QXlFQWxvekNqWk9Fa0k5TUVMQWZ1aEswUXhNTHNNVkRGMWpTZ0F3aG1jN2pyak09XG4tLS0tLUVORCBQVUJMSUMgS0VZLS0tLS1cbiIsImNhbm9uaWNhbF92ZXJzaW9uIjoiYXJlLnBhc3Nwb3J0LnYyIiwicGFzc3BvcnRfaWQiOiIwMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwMDciLCJhZ2VudF9pZCI6ImFnZW50LcOJXHUwMDNjXHUwMDI2XHUwMDNlIiwiaXNzdWFuY2VfcmV2aXNpb24iOjcsInBhc3Nwb3J0X3R5cGUiOiJTVEFOREFSRCIsInNjb3BlX3NldCI6W3sic2NvcGVfaWQiOiJzY29wZS0xIiwiYWN0aW9uX2NsYXNzIjoibW9kZWwucHJvbW90ZSIsInJlc291cmNlX3BhdHRlcm4iOiJtb2RlbC/OsVx1MDAzY1x1MDAyNlx1MDAzZSoiLCJjb250ZXh0X2NvbnN0cmFpbnRzIjp7ImFcdTAwM2NcdTAwMjZcdTAwM2UiOiJ2YWx1ZVx1MDAzY1x1MDAyNlx1MDAzZVx1MjAyOFx1MjAyOSIsInNpdGUiOiLDqeW3peWgtCIsInpldGEiOiJsYXN0In0sImdyYW50ZWRfdHMiOjE3OTE1NDcyMDAxMjMsImV4cGlyZXNfdHMiOjE3OTE1NDcyNjAxMjMsImlzX2VzY2FsYXRpb24iOnRydWV9XSwiaXNzdWVkX2J5IjoiaXNzdWVyXHUwMDNjXHUwMDI2XHUwMDNlw6kiLCJyZWFzb24iOiJxdWFsaWZpZWRcbmxpbmVcdFx1MDAzY1x1MDAyNlx1MDAzZVx1MjAyOOe1giIsImlzc3VlZF90cyI6MTc5MTU0NzIwMDEyMywiZXhwaXJlc190cyI6MTc5MTU1MDgwMDEyMywicG9saWN5X2lkX2F0X2lzc3VhbmNlIjoicG9saWN5XHUwMDNjXHUwMDI2XHUwMDNlIiwicG9saWN5X3Zlcl9hdF9pc3N1YW5jZSI6InYxLcOpIn0=",
++  "canonical_payload_sha256": "1ec97c4318deafcc036167afc324bb0a8bdcf9e7a9d4cdeca789a4e76dff5b55",
++  "canonical_payload_utf8": "{\"credential_id\":\"ed25519:ec91d30f34101ee00dac0658f71becb182cbeb67379bc1ae97b6b287bf11306c\",\"public_key_pem\":\"-----BEGIN PUBLIC KEY-----\\nMCowBQYDK2VwAyEAlozCjZOEkI9MELAfuhK0QxMLsMVDF1jSgAwhmc7jrjM=\\n-----END PUBLIC KEY-----\\n\",\"canonical_version\":\"are.passport.v2\",\"passport_id\":\"00000000-0000-4000-8000-000000000007\",\"agent_id\":\"agent-É\\u003c\\u0026\\u003e\",\"issuance_revision\":7,\"passport_type\":\"STANDARD\",\"scope_set\":[{\"scope_id\":\"scope-1\",\"action_class\":\"model.promote\",\"resource_pattern\":\"model/α\\u003c\\u0026\\u003e*\",\"context_constraints\":{\"a\\u003c\\u0026\\u003e\":\"value\\u003c\\u0026\\u003e\\u2028\\u2029\",\"site\":\"é工場\",\"zeta\":\"last\"},\"granted_ts\":1791547200123,\"expires_ts\":1791547260123,\"is_escalation\":true}],\"issued_by\":\"issuer\\u003c\\u0026\\u003eé\",\"reason\":\"qualified\\nline\\t\\u003c\\u0026\\u003e\\u2028終\",\"issued_ts\":1791547200123,\"expires_ts\":1791550800123,\"policy_id_at_issuance\":\"policy\\u003c\\u0026\\u003e\",\"policy_ver_at_issuance\":\"v1-é\"}",
++  "canonical_version": "are.passport.v2",
++  "current_agent_revision": 7,
++  "domain_passport": {
++    "Revision": 7,
++    "PassportID": "00000000-0000-4000-8000-000000000007",
++    "AgentID": "agent-É\u003c\u0026\u003e",
++    "PassportType": "STANDARD",
++    "ScopeSet": [
++      {
++        "ScopeID": "scope-1",
++        "ActionClass": "model.promote",
++        "ResourcePattern": "model/α\u003c\u0026\u003e*",
++        "ContextConstraints": {
++          "a\u003c\u0026\u003e": "value\u003c\u0026\u003e\u2028\u2029",
++          "site": "é工場",
++          "zeta": "last"
++        },
++        "IsEscalation": true,
++        "GrantedTS": "2026-10-09T12:00:00.123Z",
++        "ExpiresTS": "2026-10-09T12:01:00.123Z"
++      }
++    ],
++    "Status": "ACTIVE",
++    "IssuedBy": "issuer\u003c\u0026\u003eé",
++    "CredentialID": "ed25519:ec91d30f34101ee00dac0658f71becb182cbeb67379bc1ae97b6b287bf11306c",
++    "PublicKeyPEM": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAlozCjZOEkI9MELAfuhK0QxMLsMVDF1jSgAwhmc7jrjM=\n-----END PUBLIC KEY-----\n",
++    "Signature": "bJcLHVUdd+qzMbzbNqUTFGYlyc8o6USOmDdJh/nL1P8Q0duioRfPlrFBEwKAQIUiIFl8HAeMWYiI7OtD6JmjAw==",
++    "Reason": "qualified\nline\t\u003c\u0026\u003e\u2028終",
++    "IssuedTS": "2026-10-09T12:00:00.123Z",
++    "ExpiresTS": "2026-10-09T13:00:00.123Z",
++    "RevokedTS": null,
++    "RevocationReason": "",
++    "SupersededBy": "",
++    "PolicyIDAtIssuance": "policy\u003c\u0026\u003e",
++    "PolicyVerAtIssuance": "v1-é"
++  },
++  "issuance_revision": 7,
++  "passport_proto_json": {
++    "agent_id": "agent-É\u003c\u0026\u003e",
++    "credential_id": "ed25519:ec91d30f34101ee00dac0658f71becb182cbeb67379bc1ae97b6b287bf11306c",
++    "expires_ts": "1791550800123",
++    "issued_by": "issuer\u003c\u0026\u003eé",
++    "issued_ts": "1791547200123",
++    "passport_id": "00000000-0000-4000-8000-000000000007",
++    "passport_type": "STANDARD",
++    "policy_id_at_issuance": "policy\u003c\u0026\u003e",
++    "policy_ver_at_issuance": "v1-é",
++    "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAlozCjZOEkI9MELAfuhK0QxMLsMVDF1jSgAwhmc7jrjM=\n-----END PUBLIC KEY-----\n",
++    "revocation_reason": "",
++    "revoked_ts": "0",
++    "scope_set": [
++      {
++        "action_class": "model.promote",
++        "context_constraints": {
++          "a\u003c\u0026\u003e": "value\u003c\u0026\u003e\u2028\u2029",
++          "site": "é工場",
++          "zeta": "last"
++        },
++        "expires_ts": "1791547260123",
++        "granted_ts": "1791547200123",
++        "is_escalation": true,
++        "resource_pattern": "model/α\u003c\u0026\u003e*",
++        "scope_id": "scope-1"
++      }
++    ],
++    "signature": "bJcLHVUdd+qzMbzbNqUTFGYlyc8o6USOmDdJh/nL1P8Q0duioRfPlrFBEwKAQIUiIFl8HAeMWYiI7OtD6JmjAw==",
++    "status": "ACTIVE",
++    "superseded_by": ""
++  },
++  "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAlozCjZOEkI9MELAfuhK0QxMLsMVDF1jSgAwhmc7jrjM=\n-----END PUBLIC KEY-----\n",
++  "purpose": "Public deterministic interoperability test vector; never use this issuer as deployment trust.",
++  "signature_base64": "bJcLHVUdd+qzMbzbNqUTFGYlyc8o6USOmDdJh/nL1P8Q0duioRfPlrFBEwKAQIUiIFl8HAeMWYiI7OtD6JmjAw=="
++}

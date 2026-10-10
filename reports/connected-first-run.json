@@ -1,0 +1,20 @@
+{
+  "run_id": "connected-5b64732015d2499591696a29214bd548",
+  "environment": "REAL_LOCAL_SERVICES",
+  "started_at": "2026-10-10T01:45:41.976969+00:00",
+  "checks": [],
+  "scope": "Real Passport, Foundation/PostgreSQL/OPA, Cascade, deterministic GCL constraint, canonical Ledger/PostgreSQL; local fenced SQLite registry. No product-value or distributed guarantee.",
+  "execution_state": "ABORTED",
+  "acceptance_color": "RED",
+  "error": "NotImplementedError: WP2 qualification adapter TDD baseline",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tools/validate_connected.py\", line 58, in run\n    rt=build_runtime(args,state)\n       ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tools/validate_connected.py\", line 36, in build_runtime\n    qualifier=QualificationClient(cascade_root=config.get('CASCADE_SOURCE_DIR',str(task/'work/cascade-compression-oss')),\n              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/earned_authority/qualification_client.py\", line 6, in __init__\n    raise NotImplementedError(\"WP2 qualification adapter TDD baseline\")\nNotImplementedError: WP2 qualification adapter TDD baseline\n",
+  "finished_at": "2026-10-10T01:45:42.079207+00:00",
+  "source_hashes": {
+    "tools/validate_connected.py": "sha256:79285c05ae9088feee859fc0588d22ed752a5b8b51876451692655da09171f5e",
+    "earned_authority/runtime.py": "sha256:88bf9fdc559e7db512c46ae84f525ec371a50c15703b53ad4fa89aee641a15aa",
+    "earned_authority/connected.py": "sha256:29625e87be8cf7e63dc7642da32383bbba1976f640347ab95d6ab8ef992dc246",
+    "earned_authority/passport_client.py": "sha256:5afb2260c1af4ea7fd2511f8807ec6bf46ede0b9600d392a9539dbd8289caf84",
+    "earned_authority/qualification_client.py": "sha256:dd298db38c979f2e342c3b5b5383cd3565cc1baf4c31ec95d38ea092c25466e9",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a"
+  }
+}

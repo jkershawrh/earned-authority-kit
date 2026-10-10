@@ -1,0 +1,99 @@
+   Compiling are-immutable-ledger v0.1.0 (/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/ledger-track)
+    Finished `release` profile [optimized] target(s) in 19.55s
+     Running unittests src/lib.rs (target/release/deps/are_immutable_ledger-f069125d0630c124)
+
+running 55 tests
+test crypto::tests::advisory_lock_key_differs_for_different_types ... ok
+test crypto::tests::advisory_lock_key_is_deterministic ... ok
+test crypto::tests::canonical_hash_changes_when_timestamp_or_previous_hash_changes ... ok
+test config::tests::missing_required_variable_fails ... ok
+test config::tests::loads_defaults_and_required_values ... ok
+test config::tests::invalid_integer_fails ... ok
+test config::tests::rejects_non_positive_verification_window ... ok
+test config::tests::rejects_zero_outbox_timeout ... ok
+test crypto::tests::canonical_hash_commits_to_identity_position_and_correlation ... ok
+test crypto::tests::canonical_hash_is_deterministic_for_identical_input ... ok
+test crypto::tests::v2_hash_remains_available_for_existing_entries ... ok
+test crypto::tests::v3_hash_commits_to_signature_key_reference_and_attestation ... ok
+test db_permissions::tests::accepts_insert_select_only ... ok
+test db_permissions::tests::rejects_missing_insert_or_select ... ok
+test db_permissions::tests::rejects_update_or_delete ... ok
+test grpc::tests::helper_functions_cover_error_mappings ... ok
+test repository::tests::rejects_chain_integrity_violation ... ok
+test repository::tests::writes_and_reads_entry_with_tip_and_outbox ... ok
+test repository::tests::writes_entry_without_outbox_when_delivery_is_disabled ... ok
+test grpc::tests::grpc_methods_cover_success_and_invalid_paths ... ok
+test service::tests::http_event_publisher_requires_a_valid_endpoint ... ok
+test service::tests::disabled_publisher_does_not_create_orphan_outbox_record ... ok
+test service::tests::chain_positions_increment_without_gaps ... ok
+test service::tests::idempotency_rejects_conflicting_retry ... ok
+test service::tests::idempotency_rejects_changed_proof_material ... ok
+test service::tests::concurrent_same_type_writes_succeed_without_halt ... ok
+test service::tests::idempotency_returns_same_entry ... ok
+test service::tests::maps_repository_unavailable_errors ... ok
+test service::tests::max_content_size_enforced ... ok
+test service::tests::noop_event_publisher_reports_disabled ... ok
+test service::tests::metrics_increment_on_failed_verify_chain ... ok
+test service::tests::query_entries_entry_type_filter_matches_prefix ... ok
+test service::tests::query_entries_filters_and_paginates ... ok
+test service::tests::v3_verify_proof_detects_signature_tamper ... ok
+test service::tests::http_event_publisher_sends_idempotent_authenticated_json ... ok
+test service::tests::verify_chain_detects_tamper ... ok
+test service::tests::verify_chain_fails_after_hash_tamper ... ok
+test service::tests::verify_chain_not_found_on_invalid_bounds ... ok
+test service::tests::verify_chain_rejects_bounds_from_another_chain ... ok
+test service::tests::verify_chain_rejects_reversed_bounds ... ok
+test service::tests::verify_chain_reports_first_invalid_entry ... ok
+test service::tests::verify_entry_fails_after_correlation_id_tamper ... ok
+test service::tests::verify_entry_reports_chain_mismatch_when_previous_missing ... ok
+test service::tests::verify_recent_chain_limits_online_work_to_tail_window ... ok
+test service::tests::verify_recent_chain_rejects_non_positive_window ... ok
+test service::tests::write_entry_rejects_missing_required_fields ... ok
+test service::tests::write_then_get_and_verify ... ok
+test tls::tests::make_pg_tls_plain_when_disabled ... ok
+test tls::tests::make_pg_tls_plain_when_no_sslmode ... ok
+test tls::tests::parse_ssl_mode_absent ... ok
+test tls::tests::parse_ssl_mode_disable ... ok
+test tls::tests::parse_ssl_mode_url_multiple_params ... ok
+test tls::tests::parse_ssl_mode_key_value ... ok
+test tls::tests::parse_ssl_mode_url ... ok
+test service::tests::write_entry_halts_after_repeated_chain_integrity_violation ... ok
+
+test result: ok. 55 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 5.16s
+
+     Running unittests src/main.rs (target/release/deps/are_immutable_ledger-484b479bb85909b3)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/fleet_ecosystem_contract.rs (target/release/deps/fleet_ecosystem_contract-ad68dbce26c34fbb)
+
+running 1 test
+test core_four_entries_are_correlated_receipted_and_chain_verifiable ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/grpc_contract.rs (target/release/deps/grpc_contract-12a84789d91018e9)
+
+running 1 test
+test ig006_grpc_contract_smoke ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/integration_lifecycle.rs (target/release/deps/integration_lifecycle-843c6d57d29b6f35)
+
+running 4 tests
+test it001_write_read_verify_cycle ... ok
+test it004_delegation_admitted_entry_type_chain ... ok
+test it003_concurrent_multi_type_writes ... ok
+test it002_chain_integrity_for_many_entries ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s
+
+   Doc-tests are_immutable_ledger
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+

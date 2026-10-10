@@ -1,0 +1,18 @@
+{
+  "schema_version": "0.1.0-draft.1",
+  "qualification_id": "qualification-001",
+  "skill_id": "registry-release-v1",
+  "skill_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "context_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "qualification_revision": 1,
+  "evaluator_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "policy_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "outcome_refs": [
+    "observation-001"
+  ],
+  "observed_from_ms": 1000,
+  "observed_until_ms": 2000,
+  "expires_at_ms": 3000,
+  "disposition": "HOLD",
+  "evidence_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}

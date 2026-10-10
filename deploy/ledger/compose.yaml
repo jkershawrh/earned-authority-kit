@@ -1,0 +1,47 @@
+name: earned-authority-ledger
+services:
+  postgres:
+    image: docker.io/library/postgres@sha256:2c942175a1255a9abe0366e48c1b401d9f50f835b04dfea13f111609b5530df7
+    container_name: ${LEDGER_INSTANCE:-earned-authority}-ledger-db
+    environment:
+      POSTGRES_USER: ledger
+      POSTGRES_PASSWORD: ${LEDGER_DB_ADMIN_PASSWORD:?run prepare.py}
+      POSTGRES_DB: ledger
+    ports:
+      - "127.0.0.1:${LEDGER_DB_PORT:-29432}:5432"
+    volumes:
+      - ledger-data:/var/lib/postgresql/data
+      - ${LEDGER_RUNTIME_DIR:?run prepare.py}/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ledger -d ledger"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+  ledger:
+    image: localhost/earned-authority-ledger:2679c9e
+    container_name: ${LEDGER_INSTANCE:-earned-authority}-ledger-service
+    build:
+      context: ${LEDGER_SOURCE_DIR:?run prepare.py}
+      dockerfile: ${LEDGER_DOCKERFILE:?run prepare.py}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      ARE_LEDGER_DB_CONNECTION_STRING: "host=postgres port=5432 user=ledger_app password=${LEDGER_DB_APP_PASSWORD:?run prepare.py} dbname=ledger sslmode=disable"
+      ARE_LEDGER_API_TOKEN: ${ARE_LEDGER_API_TOKEN:?run prepare.py}
+      ARE_LEDGER_GRPC_PORT: "9092"
+      ARE_LEDGER_HEALTH_PORT: "8080"
+      ARE_LEDGER_METRICS_PORT: "8083"
+      ARE_LEDGER_VERIFY_INTERVAL_SECONDS: "5"
+    ports:
+      - "127.0.0.1:${LEDGER_GRPC_PORT:-29492}:9092"
+      - "127.0.0.1:${LEDGER_HEALTH_PORT:-29480}:8080"
+      - "127.0.0.1:${LEDGER_METRICS_PORT:-29483}:8083"
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/readyz"]
+      interval: 3s
+      timeout: 5s
+      retries: 30
+volumes:
+  ledger-data:
+    name: ${LEDGER_INSTANCE:-earned-authority}-ledger-data

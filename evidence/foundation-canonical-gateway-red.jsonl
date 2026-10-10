@@ -1,0 +1,10 @@
+{"Time":"2026-10-09T20:46:33.787672-05:00","Action":"start","Package":"are-api-gateway/internal/gateway"}
+{"Time":"2026-10-09T20:46:34.4004-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestCanonicalCASMetadataRoundTrip"}
+{"Time":"2026-10-09T20:46:34.40129-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestCanonicalCASMetadataRoundTrip","Output":"=== RUN   TestCanonicalCASMetadataRoundTrip\n"}
+{"Time":"2026-10-09T20:46:34.402363-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestCanonicalCASMetadataRoundTrip","Output":"    canonical_metadata_test.go:12: canonical CAS metadata lost: map[Accept-Encoding:[gzip] Authorization:[Bearer test-token] Content-Length:[2] Content-Type:[application/json] Idempotency-Key:[issue] User-Agent:[Go-http-client/1.1] X-Are-Agent-Id:[demo-operator] X-Request-Id:[req-1]]\n"}
+{"Time":"2026-10-09T20:46:34.402497-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestCanonicalCASMetadataRoundTrip","Output":"    canonical_metadata_test.go:30: canonical revision response lost: 201 map[]\n"}
+{"Time":"2026-10-09T20:46:34.402721-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestCanonicalCASMetadataRoundTrip","Output":"--- FAIL: TestCanonicalCASMetadataRoundTrip (0.00s)\n"}
+{"Time":"2026-10-09T20:46:34.402727-05:00","Action":"fail","Package":"are-api-gateway/internal/gateway","Test":"TestCanonicalCASMetadataRoundTrip","Elapsed":0}
+{"Time":"2026-10-09T20:46:34.402742-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Output":"FAIL\n"}
+{"Time":"2026-10-09T20:46:34.404041-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Output":"FAIL\tare-api-gateway/internal/gateway\t0.616s\n"}
+{"Time":"2026-10-09T20:46:34.404053-05:00","Action":"fail","Package":"are-api-gateway/internal/gateway","Elapsed":0.616}

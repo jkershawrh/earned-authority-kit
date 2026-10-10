@@ -1,0 +1,21 @@
+.EF
+======================================================================
+ERROR: test_recovery_cannot_attribute_a_later_mutation_to_old_attempt (test_runtime_security.RecoverySecurity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_runtime_security.py", line 26, in test_recovery_cannot_attribute_a_later_mutation_to_old_attempt
+    self.assertEqual('UNKNOWN',recovered['outcome']['outcome'])
+TypeError: 'NoneType' object is not subscriptable
+
+======================================================================
+FAIL: test_tampered_local_outbox_is_not_resigned_and_delivered (test_runtime_security.RecoverySecurity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_runtime_security.py", line 35, in test_tampered_local_outbox_is_not_resigned_and_delivered
+    with self.assertRaises(Denied) as got: self.rt.flush_outbox()
+AssertionError: Denied not raised
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.116s
+
+FAILED (failures=1, errors=1)

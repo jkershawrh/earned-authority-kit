@@ -1,0 +1,12 @@
+{
+  "policy_id": "policy/are_evaluatepolicy.rego",
+  "policy_digest": "sha256:272b8a64f27947d4fc0bf5c6b2749a665d7442556a13db31f524e0f721ab41da",
+  "authz_policy_id": "authz/authorization.rego",
+  "authz_policy_digest": "sha256:d885c168086acda4556c80dd6b8911c6ada7c7b514a8632379b831179900cc52",
+  "files_sha256": {
+    "policy/are_evaluatepolicy.rego": "272b8a64f27947d4fc0bf5c6b2749a665d7442556a13db31f524e0f721ab41da",
+    "policy/binding.json": "6254dff1bafe9855b96fa4658bab04bf66ecfd6969d34beae9af34e73f92e05a",
+    "authz/authorization.rego": "d885c168086acda4556c80dd6b8911c6ada7c7b514a8632379b831179900cc52"
+  },
+  "contract": "OPA reads policy and binding in one startup load; no watch or network writes; trusted host administrator"
+}

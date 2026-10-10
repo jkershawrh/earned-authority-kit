@@ -1,0 +1,21 @@
+.F...F...
+======================================================================
+FAIL: test_boolean_expiry_is_not_a_timestamp (test_passport_client.PassportConsumer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_passport_client.py", line 34, in test_boolean_expiry_is_not_a_timestamp
+    with self.assertRaises(Denied): self.verify()
+AssertionError: Denied not raised
+
+======================================================================
+FAIL: test_scope_outliving_passport_denied (test_passport_client.PassportConsumer)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_passport_client.py", line 38, in test_scope_outliving_passport_denied
+    with self.assertRaises(Denied): self.verify()
+AssertionError: Denied not raised
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.010s
+
+FAILED (failures=2)

@@ -1,0 +1,46 @@
+......................FFF                                                [100%]
+=================================== FAILURES ===================================
+_________________ test_dependency_outage_is_unknown_not_tamper _________________
+
+setup = (<earned_authority.ledger_client.LedgerClient object at 0x1070548f0>, <test_ledger_client.FakeTransport object at 0x1070547d0>, {'agent_id': 'agent-1', 'attempt_id': 'attempt-1', 'authority_revision': 2, 'correlation_id': 'run-1', ...})
+
+    def test_dependency_outage_is_unknown_not_tamper(setup):
+        client, sdk, event = setup
+        receipt = client.append(event, "key-1")
+        def offline(_entry_id):
+            raise ConnectionError("offline")
+        sdk.get_entry = offline
+>       result = client.verify_detailed(receipt, event)
+                 ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'LedgerClient' object has no attribute 'verify_detailed'
+
+tests/test_ledger_client.py:157: AttributeError
+___________________ test_expired_receipt_is_stale_not_tamper ___________________
+
+setup = (<earned_authority.ledger_client.LedgerClient object at 0x1070576b0>, <test_ledger_client.FakeTransport object at 0x107057650>, {'agent_id': 'agent-1', 'attempt_id': 'attempt-1', 'authority_revision': 2, 'correlation_id': 'run-1', ...})
+
+    def test_expired_receipt_is_stale_not_tamper(setup):
+        client, _, event = setup
+        receipt = client.append(event, "key-1")
+>       result = client.verify_detailed(receipt, event, max_age_ms=100, now_ms=receipt["written_ts"] + 101)
+                 ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'LedgerClient' object has no attribute 'verify_detailed'
+
+tests/test_ledger_client.py:165: AttributeError
+________ test_positive_content_mismatch_is_distinct_from_missing_trust _________
+
+setup = (<earned_authority.ledger_client.LedgerClient object at 0x107057fb0>, <test_ledger_client.FakeTransport object at 0x107057da0>, {'agent_id': 'agent-1', 'attempt_id': 'attempt-1', 'authority_revision': 2, 'correlation_id': 'run-1', ...})
+
+    def test_positive_content_mismatch_is_distinct_from_missing_trust(setup):
+        client, _, event = setup
+        receipt = client.append(event, "key-1")
+>       result = client.verify_detailed(receipt, {**event, "outcome": "FAIL"})
+                 ^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'LedgerClient' object has no attribute 'verify_detailed'
+
+tests/test_ledger_client.py:174: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_ledger_client.py::test_dependency_outage_is_unknown_not_tamper
+FAILED tests/test_ledger_client.py::test_expired_receipt_is_stale_not_tamper
+FAILED tests/test_ledger_client.py::test_positive_content_mismatch_is_distinct_from_missing_trust
+3 failed, 22 passed in 0.09s

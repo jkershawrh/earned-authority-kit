@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:earned-authority:attempt:0.1.0-draft.1",
+  "title": "attempt",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "0.1.0-draft.1"
+    },
+    "attempt_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "correlation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agent_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "skill_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "skill_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "minLength": 71,
+      "maxLength": 71
+    },
+    "context_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "minLength": 71,
+      "maxLength": 71
+    },
+    "passport_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authority_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "grant_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "policy_decision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "policy_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "minLength": 71,
+      "maxLength": 71
+    },
+    "action_class": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resource": {
+      "type": "string",
+      "minLength": 1
+    },
+    "arguments_digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$",
+      "minLength": 71,
+      "maxLength": 71
+    },
+    "requested_at_ms": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "state": {
+      "enum": [
+        "REQUESTED",
+        "COMMITTED",
+        "DENIED",
+        "UNKNOWN"
+      ]
+    },
+    "mutation_receipt_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Reference to authenticated durable local COMMITTED event; does not imply remote ledger delivery. A read completion records execution without a registry mutation."
+    }
+  },
+  "required": [
+    "schema_version",
+    "attempt_id",
+    "correlation_id",
+    "idempotency_key",
+    "agent_id",
+    "skill_id",
+    "skill_digest",
+    "context_digest",
+    "passport_id",
+    "authority_revision",
+    "grant_id",
+    "policy_decision_id",
+    "policy_digest",
+    "action_class",
+    "resource",
+    "arguments_digest",
+    "requested_at_ms",
+    "state"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "COMMITTED"
+          }
+        }
+      },
+      "then": {
+        "required": [
+          "mutation_receipt_ref"
+        ]
+      },
+      "else": {
+        "not": {
+          "required": [
+            "mutation_receipt_ref"
+          ]
+        }
+      }
+    }
+  ]
+}

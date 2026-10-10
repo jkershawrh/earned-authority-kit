@@ -1,0 +1,53 @@
+{
+  "schema_version": "0.1.0-draft.1",
+  "scope": "M2_CANONICAL_QUALIFICATION_ADAPTER",
+  "executed_at_utc": "2026-10-10T01:47:24.151188+00:00",
+  "status": "PASS",
+  "tests_run": 17,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "source_unchanged_during_run": true,
+  "source_hashes": {
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "tests/test_qualification_client.py": "sha256:fa875d69b98440ce13545e17517f986cc4c045cbecf214c316cbe34bde9392b1",
+    "contracts/fixtures/qualification-client-cases.json": "sha256:5d201b632a3a1a323136fdcad0905f258492988fb7a79e1051eb0675f114742e"
+  },
+  "canonical_revisions": {
+    "cascade": "3efd16e053ef2a8a95b1b1ba6c1d1acdd873a3cb",
+    "gcl": "a8ae67ee1198e8b86bf7458119723c0af2d74792"
+  },
+  "canonical_file_hashes": {
+    "cascade": {
+      "cascade_compression/cascade/promotion.py": "e9aac54a4ed7fab236d87337fc627bcb62ecae7c83f693590c1592fc7c63f443"
+    },
+    "gcl": {
+      "gcl/falsification/gate.py": "b062a429a326d885d0093147e7f32430e25d109868df065b334a646e0c250231",
+      "gcl/falsification/checks.py": "7393cea6ab6c897ace296c653f6f052ac689e76fc09b28c505fbfbb8f19cc9fb",
+      "gcl/domain/contracts.py": "3b759bf69b7ebbf007459dd3c2b1add48241cdf51789143b0f6a0276d30c30d3",
+      "gcl/domain/enums.py": "e4d45cdea95678df1b5722ca3318ab923111328a6df13f92dc6aca780a9be91c",
+      "gcl/config.py": "30b26da0fb95772a5c1120347808d4e1429ebc4e4346bd3d258c31edbff2f508",
+      "gcl/inference/client.py": "776d8afa7b4af6942a9b7481dfe29a14bff884dd587fff7c2f49d85d7b6550b6",
+      "gcl/falsification/llm_adversary.py": "b59ae332c74a599462df91d287371577a862f6ec8d3caaa914a2f3ef8410bbde",
+      "config/defaults/loop.yaml": "4cfe968794c666c943a157096e76f08306da67ec53c7d56f34e6bd2e57b5f895"
+    }
+  },
+  "canonical_import_roots": {
+    "cascade": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/cascade-compression-oss",
+    "gcl": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/governed-cognitive-loop-oss"
+  },
+  "canonical_scope": {
+    "cascade": "actual in-process PromotionEngine scoring and lifecycle",
+    "gcl": "actual FalsificationGate isolated subprocess, deterministic current deployment-capacity constraints, advisory only"
+  },
+  "policy_profile": "demo-three-pass",
+  "canonical_defaults_changed": false,
+  "statistical_adequacy_claim": false,
+  "authority_created": false,
+  "customer_actions_executed": false,
+  "network_policy": "GCL socket.connect blocked and counted; deterministic gate bypasses LLM probe",
+  "artifacts": {
+    "reports/qualification-client-green.log": "sha256:495a7627c16490bbf6b796d6b3fd8c575e7195a4be9ce813435b6a0c420d574d"
+  },
+  "red_evidence": "reports/qualification-client-red.log"
+}

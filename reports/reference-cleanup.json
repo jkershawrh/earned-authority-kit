@@ -1,0 +1,261 @@
+{
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "completed_at": "2026-10-10T02:03:10.824969+00:00",
+  "scope": "Gracefully stop only the two test stacks owned by this task; retain containers, named volumes, private keys, state, receipts and logs. No source/runtime code changes.",
+  "commands": [
+    {
+      "environment": {
+        "EA_WORKSPACE": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v"
+      },
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "stop"
+      ],
+      "exit_code": 0
+    },
+    {
+      "environment": {
+        "EA_WORKSPACE": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference"
+      },
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "stop"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "stopped_containers": [
+    {
+      "id": "84f8d2db59a15536b8780df6a8802add5e4bcde2870cac32090c351e32a4d3d6",
+      "names": [
+        "earned-authority-ledger-db"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "3a7c66b41c9793c79522f5139edbe878e6e49e5181eefd6b5124f318800dfa5d",
+      "names": [
+        "earned-authority-ledger-service"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "3112f8fb3134583dad4c9ba2c5a1ba6a361a3f1597f745dba255f4f4591274c4",
+      "names": [
+        "earned-authority-foundation-db"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "911e9ff07a8a7b2e6f1a1ee64c9f68cacf1e783580d86bb605e88219689559c6",
+      "names": [
+        "earned-authority-jwks"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "d1fea5512901762ebea96fe9088760473a29efd8febe954fa5efdfc99fcef5be",
+      "names": [
+        "earned-authority-opa"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "590465d501e030f94662b11c7dc7ade64f5b7e0707ce200e18b2bfcae3851180",
+      "names": [
+        "earned-authority-foundation-bff"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "9e015275c833526490ee44e6b63a50d4b3c07c11820848ceee095c7ab3f7ac14",
+      "names": [
+        "earned-authority-foundation-gateway"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "dac13a2ac316e72136bf222c48541663d6ec232b58374ed6bb2e2b0d67df653b",
+      "names": [
+        "ea-clean-ledger-db"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "b3c59f757aba429ff2fd4032bd13d2763aafe19c4f5f195cd61af8104ce52454",
+      "names": [
+        "ea-clean-ledger-service"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "09ecd1da681f6f1c18084ec51d289a9649c64d7bdd342e3b64f6f276194243cc",
+      "names": [
+        "ea-clean-foundation-db"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "302a94dae8cc105f897b370ef2a23f72ca6b56cc44ad821ea411d477d349648b",
+      "names": [
+        "ea-clean-jwks"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "c204d3f37e97782a785446422a3ee3f463c458ab910711253ea2c8c25c59b34b",
+      "names": [
+        "ea-clean-opa"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "f9867aa7ae9deb1affad7135ac88f923ba183d32a879837fe67adb307178bddf",
+      "names": [
+        "ea-clean-foundation-bff"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "d32c695199f7cb7dc183d8e9f56594eea333e29133c44be267e324e7300a8d51",
+      "names": [
+        "ea-clean-foundation-gateway"
+      ],
+      "state": "exited"
+    }
+  ],
+  "stopped_host_passport_processes": [
+    {
+      "stack": "earned-authority",
+      "pid": 59519,
+      "expected_command": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/passport-track/bin/agent-passport",
+      "state": "EXITED"
+    },
+    {
+      "stack": "ea-clean",
+      "pid": 71041,
+      "expected_command": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/passport-track/bin/agent-passport",
+      "state": "EXITED"
+    }
+  ],
+  "retained_volumes": [
+    {
+      "name": "earned-authority-ledger-data",
+      "mountpoint": "/var/home/core/.local/share/containers/storage/volumes/earned-authority-ledger-data/_data",
+      "created_at": "2026-10-09T20:37:35.535535166-05:00"
+    },
+    {
+      "name": "earned-authority-foundation-data",
+      "mountpoint": "/var/home/core/.local/share/containers/storage/volumes/earned-authority-foundation-data/_data",
+      "created_at": "2026-10-09T20:43:43.967594764-05:00"
+    },
+    {
+      "name": "ea-clean-ledger-data",
+      "mountpoint": "/var/home/core/.local/share/containers/storage/volumes/ea-clean-ledger-data/_data",
+      "created_at": "2026-10-09T20:54:58.105241367-05:00"
+    },
+    {
+      "name": "ea-clean-foundation-data",
+      "mountpoint": "/var/home/core/.local/share/containers/storage/volumes/ea-clean-foundation-data/_data",
+      "created_at": "2026-10-09T20:55:02.686527957-05:00"
+    }
+  ],
+  "retained_files": [
+    {
+      "stack": "earned-authority",
+      "private_configuration_and_state_files": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/reference-runtime/reference.env",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/ledger-runtime/local.env",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/reference-runtime/passport/state.json",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/reference-runtime/passport/ed25519.pem",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/reference-runtime/passport/ed25519-public.pem",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/ledger-runtime/writer-private.pem",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/ledger-runtime/writer-public.pem"
+      ],
+      "all_exist_and_nonempty": true,
+      "logs_directory": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/reference-runtime",
+      "ledger_logs_and_configuration_directory": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/ledger-runtime"
+    },
+    {
+      "stack": "ea-clean",
+      "private_configuration_and_state_files": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/reference-runtime/reference.env",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/ledger-runtime/local.env",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/reference-runtime/passport/state.json",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/reference-runtime/passport/ed25519.pem",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/reference-runtime/passport/ed25519-public.pem",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/ledger-runtime/writer-private.pem",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/ledger-runtime/writer-public.pem"
+      ],
+      "all_exist_and_nonempty": true,
+      "logs_directory": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/reference-runtime",
+      "ledger_logs_and_configuration_directory": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/ledger-runtime"
+    }
+  ],
+  "retained_local_registry_state": {
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/reference-runtime/connected-validation/adversarial-e6195b38463848739f147cef8d636b12.sqlite": {
+      "bytes": 552960,
+      "evidence_report": "reports/clean-reference-combined-adversarial.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/connected-runs/connected-1170d93c55dd40df943964f4afb15124.sqlite": {
+      "bytes": 270336,
+      "evidence_report": "reports/connected-second-run.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/reference-runtime/connected-validation/connected-9d598304a6174a5f9ced8ccf6848f897.sqlite": {
+      "bytes": 335872,
+      "evidence_report": "reports/clean-reference-connected.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/connected-runs/connected-f5e4b4ae7a354eaca502573ed439c9e0.sqlite": {
+      "bytes": 335872,
+      "evidence_report": "reports/connected-lifecycle.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/reference-runtime/connected-validation/connected-c6c895d61ae54621a18600d331154b4e.sqlite": {
+      "bytes": 335872,
+      "evidence_report": "reports/clean-reference-combined-connected.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/reference-runtime/adversarial-validation/adversarial-c0a090e154a64735a71774a9b4907bba.sqlite": {
+      "bytes": 552960,
+      "evidence_report": "reports/clean-reference-adversarial.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/connected-runs/adversarial-afc3491bc12f48af8d218334c7571431.sqlite": {
+      "bytes": 552960,
+      "evidence_report": "reports/connected-adversarial.json"
+    }
+  },
+  "unrelated_containers_checked": 13,
+  "unrelated_container_ids_names_and_states_unchanged": true,
+  "restart_instructions": [
+    {
+      "stack": "earned-authority",
+      "working_directory": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v",
+      "environment": {
+        "EA_WORKSPACE": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v"
+      },
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "restore"
+      ]
+    },
+    {
+      "stack": "ea-clean",
+      "working_directory": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v",
+      "environment": {
+        "EA_WORKSPACE": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference"
+      },
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "restore"
+      ]
+    }
+  ],
+  "notes": [
+    "Run each restart argv in its recorded working directory with its recorded EA_WORKSPACE environment; do not print or source the private configuration.",
+    "No volume removal or container deletion was performed. Receipts remain in the retained Ledger PostgreSQL volumes and prior validation reports.",
+    "Registry JWTs expire after one day. For later restart, refresh prepare.py in the same workspace, then restore; see deploy/reference/README.md."
+  ]
+}

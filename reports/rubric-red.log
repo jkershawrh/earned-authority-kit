@@ -1,0 +1,207 @@
+test_complete_current_evidence_is_green (test_rubric.RubricTests) ... ok
+test_component_pass_cannot_satisfy_integration (test_rubric.RubricTests) ... FAIL
+test_different_requirement_does_not_count (test_rubric.RubricTests) ... FAIL
+test_empty_required_methods_are_invalid (test_rubric.RubricTests) ... FAIL
+test_future_timestamp_is_amber (test_rubric.RubricTests) ... FAIL
+test_known_failure_dominates_pass (test_rubric.RubricTests) ... FAIL
+test_missing_evidence_is_amber (test_rubric.RubricTests) ... FAIL
+test_no_artifact_digest_cannot_be_green (test_rubric.RubricTests) ... FAIL
+test_one_missing_method_is_amber (test_rubric.RubricTests) ... FAIL
+test_previous_revision_cannot_satisfy_current (test_rubric.RubricTests) ... FAIL
+test_release_is_worst_required_status (test_rubric.RubricTests) ... FAIL
+test_stale_failure_remains_red_until_revision_changes (test_rubric.RubricTests) ... FAIL
+test_stale_pass_is_amber (test_rubric.RubricTests) ... FAIL
+test_unexecuted_scenario_is_amber (test_rubric.RubricTests) ... FAIL
+test_unknown_and_skipped_are_amber (test_rubric.RubricTests) ... 
+======================================================================
+FAIL: test_component_pass_cannot_satisfy_integration (test_rubric.RubricTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 38, in test_component_pass_cannot_satisfy_integration
+    self.check_status("AMBER")
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 20, in check_status
+    self.assertEqual(status, result["status"], result)
+AssertionError: 'AMBER' != 'GREEN'
+- AMBER
++ GREEN
+ : {'status': 'GREEN', 'reason': 'Unimplemented scaffold'}
+
+======================================================================
+FAIL: test_different_requirement_does_not_count (test_rubric.RubricTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 71, in test_different_requirement_does_not_count
+    self.check_status("AMBER")
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 20, in check_status
+    self.assertEqual(status, result["status"], result)
+AssertionError: 'AMBER' != 'GREEN'
+- AMBER
++ GREEN
+ : {'status': 'GREEN', 'reason': 'Unimplemented scaffold'}
+
+======================================================================
+FAIL: test_empty_required_methods_are_invalid (test_rubric.RubricTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 75, in test_empty_required_methods_are_invalid
+    with self.assertRaises(ValueError): assess(self.req, [], self.now)
+AssertionError: ValueError not raised
+
+======================================================================
+FAIL: test_future_timestamp_is_amber (test_rubric.RubricTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 54, in test_future_timestamp_is_amber
+    self.check_status("AMBER")
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 20, in check_status
+    self.assertEqual(status, result["status"], result)
+AssertionError: 'AMBER' != 'GREEN'
+- AMBER
++ GREEN
+ : {'status': 'GREEN', 'reason': 'Unimplemented scaffold'}
+
+======================================================================
+FAIL: test_known_failure_dominates_pass (test_rubric.RubricTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 34, in test_known_failure_dominates_pass
+    self.check_status("RED")
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 20, in check_status
+    self.assertEqual(status, result["status"], result)
+AssertionError: 'RED' != 'GREEN'
+- RED
++ GREEN
+ : {'status': 'GREEN', 'reason': 'Unimplemented scaffold'}
+
+======================================================================
+FAIL: test_missing_evidence_is_amber (test_rubric.RubricTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 27, in test_missing_evidence_is_amber
+    self.check_status("AMBER", [])
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 20, in check_status
+    self.assertEqual(status, result["status"], result)
+AssertionError: 'AMBER' != 'GREEN'
+- AMBER
++ GREEN
+ : {'status': 'GREEN', 'reason': 'Unimplemented scaffold'}
+
+======================================================================
+FAIL: test_no_artifact_digest_cannot_be_green (test_rubric.RubricTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 67, in test_no_artifact_digest_cannot_be_green
+    self.check_status("AMBER")
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 20, in check_status
+    self.assertEqual(status, result["status"], result)
+AssertionError: 'AMBER' != 'GREEN'
+- AMBER
++ GREEN
+ : {'status': 'GREEN', 'reason': 'Unimplemented scaffold'}
+
+======================================================================
+FAIL: test_one_missing_method_is_amber (test_rubric.RubricTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 30, in test_one_missing_method_is_amber
+    self.check_status("AMBER", self.records[:1])
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 20, in check_status
+    self.assertEqual(status, result["status"], result)
+AssertionError: 'AMBER' != 'GREEN'
+- AMBER
++ GREEN
+ : {'status': 'GREEN', 'reason': 'Unimplemented scaffold'}
+
+======================================================================
+FAIL: test_previous_revision_cannot_satisfy_current (test_rubric.RubricTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 42, in test_previous_revision_cannot_satisfy_current
+    self.check_status("AMBER")
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 20, in check_status
+    self.assertEqual(status, result["status"], result)
+AssertionError: 'AMBER' != 'GREEN'
+- AMBER
++ GREEN
+ : {'status': 'GREEN', 'reason': 'Unimplemented scaffold'}
+
+======================================================================
+FAIL: test_release_is_worst_required_status (test_rubric.RubricTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 78, in test_release_is_worst_required_status
+    self.assertEqual("AMBER", release_status([]))
+AssertionError: 'AMBER' != 'GREEN'
+- AMBER
++ GREEN
+
+
+======================================================================
+FAIL: test_stale_failure_remains_red_until_revision_changes (test_rubric.RubricTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 50, in test_stale_failure_remains_red_until_revision_changes
+    self.check_status("RED")
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 20, in check_status
+    self.assertEqual(status, result["status"], result)
+AssertionError: 'RED' != 'GREEN'
+- RED
++ GREEN
+ : {'status': 'GREEN', 'reason': 'Unimplemented scaffold'}
+
+======================================================================
+FAIL: test_stale_pass_is_amber (test_rubric.RubricTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 46, in test_stale_pass_is_amber
+    self.check_status("AMBER")
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 20, in check_status
+    self.assertEqual(status, result["status"], result)
+AssertionError: 'AMBER' != 'GREEN'
+- AMBER
++ GREEN
+ : {'status': 'GREEN', 'reason': 'Unimplemented scaffold'}
+
+======================================================================
+FAIL: test_unexecuted_scenario_is_amber (test_rubric.RubricTests)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 58, in test_unexecuted_scenario_is_amber
+    self.check_status("AMBER")
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 20, in check_status
+    self.assertEqual(status, result["status"], result)
+AssertionError: 'AMBER' != 'GREEN'
+- AMBER
++ GREEN
+ : {'status': 'GREEN', 'reason': 'Unimplemented scaffold'}
+
+======================================================================
+FAIL: test_unknown_and_skipped_are_amber (test_rubric.RubricTests) (outcome='UNKNOWN')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 63, in test_unknown_and_skipped_are_amber
+    self.check_status("AMBER", [dict(r, outcome=outcome) for r in self.records])
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 20, in check_status
+    self.assertEqual(status, result["status"], result)
+AssertionError: 'AMBER' != 'GREEN'
+- AMBER
++ GREEN
+ : {'status': 'GREEN', 'reason': 'Unimplemented scaffold'}
+
+======================================================================
+FAIL: test_unknown_and_skipped_are_amber (test_rubric.RubricTests) (outcome='SKIP')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 63, in test_unknown_and_skipped_are_amber
+    self.check_status("AMBER", [dict(r, outcome=outcome) for r in self.records])
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_rubric.py", line 20, in check_status
+    self.assertEqual(status, result["status"], result)
+AssertionError: 'AMBER' != 'GREEN'
+- AMBER
++ GREEN
+ : {'status': 'GREEN', 'reason': 'Unimplemented scaffold'}
+
+----------------------------------------------------------------------
+Ran 15 tests in 0.001s
+
+FAILED (failures=15)

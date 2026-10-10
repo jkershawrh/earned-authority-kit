@@ -1,0 +1,32 @@
+[
+  {
+    "location": {
+      "file": "/policy-tests/are_evaluatepolicy_test.rego",
+      "row": 3,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_decision_binds_evaluated_input_and_policy",
+    "duration": 7643686
+  },
+  {
+    "location": {
+      "file": "/policy-tests/are_evaluatepolicy_test.rego",
+      "row": 16,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_missing_policy_binding_does_not_produce_allow",
+    "duration": 138709
+  },
+  {
+    "location": {
+      "file": "/policy-tests/are_evaluatepolicy_test.rego",
+      "row": 21,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_request_cannot_supply_policy_digest",
+    "duration": 174377
+  }
+]

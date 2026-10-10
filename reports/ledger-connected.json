@@ -1,0 +1,323 @@
+{
+  "run_id": "ledger-connected-8e091ec5-fff4-4905-9898-b141c42ffd92",
+  "started_at": "2026-10-10T01:39:47.541502+00:00",
+  "environment": "REAL_LOCAL_SERVICES",
+  "execution_state": "COMPLETED",
+  "scope": "canonical standalone ledger with PostgreSQL; not EDD product-value measurement",
+  "checks": [
+    {
+      "check": "earned-authority-ledger-db_exists",
+      "passed": true,
+      "evidence": {
+        "identity": "84f8d2db59a15536b8780df6a8802add5e4bcde2870cac32090c351e32a4d3d6 ef738a34a8651d11b2bace81c55c7e2187f786b484add6c83070884340074368"
+      }
+    },
+    {
+      "check": "earned-authority-ledger-service_exists",
+      "passed": true,
+      "evidence": {
+        "identity": "3a7c66b41c9793c79522f5139edbe878e6e49e5181eefd6b5124f318800dfa5d cdb93c756e37bf82785ce56b1252ebed4fd5ee4d054f70c40682a7384b360a86"
+      }
+    },
+    {
+      "check": "canonical_source_pinned",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "authenticated_signed_append_and_verify",
+      "passed": true,
+      "evidence": {
+        "entry_id": "0ae586eb-9bbc-4deb-8728-398e6d42e25e",
+        "entry_hash": "cc7d946623417edbb78c2882187bc9c08a65bf71212b37cf228735fb3fa9bf87",
+        "hash_version": "ARE_LEDGER_ENTRY_HASH_V3"
+      }
+    },
+    {
+      "check": "duplicate_returns_same_receipt",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "duplicate_does_not_append",
+      "passed": true,
+      "evidence": {
+        "matching_entries": 1
+      }
+    },
+    {
+      "check": "conflicting_idempotency_rejected",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "changed_event_attempt_id_rejected",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "changed_event_authority_revision_rejected",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "changed_event_outcome_rejected",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "changed_receipt_rejected",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "untrusted_writer_rejected",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "incorrect_api_token_cannot_write",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "missing_api_token_cannot_write",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "application_role_update_denied",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "application_role_delete_denied",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "app_denial_preserves_receipt",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "earned-authority-ledger-db_restart",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "earned-authority-ledger-service_restart",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "receipt_survives_database_and_service_restart",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "idempotency_survives_restart",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "owned_admin_tamper_injected",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "stored_tamper_rejected_locally",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "stored_tamper_detected_by_canonical_server",
+      "passed": true,
+      "evidence": {
+        "failure_reason": "entry_hash_mismatch"
+      }
+    },
+    {
+      "check": "owned_probe_restored",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "restored_assertion_verifies",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "canonical_chain_verifies",
+      "passed": true,
+      "evidence": {
+        "entries_checked": 1
+      }
+    }
+  ],
+  "commands": [
+    {
+      "argv": [
+        "podman",
+        "inspect",
+        "--format",
+        "{{.Id}} {{.Image}}",
+        "earned-authority-ledger-db"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "podman",
+        "inspect",
+        "--format",
+        "{{.Id}} {{.Image}}",
+        "earned-authority-ledger-service"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "git",
+        "-C",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/ledger-track",
+        "rev-parse",
+        "HEAD"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "podman",
+        "exec",
+        "-i",
+        "earned-authority-ledger-db",
+        "psql",
+        "-X",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-U",
+        "ledger",
+        "-d",
+        "ledger"
+      ],
+      "exit_code": 3
+    },
+    {
+      "argv": [
+        "podman",
+        "exec",
+        "-i",
+        "earned-authority-ledger-db",
+        "psql",
+        "-X",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-U",
+        "ledger",
+        "-d",
+        "ledger"
+      ],
+      "exit_code": 3
+    },
+    {
+      "argv": [
+        "podman",
+        "restart",
+        "earned-authority-ledger-db"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "podman",
+        "restart",
+        "earned-authority-ledger-service"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "podman",
+        "exec",
+        "-i",
+        "earned-authority-ledger-db",
+        "psql",
+        "-X",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-U",
+        "ledger",
+        "-d",
+        "ledger"
+      ],
+      "exit_code": 0
+    },
+    {
+      "argv": [
+        "podman",
+        "exec",
+        "-i",
+        "earned-authority-ledger-db",
+        "psql",
+        "-X",
+        "-v",
+        "ON_ERROR_STOP=1",
+        "-U",
+        "ledger",
+        "-d",
+        "ledger"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "results": {
+    "event": {
+      "agent_id": "ledger-reference-agent",
+      "attempt_id": "ledger-connected-8e091ec5-fff4-4905-9898-b141c42ffd92-attempt",
+      "correlation_id": "ledger-connected-8e091ec5-fff4-4905-9898-b141c42ffd92",
+      "event_type": "connected_validation",
+      "outcome": "PASS",
+      "authority_revision": 1,
+      "purpose": "real-ledger-adapter-test"
+    },
+    "receipt": {
+      "entry_id": "0ae586eb-9bbc-4deb-8728-398e6d42e25e",
+      "entry_hash": "cc7d946623417edbb78c2882187bc9c08a65bf71212b37cf228735fb3fa9bf87",
+      "entry_type": "earned_authority.connected_validation",
+      "chain_position": 1,
+      "written_ts": 1791596388894,
+      "input_hash": "sha256:bf2858a34a0d57e034fd85fc4446f56cb688169496344c29434434e1d33fc36b",
+      "writer_signature": "jA5CBi+irRodqMv57EJy6hH8jRfSpIpUnBqj933UDzp13NnSsRugN4awBKjsB2eldjRbGS/CkTIjKvWs3SgbCQ==",
+      "signer_key_reference": "earned-authority-local-writer-v1",
+      "attestation_report": "",
+      "hash_version": "ARE_LEDGER_ENTRY_HASH_V3",
+      "attempt_id": "ledger-connected-8e091ec5-fff4-4905-9898-b141c42ffd92-attempt",
+      "content_sha256": "sha256:bf2858a34a0d57e034fd85fc4446f56cb688169496344c29434434e1d33fc36b",
+      "agent_id": "ledger-reference-agent",
+      "correlation_id": "ledger-connected-8e091ec5-fff4-4905-9898-b141c42ffd92",
+      "idempotency_key": "ledger-connected-8e091ec5-fff4-4905-9898-b141c42ffd92-idempotency"
+    },
+    "tamper_receipt": {
+      "entry_id": "bf797732-68a8-4436-8046-09e312201b25",
+      "entry_hash": "0fcb8715ea8a337a517479b848d0570d3a646c27dd13a3b955181515d17d3924",
+      "entry_type": "earned_authority.tamper_probe",
+      "chain_position": 1,
+      "written_ts": 1791596389749,
+      "input_hash": "sha256:60b7d747db8f6c8ada3dfbf87d27be4260e963d5afaf9ce524274a17c519fb6a",
+      "writer_signature": "M3P+F0Ulqxcbf6ZaRa+m5iCGQO00NM46I/HTmhI8pFEdi8MygheNKEQ9JxCILzoeIX92uJr2MKVRL6fUVpd4Bg==",
+      "signer_key_reference": "earned-authority-local-writer-v1",
+      "attestation_report": "",
+      "hash_version": "ARE_LEDGER_ENTRY_HASH_V3",
+      "attempt_id": "ledger-connected-8e091ec5-fff4-4905-9898-b141c42ffd92-tamper",
+      "content_sha256": "sha256:60b7d747db8f6c8ada3dfbf87d27be4260e963d5afaf9ce524274a17c519fb6a",
+      "agent_id": "ledger-reference-agent",
+      "correlation_id": "ledger-connected-8e091ec5-fff4-4905-9898-b141c42ffd92",
+      "idempotency_key": "ledger-connected-8e091ec5-fff4-4905-9898-b141c42ffd92-tamper-key"
+    },
+    "durable_volume": "earned-authority-ledger-data"
+  },
+  "source_revision": "2679c9e0a5430cde9e435339e441a94989d2bcd6",
+  "acceptance_color": "GREEN",
+  "finished_at": "2026-10-10T01:39:49.759983+00:00"
+}
