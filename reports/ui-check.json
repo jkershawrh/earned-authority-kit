@@ -1,11 +1,11 @@
 {
   "status": "PASS",
   "scope": "ROADMAP_UI_ONLY",
-  "rows": 27,
+  "rows": 29,
   "status_and_lane_filters": true,
   "mobile_width": 390,
   "desktop_width": 1440,
   "broken_local_links": [],
   "page_errors": [],
-  "checked_at": "2026-10-10T03:07:19.190Z"
+  "checked_at": "2026-10-10T03:36:27.212Z"
 }

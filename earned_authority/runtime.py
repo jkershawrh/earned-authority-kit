@@ -138,6 +138,7 @@ class Runtime:
             PRAGMA journal_mode=WAL;
             CREATE TABLE IF NOT EXISTS keys(name TEXT PRIMARY KEY, material BLOB NOT NULL);
             CREATE TABLE IF NOT EXISTS observations(attempt_id TEXT PRIMARY KEY, body TEXT NOT NULL);
+            CREATE TABLE IF NOT EXISTS procedure_reports(attempt_id TEXT PRIMARY KEY, body TEXT NOT NULL);
             CREATE TABLE IF NOT EXISTS qualifications(id TEXT PRIMARY KEY, body TEXT NOT NULL);
             CREATE TABLE IF NOT EXISTS qualification_history(id TEXT NOT NULL, revision INTEGER NOT NULL, body TEXT NOT NULL, PRIMARY KEY(id,revision));
             CREATE TABLE IF NOT EXISTS authorities(agent TEXT PRIMARY KEY, body TEXT NOT NULL);
@@ -231,11 +232,41 @@ class Runtime:
         with self._db() as db:
             return [json.loads(r[0]) for r in db.execute('SELECT body FROM observations ORDER BY rowid')]
 
+    def _observation_admissible(self,observation):
+        return True
+
+    def procedure_reports(self,attempt_id=None):
+        with self._db() as db:
+            rows=db.execute('SELECT body FROM procedure_reports ORDER BY rowid') if attempt_id is None else db.execute('SELECT body FROM procedure_reports WHERE attempt_id=?',(attempt_id,))
+            return [json.loads(row[0]) for row in rows]
+
+    def record_procedure_report(self,attempt_id,reported_outcome='PASS',agent='agent-a',skill='release-model',version='skill-v1',context='demo-a'):
+        """Retain an unverified procedure claim separately from checker outcomes."""
+        if any(not isinstance(value,str) or not value.strip() for value in (attempt_id,agent,skill,version)) or reported_outcome not in ('PASS','FAIL','UNKNOWN'):
+            raise Denied('INVALID_PROCEDURE_REPORT')
+        try:
+            if not isinstance(context,(str,dict)):raise ValueError('context shape')
+            canonical_digest(context)
+        except (ValueError,TypeError):raise Denied('INVALID_PROCEDURE_REPORT')
+        claim={'attempt_id':attempt_id,'agent_id':agent,'skill':skill,'version':version,
+               'context':context,'reported_outcome':reported_outcome,'independent':False}
+        with self._tx() as db:
+            row=db.execute('SELECT body FROM procedure_reports WHERE attempt_id=?',(attempt_id,)).fetchone()
+            if row:
+                prior=json.loads(row[0])
+                if not self._verified(prior,{'writer'}) or any(prior.get(k)!=v for k,v in claim.items()):
+                    raise Denied('IDEMPOTENCY_CONFLICT')
+                return prior
+            report=self._seal({**claim,'reported_at_ms':self.clock.now_ms},'writer')
+            db.execute('INSERT INTO procedure_reports VALUES (?,?)',(attempt_id,json.dumps(report)))
+            self._event(db,'PROCEDURE_REPORTED',agent,attempt_id,report=report)
+            return report
+
     def qualify(self, skill='release-model',version='skill-v1',context='demo-a',_publish=True):
         with self._tx() as db:
             all_obs=[json.loads(r[0]) for r in db.execute('SELECT body FROM observations')]
             selected=[o for o in all_obs if o['skill']==skill and o['version']==version and o['context']==context]
-            trusted=[o for o in selected if o['independent'] and self._verified(o,{'checker'})]
+            trusted=[o for o in selected if o['independent'] and self._verified(o,{'checker'}) and self._observation_admissible(o)]
             fresh=[o for o in trusted if 0 <= self.clock.now_ms-o['observed_at_ms'] < self.evidence_window_ms]
             passes=sum(o['outcome']=='PASS' for o in fresh); failures=sum(o['outcome']=='FAIL' for o in fresh)
             if failures: disposition,reason='INELIGIBLE','KNOWN_FAILURE'
@@ -577,6 +608,7 @@ class Runtime:
         return self.events()
 
     def record_check_only(self,attempt_id,response):
-        if response.get('executed') is not False: raise Denied('INVALID_CHECK_ONLY_PROOF')
+        if response.get('executed') is not False or response.get('receipt_created') is not False:
+            raise Denied('INVALID_CHECK_ONLY_PROOF')
         return {'state':'AUTHORIZATION_CHECKED','attempt_id':attempt_id,'executed':False,
                 'receipt_created':False,'outcome':None,'delivery':'NONE'}

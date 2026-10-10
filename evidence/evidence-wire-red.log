@@ -1,0 +1,1024 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+_ test_evidence_events_round_trip_actual_signed_producers[PROCEDURE_REPORTED-pending] _
+
+runtime = <earned_authority.runtime.Runtime object at 0x108468f50>
+
+    def export_runtime(runtime, *, qualification_ids=(), agent='agent-a', attempt_ids=(), include_authority=True):
+        """Snapshot actual records without execution, qualification, or grants.
+    
+        include_authority=False exports historical execution/evidence after withdrawal.
+        An active bundle binds all included attempts to its current authority revision.
+        Concurrent source changes invalidate consumption; retry from a fresh export.
+        """
+        try:
+            bundle = WireBundle()
+            observations = {o['observation_id']: o for o in runtime.observations()}
+            events = runtime.events(); qids = set(qualification_ids)
+            authority = runtime.authority(agent) if include_authority else None
+            if authority:
+                require(authority['status'] == 'ACTIVE' and authority['grants'] and authority['passport_id'],
+                        'no active credential to export')
+                qids.update(g['qualification_id'] for g in authority['grants'].values())
+            outcomes = set()
+            for qid in sorted(qids):
+                q = runtime.qualification(qid)
+                refs = [bundle.proof('observation', observations[r['observation_id']]) for r in q['outcome_refs']]
+                outcomes.update(r['observation_id'] for r in q['outcome_refs'])
+                bundle.add('qualification', 'qualification', qualification=bundle.proof('qualification', q), observations=refs)
+            if authority:
+                bundle.add('authority', 'authority', authority=bundle.proof('authority', authority))
+            for aid in attempt_ids:
+                attempt = runtime.attempts(aid); require(attempt is not None, 'attempt missing')
+                commits = [bundle.proof('event', row) for row in events
+                           if row['event']['attempt_id'] == aid and row['event']['event_type'] == 'COMMITTED']
+                command = attempt['command']
+                historical = runtime.qualification_at(command['qualification_id'], digest=command['qualification_digest'])
+                bundle.add('attempt', 'attempt', attempt=bundle.proof('attempt', attempt), commits=commits,
+                           qualification=bundle.proof('qualification-history', historical))
+                if attempt.get('outcome'):
+                    outcomes.add(attempt['outcome']['observation_id'])
+            for oid in sorted(outcomes):
+                o = observations[oid]; inputs = {'observation': bundle.proof('observation', o)}
+                if not o['shadow']:
+                    attempt = runtime.attempts(o['attempt_id']); require(attempt is not None, 'live outcome original attempt missing')
+                    inputs['attempt'] = bundle.proof('attempt', attempt)
+                bundle.add('outcome', 'observation', **inputs)
+            for row in events:
+>               bundle.add('lifecycle-event', 'event', event=bundle.proof('event', row))
+
+earned_authority/wire_contracts.py:231: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/wire_contracts.py:43: in add
+    validate(kind, value)
+earned_authority/contracts.py:15: in validate
+    Draft202012Validator(schema).validate(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Draft202012Validator(schema={'$id': 'urn:earned-a...0.1.0-draft.1', '$schema': 'https://json...020-12/schema', 'additi... {'delivery_state': {'const': 'RECORDED'}}}, 'then': {'required': ['ledger_receipt_ref']}}], ...}, format_checker=None)
+args = ({'actor_ref': 'local-runtime-writer', 'agent_id': 'agent-a', 'correlation_id': 'self-report', 'delivery_state': 'PENDING', ...},)
+kwargs = {}
+error = <ValidationError: "'PROCEDURE_REPORTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED'...TED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']">
+
+    def validate(self, *args, **kwargs):
+        for error in self.iter_errors(*args, **kwargs):
+>           raise error
+E           jsonschema.exceptions.ValidationError: 'PROCEDURE_REPORTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED', 'DEMOTED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']
+E           
+E           Failed validating 'enum' in schema['properties']['event_type']:
+E               {'enum': ['QUALIFIED',
+E                         'HELD',
+E                         'GRANTED',
+E                         'COMMITTED',
+E                         'OUTCOME_OBSERVED',
+E                         'DEMOTED',
+E                         'REVOKED',
+E                         'SUPERSEDED',
+E                         'REQUALIFIED',
+E                         'INTENT',
+E                         'CANONICAL_QUALIFICATION_EVALUATED',
+E                         'WITHDRAWAL_RECONCILED']}
+E           
+E           On instance['event_type']:
+E               'PROCEDURE_REPORTED'
+
+../../work/ledger-venv/lib/python3.12/site-packages/jsonschema/validators.py:451: ValidationError
+
+The above exception was the direct cause of the following exception:
+
+produced = (<earned_authority.runtime.Runtime object at 0x108468f50>, 'PROCEDURE_REPORTED', 'event-45a172cfc60d44fca6cdde8a84619034')
+recorded = False
+
+    @pytest.mark.parametrize("recorded", [False, True], ids=["pending", "recorded"])
+    def test_evidence_events_round_trip_actual_signed_producers(produced, recorded):
+        runtime, kind, event_id = produced
+        if recorded:
+            runtime.flush_outbox()
+>       bundle = export_runtime(runtime, include_authority=False)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_evidence_wire.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x108468f50>
+
+    def export_runtime(runtime, *, qualification_ids=(), agent='agent-a', attempt_ids=(), include_authority=True):
+        """Snapshot actual records without execution, qualification, or grants.
+    
+        include_authority=False exports historical execution/evidence after withdrawal.
+        An active bundle binds all included attempts to its current authority revision.
+        Concurrent source changes invalidate consumption; retry from a fresh export.
+        """
+        try:
+            bundle = WireBundle()
+            observations = {o['observation_id']: o for o in runtime.observations()}
+            events = runtime.events(); qids = set(qualification_ids)
+            authority = runtime.authority(agent) if include_authority else None
+            if authority:
+                require(authority['status'] == 'ACTIVE' and authority['grants'] and authority['passport_id'],
+                        'no active credential to export')
+                qids.update(g['qualification_id'] for g in authority['grants'].values())
+            outcomes = set()
+            for qid in sorted(qids):
+                q = runtime.qualification(qid)
+                refs = [bundle.proof('observation', observations[r['observation_id']]) for r in q['outcome_refs']]
+                outcomes.update(r['observation_id'] for r in q['outcome_refs'])
+                bundle.add('qualification', 'qualification', qualification=bundle.proof('qualification', q), observations=refs)
+            if authority:
+                bundle.add('authority', 'authority', authority=bundle.proof('authority', authority))
+            for aid in attempt_ids:
+                attempt = runtime.attempts(aid); require(attempt is not None, 'attempt missing')
+                commits = [bundle.proof('event', row) for row in events
+                           if row['event']['attempt_id'] == aid and row['event']['event_type'] == 'COMMITTED']
+                command = attempt['command']
+                historical = runtime.qualification_at(command['qualification_id'], digest=command['qualification_digest'])
+                bundle.add('attempt', 'attempt', attempt=bundle.proof('attempt', attempt), commits=commits,
+                           qualification=bundle.proof('qualification-history', historical))
+                if attempt.get('outcome'):
+                    outcomes.add(attempt['outcome']['observation_id'])
+            for oid in sorted(outcomes):
+                o = observations[oid]; inputs = {'observation': bundle.proof('observation', o)}
+                if not o['shadow']:
+                    attempt = runtime.attempts(o['attempt_id']); require(attempt is not None, 'live outcome original attempt missing')
+                    inputs['attempt'] = bundle.proof('attempt', attempt)
+                bundle.add('outcome', 'observation', **inputs)
+            for row in events:
+                bundle.add('lifecycle-event', 'event', event=bundle.proof('event', row))
+            return bundle
+        except WireContractError:
+            raise
+        except Exception as exc:
+>           raise WireContractError('runtime export incomplete or invalid: ' + str(exc)) from exc
+E           earned_authority.wire_contracts.WireContractError: runtime export incomplete or invalid: 'PROCEDURE_REPORTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED', 'DEMOTED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']
+E           
+E           Failed validating 'enum' in schema['properties']['event_type']:
+E               {'enum': ['QUALIFIED',
+E                         'HELD',
+E                         'GRANTED',
+E                         'COMMITTED',
+E                         'OUTCOME_OBSERVED',
+E                         'DEMOTED',
+E                         'REVOKED',
+E                         'SUPERSEDED',
+E                         'REQUALIFIED',
+E                         'INTENT',
+E                         'CANONICAL_QUALIFICATION_EVALUATED',
+E                         'WITHDRAWAL_RECONCILED']}
+E           
+E           On instance['event_type']:
+E               'PROCEDURE_REPORTED'
+
+earned_authority/wire_contracts.py:236: WireContractError
+_ test_evidence_events_round_trip_actual_signed_producers[PROCEDURE_REPORTED-recorded] _
+
+runtime = <earned_authority.runtime.Runtime object at 0x10848d250>
+
+    def export_runtime(runtime, *, qualification_ids=(), agent='agent-a', attempt_ids=(), include_authority=True):
+        """Snapshot actual records without execution, qualification, or grants.
+    
+        include_authority=False exports historical execution/evidence after withdrawal.
+        An active bundle binds all included attempts to its current authority revision.
+        Concurrent source changes invalidate consumption; retry from a fresh export.
+        """
+        try:
+            bundle = WireBundle()
+            observations = {o['observation_id']: o for o in runtime.observations()}
+            events = runtime.events(); qids = set(qualification_ids)
+            authority = runtime.authority(agent) if include_authority else None
+            if authority:
+                require(authority['status'] == 'ACTIVE' and authority['grants'] and authority['passport_id'],
+                        'no active credential to export')
+                qids.update(g['qualification_id'] for g in authority['grants'].values())
+            outcomes = set()
+            for qid in sorted(qids):
+                q = runtime.qualification(qid)
+                refs = [bundle.proof('observation', observations[r['observation_id']]) for r in q['outcome_refs']]
+                outcomes.update(r['observation_id'] for r in q['outcome_refs'])
+                bundle.add('qualification', 'qualification', qualification=bundle.proof('qualification', q), observations=refs)
+            if authority:
+                bundle.add('authority', 'authority', authority=bundle.proof('authority', authority))
+            for aid in attempt_ids:
+                attempt = runtime.attempts(aid); require(attempt is not None, 'attempt missing')
+                commits = [bundle.proof('event', row) for row in events
+                           if row['event']['attempt_id'] == aid and row['event']['event_type'] == 'COMMITTED']
+                command = attempt['command']
+                historical = runtime.qualification_at(command['qualification_id'], digest=command['qualification_digest'])
+                bundle.add('attempt', 'attempt', attempt=bundle.proof('attempt', attempt), commits=commits,
+                           qualification=bundle.proof('qualification-history', historical))
+                if attempt.get('outcome'):
+                    outcomes.add(attempt['outcome']['observation_id'])
+            for oid in sorted(outcomes):
+                o = observations[oid]; inputs = {'observation': bundle.proof('observation', o)}
+                if not o['shadow']:
+                    attempt = runtime.attempts(o['attempt_id']); require(attempt is not None, 'live outcome original attempt missing')
+                    inputs['attempt'] = bundle.proof('attempt', attempt)
+                bundle.add('outcome', 'observation', **inputs)
+            for row in events:
+>               bundle.add('lifecycle-event', 'event', event=bundle.proof('event', row))
+
+earned_authority/wire_contracts.py:231: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/wire_contracts.py:43: in add
+    validate(kind, value)
+earned_authority/contracts.py:15: in validate
+    Draft202012Validator(schema).validate(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Draft202012Validator(schema={'$id': 'urn:earned-a...0.1.0-draft.1', '$schema': 'https://json...020-12/schema', 'additi... {'delivery_state': {'const': 'RECORDED'}}}, 'then': {'required': ['ledger_receipt_ref']}}], ...}, format_checker=None)
+args = ({'actor_ref': 'local-runtime-writer', 'agent_id': 'agent-a', 'correlation_id': 'self-report', 'delivery_state': 'RECORDED', ...},)
+kwargs = {}
+error = <ValidationError: "'PROCEDURE_REPORTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED'...TED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']">
+
+    def validate(self, *args, **kwargs):
+        for error in self.iter_errors(*args, **kwargs):
+>           raise error
+E           jsonschema.exceptions.ValidationError: 'PROCEDURE_REPORTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED', 'DEMOTED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']
+E           
+E           Failed validating 'enum' in schema['properties']['event_type']:
+E               {'enum': ['QUALIFIED',
+E                         'HELD',
+E                         'GRANTED',
+E                         'COMMITTED',
+E                         'OUTCOME_OBSERVED',
+E                         'DEMOTED',
+E                         'REVOKED',
+E                         'SUPERSEDED',
+E                         'REQUALIFIED',
+E                         'INTENT',
+E                         'CANONICAL_QUALIFICATION_EVALUATED',
+E                         'WITHDRAWAL_RECONCILED']}
+E           
+E           On instance['event_type']:
+E               'PROCEDURE_REPORTED'
+
+../../work/ledger-venv/lib/python3.12/site-packages/jsonschema/validators.py:451: ValidationError
+
+The above exception was the direct cause of the following exception:
+
+produced = (<earned_authority.runtime.Runtime object at 0x10848d250>, 'PROCEDURE_REPORTED', 'event-5d83b367fa7d4d07ab966c01f971b468')
+recorded = True
+
+    @pytest.mark.parametrize("recorded", [False, True], ids=["pending", "recorded"])
+    def test_evidence_events_round_trip_actual_signed_producers(produced, recorded):
+        runtime, kind, event_id = produced
+        if recorded:
+            runtime.flush_outbox()
+>       bundle = export_runtime(runtime, include_authority=False)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_evidence_wire.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10848d250>
+
+    def export_runtime(runtime, *, qualification_ids=(), agent='agent-a', attempt_ids=(), include_authority=True):
+        """Snapshot actual records without execution, qualification, or grants.
+    
+        include_authority=False exports historical execution/evidence after withdrawal.
+        An active bundle binds all included attempts to its current authority revision.
+        Concurrent source changes invalidate consumption; retry from a fresh export.
+        """
+        try:
+            bundle = WireBundle()
+            observations = {o['observation_id']: o for o in runtime.observations()}
+            events = runtime.events(); qids = set(qualification_ids)
+            authority = runtime.authority(agent) if include_authority else None
+            if authority:
+                require(authority['status'] == 'ACTIVE' and authority['grants'] and authority['passport_id'],
+                        'no active credential to export')
+                qids.update(g['qualification_id'] for g in authority['grants'].values())
+            outcomes = set()
+            for qid in sorted(qids):
+                q = runtime.qualification(qid)
+                refs = [bundle.proof('observation', observations[r['observation_id']]) for r in q['outcome_refs']]
+                outcomes.update(r['observation_id'] for r in q['outcome_refs'])
+                bundle.add('qualification', 'qualification', qualification=bundle.proof('qualification', q), observations=refs)
+            if authority:
+                bundle.add('authority', 'authority', authority=bundle.proof('authority', authority))
+            for aid in attempt_ids:
+                attempt = runtime.attempts(aid); require(attempt is not None, 'attempt missing')
+                commits = [bundle.proof('event', row) for row in events
+                           if row['event']['attempt_id'] == aid and row['event']['event_type'] == 'COMMITTED']
+                command = attempt['command']
+                historical = runtime.qualification_at(command['qualification_id'], digest=command['qualification_digest'])
+                bundle.add('attempt', 'attempt', attempt=bundle.proof('attempt', attempt), commits=commits,
+                           qualification=bundle.proof('qualification-history', historical))
+                if attempt.get('outcome'):
+                    outcomes.add(attempt['outcome']['observation_id'])
+            for oid in sorted(outcomes):
+                o = observations[oid]; inputs = {'observation': bundle.proof('observation', o)}
+                if not o['shadow']:
+                    attempt = runtime.attempts(o['attempt_id']); require(attempt is not None, 'live outcome original attempt missing')
+                    inputs['attempt'] = bundle.proof('attempt', attempt)
+                bundle.add('outcome', 'observation', **inputs)
+            for row in events:
+                bundle.add('lifecycle-event', 'event', event=bundle.proof('event', row))
+            return bundle
+        except WireContractError:
+            raise
+        except Exception as exc:
+>           raise WireContractError('runtime export incomplete or invalid: ' + str(exc)) from exc
+E           earned_authority.wire_contracts.WireContractError: runtime export incomplete or invalid: 'PROCEDURE_REPORTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED', 'DEMOTED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']
+E           
+E           Failed validating 'enum' in schema['properties']['event_type']:
+E               {'enum': ['QUALIFIED',
+E                         'HELD',
+E                         'GRANTED',
+E                         'COMMITTED',
+E                         'OUTCOME_OBSERVED',
+E                         'DEMOTED',
+E                         'REVOKED',
+E                         'SUPERSEDED',
+E                         'REQUALIFIED',
+E                         'INTENT',
+E                         'CANONICAL_QUALIFICATION_EVALUATED',
+E                         'WITHDRAWAL_RECONCILED']}
+E           
+E           On instance['event_type']:
+E               'PROCEDURE_REPORTED'
+
+earned_authority/wire_contracts.py:236: WireContractError
+_ test_evidence_events_round_trip_actual_signed_producers[EVIDENCE_ADMITTED-pending] _
+
+runtime = <earned_authority.connected.ConnectedRuntime object at 0x10848f290>
+
+    def export_runtime(runtime, *, qualification_ids=(), agent='agent-a', attempt_ids=(), include_authority=True):
+        """Snapshot actual records without execution, qualification, or grants.
+    
+        include_authority=False exports historical execution/evidence after withdrawal.
+        An active bundle binds all included attempts to its current authority revision.
+        Concurrent source changes invalidate consumption; retry from a fresh export.
+        """
+        try:
+            bundle = WireBundle()
+            observations = {o['observation_id']: o for o in runtime.observations()}
+            events = runtime.events(); qids = set(qualification_ids)
+            authority = runtime.authority(agent) if include_authority else None
+            if authority:
+                require(authority['status'] == 'ACTIVE' and authority['grants'] and authority['passport_id'],
+                        'no active credential to export')
+                qids.update(g['qualification_id'] for g in authority['grants'].values())
+            outcomes = set()
+            for qid in sorted(qids):
+                q = runtime.qualification(qid)
+                refs = [bundle.proof('observation', observations[r['observation_id']]) for r in q['outcome_refs']]
+                outcomes.update(r['observation_id'] for r in q['outcome_refs'])
+                bundle.add('qualification', 'qualification', qualification=bundle.proof('qualification', q), observations=refs)
+            if authority:
+                bundle.add('authority', 'authority', authority=bundle.proof('authority', authority))
+            for aid in attempt_ids:
+                attempt = runtime.attempts(aid); require(attempt is not None, 'attempt missing')
+                commits = [bundle.proof('event', row) for row in events
+                           if row['event']['attempt_id'] == aid and row['event']['event_type'] == 'COMMITTED']
+                command = attempt['command']
+                historical = runtime.qualification_at(command['qualification_id'], digest=command['qualification_digest'])
+                bundle.add('attempt', 'attempt', attempt=bundle.proof('attempt', attempt), commits=commits,
+                           qualification=bundle.proof('qualification-history', historical))
+                if attempt.get('outcome'):
+                    outcomes.add(attempt['outcome']['observation_id'])
+            for oid in sorted(outcomes):
+                o = observations[oid]; inputs = {'observation': bundle.proof('observation', o)}
+                if not o['shadow']:
+                    attempt = runtime.attempts(o['attempt_id']); require(attempt is not None, 'live outcome original attempt missing')
+                    inputs['attempt'] = bundle.proof('attempt', attempt)
+                bundle.add('outcome', 'observation', **inputs)
+            for row in events:
+>               bundle.add('lifecycle-event', 'event', event=bundle.proof('event', row))
+
+earned_authority/wire_contracts.py:231: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/wire_contracts.py:43: in add
+    validate(kind, value)
+earned_authority/contracts.py:15: in validate
+    Draft202012Validator(schema).validate(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Draft202012Validator(schema={'$id': 'urn:earned-a...0.1.0-draft.1', '$schema': 'https://json...020-12/schema', 'additi... {'delivery_state': {'const': 'RECORDED'}}}, 'then': {'required': ['ledger_receipt_ref']}}], ...}, format_checker=None)
+args = ({'actor_ref': 'local-runtime-writer', 'agent_id': 'reference-qualification-checker', 'correlation_id': 'import-wire', 'delivery_state': 'PENDING', ...},)
+kwargs = {}
+error = <ValidationError: "'EVIDENCE_ADMITTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED',...TED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']">
+
+    def validate(self, *args, **kwargs):
+        for error in self.iter_errors(*args, **kwargs):
+>           raise error
+E           jsonschema.exceptions.ValidationError: 'EVIDENCE_ADMITTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED', 'DEMOTED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']
+E           
+E           Failed validating 'enum' in schema['properties']['event_type']:
+E               {'enum': ['QUALIFIED',
+E                         'HELD',
+E                         'GRANTED',
+E                         'COMMITTED',
+E                         'OUTCOME_OBSERVED',
+E                         'DEMOTED',
+E                         'REVOKED',
+E                         'SUPERSEDED',
+E                         'REQUALIFIED',
+E                         'INTENT',
+E                         'CANONICAL_QUALIFICATION_EVALUATED',
+E                         'WITHDRAWAL_RECONCILED']}
+E           
+E           On instance['event_type']:
+E               'EVIDENCE_ADMITTED'
+
+../../work/ledger-venv/lib/python3.12/site-packages/jsonschema/validators.py:451: ValidationError
+
+The above exception was the direct cause of the following exception:
+
+produced = (<earned_authority.connected.ConnectedRuntime object at 0x10848f290>, 'EVIDENCE_ADMITTED', 'event-f9a189851cda4194931773f2e463637a')
+recorded = False
+
+    @pytest.mark.parametrize("recorded", [False, True], ids=["pending", "recorded"])
+    def test_evidence_events_round_trip_actual_signed_producers(produced, recorded):
+        runtime, kind, event_id = produced
+        if recorded:
+            runtime.flush_outbox()
+>       bundle = export_runtime(runtime, include_authority=False)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_evidence_wire.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.connected.ConnectedRuntime object at 0x10848f290>
+
+    def export_runtime(runtime, *, qualification_ids=(), agent='agent-a', attempt_ids=(), include_authority=True):
+        """Snapshot actual records without execution, qualification, or grants.
+    
+        include_authority=False exports historical execution/evidence after withdrawal.
+        An active bundle binds all included attempts to its current authority revision.
+        Concurrent source changes invalidate consumption; retry from a fresh export.
+        """
+        try:
+            bundle = WireBundle()
+            observations = {o['observation_id']: o for o in runtime.observations()}
+            events = runtime.events(); qids = set(qualification_ids)
+            authority = runtime.authority(agent) if include_authority else None
+            if authority:
+                require(authority['status'] == 'ACTIVE' and authority['grants'] and authority['passport_id'],
+                        'no active credential to export')
+                qids.update(g['qualification_id'] for g in authority['grants'].values())
+            outcomes = set()
+            for qid in sorted(qids):
+                q = runtime.qualification(qid)
+                refs = [bundle.proof('observation', observations[r['observation_id']]) for r in q['outcome_refs']]
+                outcomes.update(r['observation_id'] for r in q['outcome_refs'])
+                bundle.add('qualification', 'qualification', qualification=bundle.proof('qualification', q), observations=refs)
+            if authority:
+                bundle.add('authority', 'authority', authority=bundle.proof('authority', authority))
+            for aid in attempt_ids:
+                attempt = runtime.attempts(aid); require(attempt is not None, 'attempt missing')
+                commits = [bundle.proof('event', row) for row in events
+                           if row['event']['attempt_id'] == aid and row['event']['event_type'] == 'COMMITTED']
+                command = attempt['command']
+                historical = runtime.qualification_at(command['qualification_id'], digest=command['qualification_digest'])
+                bundle.add('attempt', 'attempt', attempt=bundle.proof('attempt', attempt), commits=commits,
+                           qualification=bundle.proof('qualification-history', historical))
+                if attempt.get('outcome'):
+                    outcomes.add(attempt['outcome']['observation_id'])
+            for oid in sorted(outcomes):
+                o = observations[oid]; inputs = {'observation': bundle.proof('observation', o)}
+                if not o['shadow']:
+                    attempt = runtime.attempts(o['attempt_id']); require(attempt is not None, 'live outcome original attempt missing')
+                    inputs['attempt'] = bundle.proof('attempt', attempt)
+                bundle.add('outcome', 'observation', **inputs)
+            for row in events:
+                bundle.add('lifecycle-event', 'event', event=bundle.proof('event', row))
+            return bundle
+        except WireContractError:
+            raise
+        except Exception as exc:
+>           raise WireContractError('runtime export incomplete or invalid: ' + str(exc)) from exc
+E           earned_authority.wire_contracts.WireContractError: runtime export incomplete or invalid: 'EVIDENCE_ADMITTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED', 'DEMOTED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']
+E           
+E           Failed validating 'enum' in schema['properties']['event_type']:
+E               {'enum': ['QUALIFIED',
+E                         'HELD',
+E                         'GRANTED',
+E                         'COMMITTED',
+E                         'OUTCOME_OBSERVED',
+E                         'DEMOTED',
+E                         'REVOKED',
+E                         'SUPERSEDED',
+E                         'REQUALIFIED',
+E                         'INTENT',
+E                         'CANONICAL_QUALIFICATION_EVALUATED',
+E                         'WITHDRAWAL_RECONCILED']}
+E           
+E           On instance['event_type']:
+E               'EVIDENCE_ADMITTED'
+
+earned_authority/wire_contracts.py:236: WireContractError
+_ test_evidence_events_round_trip_actual_signed_producers[EVIDENCE_ADMITTED-recorded] _
+
+runtime = <earned_authority.connected.ConnectedRuntime object at 0x107264770>
+
+    def export_runtime(runtime, *, qualification_ids=(), agent='agent-a', attempt_ids=(), include_authority=True):
+        """Snapshot actual records without execution, qualification, or grants.
+    
+        include_authority=False exports historical execution/evidence after withdrawal.
+        An active bundle binds all included attempts to its current authority revision.
+        Concurrent source changes invalidate consumption; retry from a fresh export.
+        """
+        try:
+            bundle = WireBundle()
+            observations = {o['observation_id']: o for o in runtime.observations()}
+            events = runtime.events(); qids = set(qualification_ids)
+            authority = runtime.authority(agent) if include_authority else None
+            if authority:
+                require(authority['status'] == 'ACTIVE' and authority['grants'] and authority['passport_id'],
+                        'no active credential to export')
+                qids.update(g['qualification_id'] for g in authority['grants'].values())
+            outcomes = set()
+            for qid in sorted(qids):
+                q = runtime.qualification(qid)
+                refs = [bundle.proof('observation', observations[r['observation_id']]) for r in q['outcome_refs']]
+                outcomes.update(r['observation_id'] for r in q['outcome_refs'])
+                bundle.add('qualification', 'qualification', qualification=bundle.proof('qualification', q), observations=refs)
+            if authority:
+                bundle.add('authority', 'authority', authority=bundle.proof('authority', authority))
+            for aid in attempt_ids:
+                attempt = runtime.attempts(aid); require(attempt is not None, 'attempt missing')
+                commits = [bundle.proof('event', row) for row in events
+                           if row['event']['attempt_id'] == aid and row['event']['event_type'] == 'COMMITTED']
+                command = attempt['command']
+                historical = runtime.qualification_at(command['qualification_id'], digest=command['qualification_digest'])
+                bundle.add('attempt', 'attempt', attempt=bundle.proof('attempt', attempt), commits=commits,
+                           qualification=bundle.proof('qualification-history', historical))
+                if attempt.get('outcome'):
+                    outcomes.add(attempt['outcome']['observation_id'])
+            for oid in sorted(outcomes):
+                o = observations[oid]; inputs = {'observation': bundle.proof('observation', o)}
+                if not o['shadow']:
+                    attempt = runtime.attempts(o['attempt_id']); require(attempt is not None, 'live outcome original attempt missing')
+                    inputs['attempt'] = bundle.proof('attempt', attempt)
+                bundle.add('outcome', 'observation', **inputs)
+            for row in events:
+>               bundle.add('lifecycle-event', 'event', event=bundle.proof('event', row))
+
+earned_authority/wire_contracts.py:231: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/wire_contracts.py:43: in add
+    validate(kind, value)
+earned_authority/contracts.py:15: in validate
+    Draft202012Validator(schema).validate(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Draft202012Validator(schema={'$id': 'urn:earned-a...0.1.0-draft.1', '$schema': 'https://json...020-12/schema', 'additi... {'delivery_state': {'const': 'RECORDED'}}}, 'then': {'required': ['ledger_receipt_ref']}}], ...}, format_checker=None)
+args = ({'actor_ref': 'local-runtime-writer', 'agent_id': 'reference-qualification-checker', 'correlation_id': 'import-wire', 'delivery_state': 'RECORDED', ...},)
+kwargs = {}
+error = <ValidationError: "'EVIDENCE_ADMITTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED',...TED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']">
+
+    def validate(self, *args, **kwargs):
+        for error in self.iter_errors(*args, **kwargs):
+>           raise error
+E           jsonschema.exceptions.ValidationError: 'EVIDENCE_ADMITTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED', 'DEMOTED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']
+E           
+E           Failed validating 'enum' in schema['properties']['event_type']:
+E               {'enum': ['QUALIFIED',
+E                         'HELD',
+E                         'GRANTED',
+E                         'COMMITTED',
+E                         'OUTCOME_OBSERVED',
+E                         'DEMOTED',
+E                         'REVOKED',
+E                         'SUPERSEDED',
+E                         'REQUALIFIED',
+E                         'INTENT',
+E                         'CANONICAL_QUALIFICATION_EVALUATED',
+E                         'WITHDRAWAL_RECONCILED']}
+E           
+E           On instance['event_type']:
+E               'EVIDENCE_ADMITTED'
+
+../../work/ledger-venv/lib/python3.12/site-packages/jsonschema/validators.py:451: ValidationError
+
+The above exception was the direct cause of the following exception:
+
+produced = (<earned_authority.connected.ConnectedRuntime object at 0x107264770>, 'EVIDENCE_ADMITTED', 'event-fc6e8199e54a49d8b97e5300c8992ea2')
+recorded = True
+
+    @pytest.mark.parametrize("recorded", [False, True], ids=["pending", "recorded"])
+    def test_evidence_events_round_trip_actual_signed_producers(produced, recorded):
+        runtime, kind, event_id = produced
+        if recorded:
+            runtime.flush_outbox()
+>       bundle = export_runtime(runtime, include_authority=False)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_evidence_wire.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.connected.ConnectedRuntime object at 0x107264770>
+
+    def export_runtime(runtime, *, qualification_ids=(), agent='agent-a', attempt_ids=(), include_authority=True):
+        """Snapshot actual records without execution, qualification, or grants.
+    
+        include_authority=False exports historical execution/evidence after withdrawal.
+        An active bundle binds all included attempts to its current authority revision.
+        Concurrent source changes invalidate consumption; retry from a fresh export.
+        """
+        try:
+            bundle = WireBundle()
+            observations = {o['observation_id']: o for o in runtime.observations()}
+            events = runtime.events(); qids = set(qualification_ids)
+            authority = runtime.authority(agent) if include_authority else None
+            if authority:
+                require(authority['status'] == 'ACTIVE' and authority['grants'] and authority['passport_id'],
+                        'no active credential to export')
+                qids.update(g['qualification_id'] for g in authority['grants'].values())
+            outcomes = set()
+            for qid in sorted(qids):
+                q = runtime.qualification(qid)
+                refs = [bundle.proof('observation', observations[r['observation_id']]) for r in q['outcome_refs']]
+                outcomes.update(r['observation_id'] for r in q['outcome_refs'])
+                bundle.add('qualification', 'qualification', qualification=bundle.proof('qualification', q), observations=refs)
+            if authority:
+                bundle.add('authority', 'authority', authority=bundle.proof('authority', authority))
+            for aid in attempt_ids:
+                attempt = runtime.attempts(aid); require(attempt is not None, 'attempt missing')
+                commits = [bundle.proof('event', row) for row in events
+                           if row['event']['attempt_id'] == aid and row['event']['event_type'] == 'COMMITTED']
+                command = attempt['command']
+                historical = runtime.qualification_at(command['qualification_id'], digest=command['qualification_digest'])
+                bundle.add('attempt', 'attempt', attempt=bundle.proof('attempt', attempt), commits=commits,
+                           qualification=bundle.proof('qualification-history', historical))
+                if attempt.get('outcome'):
+                    outcomes.add(attempt['outcome']['observation_id'])
+            for oid in sorted(outcomes):
+                o = observations[oid]; inputs = {'observation': bundle.proof('observation', o)}
+                if not o['shadow']:
+                    attempt = runtime.attempts(o['attempt_id']); require(attempt is not None, 'live outcome original attempt missing')
+                    inputs['attempt'] = bundle.proof('attempt', attempt)
+                bundle.add('outcome', 'observation', **inputs)
+            for row in events:
+                bundle.add('lifecycle-event', 'event', event=bundle.proof('event', row))
+            return bundle
+        except WireContractError:
+            raise
+        except Exception as exc:
+>           raise WireContractError('runtime export incomplete or invalid: ' + str(exc)) from exc
+E           earned_authority.wire_contracts.WireContractError: runtime export incomplete or invalid: 'EVIDENCE_ADMITTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED', 'DEMOTED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']
+E           
+E           Failed validating 'enum' in schema['properties']['event_type']:
+E               {'enum': ['QUALIFIED',
+E                         'HELD',
+E                         'GRANTED',
+E                         'COMMITTED',
+E                         'OUTCOME_OBSERVED',
+E                         'DEMOTED',
+E                         'REVOKED',
+E                         'SUPERSEDED',
+E                         'REQUALIFIED',
+E                         'INTENT',
+E                         'CANONICAL_QUALIFICATION_EVALUATED',
+E                         'WITHDRAWAL_RECONCILED']}
+E           
+E           On instance['event_type']:
+E               'EVIDENCE_ADMITTED'
+
+earned_authority/wire_contracts.py:236: WireContractError
+_ test_evidence_events_round_trip_actual_signed_producers[EVIDENCE_REJECTED-pending] _
+
+runtime = <earned_authority.connected.ConnectedRuntime object at 0x10848d0d0>
+
+    def export_runtime(runtime, *, qualification_ids=(), agent='agent-a', attempt_ids=(), include_authority=True):
+        """Snapshot actual records without execution, qualification, or grants.
+    
+        include_authority=False exports historical execution/evidence after withdrawal.
+        An active bundle binds all included attempts to its current authority revision.
+        Concurrent source changes invalidate consumption; retry from a fresh export.
+        """
+        try:
+            bundle = WireBundle()
+            observations = {o['observation_id']: o for o in runtime.observations()}
+            events = runtime.events(); qids = set(qualification_ids)
+            authority = runtime.authority(agent) if include_authority else None
+            if authority:
+                require(authority['status'] == 'ACTIVE' and authority['grants'] and authority['passport_id'],
+                        'no active credential to export')
+                qids.update(g['qualification_id'] for g in authority['grants'].values())
+            outcomes = set()
+            for qid in sorted(qids):
+                q = runtime.qualification(qid)
+                refs = [bundle.proof('observation', observations[r['observation_id']]) for r in q['outcome_refs']]
+                outcomes.update(r['observation_id'] for r in q['outcome_refs'])
+                bundle.add('qualification', 'qualification', qualification=bundle.proof('qualification', q), observations=refs)
+            if authority:
+                bundle.add('authority', 'authority', authority=bundle.proof('authority', authority))
+            for aid in attempt_ids:
+                attempt = runtime.attempts(aid); require(attempt is not None, 'attempt missing')
+                commits = [bundle.proof('event', row) for row in events
+                           if row['event']['attempt_id'] == aid and row['event']['event_type'] == 'COMMITTED']
+                command = attempt['command']
+                historical = runtime.qualification_at(command['qualification_id'], digest=command['qualification_digest'])
+                bundle.add('attempt', 'attempt', attempt=bundle.proof('attempt', attempt), commits=commits,
+                           qualification=bundle.proof('qualification-history', historical))
+                if attempt.get('outcome'):
+                    outcomes.add(attempt['outcome']['observation_id'])
+            for oid in sorted(outcomes):
+                o = observations[oid]; inputs = {'observation': bundle.proof('observation', o)}
+                if not o['shadow']:
+                    attempt = runtime.attempts(o['attempt_id']); require(attempt is not None, 'live outcome original attempt missing')
+                    inputs['attempt'] = bundle.proof('attempt', attempt)
+                bundle.add('outcome', 'observation', **inputs)
+            for row in events:
+>               bundle.add('lifecycle-event', 'event', event=bundle.proof('event', row))
+
+earned_authority/wire_contracts.py:231: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/wire_contracts.py:43: in add
+    validate(kind, value)
+earned_authority/contracts.py:15: in validate
+    Draft202012Validator(schema).validate(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Draft202012Validator(schema={'$id': 'urn:earned-a...0.1.0-draft.1', '$schema': 'https://json...020-12/schema', 'additi... {'delivery_state': {'const': 'RECORDED'}}}, 'then': {'required': ['ledger_receipt_ref']}}], ...}, format_checker=None)
+args = ({'actor_ref': 'local-runtime-writer', 'agent_id': 'reference-qualification-checker', 'correlation_id': 'import-wire', 'delivery_state': 'PENDING', ...},)
+kwargs = {}
+error = <ValidationError: "'EVIDENCE_REJECTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED',...TED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']">
+
+    def validate(self, *args, **kwargs):
+        for error in self.iter_errors(*args, **kwargs):
+>           raise error
+E           jsonschema.exceptions.ValidationError: 'EVIDENCE_REJECTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED', 'DEMOTED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']
+E           
+E           Failed validating 'enum' in schema['properties']['event_type']:
+E               {'enum': ['QUALIFIED',
+E                         'HELD',
+E                         'GRANTED',
+E                         'COMMITTED',
+E                         'OUTCOME_OBSERVED',
+E                         'DEMOTED',
+E                         'REVOKED',
+E                         'SUPERSEDED',
+E                         'REQUALIFIED',
+E                         'INTENT',
+E                         'CANONICAL_QUALIFICATION_EVALUATED',
+E                         'WITHDRAWAL_RECONCILED']}
+E           
+E           On instance['event_type']:
+E               'EVIDENCE_REJECTED'
+
+../../work/ledger-venv/lib/python3.12/site-packages/jsonschema/validators.py:451: ValidationError
+
+The above exception was the direct cause of the following exception:
+
+produced = (<earned_authority.connected.ConnectedRuntime object at 0x10848d0d0>, 'EVIDENCE_REJECTED', 'event-230d3fcd13fa4b318a587e174c431e99')
+recorded = False
+
+    @pytest.mark.parametrize("recorded", [False, True], ids=["pending", "recorded"])
+    def test_evidence_events_round_trip_actual_signed_producers(produced, recorded):
+        runtime, kind, event_id = produced
+        if recorded:
+            runtime.flush_outbox()
+>       bundle = export_runtime(runtime, include_authority=False)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_evidence_wire.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.connected.ConnectedRuntime object at 0x10848d0d0>
+
+    def export_runtime(runtime, *, qualification_ids=(), agent='agent-a', attempt_ids=(), include_authority=True):
+        """Snapshot actual records without execution, qualification, or grants.
+    
+        include_authority=False exports historical execution/evidence after withdrawal.
+        An active bundle binds all included attempts to its current authority revision.
+        Concurrent source changes invalidate consumption; retry from a fresh export.
+        """
+        try:
+            bundle = WireBundle()
+            observations = {o['observation_id']: o for o in runtime.observations()}
+            events = runtime.events(); qids = set(qualification_ids)
+            authority = runtime.authority(agent) if include_authority else None
+            if authority:
+                require(authority['status'] == 'ACTIVE' and authority['grants'] and authority['passport_id'],
+                        'no active credential to export')
+                qids.update(g['qualification_id'] for g in authority['grants'].values())
+            outcomes = set()
+            for qid in sorted(qids):
+                q = runtime.qualification(qid)
+                refs = [bundle.proof('observation', observations[r['observation_id']]) for r in q['outcome_refs']]
+                outcomes.update(r['observation_id'] for r in q['outcome_refs'])
+                bundle.add('qualification', 'qualification', qualification=bundle.proof('qualification', q), observations=refs)
+            if authority:
+                bundle.add('authority', 'authority', authority=bundle.proof('authority', authority))
+            for aid in attempt_ids:
+                attempt = runtime.attempts(aid); require(attempt is not None, 'attempt missing')
+                commits = [bundle.proof('event', row) for row in events
+                           if row['event']['attempt_id'] == aid and row['event']['event_type'] == 'COMMITTED']
+                command = attempt['command']
+                historical = runtime.qualification_at(command['qualification_id'], digest=command['qualification_digest'])
+                bundle.add('attempt', 'attempt', attempt=bundle.proof('attempt', attempt), commits=commits,
+                           qualification=bundle.proof('qualification-history', historical))
+                if attempt.get('outcome'):
+                    outcomes.add(attempt['outcome']['observation_id'])
+            for oid in sorted(outcomes):
+                o = observations[oid]; inputs = {'observation': bundle.proof('observation', o)}
+                if not o['shadow']:
+                    attempt = runtime.attempts(o['attempt_id']); require(attempt is not None, 'live outcome original attempt missing')
+                    inputs['attempt'] = bundle.proof('attempt', attempt)
+                bundle.add('outcome', 'observation', **inputs)
+            for row in events:
+                bundle.add('lifecycle-event', 'event', event=bundle.proof('event', row))
+            return bundle
+        except WireContractError:
+            raise
+        except Exception as exc:
+>           raise WireContractError('runtime export incomplete or invalid: ' + str(exc)) from exc
+E           earned_authority.wire_contracts.WireContractError: runtime export incomplete or invalid: 'EVIDENCE_REJECTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED', 'DEMOTED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']
+E           
+E           Failed validating 'enum' in schema['properties']['event_type']:
+E               {'enum': ['QUALIFIED',
+E                         'HELD',
+E                         'GRANTED',
+E                         'COMMITTED',
+E                         'OUTCOME_OBSERVED',
+E                         'DEMOTED',
+E                         'REVOKED',
+E                         'SUPERSEDED',
+E                         'REQUALIFIED',
+E                         'INTENT',
+E                         'CANONICAL_QUALIFICATION_EVALUATED',
+E                         'WITHDRAWAL_RECONCILED']}
+E           
+E           On instance['event_type']:
+E               'EVIDENCE_REJECTED'
+
+earned_authority/wire_contracts.py:236: WireContractError
+_ test_evidence_events_round_trip_actual_signed_producers[EVIDENCE_REJECTED-recorded] _
+
+runtime = <earned_authority.connected.ConnectedRuntime object at 0x108508320>
+
+    def export_runtime(runtime, *, qualification_ids=(), agent='agent-a', attempt_ids=(), include_authority=True):
+        """Snapshot actual records without execution, qualification, or grants.
+    
+        include_authority=False exports historical execution/evidence after withdrawal.
+        An active bundle binds all included attempts to its current authority revision.
+        Concurrent source changes invalidate consumption; retry from a fresh export.
+        """
+        try:
+            bundle = WireBundle()
+            observations = {o['observation_id']: o for o in runtime.observations()}
+            events = runtime.events(); qids = set(qualification_ids)
+            authority = runtime.authority(agent) if include_authority else None
+            if authority:
+                require(authority['status'] == 'ACTIVE' and authority['grants'] and authority['passport_id'],
+                        'no active credential to export')
+                qids.update(g['qualification_id'] for g in authority['grants'].values())
+            outcomes = set()
+            for qid in sorted(qids):
+                q = runtime.qualification(qid)
+                refs = [bundle.proof('observation', observations[r['observation_id']]) for r in q['outcome_refs']]
+                outcomes.update(r['observation_id'] for r in q['outcome_refs'])
+                bundle.add('qualification', 'qualification', qualification=bundle.proof('qualification', q), observations=refs)
+            if authority:
+                bundle.add('authority', 'authority', authority=bundle.proof('authority', authority))
+            for aid in attempt_ids:
+                attempt = runtime.attempts(aid); require(attempt is not None, 'attempt missing')
+                commits = [bundle.proof('event', row) for row in events
+                           if row['event']['attempt_id'] == aid and row['event']['event_type'] == 'COMMITTED']
+                command = attempt['command']
+                historical = runtime.qualification_at(command['qualification_id'], digest=command['qualification_digest'])
+                bundle.add('attempt', 'attempt', attempt=bundle.proof('attempt', attempt), commits=commits,
+                           qualification=bundle.proof('qualification-history', historical))
+                if attempt.get('outcome'):
+                    outcomes.add(attempt['outcome']['observation_id'])
+            for oid in sorted(outcomes):
+                o = observations[oid]; inputs = {'observation': bundle.proof('observation', o)}
+                if not o['shadow']:
+                    attempt = runtime.attempts(o['attempt_id']); require(attempt is not None, 'live outcome original attempt missing')
+                    inputs['attempt'] = bundle.proof('attempt', attempt)
+                bundle.add('outcome', 'observation', **inputs)
+            for row in events:
+>               bundle.add('lifecycle-event', 'event', event=bundle.proof('event', row))
+
+earned_authority/wire_contracts.py:231: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/wire_contracts.py:43: in add
+    validate(kind, value)
+earned_authority/contracts.py:15: in validate
+    Draft202012Validator(schema).validate(value)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = Draft202012Validator(schema={'$id': 'urn:earned-a...0.1.0-draft.1', '$schema': 'https://json...020-12/schema', 'additi... {'delivery_state': {'const': 'RECORDED'}}}, 'then': {'required': ['ledger_receipt_ref']}}], ...}, format_checker=None)
+args = ({'actor_ref': 'local-runtime-writer', 'agent_id': 'reference-qualification-checker', 'correlation_id': 'import-wire', 'delivery_state': 'RECORDED', ...},)
+kwargs = {}
+error = <ValidationError: "'EVIDENCE_REJECTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED',...TED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']">
+
+    def validate(self, *args, **kwargs):
+        for error in self.iter_errors(*args, **kwargs):
+>           raise error
+E           jsonschema.exceptions.ValidationError: 'EVIDENCE_REJECTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED', 'DEMOTED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']
+E           
+E           Failed validating 'enum' in schema['properties']['event_type']:
+E               {'enum': ['QUALIFIED',
+E                         'HELD',
+E                         'GRANTED',
+E                         'COMMITTED',
+E                         'OUTCOME_OBSERVED',
+E                         'DEMOTED',
+E                         'REVOKED',
+E                         'SUPERSEDED',
+E                         'REQUALIFIED',
+E                         'INTENT',
+E                         'CANONICAL_QUALIFICATION_EVALUATED',
+E                         'WITHDRAWAL_RECONCILED']}
+E           
+E           On instance['event_type']:
+E               'EVIDENCE_REJECTED'
+
+../../work/ledger-venv/lib/python3.12/site-packages/jsonschema/validators.py:451: ValidationError
+
+The above exception was the direct cause of the following exception:
+
+produced = (<earned_authority.connected.ConnectedRuntime object at 0x108508320>, 'EVIDENCE_REJECTED', 'event-5a494d8024904883be28b011ce39986e')
+recorded = True
+
+    @pytest.mark.parametrize("recorded", [False, True], ids=["pending", "recorded"])
+    def test_evidence_events_round_trip_actual_signed_producers(produced, recorded):
+        runtime, kind, event_id = produced
+        if recorded:
+            runtime.flush_outbox()
+>       bundle = export_runtime(runtime, include_authority=False)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_evidence_wire.py:61: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.connected.ConnectedRuntime object at 0x108508320>
+
+    def export_runtime(runtime, *, qualification_ids=(), agent='agent-a', attempt_ids=(), include_authority=True):
+        """Snapshot actual records without execution, qualification, or grants.
+    
+        include_authority=False exports historical execution/evidence after withdrawal.
+        An active bundle binds all included attempts to its current authority revision.
+        Concurrent source changes invalidate consumption; retry from a fresh export.
+        """
+        try:
+            bundle = WireBundle()
+            observations = {o['observation_id']: o for o in runtime.observations()}
+            events = runtime.events(); qids = set(qualification_ids)
+            authority = runtime.authority(agent) if include_authority else None
+            if authority:
+                require(authority['status'] == 'ACTIVE' and authority['grants'] and authority['passport_id'],
+                        'no active credential to export')
+                qids.update(g['qualification_id'] for g in authority['grants'].values())
+            outcomes = set()
+            for qid in sorted(qids):
+                q = runtime.qualification(qid)
+                refs = [bundle.proof('observation', observations[r['observation_id']]) for r in q['outcome_refs']]
+                outcomes.update(r['observation_id'] for r in q['outcome_refs'])
+                bundle.add('qualification', 'qualification', qualification=bundle.proof('qualification', q), observations=refs)
+            if authority:
+                bundle.add('authority', 'authority', authority=bundle.proof('authority', authority))
+            for aid in attempt_ids:
+                attempt = runtime.attempts(aid); require(attempt is not None, 'attempt missing')
+                commits = [bundle.proof('event', row) for row in events
+                           if row['event']['attempt_id'] == aid and row['event']['event_type'] == 'COMMITTED']
+                command = attempt['command']
+                historical = runtime.qualification_at(command['qualification_id'], digest=command['qualification_digest'])
+                bundle.add('attempt', 'attempt', attempt=bundle.proof('attempt', attempt), commits=commits,
+                           qualification=bundle.proof('qualification-history', historical))
+                if attempt.get('outcome'):
+                    outcomes.add(attempt['outcome']['observation_id'])
+            for oid in sorted(outcomes):
+                o = observations[oid]; inputs = {'observation': bundle.proof('observation', o)}
+                if not o['shadow']:
+                    attempt = runtime.attempts(o['attempt_id']); require(attempt is not None, 'live outcome original attempt missing')
+                    inputs['attempt'] = bundle.proof('attempt', attempt)
+                bundle.add('outcome', 'observation', **inputs)
+            for row in events:
+                bundle.add('lifecycle-event', 'event', event=bundle.proof('event', row))
+            return bundle
+        except WireContractError:
+            raise
+        except Exception as exc:
+>           raise WireContractError('runtime export incomplete or invalid: ' + str(exc)) from exc
+E           earned_authority.wire_contracts.WireContractError: runtime export incomplete or invalid: 'EVIDENCE_REJECTED' is not one of ['QUALIFIED', 'HELD', 'GRANTED', 'COMMITTED', 'OUTCOME_OBSERVED', 'DEMOTED', 'REVOKED', 'SUPERSEDED', 'REQUALIFIED', 'INTENT', 'CANONICAL_QUALIFICATION_EVALUATED', 'WITHDRAWAL_RECONCILED']
+E           
+E           Failed validating 'enum' in schema['properties']['event_type']:
+E               {'enum': ['QUALIFIED',
+E                         'HELD',
+E                         'GRANTED',
+E                         'COMMITTED',
+E                         'OUTCOME_OBSERVED',
+E                         'DEMOTED',
+E                         'REVOKED',
+E                         'SUPERSEDED',
+E                         'REQUALIFIED',
+E                         'INTENT',
+E                         'CANONICAL_QUALIFICATION_EVALUATED',
+E                         'WITHDRAWAL_RECONCILED']}
+E           
+E           On instance['event_type']:
+E               'EVIDENCE_REJECTED'
+
+earned_authority/wire_contracts.py:236: WireContractError
+=========================== short test summary info ============================
+FAILED tests/test_evidence_wire.py::test_evidence_events_round_trip_actual_signed_producers[PROCEDURE_REPORTED-pending]
+FAILED tests/test_evidence_wire.py::test_evidence_events_round_trip_actual_signed_producers[PROCEDURE_REPORTED-recorded]
+FAILED tests/test_evidence_wire.py::test_evidence_events_round_trip_actual_signed_producers[EVIDENCE_ADMITTED-pending]
+FAILED tests/test_evidence_wire.py::test_evidence_events_round_trip_actual_signed_producers[EVIDENCE_ADMITTED-recorded]
+FAILED tests/test_evidence_wire.py::test_evidence_events_round_trip_actual_signed_producers[EVIDENCE_REJECTED-pending]
+FAILED tests/test_evidence_wire.py::test_evidence_events_round_trip_actual_signed_producers[EVIDENCE_REJECTED-recorded]
+6 failed, 9 deselected in 0.28s

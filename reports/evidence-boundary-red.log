@@ -1,0 +1,108 @@
+FFF..FF.F                                                                [100%]
+=================================== FAILURES ===================================
+_____________ test_self_reports_cannot_supply_qualification_passes _____________
+
+runtime = <earned_authority.runtime.Runtime object at 0x1077399d0>
+
+    def test_self_reports_cannot_supply_qualification_passes(runtime):
+        for i in range(3):
+>           runtime.record_procedure_report('claim-'+str(i), reported_outcome='PASS')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'record_procedure_report'
+
+tests/test_evidence_boundary.py:18: AttributeError
+_________ test_report_retry_retains_identity_and_rebinding_is_rejected _________
+
+runtime = <earned_authority.runtime.Runtime object at 0x1077cc080>
+
+    def test_report_retry_retains_identity_and_rebinding_is_rejected(runtime):
+>       report=runtime.record_procedure_report('claim')
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Runtime' object has no attribute 'record_procedure_report'
+
+tests/test_evidence_boundary.py:26: AttributeError
+_____________ test_self_report_never_overrides_independent_failure _____________
+
+runtime = <earned_authority.runtime.Runtime object at 0x1077ce330>
+
+    def test_self_report_never_overrides_independent_failure(runtime):
+        for i in range(3):runtime.shadow(attempt_id='shadow-'+str(i))
+        q=runtime.qualify();runtime.grant(q['qualification_id'])
+        command=runtime.admit(attempt_id='live')
+>       runtime.record_procedure_report('live',reported_outcome='PASS')
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'Runtime' object has no attribute 'record_procedure_report'
+
+tests/test_evidence_boundary.py:38: AttributeError
+_ test_check_only_rejects_missing_or_positive_side_effect_claims[receipt_created-True] _
+
+runtime = <earned_authority.runtime.Runtime object at 0x1077cdee0>
+field = 'receipt_created', value = True
+
+    @pytest.mark.parametrize('field,value',[('executed',True),('executed',None),('receipt_created',True),('receipt_created',None)])
+    def test_check_only_rejects_missing_or_positive_side_effect_claims(runtime,field,value):
+        response={'executed':False,'receipt_created':False};response[field]=value
+>       with pytest.raises(Denied,match='INVALID_CHECK_ONLY_PROOF'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_evidence_boundary.py:48: Failed
+_ test_check_only_rejects_missing_or_positive_side_effect_claims[receipt_created-None] _
+
+runtime = <earned_authority.runtime.Runtime object at 0x1077cfd10>
+field = 'receipt_created', value = None
+
+    @pytest.mark.parametrize('field,value',[('executed',True),('executed',None),('receipt_created',True),('receipt_created',None)])
+    def test_check_only_rejects_missing_or_positive_side_effect_claims(runtime,field,value):
+        response={'executed':False,'receipt_created':False};response[field]=value
+>       with pytest.raises(Denied,match='INVALID_CHECK_ONLY_PROOF'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_evidence_boundary.py:48: Failed
+___________ test_connected_boundary_maps_invalid_canonical_authority ___________
+
+    def test_connected_boundary_maps_invalid_canonical_authority():
+        rt=ConnectedRuntime.__new__(ConnectedRuntime);rt.authority_available=True
+        def invalid(*args,**kwargs):raise Denied('INVALID_CANONICAL_AUTHORITY')
+        rt.passport=SimpleNamespace(current=invalid)
+        with pytest.raises(Denied,match='^INVALID_AUTHORITY$'):
+>           rt.authority()
+
+tests/test_evidence_boundary.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/connected.py:145: in authority
+    return self._normalize(self.passport.current(agent),agent)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+args = ('agent-a',), kwargs = {}
+
+>   def invalid(*args,**kwargs):raise Denied('INVALID_CANONICAL_AUTHORITY')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   earned_authority.runtime.Denied: INVALID_CANONICAL_AUTHORITY
+
+tests/test_evidence_boundary.py:62: Denied
+
+During handling of the above exception, another exception occurred:
+
+    def test_connected_boundary_maps_invalid_canonical_authority():
+        rt=ConnectedRuntime.__new__(ConnectedRuntime);rt.authority_available=True
+        def invalid(*args,**kwargs):raise Denied('INVALID_CANONICAL_AUTHORITY')
+        rt.passport=SimpleNamespace(current=invalid)
+>       with pytest.raises(Denied,match='^INVALID_AUTHORITY$'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: 
+E       - INVALID_CANONICAL_AUTHORITY
+E       ?        ----------
+E       + INVALID_AUTHORITY
+
+tests/test_evidence_boundary.py:64: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_evidence_boundary.py::test_self_reports_cannot_supply_qualification_passes
+FAILED tests/test_evidence_boundary.py::test_report_retry_retains_identity_and_rebinding_is_rejected
+FAILED tests/test_evidence_boundary.py::test_self_report_never_overrides_independent_failure
+FAILED tests/test_evidence_boundary.py::test_check_only_rejects_missing_or_positive_side_effect_claims[receipt_created-True]
+FAILED tests/test_evidence_boundary.py::test_check_only_rejects_missing_or_positive_side_effect_claims[receipt_created-None]
+FAILED tests/test_evidence_boundary.py::test_connected_boundary_maps_invalid_canonical_authority
+6 failed, 3 passed in 0.19s

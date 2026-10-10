@@ -1,0 +1,52 @@
+.......F                                                                 [100%]
+=================================== FAILURES ===================================
+____ test_audit_cannot_downgrade_known_failure_while_withdrawal_is_pending _____
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10ae6bcb0>
+
+    def test_audit_cannot_downgrade_known_failure_while_withdrawal_is_pending(rt):
+        q,_=ready(rt)
+        command=rt.admit(version=rt.procedure_revision,context=CONTEXT,resource='model/champion')
+        rt.passport.fail_mutations=True
+        with pytest.raises(Denied):rt.commit(command,actual='wrong-version')
+        before=rt.qualification(q['qualification_id'])
+        assert before['disposition']=='INELIGIBLE' and before['reason']=='KNOWN_FAILURE'
+>       result=rt.audit_qualification_evidence()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_connected_evidence.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/connected.py:182: in audit_qualification_evidence
+    self.drain_withdrawals(only_agent=agent)
+earned_authority/connected.py:369: in drain_withdrawals
+    self.revoke(agent,skill,reason,attempt_id=aid,target_grant_id=gid,target_qualification_id=qid,operation_id=oid)
+earned_authority/connected.py:380: in revoke
+    self.recover_authority_intents(agent)
+earned_authority/authority_journal.py:221: in recover_authority_intents
+    if operation['state'] in PENDING:self._recover_authority_operation(operation)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/authority_journal.py:189: in _recover_authority_operation
+    self.passport.issue(operation['agent_id'],args['requested_scopes'],args['ttl_seconds'],operation['prior_authority'],args['reason'],operation_id=operation['operation_id'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_connected_security.UnitPassport object at 0x10ae6a690>
+agent = 'agent-a'
+scopes = [{'action_class': 'demo.read', 'context_constraints': {'earned_authority_binding_v1': '{"action":"read","context":{"mo...4c361fb2faf1327ddb2d8558ee55edb7383b29a05517e"}'}, 'resource_pattern': 'urn:dataset/health', 'scope_ttl_seconds': 300}]
+ttl = 300
+current = {'revision': 2, 'status': 'ACTIVE', 'subject': {'agent_id': 'agent-a', 'expires_ts': 1300000, 'issued_ts': 1000000, 'passport_id': 'unit-passport-2', ...}}
+reason = 'selective withdrawal KNOWN_FAILURE'
+operation_id = 'withdrawal-07fee3f6752abc2c735582bd57483e7a6066f11caa5b1f1039af1bcd5ad97854'
+
+    def issue(self, agent, scopes, ttl, current, reason, operation_id=None):
+        from earned_authority.passport_client import issue_operation_request
+        request = issue_operation_request(agent, scopes, ttl, current, reason, operation_id)
+        previous = self.operation(agent, operation_id, request) if operation_id else None
+        if previous: return previous['authority']
+>       if self.fail_mutations: raise Denied('AUTHORITY_UNCONFIRMED')
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: AUTHORITY_UNCONFIRMED
+
+tests/test_connected_security.py:112: Denied
+=========================== short test summary info ============================
+FAILED tests/test_connected_evidence.py::test_audit_cannot_downgrade_known_failure_while_withdrawal_is_pending
+1 failed, 7 passed in 0.62s

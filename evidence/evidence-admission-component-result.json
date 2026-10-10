@@ -1,0 +1,96 @@
+{
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "environment": "UNIT_WITH_EXPLICIT_SDK_TRANSPORT_DOUBLE",
+  "executed_at_utc": "2026-10-10T03:25:01.233463+00:00",
+  "passed": 44,
+  "failed": 0,
+  "tdd_stages": [
+    {
+      "stage": "red-corrected",
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "tests/test_evidence_admission.py",
+        "-q"
+      ],
+      "working_directory": "kit root",
+      "exit_code": 2,
+      "counts": {
+        "collection_errors": 1
+      },
+      "artifact": "evidence/evidence-admission-red-corrected.log"
+    },
+    {
+      "stage": "local-red",
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "tests/test_evidence_admission.py",
+        "-q"
+      ],
+      "working_directory": "kit root",
+      "exit_code": 1,
+      "counts": {
+        "failed": 6,
+        "passed": 34
+      },
+      "artifact": "evidence/evidence-admission-local-red.log"
+    },
+    {
+      "stage": "priority-red",
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "tests/test_evidence_admission.py",
+        "-q"
+      ],
+      "working_directory": "kit root",
+      "exit_code": 1,
+      "counts": {
+        "failed": 4,
+        "passed": 40
+      },
+      "artifact": "evidence/evidence-admission-priority-red.log"
+    },
+    {
+      "stage": "final-green",
+      "command": [
+        "python",
+        "-m",
+        "pytest",
+        "tests/test_evidence_admission.py",
+        "-q"
+      ],
+      "working_directory": "kit root",
+      "exit_code": 0,
+      "counts": {
+        "passed": 44,
+        "failed": 0
+      },
+      "artifact": "evidence/evidence-admission-final-green.log"
+    }
+  ],
+  "source_hashes": {
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "tests/test_evidence_admission.py": "sha256:47c59f09d7a8cf3236e9e46f0581b7c1fb9c5e809329316e280252da613c31f9"
+  },
+  "artifacts": {
+    "evidence/evidence-admission-red-corrected.log": "sha256:154d33b234b87911bc840027f45d9a3700767329050edb99b18ca4e4f1fc705d",
+    "evidence/evidence-admission-local-red.log": "sha256:fcf54a30ea3d9d3f7e5c0dbc1a5ff37aa82ac0a9cad9f25854401decaaa28470",
+    "evidence/evidence-admission-priority-red.log": "sha256:0321d87ecffa52fda9bb352d6696a36de79c01ff83d59376fd5cd3d151e7b1b8",
+    "evidence/evidence-admission-final-green.log": "sha256:4ccbc2a2703d5100185d961fd6dc3b75cec0f090abdc7b5b3db3a071ee4206e0"
+  },
+  "scope": "Real Ed25519 producer/writer signatures and real LedgerClient verification code against a labeled in-memory SDK transport double; no service, qualification, authority or product-value claim.",
+  "limits": [
+    "Only the two listed files are covered by this focused component report.",
+    "Live canonical services and coordinated grant exclusion/hold are separate integration acceptance.",
+    "Initial red establishes missing module; subsequent red tests establish missing local-admission API and incorrect tamper classification priority."
+  ],
+  "notes": [
+    "A first invocation from the task directory failed package import before collecting this test; retained as work/evidence-admission-red.log, not counted as behavioral TDD evidence."
+  ]
+}

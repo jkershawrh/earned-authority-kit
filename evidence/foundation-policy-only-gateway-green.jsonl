@@ -1,0 +1,161 @@
+{"Time":"2026-10-09T22:21:48.713841-05:00","Action":"start","Package":"are-api-gateway/cmd/are-api-gateway"}
+{"Time":"2026-10-09T22:21:48.714014-05:00","Action":"start","Package":"are-api-gateway/internal/gateway"}
+{"Time":"2026-10-09T22:21:49.594247-05:00","Action":"run","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRequiresTLSFilesAndJWKS"}
+{"Time":"2026-10-09T22:21:49.594333-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRequiresTLSFilesAndJWKS","Output":"=== RUN   TestRunRequiresTLSFilesAndJWKS\n"}
+{"Time":"2026-10-09T22:21:49.59443-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRequiresTLSFilesAndJWKS","Output":"--- PASS: TestRunRequiresTLSFilesAndJWKS (0.00s)\n"}
+{"Time":"2026-10-09T22:21:49.594501-05:00","Action":"pass","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRequiresTLSFilesAndJWKS","Elapsed":0}
+{"Time":"2026-10-09T22:21:49.594509-05:00","Action":"run","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRejectsMissingCertFiles"}
+{"Time":"2026-10-09T22:21:49.594542-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRejectsMissingCertFiles","Output":"=== RUN   TestRunRejectsMissingCertFiles\n"}
+{"Time":"2026-10-09T22:21:49.594548-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRejectsMissingCertFiles","Output":"--- PASS: TestRunRejectsMissingCertFiles (0.00s)\n"}
+{"Time":"2026-10-09T22:21:49.594553-05:00","Action":"pass","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRejectsMissingCertFiles","Elapsed":0}
+{"Time":"2026-10-09T22:21:49.594583-05:00","Action":"run","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestLoadConfigFallbacks"}
+{"Time":"2026-10-09T22:21:49.594588-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestLoadConfigFallbacks","Output":"=== RUN   TestLoadConfigFallbacks\n"}
+{"Time":"2026-10-09T22:21:49.594619-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestLoadConfigFallbacks","Output":"--- PASS: TestLoadConfigFallbacks (0.00s)\n"}
+{"Time":"2026-10-09T22:21:49.594624-05:00","Action":"pass","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestLoadConfigFallbacks","Elapsed":0}
+{"Time":"2026-10-09T22:21:49.594628-05:00","Action":"run","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestLoadConfigFromEnv"}
+{"Time":"2026-10-09T22:21:49.594632-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestLoadConfigFromEnv","Output":"=== RUN   TestLoadConfigFromEnv\n"}
+{"Time":"2026-10-09T22:21:49.594763-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestLoadConfigFromEnv","Output":"--- PASS: TestLoadConfigFromEnv (0.00s)\n"}
+{"Time":"2026-10-09T22:21:49.594805-05:00","Action":"pass","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestLoadConfigFromEnv","Elapsed":0}
+{"Time":"2026-10-09T22:21:49.594835-05:00","Action":"run","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestEnvIntValidValue"}
+{"Time":"2026-10-09T22:21:49.594846-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestEnvIntValidValue","Output":"=== RUN   TestEnvIntValidValue\n"}
+{"Time":"2026-10-09T22:21:49.594884-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestEnvIntValidValue","Output":"--- PASS: TestEnvIntValidValue (0.00s)\n"}
+{"Time":"2026-10-09T22:21:49.594909-05:00","Action":"pass","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestEnvIntValidValue","Elapsed":0}
+{"Time":"2026-10-09T22:21:49.594915-05:00","Action":"run","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestNewTLSConfigSuccess"}
+{"Time":"2026-10-09T22:21:49.594919-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestNewTLSConfigSuccess","Output":"=== RUN   TestNewTLSConfigSuccess\n"}
+{"Time":"2026-10-09T22:21:49.892774-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestStaticValidatorValidToken"}
+{"Time":"2026-10-09T22:21:49.89289-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestStaticValidatorValidToken","Output":"=== RUN   TestStaticValidatorValidToken\n"}
+{"Time":"2026-10-09T22:21:49.901058-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestNewTLSConfigSuccess","Output":"--- PASS: TestNewTLSConfigSuccess (0.31s)\n"}
+{"Time":"2026-10-09T22:21:49.901119-05:00","Action":"pass","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestNewTLSConfigSuccess","Elapsed":0.31}
+{"Time":"2026-10-09T22:21:49.901151-05:00","Action":"run","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestNewTLSConfigInvalidCA"}
+{"Time":"2026-10-09T22:21:49.901161-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestNewTLSConfigInvalidCA","Output":"=== RUN   TestNewTLSConfigInvalidCA\n"}
+{"Time":"2026-10-09T22:21:49.902358-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestNewTLSConfigInvalidCA","Output":"--- PASS: TestNewTLSConfigInvalidCA (0.00s)\n"}
+{"Time":"2026-10-09T22:21:49.902376-05:00","Action":"pass","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestNewTLSConfigInvalidCA","Elapsed":0}
+{"Time":"2026-10-09T22:21:49.902382-05:00","Action":"run","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunReturnsOnContextCancel"}
+{"Time":"2026-10-09T22:21:49.902385-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunReturnsOnContextCancel","Output":"=== RUN   TestRunReturnsOnContextCancel\n"}
+{"Time":"2026-10-09T22:21:49.971334-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestStaticValidatorValidToken","Output":"--- PASS: TestStaticValidatorValidToken (0.08s)\n"}
+{"Time":"2026-10-09T22:21:49.971364-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestStaticValidatorValidToken","Elapsed":0.08}
+{"Time":"2026-10-09T22:21:49.971371-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestJWKSValidatorValidToken"}
+{"Time":"2026-10-09T22:21:49.971375-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestJWKSValidatorValidToken","Output":"=== RUN   TestJWKSValidatorValidToken\n"}
+{"Time":"2026-10-09T22:21:50.028256-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestJWKSValidatorValidToken","Output":"--- PASS: TestJWKSValidatorValidToken (0.06s)\n"}
+{"Time":"2026-10-09T22:21:50.028315-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestJWKSValidatorValidToken","Elapsed":0.06}
+{"Time":"2026-10-09T22:21:50.028333-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestJWKSValidatorRequiresURL"}
+{"Time":"2026-10-09T22:21:50.028342-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestJWKSValidatorRequiresURL","Output":"=== RUN   TestJWKSValidatorRequiresURL\n"}
+{"Time":"2026-10-09T22:21:50.028355-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestJWKSValidatorRequiresURL","Output":"--- PASS: TestJWKSValidatorRequiresURL (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.028363-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestJWKSValidatorRequiresURL","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.028385-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestJWKSValidatorInvalidEndpoint"}
+{"Time":"2026-10-09T22:21:50.028396-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestJWKSValidatorInvalidEndpoint","Output":"=== RUN   TestJWKSValidatorInvalidEndpoint\n"}
+{"Time":"2026-10-09T22:21:50.028763-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestJWKSValidatorInvalidEndpoint","Output":"2026/10/09 22:21:50 ERROR Failed to refresh HTTP JWK Set from remote HTTP resource. error=\"failed to perform HTTP request for JWK Set refresh: Get \\\"http://127.0.0.1:1/jwks\\\": dial tcp 127.0.0.1:1: connect: connection refused\" url=http://127.0.0.1:1/jwks\n"}
+{"Time":"2026-10-09T22:21:50.02884-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestJWKSValidatorInvalidEndpoint","Output":"--- PASS: TestJWKSValidatorInvalidEndpoint (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.028852-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestJWKSValidatorInvalidEndpoint","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.02886-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestStaticValidatorWrongSigningMethod"}
+{"Time":"2026-10-09T22:21:50.028866-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestStaticValidatorWrongSigningMethod","Output":"=== RUN   TestStaticValidatorWrongSigningMethod\n"}
+{"Time":"2026-10-09T22:21:50.118673-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunReturnsOnContextCancel","Output":"--- PASS: TestRunReturnsOnContextCancel (0.22s)\n"}
+{"Time":"2026-10-09T22:21:50.118701-05:00","Action":"pass","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunReturnsOnContextCancel","Elapsed":0.22}
+{"Time":"2026-10-09T22:21:50.118714-05:00","Action":"run","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRequiresJWKSURL"}
+{"Time":"2026-10-09T22:21:50.118718-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRequiresJWKSURL","Output":"=== RUN   TestRunRequiresJWKSURL\n"}
+{"Time":"2026-10-09T22:21:50.139676-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestStaticValidatorWrongSigningMethod","Output":"--- PASS: TestStaticValidatorWrongSigningMethod (0.11s)\n"}
+{"Time":"2026-10-09T22:21:50.139742-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestStaticValidatorWrongSigningMethod","Elapsed":0.11}
+{"Time":"2026-10-09T22:21:50.139798-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestStaticValidatorMissingSubject"}
+{"Time":"2026-10-09T22:21:50.139809-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestStaticValidatorMissingSubject","Output":"=== RUN   TestStaticValidatorMissingSubject\n"}
+{"Time":"2026-10-09T22:21:50.155196-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestStaticValidatorMissingSubject","Output":"--- PASS: TestStaticValidatorMissingSubject (0.02s)\n"}
+{"Time":"2026-10-09T22:21:50.155264-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestStaticValidatorMissingSubject","Elapsed":0.02}
+{"Time":"2026-10-09T22:21:50.155288-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestCanonicalCASMetadataRoundTrip"}
+{"Time":"2026-10-09T22:21:50.155298-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestCanonicalCASMetadataRoundTrip","Output":"=== RUN   TestCanonicalCASMetadataRoundTrip\n"}
+{"Time":"2026-10-09T22:21:50.156121-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestCanonicalCASMetadataRoundTrip","Output":"--- PASS: TestCanonicalCASMetadataRoundTrip (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.156152-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestCanonicalCASMetadataRoundTrip","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.156167-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestWrapCORSIfConfigured_NoOrigins"}
+{"Time":"2026-10-09T22:21:50.156176-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestWrapCORSIfConfigured_NoOrigins","Output":"=== RUN   TestWrapCORSIfConfigured_NoOrigins\n"}
+{"Time":"2026-10-09T22:21:50.1562-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestWrapCORSIfConfigured_NoOrigins","Output":"--- PASS: TestWrapCORSIfConfigured_NoOrigins (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.156209-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestWrapCORSIfConfigured_NoOrigins","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.158238-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestWrapCORSIfConfigured_Preflight"}
+{"Time":"2026-10-09T22:21:50.15827-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestWrapCORSIfConfigured_Preflight","Output":"=== RUN   TestWrapCORSIfConfigured_Preflight\n"}
+{"Time":"2026-10-09T22:21:50.158294-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestWrapCORSIfConfigured_Preflight","Output":"--- PASS: TestWrapCORSIfConfigured_Preflight (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.158304-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestWrapCORSIfConfigured_Preflight","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.158313-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestParseCORSAllowedOrigins"}
+{"Time":"2026-10-09T22:21:50.158321-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestParseCORSAllowedOrigins","Output":"=== RUN   TestParseCORSAllowedOrigins\n"}
+{"Time":"2026-10-09T22:21:50.158329-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestParseCORSAllowedOrigins","Output":"--- PASS: TestParseCORSAllowedOrigins (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.158338-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestParseCORSAllowedOrigins","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.158363-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationRegisterIssueScopePolicyFlow"}
+{"Time":"2026-10-09T22:21:50.158406-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationRegisterIssueScopePolicyFlow","Output":"=== RUN   TestFoundationRegisterIssueScopePolicyFlow\n"}
+{"Time":"2026-10-09T22:21:50.158426-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationRegisterIssueScopePolicyFlow","Output":"--- PASS: TestFoundationRegisterIssueScopePolicyFlow (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.158436-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationRegisterIssueScopePolicyFlow","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.158442-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationUnknownRouteFailsClosed"}
+{"Time":"2026-10-09T22:21:50.158446-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationUnknownRouteFailsClosed","Output":"=== RUN   TestFoundationUnknownRouteFailsClosed\n"}
+{"Time":"2026-10-09T22:21:50.158477-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationUnknownRouteFailsClosed","Output":"--- PASS: TestFoundationUnknownRouteFailsClosed (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.158503-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationUnknownRouteFailsClosed","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.158513-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationRouteContract"}
+{"Time":"2026-10-09T22:21:50.158522-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationRouteContract","Output":"=== RUN   TestFoundationRouteContract\n"}
+{"Time":"2026-10-09T22:21:50.158532-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationRouteContract","Output":"--- PASS: TestFoundationRouteContract (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.158541-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationRouteContract","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.158549-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestOutboxProcessorStopsOnContextCancel"}
+{"Time":"2026-10-09T22:21:50.158556-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestOutboxProcessorStopsOnContextCancel","Output":"=== RUN   TestOutboxProcessorStopsOnContextCancel\n"}
+{"Time":"2026-10-09T22:21:50.158565-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestOutboxProcessorStopsOnContextCancel","Output":"--- PASS: TestOutboxProcessorStopsOnContextCancel (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.158593-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestOutboxProcessorStopsOnContextCancel","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.158601-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt"}
+{"Time":"2026-10-09T22:21:50.158608-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt","Output":"=== RUN   TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt\n"}
+{"Time":"2026-10-09T22:21:50.158634-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt/demo.read"}
+{"Time":"2026-10-09T22:21:50.158643-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt/demo.read","Output":"=== RUN   TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt/demo.read\n"}
+{"Time":"2026-10-09T22:21:50.158704-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt/demo.read","Output":"--- PASS: TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt/demo.read (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.158715-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt/demo.read","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.158722-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt/demo.forbidden_action"}
+{"Time":"2026-10-09T22:21:50.158729-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt/demo.forbidden_action","Output":"=== RUN   TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt/demo.forbidden_action\n"}
+{"Time":"2026-10-09T22:21:50.158756-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt/demo.forbidden_action","Output":"--- PASS: TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt/demo.forbidden_action (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.158764-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt/demo.forbidden_action","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.158781-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt","Output":"--- PASS: TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.158802-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.15881-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestReadinessJWKSOK"}
+{"Time":"2026-10-09T22:21:50.158816-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestReadinessJWKSOK","Output":"=== RUN   TestReadinessJWKSOK\n"}
+{"Time":"2026-10-09T22:21:50.159361-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestReadinessJWKSOK","Output":"--- PASS: TestReadinessJWKSOK (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.159381-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestReadinessJWKSOK","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.159392-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestReadinessJWKSBadStatus"}
+{"Time":"2026-10-09T22:21:50.1594-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestReadinessJWKSBadStatus","Output":"=== RUN   TestReadinessJWKSBadStatus\n"}
+{"Time":"2026-10-09T22:21:50.159799-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestReadinessJWKSBadStatus","Output":"--- PASS: TestReadinessJWKSBadStatus (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.159813-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestReadinessJWKSBadStatus","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.159826-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestReadinessKafkaUnreachable"}
+{"Time":"2026-10-09T22:21:50.159834-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestReadinessKafkaUnreachable","Output":"=== RUN   TestReadinessKafkaUnreachable\n"}
+{"Time":"2026-10-09T22:21:50.160194-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestReadinessKafkaUnreachable","Output":"--- PASS: TestReadinessKafkaUnreachable (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.160208-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestReadinessKafkaUnreachable","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.160218-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestParseKafkaBootstrap"}
+{"Time":"2026-10-09T22:21:50.160226-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestParseKafkaBootstrap","Output":"=== RUN   TestParseKafkaBootstrap\n"}
+{"Time":"2026-10-09T22:21:50.160234-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestParseKafkaBootstrap","Output":"--- PASS: TestParseKafkaBootstrap (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.160241-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestParseKafkaBootstrap","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.160248-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestServeReadiness503"}
+{"Time":"2026-10-09T22:21:50.160255-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestServeReadiness503","Output":"=== RUN   TestServeReadiness503\n"}
+{"Time":"2026-10-09T22:21:50.160354-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestServeReadiness503","Output":"--- PASS: TestServeReadiness503 (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.160368-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestServeReadiness503","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.160379-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestLoadUpstreamModeDefaultStatic"}
+{"Time":"2026-10-09T22:21:50.160386-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestLoadUpstreamModeDefaultStatic","Output":"=== RUN   TestLoadUpstreamModeDefaultStatic\n"}
+{"Time":"2026-10-09T22:21:50.160394-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestLoadUpstreamModeDefaultStatic","Output":"--- PASS: TestLoadUpstreamModeDefaultStatic (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.160401-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestLoadUpstreamModeDefaultStatic","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.160413-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestLoadUpstreamModeInvalid"}
+{"Time":"2026-10-09T22:21:50.16042-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestLoadUpstreamModeInvalid","Output":"=== RUN   TestLoadUpstreamModeInvalid\n"}
+{"Time":"2026-10-09T22:21:50.160429-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestLoadUpstreamModeInvalid","Output":"--- PASS: TestLoadUpstreamModeInvalid (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.160437-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestLoadUpstreamModeInvalid","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.160444-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestValidateLiveRequiresS0S1Proxy"}
+{"Time":"2026-10-09T22:21:50.160451-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestValidateLiveRequiresS0S1Proxy","Output":"=== RUN   TestValidateLiveRequiresS0S1Proxy\n"}
+{"Time":"2026-10-09T22:21:50.160475-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestValidateLiveRequiresS0S1Proxy","Output":"--- PASS: TestValidateLiveRequiresS0S1Proxy (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.160483-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestValidateLiveRequiresS0S1Proxy","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.16049-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestValidateStaticSkips"}
+{"Time":"2026-10-09T22:21:50.160497-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestValidateStaticSkips","Output":"=== RUN   TestValidateStaticSkips\n"}
+{"Time":"2026-10-09T22:21:50.160505-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestValidateStaticSkips","Output":"--- PASS: TestValidateStaticSkips (0.00s)\n"}
+{"Time":"2026-10-09T22:21:50.160512-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Test":"TestValidateStaticSkips","Elapsed":0}
+{"Time":"2026-10-09T22:21:50.160537-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Output":"PASS\n"}
+{"Time":"2026-10-09T22:21:50.162135-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Output":"ok  \tare-api-gateway/internal/gateway\t1.448s\n"}
+{"Time":"2026-10-09T22:21:50.168283-05:00","Action":"pass","Package":"are-api-gateway/internal/gateway","Elapsed":1.454}
+{"Time":"2026-10-09T22:21:50.173844-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRequiresJWKSURL","Output":"--- PASS: TestRunRequiresJWKSURL (0.06s)\n"}
+{"Time":"2026-10-09T22:21:50.173885-05:00","Action":"pass","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRequiresJWKSURL","Elapsed":0.06}
+{"Time":"2026-10-09T22:21:50.173899-05:00","Action":"run","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRejectsInsecureConformanceWithoutDevUnsafeMode"}
+{"Time":"2026-10-09T22:21:50.173907-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRejectsInsecureConformanceWithoutDevUnsafeMode","Output":"=== RUN   TestRunRejectsInsecureConformanceWithoutDevUnsafeMode\n"}
+{"Time":"2026-10-09T22:21:50.258599-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRejectsInsecureConformanceWithoutDevUnsafeMode","Output":"--- PASS: TestRunRejectsInsecureConformanceWithoutDevUnsafeMode (0.08s)\n"}
+{"Time":"2026-10-09T22:21:50.258658-05:00","Action":"pass","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRejectsInsecureConformanceWithoutDevUnsafeMode","Elapsed":0.08}
+{"Time":"2026-10-09T22:21:50.258677-05:00","Action":"run","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRejectsLiveUpstreamWithoutMandatoryEnv"}
+{"Time":"2026-10-09T22:21:50.258686-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRejectsLiveUpstreamWithoutMandatoryEnv","Output":"=== RUN   TestRunRejectsLiveUpstreamWithoutMandatoryEnv\n"}
+{"Time":"2026-10-09T22:21:50.37047-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRejectsLiveUpstreamWithoutMandatoryEnv","Output":"--- PASS: TestRunRejectsLiveUpstreamWithoutMandatoryEnv (0.11s)\n"}
+{"Time":"2026-10-09T22:21:50.370505-05:00","Action":"pass","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunRejectsLiveUpstreamWithoutMandatoryEnv","Elapsed":0.11}
+{"Time":"2026-10-09T22:21:50.370512-05:00","Action":"run","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunFailsOnInvalidGRPCPort"}
+{"Time":"2026-10-09T22:21:50.370516-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunFailsOnInvalidGRPCPort","Output":"=== RUN   TestRunFailsOnInvalidGRPCPort\n"}
+{"Time":"2026-10-09T22:21:50.55107-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunFailsOnInvalidGRPCPort","Output":"--- PASS: TestRunFailsOnInvalidGRPCPort (0.18s)\n"}
+{"Time":"2026-10-09T22:21:50.551111-05:00","Action":"pass","Package":"are-api-gateway/cmd/are-api-gateway","Test":"TestRunFailsOnInvalidGRPCPort","Elapsed":0.18}
+{"Time":"2026-10-09T22:21:50.551119-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Output":"PASS\n"}
+{"Time":"2026-10-09T22:21:50.552086-05:00","Action":"output","Package":"are-api-gateway/cmd/are-api-gateway","Output":"ok  \tare-api-gateway/cmd/are-api-gateway\t1.838s\n"}
+{"Time":"2026-10-09T22:21:50.554475-05:00","Action":"pass","Package":"are-api-gateway/cmd/are-api-gateway","Elapsed":1.841}

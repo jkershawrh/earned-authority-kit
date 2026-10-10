@@ -1,0 +1,546 @@
+FFFF.FFFFFFFFFFFF.....................FFFF...................... [ 21%]
+........................................................................ [ 44%]
+........................................................................ [ 68%]
+................................................... [ 85%]
+.............................................                            [100%]
+=================================== FAILURES ===================================
+_ AuthorityJournalTests.test_advanced_authority_without_matching_operation_cancels_stale_cas _
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_advanced_authority_without_matching_operation_cancels_stale_cas>
+
+    def test_advanced_authority_without_matching_operation_cancels_stale_cas(self):
+        self.stop_at('intent_committed')
+>       with self.assertRaises(Crash):self.grant()
+                                      ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:195: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:93: in grant
+    def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+____ AuthorityJournalTests.test_crash_after_intent_before_rpc_recovers_once ____
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_crash_after_intent_before_rpc_recovers_once>
+
+    def test_crash_after_intent_before_rpc_recovers_once(self):
+        self.stop_at('intent_committed')
+>       with self.assertRaises(Crash):self.grant()
+                                      ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:96: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:93: in grant
+    def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+_ AuthorityJournalTests.test_dispatched_unknown_is_not_cancelled_when_policy_changes _
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_dispatched_unknown_is_not_cancelled_when_policy_changes>
+
+    def test_dispatched_unknown_is_not_cancelled_when_policy_changes(self):
+        self.stop_at('intent_committed')
+>       with self.assertRaises(Crash):self.grant()
+                                      ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:179: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:93: in grant
+    def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+____ AuthorityJournalTests.test_event_and_applied_marker_commit_atomically _____
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_event_and_applied_marker_commit_atomically>
+
+    def test_event_and_applied_marker_commit_atomically(self):
+        self.stop_at('event_committed')
+>       with self.assertRaises(Crash):self.grant()
+                                      ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:93: in grant
+    def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+_____ AuthorityJournalTests.test_idempotent_public_retry_does_not_reissue ______
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_idempotent_public_retry_does_not_reissue>
+
+    def test_idempotent_public_retry_does_not_reissue(self):
+>       self.grant();self.grant()
+        ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:136: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:93: in grant
+    def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <earned_authority.connected.ConnectedRuntime object at 0x1091e9490>
+qid = 'q-release-model-model-v2'
+version = 'sha256:6a73278c1cd75ce652ba65d7fc7cfc9e056c48436b8f515b6e77088661231d02'
+context = {'desired_replicas': 1, 'max_replicas': 2, 'model_version': 'model-v2'}
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+_ AuthorityJournalTests.test_later_replacement_does_not_erase_old_operation_evidence _
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_later_replacement_does_not_erase_old_operation_evidence>
+
+    def test_later_replacement_does_not_erase_old_operation_evidence(self):
+        self.stop_at('remote_committed')
+>       with self.assertRaises(Crash):self.grant()
+                                      ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:93: in grant
+    def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+_ AuthorityJournalTests.test_local_intent_tamper_blocks_recovery_and_execution _
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_local_intent_tamper_blocks_recovery_and_execution>
+
+    def test_local_intent_tamper_blocks_recovery_and_execution(self):
+        self.stop_at('intent_committed')
+>       with self.assertRaises(Crash):self.grant()
+                                      ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:158: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:93: in grant
+    def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+____ AuthorityJournalTests.test_lost_response_recovers_without_new_revision ____
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_lost_response_recovers_without_new_revision>
+
+    def test_lost_response_recovers_without_new_revision(self):
+        self.passport.lose_response=True
+        with self.assertRaises(Denied):self.grant()
+        self.passport.lose_response=False;self.rt=self.runtime();self.rt.recover_authority_intents()
+>       self.assertEqual(1,self.passport.issues);self.assertEqual(1,self.passport.state['revision'])
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: 1 != 0
+
+tests/test_authority_journal.py:118: AssertionError
+_ AuthorityJournalTests.test_missing_lookup_never_infers_success_from_current_revision _
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_missing_lookup_never_infers_success_from_current_revision>
+
+    def test_missing_lookup_never_infers_success_from_current_revision(self):
+        self.stop_at('remote_committed')
+>       with self.assertRaises(Crash):self.grant()
+                                      ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:167: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:93: in grant
+    def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+_ AuthorityJournalTests.test_never_dispatched_intent_is_cancelled_when_policy_changes _
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_never_dispatched_intent_is_cancelled_when_policy_changes>
+
+    def test_never_dispatched_intent_is_cancelled_when_policy_changes(self):
+        self.stop_at('intent_committed')
+>       with self.assertRaises(Crash):self.grant()
+                                      ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:174: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:93: in grant
+    def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+__________ AuthorityJournalTests.test_operation_id_cannot_be_rebound ___________
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_operation_id_cannot_be_rebound>
+
+    def test_operation_id_cannot_be_rebound(self):
+>       self.grant();other=self.qualify(model='model-v3')
+        ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:139: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:93: in grant
+    def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <earned_authority.connected.ConnectedRuntime object at 0x1091ebcb0>
+qid = 'q-release-model-model-v2'
+version = 'sha256:6a73278c1cd75ce652ba65d7fc7cfc9e056c48436b8f515b6e77088661231d02'
+context = {'desired_replicas': 1, 'max_replicas': 2, 'model_version': 'model-v2'}
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+____ AuthorityJournalTests.test_pending_operation_blocks_existing_authority ____
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_pending_operation_blocks_existing_authority>
+
+    def test_pending_operation_blocks_existing_authority(self):
+>       self.grant();other=self.qualify('read-health')
+        ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:143: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:93: in grant
+    def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <earned_authority.connected.ConnectedRuntime object at 0x1091eb050>
+qid = 'q-release-model-model-v2'
+version = 'sha256:6a73278c1cd75ce652ba65d7fc7cfc9e056c48436b8f515b6e77088661231d02'
+context = {'desired_replicas': 1, 'max_replicas': 2, 'model_version': 'model-v2'}
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+_ AuthorityJournalTests.test_precondition_refusal_without_cas_advance_cannot_cancel_unknown_dispatch _
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_precondition_refusal_without_cas_advance_cannot_cancel_unknown_dispatch>
+
+    def test_precondition_refusal_without_cas_advance_cannot_cancel_unknown_dispatch(self):
+        self.passport.reject_without_revision=True
+        with self.assertRaises(Denied):self.grant()
+>       self.assertEqual('DISPATCHED',self.rt.authority_operations()[0]['state'])
+                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       IndexError: list index out of range
+
+tests/test_authority_journal.py:190: IndexError
+_ AuthorityJournalTests.test_remote_success_before_local_event_recovers_from_receipt _
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_remote_success_before_local_event_recovers_from_receipt>
+
+    def test_remote_success_before_local_event_recovers_from_receipt(self):
+        self.stop_at('remote_committed')
+>       with self.assertRaises(Crash):self.grant()
+                                      ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:102: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:93: in grant
+    def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+__ AuthorityJournalTests.test_revoke_to_empty_has_its_own_historical_receipt ___
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_revoke_to_empty_has_its_own_historical_receipt>
+
+    def test_revoke_to_empty_has_its_own_historical_receipt(self):
+>       self.grant();self.stop_at('remote_committed')
+        ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:121: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:93: in grant
+    def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <earned_authority.connected.ConnectedRuntime object at 0x1091ea2a0>
+qid = 'q-release-model-model-v2'
+version = 'sha256:6a73278c1cd75ce652ba65d7fc7cfc9e056c48436b8f515b6e77088661231d02'
+context = {'desired_replicas': 1, 'max_replicas': 2, 'model_version': 'model-v2'}
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+_______ AuthorityJournalTests.test_untrusted_local_writer_cannot_revoke ________
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_untrusted_local_writer_cannot_revoke>
+
+    def test_untrusted_local_writer_cannot_revoke(self):
+>       self.grant();self.rt.local_writer_authenticated=False
+        ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:153: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:93: in grant
+    def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <earned_authority.connected.ConnectedRuntime object at 0x10922f140>
+qid = 'q-release-model-model-v2'
+version = 'sha256:6a73278c1cd75ce652ba65d7fc7cfc9e056c48436b8f515b6e77088661231d02'
+context = {'desired_replicas': 1, 'max_replicas': 2, 'model_version': 'model-v2'}
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+_ ConnectedDeadlineAndWithdrawalBoundary.test_delayed_old_withdrawal_does_not_revoke_requalified_grant _
+
+self = <test_connected_security.ConnectedDeadlineAndWithdrawalBoundary testMethod=test_delayed_old_withdrawal_does_not_revoke_requalified_grant>
+
+    def test_delayed_old_withdrawal_does_not_revoke_requalified_grant(self):
+        q = self.qualification()
+>       self.rt.grant(q['qualification_id'], ttl_ms=10000)
+
+tests/test_connected_security.py:192: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <earned_authority.connected.ConnectedRuntime object at 0x1092aa810>
+qid = 'unit-q-1'
+version = 'sha256:6a73278c1cd75ce652ba65d7fc7cfc9e056c48436b8f515b6e77088661231d02'
+context = {'model_version': 'model-v2'}
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+_ ConnectedDeadlineAndWithdrawalBoundary.test_scope_expiring_during_policy_call_cannot_commit _
+
+self = <test_connected_security.ConnectedDeadlineAndWithdrawalBoundary testMethod=test_scope_expiring_during_policy_call_cannot_commit>
+
+    def test_scope_expiring_during_policy_call_cannot_commit(self):
+        q = self.qualification()
+>       self.rt.grant(q['qualification_id'], ttl_ms=1200)
+
+tests/test_connected_security.py:166: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <earned_authority.connected.ConnectedRuntime object at 0x1092a82f0>
+qid = 'unit-q-1'
+version = 'sha256:6a73278c1cd75ce652ba65d7fc7cfc9e056c48436b8f515b6e77088661231d02'
+context = {'model_version': 'model-v2'}
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+_ ConnectedDeadlineAndWithdrawalBoundary.test_short_requested_grant_cannot_disappear_behind_other_live_skill _
+
+self = <test_connected_security.ConnectedDeadlineAndWithdrawalBoundary testMethod=test_short_requested_grant_cannot_disappear_behind_other_live_skill>
+
+    def test_short_requested_grant_cannot_disappear_behind_other_live_skill(self):
+        read = self.qualification('read-health')
+>       self.rt.grant(read['qualification_id'], action='read', resource='urn:dataset/health', ttl_ms=10000)
+
+tests/test_connected_security.py:175: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <earned_authority.connected.ConnectedRuntime object at 0x1092a89b0>
+qid = 'unit-q-1'
+version = 'sha256:6a73278c1cd75ce652ba65d7fc7cfc9e056c48436b8f515b6e77088661231d02'
+context = {'model_version': 'model-v2'}
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+_ ConnectedDeadlineAndWithdrawalBoundary.test_unaffected_scope_keeps_exact_absolute_expiry_on_replacement _
+
+self = <test_connected_security.ConnectedDeadlineAndWithdrawalBoundary testMethod=test_unaffected_scope_keeps_exact_absolute_expiry_on_replacement>
+
+    def test_unaffected_scope_keeps_exact_absolute_expiry_on_replacement(self):
+        read = self.qualification('read-health')
+>       before = self.rt.grant(read['qualification_id'], action='read', resource='urn:dataset/health', ttl_ms=10000)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_connected_security.py:183: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/connected.py:317: in grant
+    self.eligibility(qid,q['version'],q['context'])
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <earned_authority.connected.ConnectedRuntime object at 0x1092aa360>
+qid = 'unit-q-1'
+version = 'sha256:6a73278c1cd75ce652ba65d7fc7cfc9e056c48436b8f515b6e77088661231d02'
+context = {'model_version': 'model-v2'}
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+>       if issue:raise Denied(issue)
+                 ^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: EVIDENCE_UNCONFIRMED
+
+earned_authority/connected.py:128: Denied
+=========================== short test summary info ============================
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_advanced_authority_without_matching_operation_cancels_stale_cas
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_crash_after_intent_before_rpc_recovers_once
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_dispatched_unknown_is_not_cancelled_when_policy_changes
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_event_and_applied_marker_commit_atomically
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_idempotent_public_retry_does_not_reissue
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_later_replacement_does_not_erase_old_operation_evidence
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_local_intent_tamper_blocks_recovery_and_execution
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_lost_response_recovers_without_new_revision
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_missing_lookup_never_infers_success_from_current_revision
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_never_dispatched_intent_is_cancelled_when_policy_changes
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_operation_id_cannot_be_rebound
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_pending_operation_blocks_existing_authority
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_precondition_refusal_without_cas_advance_cannot_cancel_unknown_dispatch
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_remote_success_before_local_event_recovers_from_receipt
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_revoke_to_empty_has_its_own_historical_receipt
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_untrusted_local_writer_cannot_revoke
+FAILED tests/test_connected_security.py::ConnectedDeadlineAndWithdrawalBoundary::test_delayed_old_withdrawal_does_not_revoke_requalified_grant
+FAILED tests/test_connected_security.py::ConnectedDeadlineAndWithdrawalBoundary::test_scope_expiring_during_policy_call_cannot_commit
+FAILED tests/test_connected_security.py::ConnectedDeadlineAndWithdrawalBoundary::test_short_requested_grant_cannot_disappear_behind_other_live_skill
+FAILED tests/test_connected_security.py::ConnectedDeadlineAndWithdrawalBoundary::test_unaffected_scope_keeps_exact_absolute_expiry_on_replacement
+20 failed, 284 passed, 29 subtests passed in 7.52s

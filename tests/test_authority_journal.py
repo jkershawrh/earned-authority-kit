@@ -7,6 +7,7 @@ from pathlib import Path
 from earned_authority.connected import ConnectedRuntime
 from earned_authority.runtime import ControlledClock, Denied
 from earned_authority.contracts import canonical_digest
+from test_connected_security import bound_unit_qualification, configure_unit_evidence_ledger
 
 class Crash(BaseException): pass
 
@@ -75,16 +76,10 @@ class AuthorityJournalTests(unittest.TestCase):
         self.rt=self.runtime();self.q=self.qualify()
     def runtime(self):
         rt=ConnectedRuntime(self.path,passport=self.passport,policy=self.policy,ledger=None,qualification_client=None,fence_path=Path(self.tmp.name)/'fence')
-        rt.clock=self.clock;return rt
+        rt.clock=self.clock;configure_unit_evidence_ledger(rt);return rt
     def qualify(self,skill='release-model',model='model-v2'):
         context={'model_version':model,'desired_replicas':1,'max_replicas':2}
-        q={'qualification_id':'q-'+skill+'-'+model,'qualification_revision':1,'skill':skill,
-           'version':self.rt.procedure_revision,'context':context,
-           'skill_digest':canonical_digest({'skill':skill,'version':self.rt.procedure_revision}),
-           'context_digest':canonical_digest({'environment':context}),'expires_at_ms':self.clock.now_ms+300000,
-           'disposition':'ELIGIBLE','reason':'UNIT_ELIGIBLE'}
-        with self.rt._tx() as db:self.rt._save_qualification(db,q)
-        return q
+        return bound_unit_qualification(self.rt,skill,context,300000)
     def stop_at(self,stage):
         def hook(actual,operation):
             if actual==stage:raise Crash(stage)

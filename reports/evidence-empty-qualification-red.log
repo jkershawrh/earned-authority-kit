@@ -1,0 +1,25 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_no_observations_remain_insufficient_when_canonical_evaluation_runs_later _
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10a659a90>
+
+    def test_no_observations_remain_insufficient_when_canonical_evaluation_runs_later(rt):
+        from earned_authority.qualification_client import QualificationClient
+        client=QualificationClient()
+        def later(q,*args,**kwargs):
+            rt.clock.advance(1)
+            return client.evaluate(q,*args,**{**kwargs,'now_ms':rt.clock.now_ms})
+        rt.qualifier=SimpleNamespace(evaluate=later)
+        for i in range(3):rt.record_procedure_report('claim-'+str(i),version=rt.procedure_revision,context=CONTEXT)
+        q=rt.qualify(context=CONTEXT)
+>       assert (q['passes'],q['disposition'],q['reason'])==(0,'HOLD','INSUFFICIENT_EVIDENCE')
+E       AssertionError: assert (0, 'HOLD', 'STALE_EVIDENCE') == (0, 'HOLD', '...ENT_EVIDENCE')
+E         
+E         At index 2 diff: 'STALE_EVIDENCE' != 'INSUFFICIENT_EVIDENCE'
+E         Use -v to get more diff
+
+tests/test_connected_evidence.py:74: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_connected_evidence.py::test_no_observations_remain_insufficient_when_canonical_evaluation_runs_later
+1 failed in 0.27s

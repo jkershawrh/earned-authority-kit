@@ -8,8 +8,11 @@ with fabricated successful services. Local clock/observer/reconciliation faults
 exercise the local enforcement boundary; they do not prove remote fault behavior.
 """
 import argparse
+import base64
 import copy
 import hashlib
+import importlib
+import importlib.util
 import json
 import re
 import sys
@@ -18,36 +21,87 @@ import traceback
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from validate_connected import build_runtime
 from deploy.ledger.validate import client_from_config, read_config
 from earned_authority.contracts import canonical_digest
-from earned_authority.passport_client import PassportClient
-from earned_authority.runtime import ControlledClock, Denied, ident
+from earned_authority.passport_client import PassportClient, PAYLOAD_HEADER
+from earned_authority.runtime import ControlledClock, Denied, ident, encoded
 
 
 # These cases remain unbound until the exact requirement has an observable API.
 UNBOUND = {
-    2: 'No public persisted self-report input distinct from independent outcomes. Caller attestation is rejected, but that is not the entire specified setup.',
-    14: 'Malformed provider response requires a transport negative-control; a fabricated canonical service cannot be claimed as live evidence.',
-    22: 'The current Foundation check response omits receipt_created; do not fabricate the explicitly required false field.',
-    26: 'Requires an actually changed deterministic procedure artifact, not a model-context change or manually reassigned version string.',
     33: 'The exposed boolean local-fault flags do not establish actual durable-store offline or writer authentication failure. Exact real failure and reason mapping remain unbound.',
-    35: 'Requires an owned stored-payload tamper with canonical receipt verification, qualification exclusion and hold, plus reliable restoration.',
-    36: 'Canonical verification rejects binding/freshness mismatches, but exact attempt/skill/expiry reason mapping and no-authority assertions are not yet bound.',
-    37: 'Requires an actual intact canonical entry carrying an untrusted independent-outcome signer and qualification admission control.',
 }
 PARTIAL = {
     9: 'Actual Foundation/OPA denies the requested resource at the requested time; a time-window-specific policy rule is not exercised.',
     15: 'Canonical current-status unavailability fails closed despite a previously observed active snapshot. There is no executable stale grant cache in this adapter, so the literal cached-status premise is not exercised.',
     16: 'Qualification and grant exist before the live attempt; records are linked by qualification/grant IDs, not retroactively assigned the later attempt ID required literally by this scenario.',
-    17: 'The actual registry write completes and its independent postcondition fails. A separate procedure success assertion is not a public input, so the literal self-report-versus-observation premise is not fully bound.',
     21: 'Real response loss and observation interruption are bound; unavailable reconciliation uses a local injected control, not a real inaccessible durable store or an explicit UNKNOWN response envelope.',
-    25: 'The public reevaluate API receives explicit UNKNOWN/STALE policy signals. Actual missing/stale evidence detection while a second grant stays fresh is not established by these calls.',
+    25: 'Actual bound-reference missing/stale detection holds qualification with the required reason and preserves the unrelated grant. The execution boundary denies the withdrawn grant as REVOKED_AUTHORITY; it does not return the literal scenario hold reason.',
     31: 'The current public aggregate has one resource grant per skill. Stale changed-resource rejection is exercised, but adding a second read-health resource while retaining the first is not represented.',
 }
+
+
+class MalformedPassportRelay:
+    """Forward the real service, corrupt only its response, and never sign one.
+
+    This is a transport negative-control, not a stand-in canonical issuer. The
+    unmodified upstream reply and the wire mutation are recorded by digest.
+    """
+    def __init__(self, original, fault):
+        self.original, self.fault, self.calls = original, fault, []
+        grpc = original.grpc
+        relay = self
+        class Handler(grpc.GenericRpcHandler):
+            def service(self, details):
+                method = details.method
+                if method not in ('/are.passport.v1.PassportIssuanceService/GetAgentPassport',
+                                  '/are.passport.v1.PassportIssuanceService/VerifyPassport'):
+                    return None
+                def forward(raw, context):
+                    try:
+                        response, call = original.channel.unary_unary(method).with_call(
+                            raw, metadata=list(context.invocation_metadata()), timeout=original.timeout)
+                    except grpc.RpcError as exc:
+                        if exc.trailing_metadata():context.set_trailing_metadata(exc.trailing_metadata())
+                        context.abort(exc.code(), exc.details())
+                    metadata = list(call.initial_metadata() or ())
+                    upstream_digest = 'sha256:' + hashlib.sha256(response).hexdigest()
+                    before_metadata = canonical_digest({str(i):[k,v.hex() if isinstance(v,bytes) else v]
+                                                        for i,(k,v) in enumerate(metadata)})
+                    if method.endswith('/GetAgentPassport'):
+                        if fault == 'missing-expiry':
+                            parsed=original.pb.GetAgentPassportResponse.FromString(response)
+                            parsed.passport.ClearField('expires_ts')
+                            response=parsed.SerializeToString()
+                        elif fault == 'invalid-expiry':
+                            altered=[]
+                            for key,value in metadata:
+                                if key==PAYLOAD_HEADER:
+                                    body=json.loads(value);body['expires_ts']='not-an-integer-timestamp'
+                                    value=json.dumps(body,sort_keys=True,separators=(',',':')).encode()
+                                altered.append((key,value))
+                            metadata=altered
+                        else:raise ValueError('unknown malformed response fault')
+                    context.send_initial_metadata(metadata)
+                    relay.calls.append({'method':method,'upstream_response_digest':upstream_digest,
+                        'forwarded_response_digest':'sha256:'+hashlib.sha256(response).hexdigest(),
+                        'upstream_metadata_digest':before_metadata,
+                        'forwarded_metadata_digest':canonical_digest({str(i):[k,v.hex() if isinstance(v,bytes) else v]
+                                                                     for i,(k,v) in enumerate(metadata)}),
+                        'fault':fault,'source':'actual canonical service','resigned':False})
+                    return response
+                return grpc.unary_unary_rpc_method_handler(forward)
+        self.server=grpc.server(ThreadPoolExecutor(max_workers=2))
+        self.server.add_generic_rpc_handlers((Handler(),))
+        self.port=self.server.add_insecure_port('127.0.0.1:0')
+        self.server.start()
+
+    def close(self):self.server.stop(0).wait(5)
 CASES = {
     3: ['changed-skill', 'changed-environment'],
     10: ['wrong-action', 'wrong-resource', 'wrong-context', 'changed-revision'],
@@ -103,7 +157,8 @@ class Case:
         self.agent = registration['agent_id']
         self.context = {'environment': run_id + '-' + f'{number:03}' + '-' + label,
                         'model_version': 'model-v2', 'desired_replicas': 1, 'max_replicas': 2}
-        self.assertions, self.faults, self.receipts = [], [], []
+        self.assertions, self.faults, self.receipts, self.artifacts = [], [], [], []
+        self.denied_types=(Denied,)
         self.q = None
         self.eq('real canonical agent is active',registration['status'],'ACTIVE')
         self.eq('no initial canonical authority before policy-approved grant',self.authority()['grants'],{})
@@ -147,10 +202,10 @@ class Case:
 
     def assert_final_registry(self):
         """Check actual effects, independently of returned controller outcomes."""
-        committed={16,17,18,19,20,21,23,24,27,30,32,34}
+        committed={16,17,18,19,20,21,23,24,26,27,30,32,34}
         expected_version='model-v2' if self.number in committed else 'model-v1'
         expected_healthy=True
-        if self.number in {23,24,27}:expected_version='wrong-model'
+        if self.number in {23,24,26,27}:expected_version='wrong-model'
         if self.number==17:
             if self.label=='wrong-version':expected_version='model-v1'
             else:expected_healthy=False
@@ -161,7 +216,7 @@ class Case:
     def deny(self, name, action, reason=None):
         before = self.state()
         try: action()
-        except Denied as exc:
+        except self.denied_types as exc:
             self.check(name, reason is None or exc.reason == reason, reason=exc.reason, expected_reason=reason)
         else: self.check(name, False, reason='no denial')
         self.eq(name + ': independent registry unchanged', self.state(), before)
@@ -191,6 +246,16 @@ class Case:
                                   'attempt_id': row['event']['attempt_id'], 'entry_id': row['receipt']['entry_id'],
                                   'entry_hash': row['receipt']['entry_hash'], 'verified': valid})
 
+    def observed_receipt(self, observation):
+        self.rt.flush_outbox()
+        rows=self.events('OUTCOME_OBSERVED',observation['attempt_id'])
+        self.eq('exactly one canonical outcome event for source observation',len(rows),1)
+        row=rows[0]
+        self.eq('canonical event contains the exact signed observation',row['event']['outcome'],observation)
+        self.check('source receipt independently verifies before reuse or corruption',
+                   row['delivery']=='RECORDED' and self.rt.ledger.verify(row['receipt'],row['event']))
+        return row
+
     def reopen(self):
         self.rt.passport.close(); self.rt.ledger.close(); self.rt.close()
         self.rt = build_runtime(self.args, self.path)
@@ -214,6 +279,61 @@ class Case:
             self.rt.grant(self.q['qualification_id'], agent=self.agent)
         self.eq('starting canonical authority revision', self.authority()['revision'], 4)
 
+    def switch_to_changed_procedure(self):
+        """Run an isolated, preserved artifact with an executable validation change.
+
+        Both copies are made only while this live run is executing. No version
+        property is assigned and no source repository is edited.
+        """
+        original=self.rt
+        report_path=self.args.report.resolve()
+        artifact_root=report_path.parent/(report_path.stem+'-procedure-revisions')/(f'{self.number:03}-'+self.label)
+        baseline=artifact_root/'baseline'/'earned_authority'
+        revised=artifact_root/'revised'/'earned_authority'
+        for directory in (baseline,revised):
+            directory.mkdir(parents=True,exist_ok=False)
+            for path in sorted((ROOT/'earned_authority').glob('*.py')):
+                (directory/path.name).write_bytes(path.read_bytes())
+        source=(revised/'connected.py').read_text()
+        needle="        if claims: raise Denied('CALLER_CANNOT_ATTEST_OUTCOME')\n"
+        change="        if type(healthy) is not bool: raise Denied('INVALID_HEALTH_STATE')\n"
+        self.eq('exact executable revision patch location',source.count(needle),1)
+        self.check('new validation is a behavior change',change not in source)
+        (revised/'connected.py').write_text(source.replace(needle,needle+change,1))
+
+        def load(directory):
+            alias=ident('bdd_procedure').replace('-','_')
+            spec=importlib.util.spec_from_file_location(alias,directory/'__init__.py',submodule_search_locations=[str(directory)])
+            package=importlib.util.module_from_spec(spec);sys.modules[alias]=package;spec.loader.exec_module(package)
+            connected=importlib.import_module(alias+'.connected')
+            runtime_module=importlib.import_module(alias+'.runtime')
+            instance=connected.ConnectedRuntime(self.path,passport=original.passport,policy=original.policy,ledger=original.ledger,
+                qualification_client=original.qualifier,fence_path=original.fence_path)
+            self.denied_types=self.denied_types+(runtime_module.Denied,)
+            return instance
+
+        baseline_rt=load(baseline)
+        self.eq('copied baseline computes original procedure digest',baseline_rt.procedure_revision,original.procedure_revision)
+        old_probe=baseline_rt.shadow(context=self.context,attempt_id=ident('baseline-health-type'),healthy=1)
+        self.eq('original executable accepts integer health input',old_probe['outcome'],'PASS')
+        baseline_rt.close()
+        self.rt=load(revised)
+        self.check('revised executable computes a different procedure digest',self.rt.procedure_revision!=original.procedure_revision,
+                   baseline_revision=original.procedure_revision,revised_revision=self.rt.procedure_revision)
+        self.deny('revised executable enforces its added validation',lambda:self.rt.shadow(
+            context=self.context,attempt_id=ident('revised-health-type'),healthy=1),'INVALID_HEALTH_STATE')
+        manifests=[]
+        for label,directory,revision in [('baseline',baseline,original.procedure_revision),('revised',revised,self.rt.procedure_revision)]:
+            manifests.append({'kind':label,'directory':str(directory.relative_to(ROOT)),
+                'procedure_revision':revision,'sources':{str(p.relative_to(ROOT)):'sha256:'+hashlib.sha256(p.read_bytes()).hexdigest()
+                                                       for p in sorted(directory.glob('*.py'))}})
+        manifest_path=artifact_root/'manifest.json'
+        manifest_path.write_text(json.dumps({'change':'Require an actual bool for shadow health input before execution.','artifacts':manifests},indent=2)+'\n')
+        self.artifacts.append({'path':str(manifest_path.relative_to(ROOT)),
+                               'sha256':'sha256:'+hashlib.sha256(manifest_path.read_bytes()).hexdigest(),'procedure_artifacts':manifests})
+        self.faults.append('A copied controller package executes an added health-type validation; original sources and signatures are untouched, and versions are computed from file bytes.')
+        return original.procedure_revision
+
     def run(self):
         n, rt = self.number, self.rt
         if n == 1:
@@ -230,6 +350,21 @@ class Case:
             self.eq('qualification policy revision bound',q['policy_digest'],canonical_digest({'required_passes':3,'window_ms':rt.evidence_window_ms,'version':1}))
             self.eq('qualification creates no authority', self.authority()['grants'], {})
             self.eq('shadow creates no live mutation', self.state(), before)
+        elif n == 2:
+            reports=[rt.record_procedure_report(ident('self-report'),reported_outcome='PASS',agent=self.agent,
+                       skill='release-model',version=rt.procedure_revision,context=self.context) for _ in range(3)]
+            self.eq('three distinct procedure reports',len({r['attempt_id'] for r in reports}),3)
+            self.check('procedure reports claim PASS',all(r['reported_outcome']=='PASS' for r in reports))
+            self.check('procedure claims are explicitly non-independent',all(r['independent'] is False for r in reports))
+            self.reopen();rt=self.rt
+            self.eq('procedure claims persist separately across restart',rt.procedure_reports(),reports)
+            self.eq('self reports create no independent observations',rt.observations(),[])
+            q=rt.qualify(context=self.context)
+            self.eq('self reports cannot qualify',q['disposition'],'HOLD')
+            self.eq('missing independent evidence remains insufficient',q['reason'],'INSUFFICIENT_EVIDENCE')
+            self.eq('self reports count as neither passes nor failures',(q['passes'],q['failures']),(0,0))
+            self.eq('no independent outcome reference fabricated',q['outcome_refs'],[])
+            self.eq('no passport from self reports',self.authority()['grants'],{})
         elif n == 3:
             q = self.qualify(); original = copy.deepcopy(q)
             version, context = rt.procedure_revision, self.context
@@ -308,6 +443,25 @@ class Case:
             self.check('canonical revocation acknowledged', acknowledged['revision']>old and not acknowledged['grants'])
             if n == 29:self.eq('revocation advances exact current revision',acknowledged['revision'],5)
             self.deny('prior admitted command refused at actual mutation fence',lambda:rt.commit(command),'REVOKED_AUTHORITY')
+        elif n == 14:
+            self.ready();known=self.authority();original=rt.passport
+            relay=MalformedPassportRelay(original,self.label)
+            config=read_config(self.args.config)
+            proxy=PassportClient('127.0.0.1:'+str(relay.port),original.token,original.public_key,
+                sdk_path=config['PASSPORT_SDK_DIR'],timeout_seconds=3)
+            rt.passport=proxy
+            self.faults.append('Loopback forwarding proxy corrupts expiry in an actual canonical reply; original signature is retained and no credential is fabricated or re-signed.')
+            try:
+                for _ in range(2):
+                    aid=ident('malformed-authority-attempt')
+                    self.deny('invalid expiry response denied at public authority boundary',
+                              lambda:rt.commit(self.admit(attempt_id=aid)),'INVALID_AUTHORITY')
+                    self.eq('invalid authority creates no cached executable attempt',rt.attempts(aid),None)
+                self.check('fault actually forwarded real service replies',len(relay.calls)>=2,calls=relay.calls)
+                self.check('expiry fault changed wire content',all(c['upstream_response_digest']!=c['forwarded_response_digest']
+                           or c['upstream_metadata_digest']!=c['forwarded_metadata_digest'] for c in relay.calls))
+            finally:rt.passport=original;proxy.close();relay.close()
+            self.eq('valid canonical authority remains unchanged after removing bad transport',self.authority(),known)
         elif n == 15:
             self.ready(); known = self.authority(); original = rt.passport
             config = read_config(self.args.config)
@@ -329,11 +483,18 @@ class Case:
             self.eq('one authenticated durable intent',len(self.events('INTENT',cmd['attempt_id'])),1)
             self.eq('one durable commit',len(self.events('COMMITTED',cmd['attempt_id'])),1)
         elif n == 17:
-            self.ready();result=rt.commit(self.admit(),actual='model-v1' if self.label=='wrong-version' else None,healthy=self.label!='unhealthy')
+            self.ready();cmd=self.admit()
+            report=rt.record_procedure_report(cmd['attempt_id'],reported_outcome='PASS',agent=self.agent,
+                      skill='release-model',version=rt.procedure_revision,context=self.context)
+            self.eq('procedure explicitly reports success for this attempt',(report['attempt_id'],report['reported_outcome']),
+                    (cmd['attempt_id'],'PASS'))
+            result=rt.commit(cmd,actual='model-v1' if self.label=='wrong-version' else None,healthy=self.label!='unhealthy')
             self.faults.append('Actual disposable registry writer receives wrong-version or unhealthy-state fault; independent reader observes persisted result.')
             self.eq('wrong actual postcondition is FAIL',result['outcome']['outcome'],'FAIL')
             self.eq('failed postcondition reason',result['outcome']['reason'],'POSTCONDITION_NOT_MET')
             self.eq('observation equals independently read state',result['outcome']['readback'],rt.read('model/champion'))
+            self.eq('procedure success report cannot override finalized independent outcome',rt.attempts(cmd['attempt_id'])['outcome']['outcome'],'FAIL')
+            self.eq('original procedure success claim remains separate and auditable',rt.procedure_reports(cmd['attempt_id']),[report])
         elif n == 18:
             self.ready();before=copy.deepcopy(self.q);cmd=self.admit();result=rt.commit(cmd,observer_available=False)
             self.faults.append('Independent live observer availability injection after actual durable commit.')
@@ -380,6 +541,19 @@ class Case:
             self.eq('restart recovery returns original attempt',recovered['attempt_id'],cmd['attempt_id'])
             self.eq('reconciled actual postcondition is PASS',recovered['outcome']['outcome'],'PASS')
             self.eq('recovery never repeats mutation',rt.mutation_count,count)
+        elif n == 22:
+            self.ready();aid=ident('check-only-attempt')
+            response=rt.policy.check(self.agent,'release','model/champion')
+            self.eq('actual Foundation decision allows the check',response['decision']['effect'],'ALLOW')
+            self.check('actual Foundation explicitly says not executed',response.get('executed') is False,response=response)
+            self.check('actual Foundation explicitly says no receipt created',response.get('receipt_created') is False)
+            evidence=rt.record_check_only(aid,response)
+            self.eq('check-only state',evidence['state'],'AUTHORIZATION_CHECKED')
+            self.eq('executor, outcome and delivery remain separate',
+                (evidence['executed'],evidence['receipt_created'],evidence['outcome'],evidence['delivery']),
+                (False,False,None,'NONE'))
+            self.eq('no completed execution record for check',rt.attempts(aid),None)
+            self.eq('no fabricated execution or observation event',self.events(aid=aid),[])
         elif n == 23:
             self.ready(second=True);cmd=self.admit();good=self.refuse_ledger()
             try:
@@ -403,13 +577,59 @@ class Case:
             self.check('passport replaced monotonically',current['passport_id']!=prior['passport_id'] and current['revision']>prior['revision'])
             self.read_other();self.deny('old revision cannot revive failed release',lambda:rt.commit(old),'REVOKED_AUTHORITY')
         elif n == 25:
-            self.ready(second=True);state='UNKNOWN' if self.label=='missing-result' else 'STALE'
-            before=[o for o in rt.observations() if o['outcome']=='FAIL'];rt.reevaluate(self.agent,'release-model',state=state)
-            self.faults.append('Explicit public lifecycle reevaluation signal '+state+'; underlying detector behavior is not certified.')
-            q=rt.qualification(self.q['qualification_id']);self.eq('qualification held',q['disposition'],'HOLD')
-            self.eq('hold reason',q['reason'],'EVIDENCE_UNCONFIRMED' if state=='UNKNOWN' else 'STALE_EVIDENCE')
-            self.eq('hold never invents failed evidence',[o for o in rt.observations() if o['outcome']=='FAIL'],before)
-            self.deny('affected release denied',lambda:rt.commit(self.admit()));self.read_other()
+            restored_clock=None
+            if self.label=='old-result':
+                restored_clock=self.clock_at(rt.clock.now_ms-rt.evidence_window_ms+10000)
+                self.qualify();rt.clock=restored_clock;restored_clock=None
+                rt.grant(self.q['qualification_id'],agent=self.agent)
+                readq=self.qualify('read-health')
+                prior=rt.grant(readq['qualification_id'],agent=self.agent,action='read',resource='urn:dataset/health')
+                self.check('release evidence expires before unrelated evidence',self.q['expires_at_ms']<readq['expires_at_ms'])
+                restored_clock=self.clock_at(self.q['expires_at_ms'])
+                reason='STALE_EVIDENCE'
+            else:
+                prior=self.ready(second=True);reason='EVIDENCE_UNCONFIRMED'
+                removed=self.q['outcome_refs'][0]['attempt_id']
+                with rt._tx() as db:db.execute('DELETE FROM observations WHERE attempt_id=?',(removed,))
+                self.faults.append('Actual case-local SQLite observation row removed while its original signed event and canonical receipt remain.')
+                self.check('required observation is actually missing',all(o['attempt_id']!=removed for o in rt.observations()))
+            try:
+                before=[o for o in rt.observations() if o['outcome']=='FAIL']
+                audit=rt.audit_qualification_evidence(self.agent,'release-model')
+                self.eq('actual required-evidence audit holds affected qualification',(audit['status'],audit['reason'],audit['requires_hold']),('HOLD',reason,True))
+                q=rt.qualification(self.q['qualification_id']);self.eq('qualification held',q['disposition'],'HOLD')
+                self.eq('hold reason',q['reason'],reason)
+                self.eq('hold never invents failed evidence',[o for o in rt.observations() if o['outcome']=='FAIL'],before)
+                current=self.authority()
+                for field in ('grant_id','qualification_id','qualification_digest'):
+                    self.eq('detector preserves unrelated '+field,current['grants']['read-health'][field],prior['grants']['read-health'][field])
+                self.deny('affected release denied after evidence hold',lambda:rt.commit(self.admit()),'REVOKED_AUTHORITY');self.read_other()
+            finally:
+                if restored_clock:rt.clock=restored_clock
+        elif n == 26:
+            self.ready(second=True);oldq=copy.deepcopy(self.q);old_command=self.admit()
+            failed=rt.commit(self.admit(),actual='wrong-model')
+            self.eq('old procedure independently failed',failed['outcome']['outcome'],'FAIL')
+            withdrawn=self.authority();withdrawals=self.events('REVOKED',failed['attempt_id'])
+            self.check('old release grant withdrawn before revision change','release-model' not in withdrawn['grants'] and bool(withdrawals))
+            withdrawal_id=withdrawals[-1]['event_id']
+            old_revision=self.switch_to_changed_procedure();rt=self.rt
+            q=self.qualify();self.check('revised procedure has a new qualification',q['qualification_id']!=oldq['qualification_id'])
+            self.eq('new qualification exact computed revision',q['version'],rt.procedure_revision)
+            observations={o['observation_id']:o for o in rt.observations()}
+            self.eq('new qualification has three fresh exact-revision outcomes',len(q['outcome_refs']),3)
+            self.check('old evidence is not borrowed',all(observations[ref['observation_id']]['version']==rt.procedure_revision
+                       and observations[ref['observation_id']]['outcome']=='PASS' for ref in q['outcome_refs']))
+            issued=rt.grant(q['qualification_id'],agent=self.agent);grant=issued['grants']['release-model']
+            self.eq('new grant binds new executable and evidence',(grant['version'],grant['qualification_id'],grant['qualification_digest']),
+                    (rt.procedure_revision,q['qualification_id'],canonical_digest(q)))
+            self.check('new grant is a later canonical authority revision',issued['revision']>withdrawn['revision'])
+            command=self.admit();self.check('new separate policy approval is bound',bool(command['policy_decision_id']))
+            self.deny('old executable revision remains unauthorized',lambda:self.admit(version=old_revision),'SKILL_REVISION_MISMATCH')
+            self.deny('old admitted authority cannot return',lambda:rt.commit(old_command),'REVOKED_AUTHORITY')
+            reinstatement=self.events('REQUALIFIED')
+            self.check('reinstatement links new evidence and prior withdrawal',any(row['event'].get('qualification_id')==q['qualification_id']
+                       and row['event'].get('prior_withdrawal_event_id')==withdrawal_id for row in reinstatement))
         elif n == 27:
             self.ready(second=True);rt.commit(self.admit(),actual='wrong-model');before=self.authority()
             self.deny('manual activation cannot bypass evidence or policy',lambda:rt.reactivate(self.agent,'release-model'),'QUALIFICATION_AND_POLICY_REQUIRED')
@@ -488,6 +708,84 @@ class Case:
             rows=self.events(aid=cmd['attempt_id'])
             for row in rows:self.eq('duplicate delivery preserves canonical receipt',rt.ledger.append(row['event'],row['event_id']),row['receipt'])
             self.eq('one outcome for the logical attempt',len([o for o in rt.observations() if o['attempt_id']==cmd['attempt_id']]),1)
+        elif n == 35:
+            prior=self.ready(second=True)
+            observation=next(o for o in rt.observations() if o['attempt_id']==self.q['outcome_refs'][0]['attempt_id'])
+            row=self.observed_receipt(observation)
+            altered=copy.deepcopy(observation);altered['readback']['version']='altered-without-receipt'
+            self.eq('fault retains original evidence digest',altered['evidence_digest'],observation['evidence_digest'])
+            with rt._tx() as db:db.execute('UPDATE observations SET body=? WHERE attempt_id=?',(json.dumps(altered),altered['attempt_id']))
+            self.faults.append('Actual case-local stored signed observation payload changed without changing its signature, evidence digest, original event, or remote receipt; canonical ledger remains intact.')
+            self.check('altered payload is actually stored',any(o==altered for o in rt.observations()))
+            self.check('receipt still binds original recorded bytes',rt.ledger.verify(row['receipt'],row['event']))
+            audit=rt.audit_qualification_evidence(self.agent,'release-model')
+            self.eq('stored-payload verification reports tamper',audit['reason'],'TAMPER_DETECTED')
+            self.eq('positive tamper holds affected authority',(audit['status'],audit['requires_hold']),('HOLD',True))
+            self.eq('affected qualification is held',rt.qualification(self.q['qualification_id'])['disposition'],'HOLD')
+            q=rt.qualify(context=self.context)
+            self.eq('tampered evidence is excluded from pass count',q['passes'],2)
+            self.check('tampered observation is excluded from new qualification references',all(ref['attempt_id']!=observation['attempt_id'] for ref in q['outcome_refs']))
+            self.eq('remaining evidence cannot qualify a replacement',q['disposition'],'HOLD')
+            self.deny('held affected grant cannot mutate',lambda:rt.commit(self.admit()),'REVOKED_AUTHORITY')
+            self.eq('unrelated qualification preserved',self.authority()['grants']['read-health']['qualification_id'],prior['grants']['read-health']['qualification_id'])
+            self.read_other()
+        elif n == 36:
+            observation=self.shadow();row=self.observed_receipt(observation)
+            expected_attempt=observation['attempt_id'];restored_clock=None
+            if self.label=='other-attempt':expected_attempt=ident('attempt-current');reason='ATTEMPT_MISMATCH'
+            elif self.label=='old-skill':
+                previous=self.switch_to_changed_procedure();rt=self.rt
+                self.eq('offered receipt belongs to actually executed prior code',observation['version'],previous)
+                reason='SKILL_REVISION_MISMATCH'
+            else:
+                restored_clock=self.clock_at(observation['observed_at_ms']+rt.evidence_window_ms)
+                reason='STALE_EVIDENCE'
+            try:
+                before=copy.deepcopy(rt.observations())
+                decision=rt.admit_evidence(observation,row['event'],row['receipt'],expected_attempt_id=expected_attempt,context=self.context)
+                self.eq('receipt purpose is rejected with exact reason',decision['reason'],reason)
+                self.eq('rejected receipt is not a counted outcome',(decision['admitted'],decision['counts_as_pass']),(False,False))
+                self.eq('receipt rejection cannot add or modify observations',rt.observations(),before)
+                records=[record for record in rt.evidence_intakes() if record['intake_id']==decision['intake_id']]
+                self.eq('purpose rejection durably recorded exactly once',len(records),1)
+                self.eq('durable rejection retains exact reason',records[0]['decision']['reason'],reason)
+                self.eq('receipt cannot issue any authority',self.authority()['grants'],{})
+                self.deny('receipt alone cannot authorize a new mutation',lambda:rt.commit(self.admit()),'REVOKED_AUTHORITY')
+            finally:
+                if restored_clock:rt.clock=restored_clock
+        elif n == 37:
+            aid=ident('untrusted-outcome');key=Ed25519PrivateKey.generate()
+            observation={'observation_id':ident('observation'),'attempt_id':aid,'skill':'release-model','version':rt.procedure_revision,
+                'context':self.context,'skill_digest':canonical_digest({'skill':'release-model','version':rt.procedure_revision}),
+                'context_digest':canonical_digest({'environment':self.context}),'expected':'model-v2',
+                'readback':{'version':'model-v2','healthy':True},'outcome':'PASS','reason':'POSTCONDITION_MET','independent':True,
+                'shadow':True,'observed_at_ms':rt.clock.now_ms,'evaluator_digest':canonical_digest({'checker':'independent-registry-readback-v1'}),
+                'signer':'bdd-untrusted-outcome-producer'}
+            observation['signature']=base64.b64encode(key.sign(encoded(observation))).decode()
+            observation['evidence_digest']=canonical_digest(observation)
+            self.eq('untrusted producer signature is cryptographically valid',key.public_key().verify(
+                base64.b64decode(observation['signature']),encoded({k:v for k,v in observation.items() if k not in ('signature','evidence_digest')})),None)
+            self.check('valid producer key is outside configured trust',observation['signer'] not in rt._trusted_outcome_producers)
+            event={'event_id':ident('untrusted-event'),'event_type':'OUTCOME_OBSERVED','agent_id':self.agent,'attempt_id':aid,
+                   'correlation_id':aid,'occurred_at_ms':rt.clock.now_ms,'outcome':observation}
+            receipt=rt.ledger.append(event,event['event_id'])
+            self.check('actual canonical chain and writer verify for untrusted inner claim',rt.ledger.verify(receipt,event))
+            self.receipts.append({'event_id':event['event_id'],'event_type':event['event_type'],'attempt_id':aid,
+                'entry_id':receipt['entry_id'],'entry_hash':receipt['entry_hash'],'verified':True,'external_untrusted_outcome_negative_control':True})
+            self.faults.append('An outcome signed by a newly generated untrusted Ed25519 key is actually recorded by the authorized canonical ledger writer. The ledger signature is valid; the independent attester is not trusted.')
+            decision=rt.admit_evidence(observation,event,receipt,expected_attempt_id=aid,context=self.context)
+            self.eq('intact chain does not establish independent attester trust',decision['reason'],'UNTRUSTED_ATTESTATION')
+            self.eq('untrusted assertion cannot count as pass',(decision['admitted'],decision['counts_as_pass']),(False,False))
+            self.eq('untrusted assertion is not an admitted observation',rt.observations(),[])
+            records=[record for record in rt.evidence_intakes() if record['intake_id']==decision['intake_id']]
+            self.eq('untrusted exclusion is durably reviewable',len(records),1)
+            self.eq('stored exclusion reason',records[0]['decision']['reason'],'UNTRUSTED_ATTESTATION')
+            q=rt.qualify(context=self.context)
+            self.eq('qualification counts no pass from untrusted assertion',q['passes'],0)
+            self.eq('qualification excludes untrusted outcome reference',q['outcome_refs'],[])
+            self.eq('untrusted assertion cannot qualify',q['disposition'],'HOLD')
+            self.eq('untrusted assertion creates no authority',self.authority()['grants'],{})
+            self.deny('no mutation authorized by intact but untrusted evidence',lambda:rt.commit(self.admit()),'REVOKED_AUTHORITY')
         else:
             raise NotImplementedError('unbound scenario')
 
@@ -514,6 +812,7 @@ def run(args):
             'exit_codes':{'0':'prepared inventory or all selected scenarios fully green','1':'observed failed assertion or runtime operation',
                           '2':'blocked, partial, unbound, or sources changed; acceptance incomplete'}}
     path=args.report or ROOT/'reports'/(run_id+'.json')
+    args.report=path
     if path.exists():raise ValueError('preserve prior evidence: choose a new report filename')
     path.parent.mkdir(parents=True,exist_ok=True);args.state_dir.mkdir(parents=True,exist_ok=True)
     def save():path.write_text(json.dumps(report,indent=2)+'\n')
@@ -523,7 +822,7 @@ def run(args):
         for label in CASES.get(number,['default']):
             row={'scenario_id':f'BDD-{number:03}','case':label,'requirements':requirements[number],
                  'execution_state':'NOT_RUN','acceptance_color':'AMBER','complete_scenario_candidate':number not in UNBOUND and number not in PARTIAL,
-                 'limitation':UNBOUND.get(number,PARTIAL.get(number)),'assertions':[],'faults':[],'receipts':[]}
+                 'limitation':UNBOUND.get(number,PARTIAL.get(number)),'assertions':[],'faults':[],'receipts':[],'artifacts':[]}
             report['cases'].append(row)
     save()
     for row in report['cases']:
@@ -536,14 +835,14 @@ def run(args):
             report['canonical_source_revisions']=case.rt.qualifier.source_revisions
             case.run();case.assert_final_registry();case.verify_events();row.update(execution_state='PASSED',acceptance_color='AMBER' if number in PARTIAL else 'GREEN',
                 state_after=case.state(),authority_after=public(case.authority()),authority_after_digest=canonical_digest(case.authority()),
-                assertions=case.assertions,faults=case.faults,receipts=case.receipts)
+                assertions=case.assertions,faults=case.faults,receipts=case.receipts,artifacts=case.artifacts)
         except Exception as exc:
             if case is None and not isinstance(exc,AssertionError):
                 row.update(execution_state='BLOCKED',acceptance_color='AMBER',error=type(exc).__name__+': '+str(exc))
                 report['blocked_reason']='Real service setup unavailable; no dependent scenario assertion executed.'
                 save();break
             row.update(execution_state='FAILED',acceptance_color='RED',error=type(exc).__name__+': '+str(exc),traceback=traceback.format_exc())
-            if case:row.update(assertions=case.assertions,faults=case.faults,receipts=case.receipts)
+            if case:row.update(assertions=case.assertions,faults=case.faults,receipts=case.receipts,artifacts=case.artifacts)
         finally:
             if case:case.close()
         save();print(json.dumps({'scenario_id':row['scenario_id'],'case':label,'state':row['execution_state'],'color':row['acceptance_color']}),flush=True)

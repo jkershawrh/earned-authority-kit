@@ -55,16 +55,28 @@
       "expected": "AMBER",
       "actual": "AMBER",
       "passed": true
+    },
+    {
+      "check": "changed_foundation_log_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "missing_foundation_race_check_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
     }
   ],
-  "finished_at_ms": 1791601636478,
+  "finished_at_ms": 1791603388407,
   "source_hashes": {
-    "tools/report.py": "sha256:ec98bb4a7de0394cf2739f0de1c70c791017d0a4af30ed606959fcd55b39dd70",
-    "tools/verify_report_provenance.py": "sha256:8219433b30c8e06a7416c31c61115d4df6617c0ebeab232c48dc9e91ccbf79f2"
+    "tools/report.py": "sha256:e0465dbb22c025cc7d01df906919504813508ad71ae077a0f693df530d0a9629",
+    "tools/verify_report_provenance.py": "sha256:cca85ec6fc160dbfcef7847afd2ac4e0df11854dfba721515319fd84ece7523d"
   },
   "artifacts": {
-    "reports/operations-reference-combined.json": "sha256:c6c07235ce7f094397117527fb62f50aa30e9ea63a76450f2c7f65ac0d003f0e",
-    "reports/service-bdd-live-002.json": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2"
+    "reports/evidence-reference-combined.json": "sha256:e99162a0f6cb91b154beb63164cb80bcc9d9c1c9b87b47a23ee52cbeca779080",
+    "reports/service-bdd-live-004.json": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf"
   },
   "limitations": [
     "Isolated altered evidence copies; original execution records unchanged",

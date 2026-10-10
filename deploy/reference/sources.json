@@ -20,7 +20,7 @@
       "patches": [
         {
           "path": "patches/foundation-complete-reference.patch",
-          "sha256": "af2c500f1aaa492c2e7c73da6a5b030d46c35d4b717e0bffbf110a994df43383"
+          "sha256": "afc03ba6e79d77a95548043f865832aa0b499d81303c87689f8c5612ac9bf1a1"
         }
       ],
       "reconstruction_status": "PINNED_WITH_EXPLICIT_COMPLETE_PATCH"

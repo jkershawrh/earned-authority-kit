@@ -2,7 +2,7 @@
 
 This kit connects a deterministic procedure's qualification to bounded authority, enforced mutation, independent readback, selective withdrawal and requalification. It uses ARE Foundation, Agent Passport, ARE Immutable Ledger, Cascade Compression and deterministic GCL. Foundation keeps its S0/S1 role; higher-stage qualification lives in the integration layer.
 
-**Three bounded engineering milestones have executable evidence:** a local fixture; connected canonical services; and a fresh same-host reference installation with persistent restart. The latest component run passes **235 tests**, and the fresh-reference deployment passes **123 checks**. The dedicated service behavior run passes 39 executed cases and completes **22 of 37 scenarios**; seven scenarios remain partial and eight unbound. These counts describe different suites and are not statistical trials. The full roadmap remains **AMBER**: business value has not been evaluated, complete real-service coverage is not established, and broader deployment/recovery gates remain open.
+**Three bounded engineering milestones have executable evidence:** a local fixture; connected canonical services; and a fresh same-host reference installation with persistent restart. The latest component run passes **321 tests**, and the fresh-reference deployment passes **123 checks**. The dedicated service behavior run passes 49 executed cases and completes **30 of 37 scenarios**; six scenarios remain partial and one unbound. These counts describe different suites and are not statistical trials. The full roadmap remains **AMBER**: business value has not been evaluated, complete real-service coverage is not established, and broader deployment/recovery gates remain open.
 
 Start with [the visual roadmap](roadmap.html), [the parallel work plan](docs/ROADMAP.md), [deployment instructions](deploy/reference/README.md) and [scope and remaining gaps](docs/BOUNDARIES.md). **EDD means evaluation-driven development.** The [evaluation protocol](evaluations/README.md) is drafted but unexecuted; it needs a chosen value target, actual human baseline and preregistered sample/risk criteria.
 
@@ -35,6 +35,8 @@ The demonstration uses an explicit **three-pass qualification profile**. Upstrea
 
 Authority updates now persist a signed local intent before dispatch. Canonical Passport atomically stores the transition and its signed operation receipt; reconciliation uses that exact receipt to recover the lifecycle event without repeating the transition. An uncertain dispatched operation blocks further local action until resolved. Historical receipts never supply current permission. This closes the tested process-crash paths while retaining separate service commits and explicit same-host trust assumptions; see [the boundary review](docs/BOUNDARIES.md).
 
+Independent evidence now has a receipt-backed admission path. Procedure self-reports stay separate, trusted outcome producers are pinned, and every imported record is bound to its attempt, procedure revision, context and validity window. Auditing can quarantine corrupted evidence and withdraw the affected grant. Publication, grant and execution checks prevent reuse through an older eligible qualification. Remote Ledger unavailability remains distinct from an observed task failure.
+
 ## Layout and evidence
 
 - `earned_authority/`: fixture and connected runtimes, canonical service adapters, signed proof mapping and conservative readiness assessment.
@@ -43,7 +45,7 @@ Authority updates now persist a signed local intent before dispatch. Canonical P
 - `evaluations/`: evaluation-driven development protocol, comparators, metrics and stopping rules; no measured business-value results.
 - `deploy/`: pinned sources, dependency locks, local service profiles and repeatable validation/recovery commands.
 - `patches/` and `evidence/`: reviewable Passport/Foundation patches and retained red/green evidence. Original tracked user source was preserved.
-- `reports/`: [235-test component run](reports/component-verification.json), [fresh-reference run](reports/operations-reference-combined.json), [service behavior run](reports/service-bdd-live-002.json), [environment coverage](reports/bdd-environment-coverage.json) and [readiness matrix](reports/readiness.json).
+- `reports/`: [321-test component run](reports/component-verification.json), [fresh-reference run](reports/evidence-reference-combined.json), [service behavior run](reports/service-bdd-live-004.json), [environment coverage](reports/bdd-environment-coverage.json) and [readiness matrix](reports/readiness.json).
 
 ## Color rules
 

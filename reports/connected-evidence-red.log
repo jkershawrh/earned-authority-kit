@@ -1,0 +1,83 @@
+FFFFFF                                                                   [100%]
+=================================== FAILURES ===================================
+_______________ test_verified_import_is_durable_and_deduplicated _______________
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x107573050>
+
+    def test_verified_import_is_durable_and_deduplicated(rt):
+        obs=rt.shadow(context=CONTEXT,attempt_id='imported');rt.flush_outbox();row=outcome_row(rt,'imported')
+        with rt._tx() as db:db.execute('DELETE FROM observations WHERE attempt_id=?',('imported',))
+>       result=rt.admit_evidence(obs,row['event'],row['receipt'],expected_attempt_id='imported',context=CONTEXT)
+               ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ConnectedRuntime' object has no attribute 'admit_evidence'. Did you mean: 'audit_evidence'?
+
+tests/test_connected_evidence.py:50: AttributeError
+_______ test_rejected_copy_does_not_quarantine_valid_stored_observation ________
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10872a750>
+
+    def test_rejected_copy_does_not_quarantine_valid_stored_observation(rt):
+        q,_=ready(rt);obs=rt.observations()[0];row=outcome_row(rt,obs['attempt_id'])
+        bad=copy.deepcopy(obs);bad['readback']['healthy']=False
+>       rejected=rt.admit_evidence(bad,row['event'],row['receipt'],expected_attempt_id=obs['attempt_id'],context=CONTEXT)
+                 ^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ConnectedRuntime' object has no attribute 'admit_evidence'. Did you mean: 'audit_evidence'?
+
+tests/test_connected_evidence.py:60: AttributeError
+________ test_stored_tamper_is_excluded_and_only_affected_grant_is_held ________
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10872b1d0>
+
+    def test_stored_tamper_is_excluded_and_only_affected_grant_is_held(rt):
+        q,read=ready(rt)
+        with rt._tx() as db:
+            aid,raw=db.execute('SELECT attempt_id,body FROM observations ORDER BY rowid LIMIT 1').fetchone()
+            bad=json.loads(raw);bad['readback']['healthy']=False
+            db.execute('UPDATE observations SET body=? WHERE attempt_id=?',(json.dumps(bad),aid))
+>       result=rt.audit_qualification_evidence()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ConnectedRuntime' object has no attribute 'audit_qualification_evidence'
+
+tests/test_connected_evidence.py:73: AttributeError
+_________ test_missing_required_observation_holds_without_task_failure _________
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10872bd10>
+
+    def test_missing_required_observation_holds_without_task_failure(rt):
+        q,read=ready(rt)
+        with rt._tx() as db:db.execute('DELETE FROM observations WHERE attempt_id=?',(q['outcome_refs'][0]['attempt_id'],))
+>       result=rt.audit_qualification_evidence()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ConnectedRuntime' object has no attribute 'audit_qualification_evidence'
+
+tests/test_connected_evidence.py:85: AttributeError
+__________ test_remote_outage_does_not_hold_authentic_local_evidence ___________
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10872b710>
+
+    def test_remote_outage_does_not_hold_authentic_local_evidence(rt):
+        q,read=ready(rt);rt.ledger.available=False
+>       result=rt.audit_qualification_evidence()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ConnectedRuntime' object has no attribute 'audit_qualification_evidence'
+
+tests/test_connected_evidence.py:94: AttributeError
+_________ test_local_pending_delivery_does_not_require_remote_receipt __________
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x1075069c0>
+
+    def test_local_pending_delivery_does_not_require_remote_receipt(rt):
+        q=qualify(rt);rt.grant(q['qualification_id']);rt.ledger.available=False
+>       result=rt.audit_qualification_evidence()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ConnectedRuntime' object has no attribute 'audit_qualification_evidence'
+
+tests/test_connected_evidence.py:103: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_connected_evidence.py::test_verified_import_is_durable_and_deduplicated
+FAILED tests/test_connected_evidence.py::test_rejected_copy_does_not_quarantine_valid_stored_observation
+FAILED tests/test_connected_evidence.py::test_stored_tamper_is_excluded_and_only_affected_grant_is_held
+FAILED tests/test_connected_evidence.py::test_missing_required_observation_holds_without_task_failure
+FAILED tests/test_connected_evidence.py::test_remote_outage_does_not_hold_authentic_local_evidence
+FAILED tests/test_connected_evidence.py::test_local_pending_delivery_does_not_require_remote_receipt
+6 failed in 0.49s

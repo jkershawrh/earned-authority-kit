@@ -1,0 +1,83 @@
+{
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "environment": "REAL_LOCAL_SERVICES",
+  "command_exit_code": 0,
+  "command": [
+    "python3",
+    "deploy/reference/bootstrap.py",
+    "--workspace",
+    "work/evidence-reference",
+    "--instance",
+    "ea-evidence",
+    "--port-offset",
+    "3000",
+    "--validate"
+  ],
+  "completed_at": "2026-10-10T03:36:00.477800+00:00",
+  "components": {
+    "policy": {
+      "report": "reports/evidence-reference-v2-policy.json",
+      "status": "GREEN",
+      "checks": 8,
+      "source_stable": true
+    },
+    "services": {
+      "report": "reports/evidence-reference-v2-services.json",
+      "status": "GREEN",
+      "checks": 7,
+      "source_stable": true
+    },
+    "connected": {
+      "report": "reports/evidence-reference-v2-connected.json",
+      "status": "GREEN",
+      "checks": 23,
+      "source_stable": true
+    },
+    "adversarial": {
+      "report": "reports/evidence-reference-v2-adversarial.json",
+      "status": "GREEN",
+      "checks": 17,
+      "source_stable": true
+    },
+    "authority_recovery": {
+      "report": "reports/evidence-reference-v2-authority-recovery.json",
+      "status": "GREEN",
+      "checks": 41,
+      "source_stable": true
+    },
+    "restore": {
+      "report": "reports/evidence-reference-v2-restore.json",
+      "status": "GREEN",
+      "checks": 6,
+      "source_stable": true
+    },
+    "authority_recovery_restored": {
+      "report": "reports/evidence-reference-v2-authority-recovery-restored.json",
+      "status": "GREEN",
+      "checks": 21,
+      "source_stable": true
+    }
+  },
+  "artifacts": {
+    "reports/evidence-reference-v2-policy.json": "sha256:08da395703726810812903902c535c76099c3bb7f09b06f17d3ca0b04491adfc",
+    "reports/evidence-reference-v2-services.json": "sha256:f4225dbcc8bbbc5e4d094ce0f1bebfbb9d4f2dc9f1d644c65b2c44e6487448fb",
+    "reports/evidence-reference-v2-connected.json": "sha256:7959cb29627581bdc7ad6ff2b536963432490045f6858a128b9ca406bc8949be",
+    "reports/evidence-reference-v2-adversarial.json": "sha256:c1c7341d60cd3a5503d48b1571f75b939fe41cf135de2c1fd477a13b761f9dfe",
+    "reports/evidence-reference-v2-authority-recovery.json": "sha256:d50460fbc6c6c9f9223fddbab4a8d74fa7c1543e6c3ff120e8d970a2d30ef8d2",
+    "reports/evidence-reference-v2-restore.json": "sha256:5fb0ece170c03f89b1755325ab9436855bd213eba38c4eb8311046e75b629bab",
+    "reports/evidence-reference-v2-authority-recovery-restored.json": "sha256:0baab4368b80593739a6875c5f9a393739ab9b0c1364884171b630ce4a1c197a",
+    "reports/evidence-reference-v2-bootstrap.json": "sha256:0ac5b870aed78813c19d194c89cac78907411c4ee1aac4dca0234b2132473cb1",
+    "reports/evidence-reference-v2-build-manifest.json": "sha256:10beeca3756754656c70fb4ebac59235746d5daa3a5933b8cc74d6f55ce8fc6d"
+  },
+  "source_manifest_sha256": "cdcd1a1a663984adfb984aaeaf6b3c17b67cf2317bd31164791f2726787c5232",
+  "prior_aggregate": "reports/evidence-reference-combined-pre-freeze2.json",
+  "scope": "Same host; independently fetched and patched canonical sources, distinct virtual environment, keys, state, networks, ports and volumes. Documented combined pipeline rerun against final corrected frozen evidence-admission runtime, with new validation state and actual retained-state full stack restart. Evidence-specific BDD acceptance is recorded separately.",
+  "limits": [
+    "Not a different host or independent human installer",
+    "No statistical held-out product-value claim",
+    "No backup/disk-loss recovery claim",
+    "No hardware or production deployment claim",
+    "No universal distributed atomicity or safety claim"
+  ]
+}

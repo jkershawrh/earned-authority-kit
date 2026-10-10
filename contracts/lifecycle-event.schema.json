@@ -42,7 +42,10 @@
         "REQUALIFIED",
         "INTENT",
         "CANONICAL_QUALIFICATION_EVALUATED",
-        "WITHDRAWAL_RECONCILED"
+        "WITHDRAWAL_RECONCILED",
+        "PROCEDURE_REPORTED",
+        "EVIDENCE_ADMITTED",
+        "EVIDENCE_REJECTED"
       ]
     },
     "occurred_at_ms": {

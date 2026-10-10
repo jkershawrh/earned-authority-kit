@@ -17,6 +17,7 @@ from .contracts import canonical_digest,load_unique_json
 from .runtime import Runtime,Denied,ident,encoded
 from .authority_journal import AuthorityJournal
 from .passport_client import issue_operation_request,revoke_operation_request
+from .evidence_admission import EvidenceAdmission
 
 ACTIONS={'release':'model.promote_to_production','read':'demo.read','read-health':'demo.read'}
 BINDING='earned_authority_binding_v1'
@@ -75,11 +76,145 @@ class ConnectedRuntime(AuthorityJournal,Runtime):
         with self._tx() as db:
             db.execute('CREATE TABLE IF NOT EXISTS shadow_registry(attempt_id TEXT PRIMARY KEY,version TEXT NOT NULL,healthy INTEGER NOT NULL)')
             db.execute('CREATE TABLE IF NOT EXISTS withdrawals(agent TEXT NOT NULL,skill TEXT NOT NULL,attempt_id TEXT NOT NULL,reason TEXT NOT NULL,PRIMARY KEY(agent,skill))')
+            db.execute('CREATE TABLE IF NOT EXISTS evidence_intakes(id TEXT PRIMARY KEY,body TEXT NOT NULL)')
+            db.execute('CREATE TABLE IF NOT EXISTS evidence_quarantine(attempt_id TEXT NOT NULL,body_digest TEXT NOT NULL,reason TEXT NOT NULL,PRIMARY KEY(attempt_id,body_digest))')
             columns={r[1] for r in db.execute('PRAGMA table_info(withdrawals)')}
             for column in ('target_grant_id','target_qualification_id'):
                 if column not in columns:db.execute("ALTER TABLE withdrawals ADD COLUMN "+column+" TEXT NOT NULL DEFAULT ''")
         self._init_authority_journal()
-        self.procedure_revision=canonical_digest({p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (Path(__file__),Path(__file__).with_name('runtime.py'),Path(__file__).with_name('authority_journal.py'))})
+        self._trusted_outcome_producers={'checker':self.keys['checker'].public_key()}
+        self.procedure_revision=canonical_digest({p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (Path(__file__),Path(__file__).with_name('runtime.py'),Path(__file__).with_name('authority_journal.py'),Path(__file__).with_name('evidence_admission.py'))})
+
+    def _evidence_verifier(self):
+        return EvidenceAdmission(self.ledger,trusted_producers=self._trusted_outcome_producers,
+            trusted_evaluators={canonical_digest({'checker':'independent-registry-readback-v1'})},max_age_ms=self.evidence_window_ms)
+
+    def evidence_intakes(self):
+        with self._db() as db:
+            records=[json.loads(row[0]) for row in db.execute('SELECT body FROM evidence_intakes ORDER BY rowid')]
+        if any(not self._verified(record,{'writer'}) for record in records):raise Denied('LOCAL_INTENT_UNAUTHENTICATED')
+        return records
+
+    def _observation_admissible(self,observation):
+        with self._db() as db:
+            return not db.execute('SELECT 1 FROM evidence_quarantine WHERE attempt_id=? AND body_digest=?',
+                (observation['attempt_id'],canonical_digest(observation))).fetchone()
+
+    def _reference_issue(self,db,q,ref,verifier):
+        row=db.execute('SELECT body FROM observations WHERE attempt_id=?',(ref['attempt_id'],)).fetchone()
+        if row is None:return 'EVIDENCE_UNCONFIRMED',None
+        try:
+            observation=json.loads(row[0])
+            quarantine=db.execute('SELECT reason FROM evidence_quarantine WHERE attempt_id=? AND body_digest=?',
+                (ref['attempt_id'],canonical_digest(observation))).fetchone()
+            if quarantine:return quarantine[0],observation
+            checked=verifier.verify_observation(observation,expected_attempt_id=ref['attempt_id'],
+                expected_skill_digest=q['skill_digest'],expected_context_digest=q['context_digest'],now_ms=self.clock.now_ms)
+            if observation.get('evidence_digest')!=ref['evidence_digest'] or observation.get('observation_id')!=ref['observation_id']:
+                return 'TAMPER_DETECTED',observation
+            if not checked['admitted'] or checked['requires_hold']:
+                return 'EVIDENCE_UNCONFIRMED' if checked['admitted'] else checked['reason'],observation
+            return None,observation
+        except (ValueError,TypeError,KeyError,AttributeError):return 'TAMPER_DETECTED',None
+
+    def _qualification_evidence_issue(self,db,q):
+        if not q.get('outcome_refs'):return 'EVIDENCE_UNCONFIRMED'
+        verifier=self._evidence_verifier()
+        return next((issue for ref in q['outcome_refs'] if (issue:=self._reference_issue(db,q,ref,verifier)[0])),None)
+
+    def eligibility(self,qid,version,context):
+        q=super().eligibility(qid,version,context)
+        with self._db() as db:issue=self._qualification_evidence_issue(db,q)
+        if issue:raise Denied(issue)
+        return q
+
+    def admit_evidence(self,observation,event,receipt,*,expected_attempt_id,skill='release-model',version=None,context):
+        """Authenticate imported evidence; admission never grants or revokes permission."""
+        version=version or self.procedure_revision
+        if version!=self.procedure_revision:raise Denied('SKILL_REVISION_MISMATCH')
+        expected={'expected_attempt_id':expected_attempt_id,
+            'expected_skill_digest':canonical_digest({'skill':skill,'version':version}),
+            'expected_context_digest':canonical_digest({'environment':context})}
+        envelope=copy.deepcopy({'expected':expected,'observation':observation,'event':event,'receipt':receipt})
+        iid='intake-'+canonical_digest(envelope).split(':')[1]
+        decision=self._evidence_verifier().verify(envelope['observation'],envelope['event'],envelope['receipt'],**expected,now_ms=self.clock.now_ms)
+        decision={**decision,'intake_id':iid}
+        with self._tx() as db:
+            prior_decisions=[]
+            existing=db.execute('SELECT body FROM observations WHERE attempt_id=?',(expected_attempt_id,)).fetchone()
+            if decision['admitted'] and existing and json.loads(existing[0])!=envelope['observation']:
+                decision={**decision,'admitted':False,'counts_as_pass':False,'status':'REJECTED',
+                          'reason':'IDEMPOTENCY_CONFLICT','outcome':'UNKNOWN','requires_hold':True}
+            old=db.execute('SELECT body FROM evidence_intakes WHERE id=?',(iid,)).fetchone()
+            if old:
+                stored=json.loads(old[0])
+                if not self._verified(stored,{'writer'}):raise Denied('LOCAL_INTENT_UNAUTHENTICATED')
+                if stored['decision']==decision and (not decision['admitted'] or existing and json.loads(existing[0])==envelope['observation']):
+                    return stored['decision']
+                prior_decisions=stored.get('prior_decisions',[])+[{'decision':stored['decision'],'recorded_at_ms':stored['recorded_at_ms']}]
+            if decision['admitted']:
+                db.execute('INSERT OR IGNORE INTO observations VALUES (?,?)',(expected_attempt_id,json.dumps(envelope['observation'])))
+            record=self._seal({**envelope,'intake_id':iid,'decision':decision,'prior_decisions':prior_decisions,'recorded_at_ms':self.clock.now_ms},'writer')
+            db.execute('INSERT OR REPLACE INTO evidence_intakes VALUES (?,?)',(iid,json.dumps(record)))
+            self._event(db,'EVIDENCE_ADMITTED' if decision['admitted'] else 'EVIDENCE_REJECTED',attempt_id=expected_attempt_id,
+                intake_id=iid,reason=decision['reason'],subject_digest=expected['expected_skill_digest'])
+        return decision
+
+    def audit_qualification_evidence(self,agent='agent-a',skill='release-model'):
+        """Audit this grant's bound evidence; bad unsolicited copies cannot hold it."""
+        with self._authority_serial():
+            authority=self.authority(agent);grant=authority['grants'].get(skill)
+            if not grant:return {'verified':False,'status':'NO_ACTIVE_GRANT','reason':'REVOKED_AUTHORITY','requires_hold':False}
+            q=self.qualification(grant['qualification_id'])
+            if q['disposition']!='ELIGIBLE':
+                return {'verified':False,'status':q['disposition'],'reason':q['reason'],'requires_hold':True,'qualification_id':q['qualification_id']}
+            verifier=self._evidence_verifier()
+            observations={o['attempt_id']:o for o in self.observations()}
+            rows=self.events();intakes=self.evidence_intakes();deferred=None;bad=None
+            refs=q.get('outcome_refs',[])
+            if canonical_digest(q)!=grant['qualification_digest']:
+                bad=(None,{'reason':'TAMPER_DETECTED','requires_hold':True})
+            if not refs and bad is None:bad=(None,{'reason':'EVIDENCE_UNCONFIRMED','requires_hold':True})
+            for ref in refs if bad is None else []:
+                obs=observations.get(ref['attempt_id'])
+                expected={'expected_attempt_id':ref['attempt_id'],'expected_skill_digest':q['skill_digest'],
+                    'expected_context_digest':q['context_digest'],'now_ms':self.clock.now_ms}
+                checked=verifier.verify_observation(obs,**expected)
+                if obs is None:checked={**checked,'reason':'EVIDENCE_UNCONFIRMED'}
+                elif obs.get('evidence_digest')!=ref['evidence_digest'] or obs.get('observation_id')!=ref['observation_id']:
+                    checked={**checked,'admitted':False,'reason':'TAMPER_DETECTED','requires_hold':True}
+                if checked['admitted'] and not checked['requires_hold']:
+                    row=next((r for r in rows if r['event'].get('event_type')=='OUTCOME_OBSERVED' and r['event'].get('attempt_id')==ref['attempt_id']),None)
+                    imported=next((i for i in intakes if i['decision']['admitted'] and i['observation']==obs),None)
+                    if row and row['delivery']=='RECORDED':checked=verifier.verify(obs,row['event'],row['receipt'],**expected)
+                    elif row and row['event'].get('outcome')!=obs:checked={**checked,'admitted':False,'reason':'TAMPER_DETECTED','requires_hold':True}
+                    elif imported:checked=verifier.verify(obs,imported['event'],imported['receipt'],**expected)
+                    elif not row:checked={**checked,'admitted':False,'reason':'EVIDENCE_UNCONFIRMED','requires_hold':True}
+                if checked['requires_hold']:
+                    bad=(obs,checked);break
+                if not checked['admitted']:deferred=checked
+            if bad is None:
+                if deferred:
+                    return {'verified':False,'status':'UNAVAILABLE','requires_hold':False,
+                        'reason':(deferred.get('ledger_verification') or {}).get('reason',deferred['reason'])}
+                return {'verified':True,'status':'VERIFIED','reason':'BOUND_LOCAL_EVIDENCE_VERIFIED','requires_hold':False}
+            obs,checked=bad;reason=checked['reason']
+            with self._tx() as db:
+                if obs is not None and not checked.get('admitted',False):
+                    db.execute('INSERT OR REPLACE INTO evidence_quarantine VALUES (?,?,?)',(obs['attempt_id'],canonical_digest(obs),reason))
+                current=json.loads(db.execute('SELECT body FROM qualifications WHERE id=?',(q['qualification_id'],)).fetchone()[0])
+                # An outcome may have arrived while receipt verification was in flight.
+                # Keep its stronger decision and already queued target-bound withdrawal.
+                if current['disposition']!='ELIGIBLE':
+                    return {'verified':False,'status':current['disposition'],'reason':current['reason'],
+                        'requires_hold':True,'qualification_id':current['qualification_id']}
+                current['qualification_revision']+=1;current['disposition']='HOLD'
+                current['reason']='STALE_EVIDENCE' if reason=='STALE_EVIDENCE' else 'EVIDENCE_UNCONFIRMED'
+                self._save_qualification(db,current)
+                audit=self._event(db,'HELD',agent,skill=skill,reason=current['reason'],evidence_reason=reason,qualification_id=q['qualification_id'])
+                db.execute('INSERT OR REPLACE INTO withdrawals VALUES (?,?,?,?,?,?)',(agent,skill,audit['attempt_id'],current['reason'],grant['grant_id'],grant['qualification_id']))
+            self.drain_withdrawals(only_agent=agent)
+            return {'verified':False,'status':'HOLD','reason':reason,'requires_hold':True,'qualification_id':q['qualification_id']}
 
     def _event(self,db,kind,agent='reference-qualification-checker',attempt_id='',**fields):
         return super()._event(db,kind,agent,attempt_id or ident('lifecycle'),**fields)
@@ -108,13 +243,23 @@ class ConnectedRuntime(AuthorityJournal,Runtime):
         if version!=self.procedure_revision: raise Denied('SKILL_REVISION_MISMATCH')
         q=super().qualify(skill,version,context,_publish=False)
         proposal=self.qualifier.capacity_proposal(context) if hasattr(self.qualifier,'capacity_proposal') else None
-        report=self.qualifier.evaluate(q,self.observations(),verify_observation=lambda o:self._verified(o,{'checker'}),now_ms=self.clock.now_ms,proposal=proposal)
+        report=self.qualifier.evaluate(q,self.observations(),verify_observation=lambda o:self._verified(o,{'checker'}) and self._observation_admissible(o),now_ms=self.clock.now_ms,proposal=proposal)
         # Canonical scoring may further restrict, never relax authenticated evidence admission.
-        if report['disposition']!='ELIGIBLE' or q['disposition']!='ELIGIBLE':
-            q['disposition']=report['disposition'] if q['disposition']=='ELIGIBLE' else q['disposition']
-            q['reason']=report['reason'] if q['disposition']==report['disposition'] else q['reason']
+        if q['disposition']=='ELIGIBLE' and report['disposition']!='ELIGIBLE':
+            q['disposition']=report['disposition'];q['reason']=report['reason']
         q['canonical_evaluation']=report
         with self._tx() as db:
+            if q['disposition']=='ELIGIBLE':
+                verifier=self._evidence_verifier();valid=[];issues=[];observations=[]
+                for ref in q['outcome_refs']:
+                    issue,observation=self._reference_issue(db,q,ref,verifier)
+                    if issue:issues.append(issue)
+                    else:valid.append(ref);observations.append(observation)
+                if issues:
+                    q['disposition']='HOLD';q['reason']=issues[0];q['outcome_refs']=valid
+                    q['passes']=sum(o['outcome']=='PASS' for o in observations)
+                    q['failures']=sum(o['outcome']=='FAIL' for o in observations)
+                    q['canonical_evaluation']={**report,'publication_evidence_recheck':{'status':'REJECTED','reason':issues[0]}}
             self._save_qualification(db,q)
             self._event(db,'CANONICAL_QUALIFICATION_EVALUATED',qualification_id=q['qualification_id'],qualification_digest=canonical_digest(q),evaluation=report)
             self._event(db,'QUALIFIED' if q['disposition']=='ELIGIBLE' else 'HELD',qualification_id=q['qualification_id'],qualification_digest=canonical_digest(q))
@@ -142,7 +287,11 @@ class ConnectedRuntime(AuthorityJournal,Runtime):
 
     def authority(self,agent='agent-a'):
         if not self.authority_available: raise Denied('AUTHORITY_UNCONFIRMED')
-        return self._normalize(self.passport.current(agent),agent)
+        try:
+            return self._normalize(self.passport.current(agent),agent)
+        except Denied as exc:
+            if exc.reason=='INVALID_CANONICAL_AUTHORITY':raise Denied('INVALID_AUTHORITY') from exc
+            raise
 
     def _requests(self,grants):
         now=self.clock.now_ms;scopes=[]
@@ -246,7 +395,7 @@ class ConnectedRuntime(AuthorityJournal,Runtime):
                 q['disposition']='INELIGIBLE' if obs['outcome']=='FAIL' else 'HOLD'
                 q['reason']='KNOWN_FAILURE' if obs['outcome']=='FAIL' else 'EVIDENCE_UNCONFIRMED'
                 self._include_withdrawal_observation(q,obs)
-                q['canonical_evaluation']=self.qualifier.evaluate(q,self.observations(),verify_observation=lambda o:self._verified(o,{'checker'}),now_ms=self.clock.now_ms,proposal=None,require_gcl=False)
+                q['canonical_evaluation']=self.qualifier.evaluate(q,self.observations(),verify_observation=lambda o:self._verified(o,{'checker'}) and self._observation_admissible(o),now_ms=self.clock.now_ms,proposal=None,require_gcl=False)
                 if obs['outcome']=='FAIL':q['canonical_demotion']=q['canonical_evaluation']['cascade']
                 self._save_qualification(db,q)
                 db.execute('INSERT OR REPLACE INTO withdrawals VALUES (?,?,?,?,?,?)',(cmd['agent'],cmd['skill'],attempt_id,q['reason'],cmd['grant_id'],cmd['qualification_id']))

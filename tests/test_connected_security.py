@@ -9,7 +9,42 @@ import grpc
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from cryptography.hazmat.primitives import serialization
 from earned_authority.passport_client import PassportClient, PAYLOAD_HEADER, REVISION_HEADER
-from earned_authority.runtime import Denied
+from earned_authority.runtime import Denied, FixtureLedger, Runtime
+
+
+def configure_unit_evidence_ledger(runtime):
+    """Adapt only the signed local fixture; never label it canonical evidence."""
+    ledger = runtime.ledger
+    assert isinstance(ledger, FixtureLedger)
+    ledger.clock = runtime.clock
+
+    def detailed(receipt, event, **kwargs):
+        if not ledger.available:
+            return {'verified': False, 'status': 'UNAVAILABLE',
+                    'reason': 'UNIT_LEDGER_UNAVAILABLE', 'integrity': 'UNKNOWN'}
+        verified = ledger.verify(receipt, event)
+        return {'verified': verified, 'status': 'VERIFIED' if verified else 'REJECTED',
+                'reason': 'UNIT_FIXTURE_VERIFIED' if verified else 'UNIT_PROOF_UNCONFIRMED',
+                'integrity': 'INTACT' if verified else 'UNKNOWN'}
+
+    ledger.verify_detailed = detailed
+
+
+def bound_unit_qualification(runtime, skill, context, expires_in_ms):
+    """Use real signed shadow observations and local scoring as a UNIT seam.
+
+    Journal/deadline tests do not substitute an unbound ELIGIBLE dictionary for
+    evidence. Canonical Cascade/GCL integration is tested in its own lane.
+    """
+    for _ in range(3):
+        runtime.shadow(skill=skill, context=context)
+    qualification = Runtime.qualify(runtime, skill, runtime.procedure_revision, context, _publish=False)
+    assert qualification['disposition'] == 'ELIGIBLE'
+    assert len(qualification['outcome_refs']) >= 3
+    qualification['expires_at_ms'] = min(qualification['expires_at_ms'], runtime.clock.now_ms + expires_in_ms)
+    with runtime._tx() as db:
+        runtime._save_qualification(db, qualification)
+    return qualification
 
 
 class MetadataCall:
@@ -145,21 +180,15 @@ class ConnectedDeadlineAndWithdrawalBoundary(unittest.TestCase):
             policy=self.policy, ledger=None, qualification_client=None,
             fence_path=Path(self.tmp.name) / 'fence.lock')
         self.rt.clock = ControlledClock(1000000)
+        configure_unit_evidence_ledger(self.rt)
         self.passport.now = lambda: self.rt.clock.now_ms
         self.context = {'model_version': 'model-v2'}
         self.qcount = 0
 
     def qualification(self, skill='release-model', context=None):
-        from earned_authority.contracts import canonical_digest
         self.qcount += 1
         context = self.context if context is None else context
-        q = {'qualification_id': 'unit-q-' + str(self.qcount), 'qualification_revision': 1,
-             'skill': skill, 'version': self.rt.procedure_revision, 'context': context,
-             'skill_digest': canonical_digest({'skill': skill, 'version': self.rt.procedure_revision}),
-             'context_digest': canonical_digest({'environment': context}),
-             'expires_at_ms': self.rt.clock.now_ms + 10000, 'disposition': 'ELIGIBLE', 'reason': 'UNIT_ELIGIBLE'}
-        with self.rt._tx() as db: self.rt._save_qualification(db, q)
-        return q
+        return bound_unit_qualification(self.rt, skill, context, 10000)
 
     def test_scope_expiring_during_policy_call_cannot_commit(self):
         q = self.qualification()

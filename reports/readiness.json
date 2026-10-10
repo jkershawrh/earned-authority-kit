@@ -1,6 +1,6 @@
 {
-  "generated_at_ms": 1791601636578,
-  "kit_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+  "generated_at_ms": 1791603382551,
+  "kit_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
   "overall_integration_readiness": "AMBER",
   "milestones": [
     {
@@ -26,6 +26,8 @@
         "AUTH-CLIENT",
         "AUTH-OPS",
         "LED-01",
+        "EVID-VERIFY",
+        "EVID-GUARD",
         "POL-01",
         "AUTH-01",
         "POL-LIVE",
@@ -48,7 +50,7 @@
     }
   ],
   "kit_tests": {
-    "tests_run": 235,
+    "tests_run": 321,
     "failures": 0,
     "errors": 0,
     "skipped": 0,
@@ -59,7 +61,7 @@
   "rows": [
     {
       "id": "CON-01",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "CDD"
@@ -70,16 +72,16 @@
       "missing_methods": [],
       "lane": "WP0",
       "component": "Draft schemas and producer/consumer proofs",
-      "acceptance": "Actual fixture records, signed proof binding and historical qualification lookup. Draft contract; wider service adoption is separate.",
+      "acceptance": "Actual producer records, signed proof binding, historical qualification lookup and evidence admission events. Draft contract; older closed-enum consumers require an update.",
       "baseline": "AMBER",
       "release_required": true,
       "milestone": "M1",
-      "implementation": "60 tests; exact named modules only",
+      "implementation": "75 tests; exact named modules only",
       "artifact": "reports/component-verification.json"
     },
     {
       "id": "KIT-01",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -99,7 +101,7 @@
     },
     {
       "id": "BDD-LOCAL",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "BDD"
@@ -119,7 +121,7 @@
     },
     {
       "id": "EXEC-LOCAL",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -139,7 +141,7 @@
     },
     {
       "id": "QUAL-01",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -159,7 +161,7 @@
     },
     {
       "id": "AUTH-CLIENT",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -179,7 +181,7 @@
     },
     {
       "id": "AUTH-OPS",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "CDD"
@@ -199,7 +201,7 @@
     },
     {
       "id": "AUDIT-LOCAL",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -219,7 +221,7 @@
     },
     {
       "id": "LED-01",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -238,8 +240,48 @@
       "artifact": "reports/component-verification.json"
     },
     {
+      "id": "EVID-VERIFY",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
+      "environment": "LOCAL_COMPONENT",
+      "required_methods": [
+        "TDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP4",
+      "component": "Independent evidence admission",
+      "acceptance": "Trusted producer and evaluator, exact attempt/procedure/context/time bindings, canonical receipt and outcome distinction.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M2",
+      "implementation": "44 tests; exact named modules only",
+      "artifact": "reports/component-verification.json"
+    },
+    {
+      "id": "EVID-GUARD",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
+      "environment": "LOCAL_COMPONENT",
+      "required_methods": [
+        "TDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP2",
+      "component": "Quarantine and qualification guards",
+      "acceptance": "Self-reports cannot qualify; quarantine blocks shared evidence at publication, grant and consumption. Audit cannot overwrite concurrent known failure.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M2",
+      "implementation": "27 tests; exact named modules only",
+      "artifact": "reports/component-verification.json"
+    },
+    {
       "id": "POL-01",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "CANONICAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -249,17 +291,17 @@
       "reason": "All required methods passed for this revision and environment",
       "missing_methods": [],
       "lane": "WP1",
-      "component": "Foundation binding and real Rego engine",
-      "acceptance": "81 normal and 81 race leaf cases plus 3 actual OPA engine tests; overlapping cases.",
+      "component": "Foundation binding and authorization-only responses",
+      "acceptance": "85 BFF and 37 gateway leaf cases in normal and race runs, plus 3 actual OPA engine tests; repeated cases overlap.",
       "baseline": "RED",
       "release_required": true,
       "milestone": "M2",
       "implementation": "Recorded execution",
-      "artifact": "evidence/foundation-policy-binding-results.json"
+      "artifact": "evidence/foundation-policy-only-results.json"
     },
     {
       "id": "AUTH-01",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "CANONICAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -279,7 +321,7 @@
     },
     {
       "id": "POL-LIVE",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "CDD"
@@ -295,11 +337,11 @@
       "release_required": true,
       "milestone": "M2",
       "implementation": "8 executed checks",
-      "artifact": "reports/operations-reference-policy.json"
+      "artifact": "reports/evidence-reference-v2-policy.json"
     },
     {
       "id": "SVC-LIVE",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "CDD"
@@ -315,11 +357,11 @@
       "release_required": true,
       "milestone": "M2",
       "implementation": "7 executed checks",
-      "artifact": "reports/operations-reference-services.json"
+      "artifact": "reports/evidence-reference-v2-services.json"
     },
     {
       "id": "ARC-LIVE",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -335,11 +377,11 @@
       "release_required": true,
       "milestone": "M2",
       "implementation": "23 executed checks",
-      "artifact": "reports/operations-reference-connected.json"
+      "artifact": "reports/evidence-reference-v2-connected.json"
     },
     {
       "id": "FAULT-LIVE",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -355,11 +397,11 @@
       "release_required": true,
       "milestone": "M2",
       "implementation": "17 executed checks",
-      "artifact": "reports/operations-reference-adversarial.json"
+      "artifact": "reports/evidence-reference-v2-adversarial.json"
     },
     {
       "id": "AUDIT-ATOMIC",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -375,11 +417,11 @@
       "release_required": true,
       "milestone": "M2",
       "implementation": "41 executed checks",
-      "artifact": "reports/operations-reference-authority-recovery.json"
+      "artifact": "reports/evidence-reference-v2-authority-recovery.json"
     },
     {
       "id": "DEP-RESTORE",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -395,11 +437,11 @@
       "release_required": true,
       "milestone": "M3",
       "implementation": "6 executed checks",
-      "artifact": "reports/operations-reference-restore.json"
+      "artifact": "reports/evidence-reference-v2-restore.json"
     },
     {
       "id": "AUDIT-RESTORE",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -415,11 +457,11 @@
       "release_required": true,
       "milestone": "M3",
       "implementation": "21 executed checks",
-      "artifact": "reports/operations-reference-authority-recovery-restored.json"
+      "artifact": "reports/evidence-reference-v2-authority-recovery-restored.json"
     },
     {
       "id": "DEP-BUILD",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "FRESH_SAME_HOST",
       "required_methods": [
         "BDD"
@@ -435,11 +477,11 @@
       "release_required": true,
       "milestone": "M3",
       "implementation": "Recorded execution",
-      "artifact": "reports/operations-reference-combined.json"
+      "artifact": "reports/evidence-reference-combined.json"
     },
     {
       "id": "BDD-SERVICE",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -450,16 +492,16 @@
       "missing_methods": [],
       "lane": "WP5",
       "component": "Explicit complete service behaviors",
-      "acceptance": "22 complete scenario IDs: BDD-001, BDD-003, BDD-004, BDD-005, BDD-006, BDD-007, BDD-008, BDD-010, BDD-011, BDD-012, BDD-013, BDD-018, BDD-019, BDD-020, BDD-023, BDD-024, BDD-027, BDD-028, BDD-029, BDD-030, BDD-032, BDD-034. Every named scenario requires all its outline rows and assertions.",
+      "acceptance": "30 complete scenario IDs: BDD-001, BDD-002, BDD-003, BDD-004, BDD-005, BDD-006, BDD-007, BDD-008, BDD-010, BDD-011, BDD-012, BDD-013, BDD-014, BDD-017, BDD-018, BDD-019, BDD-020, BDD-022, BDD-023, BDD-024, BDD-026, BDD-027, BDD-028, BDD-029, BDD-030, BDD-032, BDD-034, BDD-035, BDD-036, BDD-037. Every named scenario requires all its outline rows and assertions.",
       "baseline": "AMBER",
       "release_required": false,
       "milestone": null,
       "implementation": "Partial and unbound scenarios retain their own gaps in the raw report",
-      "artifact": "reports/service-bdd-live-002.json"
+      "artifact": "reports/service-bdd-live-004.json"
     },
     {
       "id": "BDD-CORE",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "SERVICE_ACCEPTANCE",
       "required_methods": [
         "BDD"
@@ -472,16 +514,16 @@
       ],
       "lane": "WP5",
       "component": "All 37 behaviors on real service adapters",
-      "acceptance": "22 of 37 complete scenarios recorded; fixture and partial assertion passes cannot complete the remainder.",
+      "acceptance": "30 of 37 complete scenarios recorded; fixture and partial assertion passes cannot complete the remainder.",
       "baseline": "AMBER",
       "release_required": true,
       "milestone": null,
       "implementation": "Recorded execution",
-      "artifact": "reports/service-bdd-live-002.json"
+      "artifact": "reports/service-bdd-live-004.json"
     },
     {
       "id": "EDD-PLAN",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "HELD_OUT_EVALUATION",
       "required_methods": [
         "EDD"
@@ -503,7 +545,7 @@
     },
     {
       "id": "EDD-RUN",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "HELD_OUT_EVALUATION",
       "required_methods": [
         "EDD"
@@ -525,7 +567,7 @@
     },
     {
       "id": "DEP-EXTERNAL",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "INDEPENDENT_REPRODUCTION",
       "required_methods": [
         "BDD"
@@ -547,7 +589,7 @@
     },
     {
       "id": "DEP-RH",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "OPENSHIFT",
       "required_methods": [
         "BDD"
@@ -569,7 +611,7 @@
     },
     {
       "id": "ROB-01",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "SIMULATION",
       "required_methods": [
         "EDD"
@@ -591,7 +633,7 @@
     },
     {
       "id": "BASE-01",
-      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "target_revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "HISTORICAL_BASELINE",
       "required_methods": [
         "TDD"
@@ -613,117 +655,139 @@
   "evidence": [
     {
       "requirement_id": "CON-01",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "method": "CDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601343163,
+      "timestamp_ms": 1791603267616,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
+      "artifact_digest": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3"
     },
     {
       "requirement_id": "KIT-01",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601343163,
+      "timestamp_ms": 1791603267616,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
+      "artifact_digest": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3"
     },
     {
       "requirement_id": "BDD-LOCAL",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "method": "BDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601343163,
+      "timestamp_ms": 1791603267616,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
+      "artifact_digest": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3"
     },
     {
       "requirement_id": "EXEC-LOCAL",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601343163,
+      "timestamp_ms": 1791603267616,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
+      "artifact_digest": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3"
     },
     {
       "requirement_id": "QUAL-01",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601343163,
+      "timestamp_ms": 1791603267616,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
+      "artifact_digest": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3"
     },
     {
       "requirement_id": "AUTH-CLIENT",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601343163,
+      "timestamp_ms": 1791603267616,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
+      "artifact_digest": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3"
     },
     {
       "requirement_id": "AUTH-OPS",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "method": "CDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601343163,
+      "timestamp_ms": 1791603267616,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
+      "artifact_digest": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3"
     },
     {
       "requirement_id": "AUDIT-LOCAL",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601343163,
+      "timestamp_ms": 1791603267616,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
+      "artifact_digest": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3"
     },
     {
       "requirement_id": "LED-01",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601343163,
+      "timestamp_ms": 1791603267616,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
+      "artifact_digest": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3"
+    },
+    {
+      "requirement_id": "EVID-VERIFY",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
+      "environment": "LOCAL_COMPONENT",
+      "method": "TDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791603267616,
+      "executed": true,
+      "artifact": "reports/component-verification.json",
+      "artifact_digest": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3"
+    },
+    {
+      "requirement_id": "EVID-GUARD",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
+      "environment": "LOCAL_COMPONENT",
+      "method": "TDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791603267616,
+      "executed": true,
+      "artifact": "reports/component-verification.json",
+      "artifact_digest": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3"
     },
     {
       "requirement_id": "POL-01",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "CANONICAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791597234282,
+      "timestamp_ms": 1791602572006,
       "executed": true,
-      "artifact": "evidence/foundation-policy-binding-results.json",
-      "artifact_digest": "sha256:aee2413d8e5e18be52a2bdc12ea9e4094f1eb503e5bd704affa7c4a931e195a0"
+      "artifact": "evidence/foundation-policy-only-results.json",
+      "artifact_digest": "sha256:4beabc78fc39456df0dc242d2c33f194ada16da7ed7ed4bc4b822536409807b4"
     },
     {
       "requirement_id": "AUTH-01",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "CANONICAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -734,117 +798,117 @@
     },
     {
       "requirement_id": "POL-LIVE",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "CDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601513518,
+      "timestamp_ms": 1791603308392,
       "executed": true,
-      "artifact": "reports/operations-reference-policy.json",
-      "artifact_digest": "sha256:6e3cc540615eaaf01b4812af45a7abf97450e124a19d248bd83f8a18f740e43d"
+      "artifact": "reports/evidence-reference-v2-policy.json",
+      "artifact_digest": "sha256:08da395703726810812903902c535c76099c3bb7f09b06f17d3ca0b04491adfc"
     },
     {
       "requirement_id": "SVC-LIVE",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "CDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601513639,
+      "timestamp_ms": 1791603308498,
       "executed": true,
-      "artifact": "reports/operations-reference-services.json",
-      "artifact_digest": "sha256:4975017de61bd38515d56abd8d82d1d441238dcd992198ce29a58d2347f612e7"
+      "artifact": "reports/evidence-reference-v2-services.json",
+      "artifact_digest": "sha256:f4225dbcc8bbbc5e4d094ce0f1bebfbb9d4f2dc9f1d644c65b2c44e6487448fb"
     },
     {
       "requirement_id": "ARC-LIVE",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601517582,
+      "timestamp_ms": 1791603311173,
       "executed": true,
-      "artifact": "reports/operations-reference-connected.json",
-      "artifact_digest": "sha256:d446b11d03e60a780c8ca191dadcd6774756d0ec077efec9c3e8706c47c1e8b7"
+      "artifact": "reports/evidence-reference-v2-connected.json",
+      "artifact_digest": "sha256:7959cb29627581bdc7ad6ff2b536963432490045f6858a128b9ca406bc8949be"
     },
     {
       "requirement_id": "FAULT-LIVE",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601523228,
+      "timestamp_ms": 1791603316919,
       "executed": true,
-      "artifact": "reports/operations-reference-adversarial.json",
-      "artifact_digest": "sha256:72c9ed54454e3962efaceccb1a9370108b733d206e3117e64e928da51de80d85"
+      "artifact": "reports/evidence-reference-v2-adversarial.json",
+      "artifact_digest": "sha256:c1c7341d60cd3a5503d48b1571f75b939fe41cf135de2c1fd477a13b761f9dfe"
     },
     {
       "requirement_id": "AUDIT-ATOMIC",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601538564,
+      "timestamp_ms": 1791603332310,
       "executed": true,
-      "artifact": "reports/operations-reference-authority-recovery.json",
-      "artifact_digest": "sha256:522d5d8c4d928f3d748986c9d21b3d75d461526074116d24b4400297926f6d64"
+      "artifact": "reports/evidence-reference-v2-authority-recovery.json",
+      "artifact_digest": "sha256:d50460fbc6c6c9f9223fddbab4a8d74fa7c1543e6c3ff120e8d970a2d30ef8d2"
     },
     {
       "requirement_id": "DEP-RESTORE",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601555389,
+      "timestamp_ms": 1791603349740,
       "executed": true,
-      "artifact": "reports/operations-reference-restore.json",
-      "artifact_digest": "sha256:3ecfa5abf969eb11988b9d3b8b3cc4b1d3c3b68eaae9e402be96db6b3cd16297"
+      "artifact": "reports/evidence-reference-v2-restore.json",
+      "artifact_digest": "sha256:5fb0ece170c03f89b1755325ab9436855bd213eba38c4eb8311046e75b629bab"
     },
     {
       "requirement_id": "AUDIT-RESTORE",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601555933,
+      "timestamp_ms": 1791603350250,
       "executed": true,
-      "artifact": "reports/operations-reference-authority-recovery-restored.json",
-      "artifact_digest": "sha256:500c0c89538a153ee820df7e330eaa835ff49163b384aa16488328de49bc69d4"
+      "artifact": "reports/evidence-reference-v2-authority-recovery-restored.json",
+      "artifact_digest": "sha256:0baab4368b80593739a6875c5f9a393739ab9b0c1364884171b630ce4a1c197a"
     },
     {
       "requirement_id": "DEP-BUILD",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "FRESH_SAME_HOST",
       "method": "BDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601566161,
+      "timestamp_ms": 1791603360477,
       "executed": true,
-      "artifact": "reports/operations-reference-combined.json",
-      "artifact_digest": "sha256:c6c07235ce7f094397117527fb62f50aa30e9ea63a76450f2c7f65ac0d003f0e"
+      "artifact": "reports/evidence-reference-combined.json",
+      "artifact_digest": "sha256:e99162a0f6cb91b154beb63164cb80bcc9d9c1c9b87b47a23ee52cbeca779080"
     },
     {
       "requirement_id": "BDD-SERVICE",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791601563615,
+      "timestamp_ms": 1791603323836,
       "executed": true,
-      "artifact": "reports/service-bdd-live-002.json",
-      "artifact_digest": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2"
+      "artifact": "reports/service-bdd-live-004.json",
+      "artifact_digest": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf"
     },
     {
       "requirement_id": "BDD-CORE",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "SERVICE_ACCEPTANCE",
       "method": "BDD",
       "outcome": "UNKNOWN",
-      "timestamp_ms": 1791601563615,
+      "timestamp_ms": 1791603323836,
       "executed": true,
-      "artifact": "reports/service-bdd-live-002.json",
-      "artifact_digest": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2"
+      "artifact": "reports/service-bdd-live-004.json",
+      "artifact_digest": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf"
     },
     {
       "requirement_id": "BASE-01",
-      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "revision": "sha256:3128b9b8cc8a6e0d8bb9d987214fc2deedf4085f0a86aa89d95b154eb454f0ec",
       "environment": "HISTORICAL_BASELINE",
       "method": "TDD",
       "outcome": "FAIL",

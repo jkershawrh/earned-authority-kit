@@ -1,0 +1,170 @@
+..................................FFFFFF                                 [100%]
+=================================== FAILURES ===================================
+_________ test_local_attestation_audit_never_requires_remote_delivery __________
+
+setup = namespace(producer=<cryptography.hazmat.bindings._rust.openssl.ed25519.Ed25519PrivateKey object at 0x107e82470>, ledge...44d09024a4c9870524651ef924cfa15'}, evaluator='sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15')
+
+    def test_local_attestation_audit_never_requires_remote_delivery(setup):
+        observation,_,_=package(setup)
+        setup.ledger.verify_detailed=lambda *args,**kwargs:(_ for _ in ()).throw(AssertionError("no remote audit allowed"))
+>       result=local_verify(setup,observation)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_evidence_admission.py:226: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+s = namespace(producer=<cryptography.hazmat.bindings._rust.openssl.ed25519.Ed25519PrivateKey object at 0x107e82470>, ledge...44d09024a4c9870524651ef924cfa15'}, evaluator='sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15')
+observation = {'attempt_id': 'attempt-current', 'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214f9189db10f29ca3869b930ec27...afcb7791510c34c8a', 'evaluator_digest': 'sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15', ...}
+
+    def local_verify(s, observation, *, now=1050):
+>       return s.gate.verify_observation(observation, expected_attempt_id="attempt-current",
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+            expected_skill_digest=s.observation["skill_digest"],
+            expected_context_digest=s.observation["context_digest"], now_ms=now)
+E       AttributeError: 'EvidenceAdmission' object has no attribute 'verify_observation'
+
+tests/test_evidence_admission.py:218: AttributeError
+__________ test_local_attestation_audit_detects_tamper_without_ledger __________
+
+setup = namespace(producer=<cryptography.hazmat.bindings._rust.openssl.ed25519.Ed25519PrivateKey object at 0x107e82670>, ledge...44d09024a4c9870524651ef924cfa15'}, evaluator='sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15')
+
+    def test_local_attestation_audit_detects_tamper_without_ledger(setup):
+        observation,_,_=package(setup)
+        observation["readback"]["healthy"]=False
+>       rejected(local_verify(setup,observation),"TAMPER_DETECTED")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_evidence_admission.py:235: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+s = namespace(producer=<cryptography.hazmat.bindings._rust.openssl.ed25519.Ed25519PrivateKey object at 0x107e82670>, ledge...44d09024a4c9870524651ef924cfa15'}, evaluator='sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15')
+observation = {'attempt_id': 'attempt-current', 'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214f9189db10f29ca3869b930ec27...afcb7791510c34c8a', 'evaluator_digest': 'sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15', ...}
+
+    def local_verify(s, observation, *, now=1050):
+>       return s.gate.verify_observation(observation, expected_attempt_id="attempt-current",
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+            expected_skill_digest=s.observation["skill_digest"],
+            expected_context_digest=s.observation["context_digest"], now_ms=now)
+E       AttributeError: 'EvidenceAdmission' object has no attribute 'verify_observation'
+
+tests/test_evidence_admission.py:218: AttributeError
+_ test_local_audit_preserves_missing_stale_binding_and_trust_distinctions[missing-MISSING_EVIDENCE] _
+
+setup = namespace(producer=<cryptography.hazmat.bindings._rust.openssl.ed25519.Ed25519PrivateKey object at 0x107e82f90>, ledge...44d09024a4c9870524651ef924cfa15'}, evaluator='sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15')
+case = 'missing', reason = 'MISSING_EVIDENCE'
+
+    @pytest.mark.parametrize("case,reason", [("missing","MISSING_EVIDENCE"),("stale","STALE_EVIDENCE"),
+        ("wrong-attempt","ATTEMPT_MISMATCH"),("untrusted","UNTRUSTED_ATTESTATION")])
+    def test_local_audit_preserves_missing_stale_binding_and_trust_distinctions(setup,case,reason):
+        changes={"attempt_id":"other"} if case=="wrong-attempt" else {}
+        values=package(setup,signer="outsider" if case=="untrusted" else "checker",**changes)
+        observation=None if case=="missing" else values[0]
+>       rejected(local_verify(setup,observation,now=1100 if case=="stale" else 1050),reason)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_evidence_admission.py:244: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+s = namespace(producer=<cryptography.hazmat.bindings._rust.openssl.ed25519.Ed25519PrivateKey object at 0x107e82f90>, ledge...44d09024a4c9870524651ef924cfa15'}, evaluator='sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15')
+observation = None
+
+    def local_verify(s, observation, *, now=1050):
+>       return s.gate.verify_observation(observation, expected_attempt_id="attempt-current",
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+            expected_skill_digest=s.observation["skill_digest"],
+            expected_context_digest=s.observation["context_digest"], now_ms=now)
+E       AttributeError: 'EvidenceAdmission' object has no attribute 'verify_observation'
+
+tests/test_evidence_admission.py:218: AttributeError
+_ test_local_audit_preserves_missing_stale_binding_and_trust_distinctions[stale-STALE_EVIDENCE] _
+
+setup = namespace(producer=<cryptography.hazmat.bindings._rust.openssl.ed25519.Ed25519PrivateKey object at 0x107e82af0>, ledge...44d09024a4c9870524651ef924cfa15'}, evaluator='sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15')
+case = 'stale', reason = 'STALE_EVIDENCE'
+
+    @pytest.mark.parametrize("case,reason", [("missing","MISSING_EVIDENCE"),("stale","STALE_EVIDENCE"),
+        ("wrong-attempt","ATTEMPT_MISMATCH"),("untrusted","UNTRUSTED_ATTESTATION")])
+    def test_local_audit_preserves_missing_stale_binding_and_trust_distinctions(setup,case,reason):
+        changes={"attempt_id":"other"} if case=="wrong-attempt" else {}
+        values=package(setup,signer="outsider" if case=="untrusted" else "checker",**changes)
+        observation=None if case=="missing" else values[0]
+>       rejected(local_verify(setup,observation,now=1100 if case=="stale" else 1050),reason)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_evidence_admission.py:244: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+s = namespace(producer=<cryptography.hazmat.bindings._rust.openssl.ed25519.Ed25519PrivateKey object at 0x107e82af0>, ledge...44d09024a4c9870524651ef924cfa15'}, evaluator='sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15')
+observation = {'attempt_id': 'attempt-current', 'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214f9189db10f29ca3869b930ec27...afcb7791510c34c8a', 'evaluator_digest': 'sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15', ...}
+
+    def local_verify(s, observation, *, now=1050):
+>       return s.gate.verify_observation(observation, expected_attempt_id="attempt-current",
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+            expected_skill_digest=s.observation["skill_digest"],
+            expected_context_digest=s.observation["context_digest"], now_ms=now)
+E       AttributeError: 'EvidenceAdmission' object has no attribute 'verify_observation'
+
+tests/test_evidence_admission.py:218: AttributeError
+_ test_local_audit_preserves_missing_stale_binding_and_trust_distinctions[wrong-attempt-ATTEMPT_MISMATCH] _
+
+setup = namespace(producer=<cryptography.hazmat.bindings._rust.openssl.ed25519.Ed25519PrivateKey object at 0x107e827d0>, ledge...44d09024a4c9870524651ef924cfa15'}, evaluator='sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15')
+case = 'wrong-attempt', reason = 'ATTEMPT_MISMATCH'
+
+    @pytest.mark.parametrize("case,reason", [("missing","MISSING_EVIDENCE"),("stale","STALE_EVIDENCE"),
+        ("wrong-attempt","ATTEMPT_MISMATCH"),("untrusted","UNTRUSTED_ATTESTATION")])
+    def test_local_audit_preserves_missing_stale_binding_and_trust_distinctions(setup,case,reason):
+        changes={"attempt_id":"other"} if case=="wrong-attempt" else {}
+        values=package(setup,signer="outsider" if case=="untrusted" else "checker",**changes)
+        observation=None if case=="missing" else values[0]
+>       rejected(local_verify(setup,observation,now=1100 if case=="stale" else 1050),reason)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_evidence_admission.py:244: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+s = namespace(producer=<cryptography.hazmat.bindings._rust.openssl.ed25519.Ed25519PrivateKey object at 0x107e827d0>, ledge...44d09024a4c9870524651ef924cfa15'}, evaluator='sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15')
+observation = {'attempt_id': 'other', 'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214f9189db10f29ca3869b930ec279fc44ad89aafcb7791510c34c8a', 'evaluator_digest': 'sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15', ...}
+
+    def local_verify(s, observation, *, now=1050):
+>       return s.gate.verify_observation(observation, expected_attempt_id="attempt-current",
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+            expected_skill_digest=s.observation["skill_digest"],
+            expected_context_digest=s.observation["context_digest"], now_ms=now)
+E       AttributeError: 'EvidenceAdmission' object has no attribute 'verify_observation'
+
+tests/test_evidence_admission.py:218: AttributeError
+_ test_local_audit_preserves_missing_stale_binding_and_trust_distinctions[untrusted-UNTRUSTED_ATTESTATION] _
+
+setup = namespace(producer=<cryptography.hazmat.bindings._rust.openssl.ed25519.Ed25519PrivateKey object at 0x107e82ff0>, ledge...44d09024a4c9870524651ef924cfa15'}, evaluator='sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15')
+case = 'untrusted', reason = 'UNTRUSTED_ATTESTATION'
+
+    @pytest.mark.parametrize("case,reason", [("missing","MISSING_EVIDENCE"),("stale","STALE_EVIDENCE"),
+        ("wrong-attempt","ATTEMPT_MISMATCH"),("untrusted","UNTRUSTED_ATTESTATION")])
+    def test_local_audit_preserves_missing_stale_binding_and_trust_distinctions(setup,case,reason):
+        changes={"attempt_id":"other"} if case=="wrong-attempt" else {}
+        values=package(setup,signer="outsider" if case=="untrusted" else "checker",**changes)
+        observation=None if case=="missing" else values[0]
+>       rejected(local_verify(setup,observation,now=1100 if case=="stale" else 1050),reason)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_evidence_admission.py:244: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+s = namespace(producer=<cryptography.hazmat.bindings._rust.openssl.ed25519.Ed25519PrivateKey object at 0x107e82ff0>, ledge...44d09024a4c9870524651ef924cfa15'}, evaluator='sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15')
+observation = {'attempt_id': 'attempt-current', 'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214f9189db10f29ca3869b930ec27...afcb7791510c34c8a', 'evaluator_digest': 'sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15', ...}
+
+    def local_verify(s, observation, *, now=1050):
+>       return s.gate.verify_observation(observation, expected_attempt_id="attempt-current",
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+            expected_skill_digest=s.observation["skill_digest"],
+            expected_context_digest=s.observation["context_digest"], now_ms=now)
+E       AttributeError: 'EvidenceAdmission' object has no attribute 'verify_observation'
+
+tests/test_evidence_admission.py:218: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_evidence_admission.py::test_local_attestation_audit_never_requires_remote_delivery
+FAILED tests/test_evidence_admission.py::test_local_attestation_audit_detects_tamper_without_ledger
+FAILED tests/test_evidence_admission.py::test_local_audit_preserves_missing_stale_binding_and_trust_distinctions[missing-MISSING_EVIDENCE]
+FAILED tests/test_evidence_admission.py::test_local_audit_preserves_missing_stale_binding_and_trust_distinctions[stale-STALE_EVIDENCE]
+FAILED tests/test_evidence_admission.py::test_local_audit_preserves_missing_stale_binding_and_trust_distinctions[wrong-attempt-ATTEMPT_MISMATCH]
+FAILED tests/test_evidence_admission.py::test_local_audit_preserves_missing_stale_binding_and_trust_distinctions[untrusted-UNTRUSTED_ATTESTATION]
+6 failed, 34 passed in 0.17s

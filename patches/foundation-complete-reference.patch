@@ -104,7 +104,25 @@ diff --git a/api/openapi.yaml b/api/openapi.yaml
        description: Returns `executed=false` and `proof_status=reference_only`; it never executes the requested business action.
        security:
          - bearerAuth: []
-@@ -595,6 +643,16 @@
+@@ -312,7 +360,7 @@
+       tags: [policy]
+       operationId: evaluatePolicy
+       summary: Evaluate policy for an action.
+-      description: Returns an allow/deny policy decision for a proposed action. Policy evaluation is check-only in this OSS surface.
++      description: Returns an allow/deny policy decision for a proposed action, with executed=false and receipt_created=false. Policy evaluation is check-only in this OSS surface; ALLOW does not execute the action or create a receipt.
+       security:
+         - bearerAuth: []
+       parameters:
+@@ -346,6 +394,8 @@
+                       decision_id: smoke-policy
+                       effect: ALLOW
+                       reason: model promotion policy passed for governed model resource
++                    executed: false
++                    receipt_created: false
+         "400":
+           $ref: "#/components/responses/BadRequest"
+         "401":
+@@ -595,6 +645,16 @@
          resource_pattern:
            type: string
            example: model/*
@@ -121,7 +139,7 @@ diff --git a/api/openapi.yaml b/api/openapi.yaml
      PassportEnvelope:
        type: object
        required: [passport]
-@@ -625,6 +683,14 @@
+@@ -625,6 +685,14 @@
          issued_by:
            type: string
            example: demo-owner
@@ -136,7 +154,7 @@ diff --git a/api/openapi.yaml b/api/openapi.yaml
      Scope:
        type: object
        required: [scope_id, action_class, resource_pattern]
-@@ -638,6 +704,18 @@
+@@ -638,6 +706,18 @@
          resource_pattern:
            type: string
            example: model/*
@@ -155,7 +173,7 @@ diff --git a/api/openapi.yaml b/api/openapi.yaml
      PassportsByAgentResponse:
        type: object
        required: [agent_id, passports, request_id]
-@@ -693,6 +771,11 @@
+@@ -693,6 +773,11 @@
          resource:
            type: string
            example: model/champion
@@ -167,8 +185,23 @@ diff --git a/api/openapi.yaml b/api/openapi.yaml
      ScopeEvaluateResponse:
        type: object
        required: [decision, request_id, executed]
-@@ -743,6 +826,10 @@
+@@ -737,12 +822,24 @@
+           example: model/champion
+     PolicyEvaluationResponse:
+       type: object
+-      required: [decision]
++      required: [decision, executed, receipt_created]
+       properties:
+         decision:
            $ref: "#/components/schemas/PolicyDecision"
++        executed:
++          type: boolean
++          enum: [false]
++          description: Policy evaluation never executes the proposed action, including when its effect is ALLOW.
++        receipt_created:
++          type: boolean
++          enum: [false]
++          description: This check creates no execution or ledger receipt.
      PolicyDecision:
        type: object
 +      description: >-
@@ -178,7 +211,7 @@ diff --git a/api/openapi.yaml b/api/openapi.yaml
        required: [decision_id, effect, reason]
        properties:
          decision_id:
-@@ -752,6 +839,17 @@
+@@ -752,6 +849,17 @@
            enum: [ALLOW, DENY]
          reason:
            type: string
@@ -269,10 +302,41 @@ diff --git a/deploy/compose/docker-compose.yml b/deploy/compose/docker-compose.y
 diff --git a/docs/api-contract.md b/docs/api-contract.md
 --- a/docs/api-contract.md
 +++ b/docs/api-contract.md
-@@ -258,6 +258,32 @@
+@@ -202,6 +202,10 @@
+ 
+ ### 7. Evaluate Policy
+ 
++This endpoint checks authorization only. Both ALLOW and DENY responses explicitly
++return `executed=false` and `receipt_created=false`; ALLOW is not evidence that the
++proposed action ran or that an execution or ledger receipt was created.
++
+ ```bash
+ curl -sS -X POST "$BASE/v1/policy/evaluations" \
+   -H "Authorization: Bearer $TOKEN" \
+@@ -225,7 +229,9 @@
+     "decision_id": "demo-model-promotion-policy",
+     "effect": "ALLOW",
+     "reason": "model promotion policy passed for governed model resource"
+-  }
++  },
++  "executed": false,
++  "receipt_created": false
  }
  ```
  
+@@ -254,9 +260,37 @@
+     "decision_id": "demo-model-promotion-policy-deny",
+     "effect": "DENY",
+     "reason": "model promotion requires a governed non-experimental model resource"
+-  }
+-}
+-```
++  },
++  "executed": false,
++  "receipt_created": false
++}
++```
++
 +## Passport Time And Context Bounds
 +
 +Passport verification and scope evaluation require an `ACTIVE` passport bound
@@ -298,11 +362,10 @@ diff --git a/docs/api-contract.md b/docs/api-contract.md
 +These are reference checks against stored records. They do not independently
 +attest the request context, verify cryptographic credentials, refresh delegated
 +revocation state, or enforce an actual executor's behavior.
-+
+ 
  ## Real OPA Policy
  
- The local Compose stack loads the policy at
-@@ -295,3 +321,68 @@
+@@ -295,3 +329,68 @@
  Use `api/openapi.yaml` as the source for client generation. The API is small on
  purpose; consumers should model register, issue, verify, scope, and policy as
  one authority-check workflow rather than independent dashboard calls.
@@ -530,6 +593,41 @@ diff --git a/sx/are-api-gateway/internal/gateway/phase1_contract.go b/sx/are-api
  		return true
  	default:
  		return false
+diff --git a/sx/are-api-gateway/internal/gateway/policy_check_only_test.go b/sx/are-api-gateway/internal/gateway/policy_check_only_test.go
+new file mode 100644
+--- /dev/null
++++ b/sx/are-api-gateway/internal/gateway/policy_check_only_test.go
+@@ -0,0 +1,30 @@
++package gateway
++
++import (
++	"encoding/json"
++	"net/http"
++	"net/http/httptest"
++	"testing"
++)
++
++func TestFoundationPolicyResponseNeverClaimsExecutionOrReceipt(t *testing.T) {
++	for _, action := range []string{"demo.read", "demo.forbidden_action"} {
++		t.Run(action, func(t *testing.T) {
++			gateway := NewGateway(allowToken{}, &StaticUpstreamClient{}, nil)
++			response := httptest.NewRecorder()
++			gateway.Handler().ServeHTTP(response, foundationRequest(http.MethodPost, "/v1/policy/evaluations", `{"decision_id":"check1","agent_id":"agent1","action_class":"`+action+`","resource":"model/champion","executed":true,"receipt_created":true}`, "check1"))
++			if response.Code != http.StatusOK {
++				t.Fatalf("status %d: %s", response.Code, response.Body.String())
++			}
++			var result map[string]json.RawMessage
++			if err := json.Unmarshal(response.Body.Bytes(), &result); err != nil {
++				t.Fatal(err)
++			}
++			for _, field := range []string{"executed", "receipt_created"} {
++				if string(result[field]) != "false" {
++					t.Errorf("%s must be explicit false, got %s", field, result[field])
++				}
++			}
++		})
++	}
++}
 diff --git a/sx/are-api-gateway/internal/gateway/s0s1_http_proxy.go b/sx/are-api-gateway/internal/gateway/s0s1_http_proxy.go
 --- a/sx/are-api-gateway/internal/gateway/s0s1_http_proxy.go
 +++ b/sx/are-api-gateway/internal/gateway/s0s1_http_proxy.go
@@ -555,6 +653,21 @@ diff --git a/sx/are-api-gateway/internal/gateway/s0s1_http_proxy.go b/sx/are-api
  }
  
  type s0s1SelectingUpstream struct {
+diff --git a/sx/are-api-gateway/internal/gateway/upstream.go b/sx/are-api-gateway/internal/gateway/upstream.go
+--- a/sx/are-api-gateway/internal/gateway/upstream.go
++++ b/sx/are-api-gateway/internal/gateway/upstream.go
+@@ -460,8 +460,9 @@
+ 			"effect":      strings.ToUpper(effect),
+ 			"reason":      reason,
+ 		},
+-		"request_id": requestID,
+-		"executed":   false,
++		"request_id":      requestID,
++		"executed":        false,
++		"receipt_created": false,
+ 	})
+ 	if err != nil {
+ 		return UpstreamResponse{}, fmt.Errorf("marshal evaluate policy response: %w", err)
 diff --git a/sx/s0s1-rest-bff/cmd/are-s0s1-rest-bff/main.go b/sx/s0s1-rest-bff/cmd/are-s0s1-rest-bff/main.go
 --- a/sx/s0s1-rest-bff/cmd/are-s0s1-rest-bff/main.go
 +++ b/sx/s0s1-rest-bff/cmd/are-s0s1-rest-bff/main.go
@@ -1013,7 +1126,7 @@ diff --git a/sx/s0s1-rest-bff/internal/api/api.go b/sx/s0s1-rest-bff/internal/ap
  	if err != nil {
  		if errors.Is(err, policy.ErrDependencyTimeout) {
  			jsonError(w, rid, "DEPENDENCY_TIMEOUT", "policy engine timeout", true, http.StatusGatewayTimeout)
-@@ -687,11 +873,7 @@
+@@ -687,11 +873,9 @@
  		return
  	}
  	body, err := json.Marshal(map[string]any{
@@ -1022,7 +1135,9 @@ diff --git a/sx/s0s1-rest-bff/internal/api/api.go b/sx/s0s1-rest-bff/internal/ap
 -			"effect":      effect,
 -			"reason":      reason,
 -		},
-+		"decision": decision,
++		"decision":        decision,
++		"executed":        false,
++		"receipt_created": false,
  	})
  	if err != nil {
  		jsonError(w, rid, "INTERNAL", "marshal failed", false, http.StatusInternalServerError)
@@ -1803,6 +1918,86 @@ new file mode 100644
 +	h.ServeHTTP(rec, req)
 +	if rec.Code != http.StatusBadGateway {
 +		t.Fatalf("unbound result must fail closed: %d %s", rec.Code, rec.Body.String())
++	}
++}
+diff --git a/sx/s0s1-rest-bff/internal/api/policy_check_only_test.go b/sx/s0s1-rest-bff/internal/api/policy_check_only_test.go
+new file mode 100644
+--- /dev/null
++++ b/sx/s0s1-rest-bff/internal/api/policy_check_only_test.go
+@@ -0,0 +1,75 @@
++package api
++
++import (
++	"are-s0s1-rest-bff/internal/policy"
++	"are-s0s1-rest-bff/internal/repo"
++	"encoding/json"
++	"net/http"
++	"net/http/httptest"
++	"strings"
++	"testing"
++	"time"
++)
++
++// No repository operation is available: a policy check must not dispatch a
++// registration, credential mutation, or receipt write through this boundary.
++type policyCheckOnlyRepository struct{ repo.Repository }
++
++func TestPolicyEvaluationExplicitlyReportsNoExecutionOrReceipt(t *testing.T) {
++	for _, mode := range []string{"canonical", "stub"} {
++		for _, effect := range []string{"ALLOW", "DENY"} {
++			t.Run(mode+"/"+effect, func(t *testing.T) {
++				action := "demo.read"
++				if effect == "DENY" {
++					action = "demo.forbidden_action"
++				}
++				var evaluator policy.Evaluator = policy.Stub{}
++				if mode == "canonical" {
++					server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++						_ = json.NewEncoder(w).Encode(map[string]any{"result": map[string]any{
++							"decision_id": "check1", "agent_id": "agent1", "action_class": action, "resource": "model/champion",
++							"effect": effect, "reason": "policy check", "policy_id": "policy/test.rego", "policy_digest": "sha256:" + strings.Repeat("a", 64),
++							"executed": true, "receipt_created": true,
++						}})
++					}))
++					defer server.Close()
++					evaluator = policy.NewOPAClient(server.URL, time.Second)
++				}
++				handler, err := Handler(Config{Repo: policyCheckOnlyRepository{}, Policy: evaluator})
++				if err != nil {
++					t.Fatal(err)
++				}
++				body := `{"decision_id":"check1","agent_id":"agent1","action_class":"` + action + `","resource":"model/champion","executed":true,"receipt_created":true}`
++				request := httptest.NewRequest(http.MethodPost, "/v1/policy/evaluations", strings.NewReader(body))
++				request.Header.Set("X-Request-ID", "request1")
++				request.Header.Set("Idempotency-Key", "check1")
++				response := httptest.NewRecorder()
++				handler.ServeHTTP(response, request)
++				if response.Code != http.StatusOK {
++					t.Fatalf("status %d: %s", response.Code, response.Body.String())
++				}
++				var result map[string]json.RawMessage
++				if err := json.Unmarshal(response.Body.Bytes(), &result); err != nil {
++					t.Fatal(err)
++				}
++				for _, field := range []string{"executed", "receipt_created"} {
++					if string(result[field]) != "false" {
++						t.Errorf("%s must be explicit false, got %s", field, result[field])
++					}
++				}
++				var decision map[string]any
++				if err := json.Unmarshal(result["decision"], &decision); err != nil {
++					t.Fatal(err)
++				}
++				if decision["effect"] != effect {
++					t.Fatalf("policy effect lost: %v", decision)
++				}
++				for _, field := range []string{"executed", "receipt_created", "receipt", "receipt_id"} {
++					if _, present := decision[field]; present {
++						t.Errorf("policy decision must not claim %s", field)
++					}
++				}
++			})
++		}
 +	}
 +}
 diff --git a/sx/s0s1-rest-bff/internal/policy/binding_test.go b/sx/s0s1-rest-bff/internal/policy/binding_test.go

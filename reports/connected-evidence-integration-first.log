@@ -1,0 +1,24 @@
+......F                                                                  [100%]
+=================================== FAILURES ===================================
+________ test_receipt_import_retries_after_remote_verification_recovers ________
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10a234050>
+
+    def test_receipt_import_retries_after_remote_verification_recovers(rt):
+        obs=rt.shadow(context=CONTEXT,attempt_id='delayed');rt.flush_outbox();row=outcome_row(rt,'delayed')
+        with rt._tx() as db:db.execute('DELETE FROM observations WHERE attempt_id=?',('delayed',))
+        rt.ledger.available=False
+        first=rt.admit_evidence(obs,row['event'],row['receipt'],expected_attempt_id='delayed',context=CONTEXT)
+        assert not first['admitted'] and rt.observations()==[]
+        rt.ledger.available=True
+        recovered=rt.admit_evidence(obs,row['event'],row['receipt'],expected_attempt_id='delayed',context=CONTEXT)
+>       assert recovered['admitted'] and len(rt.observations())==1
+E       assert (True and 0 == 1)
+E        +  where 0 = len([])
+E        +    where [] = observations()
+E        +      where observations = <earned_authority.connected.ConnectedRuntime object at 0x10a234050>.observations
+
+tests/test_connected_evidence.py:122: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_connected_evidence.py::test_receipt_import_retries_after_remote_verification_recovers
+1 failed, 6 passed in 0.56s

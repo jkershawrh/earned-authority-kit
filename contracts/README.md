@@ -63,6 +63,22 @@ Lifecycle `subject_id` identifies the immutable source event itself and its
 authenticated payload; the adapter does not infer absent historical revisions.
 INTENT, CANONICAL_QUALIFICATION_EVALUATED, and WITHDRAWAL_RECONCILED are included.
 
+The evidence-boundary revision adds `PROCEDURE_REPORTED`, `EVIDENCE_ADMITTED`
+and `EVIDENCE_REJECTED` to the lifecycle enum. These are actual signed runtime
+events: a procedure's unverified claim remains separate from an independent
+outcome, and evidence admission or rejection describes an intake decision. None
+of these events grants authority, confirms business execution or creates an
+independent outcome by itself. A recorded Ledger receipt authenticates the event
+assertion and its binding; it does not change that meaning.
+
+This is an additive change within the unpublished `0.1.0-draft.1` working draft,
+identified by its schema content hash. A consumer pinned to the prior closed enum
+is expected to reject these new event types. Producer and consumer revisions must
+be updated together; no stable published compatibility or version-negotiation
+claim is made. `tests/test_evidence_wire.py` tests actual producer/export/consumer
+records with explicit unit service seams, including pending/recorded delivery,
+rehashed-copy rejection, durable-source signature checks and old-enum rejection.
+
 ## Validation evidence
 
 The individual five fixture files are schema examples. `runtime-wire-records.json`

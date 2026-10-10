@@ -1,9 +1,9 @@
 {
   "schema_version": "0.1.0-draft.1",
-  "generated_at_utc": "2026-10-10T03:06:11.517163+00:00",
+  "generated_at_utc": "2026-10-10T03:35:29.158599+00:00",
   "scope": "BDD requirements traced to recorded environment-specific evidence; counts never imply coverage",
   "acceptance_color": "AMBER_FOR_COMPLETE_REAL_ADAPTER_BDD",
-  "method": "Fixture methods are matched to exact passing current component report cases. Current real-service acceptance is taken only from explicit Given/When/Then bindings in service-bdd-live-002, including every required outline row. Seven scenarios retain literal requirement gaps despite passing bound checks; eight remain unbound. Named older connected and fresh-stack checks are preserved as prior-revision supporting evidence, never added to scenario coverage by count.",
+  "method": "Fixture methods are matched to exact passing current component report cases. Current real-service certification uses the explicit Given/When/Then bindings and every outline row in reports/service-bdd-live-004.json. Each executed case independently asserts exact registry version, health and mutation count. Partial and unbound literal requirements stay AMBER. Prior service runs and source snapshots are historical evidence, never inferred current coverage from counts.",
   "counts": {
     "required_scenario_ids": 37,
     "fixture_scenario_ids_with_recorded_pass": 37,
@@ -12,32 +12,37 @@
     "connected_lifecycle_checks": 23,
     "connected_fault_checks": 17,
     "connected_total_checks": 40,
-    "connected_scenarios_with_partial_explicit_evidence": 7,
-    "connected_unmapped_scenario_ids": 8,
-    "connected_complete_scenarios_certified": 22,
-    "connected_full_scenario_acceptance_amber": 15,
+    "connected_scenarios_with_partial_explicit_evidence": 6,
+    "connected_unmapped_scenario_ids": 1,
+    "connected_complete_scenarios_certified": 30,
+    "connected_full_scenario_acceptance_amber": 7,
     "fresh_same_host_combined_component_checks": 61,
-    "final_component_checks_all_modules": 235,
-    "current_service_bdd_cases_passed": 39,
-    "current_service_bdd_cases_unrun": 12,
-    "current_service_bdd_assertions": 825,
-    "current_service_bdd_verified_receipts": 358
+    "final_component_checks_all_modules": 321,
+    "current_service_bdd_cases_passed": 49,
+    "current_service_bdd_cases_unrun": 2,
+    "current_service_bdd_assertions": 1106,
+    "current_service_bdd_verified_receipts": 438
   },
   "fixture_recorded_source_hashes": {
     "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
     "earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
-    "earned_authority/connected.py": "sha256:5a7000978b1de3068a5870dedb4303fa1e56e60cf07f1bd427af48c62afd3785",
+    "earned_authority/connected.py": "sha256:c3db6de8cd588565ec66bad314ffae98551d8d482dc166164239acc815180e1f",
     "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
     "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
     "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
     "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
     "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
-    "earned_authority/runtime.py": "sha256:f3b2bdd351a64e8168c7bf5771ca0d4bd460b6505dea595e288d0c68326969ce",
+    "earned_authority/runtime.py": "sha256:6e2b181587b834ca698bcc4ce0349f76a8fe418fe7768d7bafe1105952f936ad",
     "earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
-    "tests/test_authority_journal.py": "sha256:24d594dde9d91cf075bd6db0840c44a31fb3e7eabddef47d0540ba9e3d38a7a8",
+    "tests/test_authority_journal.py": "sha256:212c83084dabcda38979b1e5a651f7ff2f683319761de084ea68dabf7be3b30c",
     "tests/test_connected_binding.py": "sha256:e60d9378ade1725c7dd858529b2f3b2696181c583d85d8edc064e408288f4ce5",
-    "tests/test_connected_security.py": "sha256:243d364aabbabfd2400f6bae70dbb16c3859c627ce73f2bd2f31e6fcc59278fb",
+    "tests/test_connected_evidence.py": "sha256:b558926ae3fbb2b55a64fd57956a10d2e7e4fd33d2ce4ef360eed1477e1ad21a",
+    "tests/test_connected_security.py": "sha256:26bed459d5180330404f2937aa2045cc843be058ff048f4870b55b9eef170a77",
     "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
+    "tests/test_evidence_admission.py": "sha256:47c59f09d7a8cf3236e9e46f0581b7c1fb9c5e809329316e280252da613c31f9",
+    "tests/test_evidence_boundary.py": "sha256:403f53cb0b9a6fbd00a94688bbde80b43a720e73028255e4cfa4b0bd8cf4a5e0",
+    "tests/test_evidence_wire.py": "sha256:df555f550c4d5e1ef4303ef573ae30eda53fc513625ab617787634249bf3c245",
     "tests/test_ledger_client.py": "sha256:6a05dce90f5dfa0627c188000ad12951dbbb96e7df7f7f149cd4e640438765f2",
     "tests/test_lifecycle_bdd.py": "sha256:a376b2d47c059aea4ae5ffc79ef007eb9eff7eed1964702ec643a564c4866cdc",
     "tests/test_passport_client.py": "sha256:d86ff13cf90f3fdae60f68de7ab85af51d1ca55777245c72478d531a361153b7",
@@ -57,7 +62,7 @@
     "contracts/fixtures/qualification-client-cases.json": "sha256:5d201b632a3a1a323136fdcad0905f258492988fb7a79e1051eb0675f114742e",
     "contracts/fixtures/qualification.json": "sha256:c0b8c64ec3860f9a7aa785892bef5aef4e188962275880b069ab6df3114f93bb",
     "contracts/fixtures/runtime-wire-records.json": "sha256:cbe6c1b5bed7c50ae739983fea588a45986ce3b2a12abb7f1f771e7906e4537d",
-    "contracts/lifecycle-event.schema.json": "sha256:4032643e426de95c0ccd08ac9da535c8929dfff4dbb8e69b61a79effa7c2b4a3",
+    "contracts/lifecycle-event.schema.json": "sha256:ff4390844db2d78aede88d4413b78e1fc79f3c58857020ab92e63f892a04bc57",
     "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
     "contracts/qualification.schema.json": "sha256:2a4a4f6921a3f839b6b4a554f0c8fa019600d14411d5cfd8355f119aa28449b3",
     "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
@@ -81,9 +86,10 @@
     "reports/clean-reference-combined.json": "sha256:9705efca81fa3fb47bc9e4f449dee2e70b09e5247be0e0d1c7a5b72aa37ad01b",
     "tools/validate_connected.py": "sha256:dc9c007353e26c3b5a29305d522f85bb231ff6a6a7521a203fd3d4f17eeb5b2a",
     "tools/validate_adversarial.py": "sha256:c9c57b66cf87fe83ed907bb523e4a27c18ff933305c4bbe06ca6954ab28381b4",
-    "reports/component-verification.json": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+    "reports/component-verification.json": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
     "reports/service-bdd-live-002.json": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
-    "tools/validate_bdd_connected.py": "sha256:109d96289707d1fefae02f01648eb3e117be3be1e3701b2e1456a224a3f339ea"
+    "tools/validate_bdd_connected.py": "sha256:a7b5ce6fbc20bcdb31809c1db7c9aa105136e1b75289ea8a05be420f12d31706",
+    "reports/service-bdd-live-004.json": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf"
   },
   "fresh_same_host_components": {
     "policy": {
@@ -123,7 +129,7 @@
     }
   },
   "remaining_amber": [
-    "Fifteen real-adapter BDD scenarios: seven partially bound (009,015,016,017,021,025,031), eight unbound (002,014,022,026,033,035,036,037); every missing literal requirement remains listed per scenario.",
+    "7 real-adapter BDD scenarios: partially bound BDD-009,BDD-015,BDD-016,BDD-021,BDD-025,BDD-031; unbound BDD-033. Missing literal requirements remain listed per scenario.",
     "Preregistered evaluation-driven EDD value comparison, held-out splits, matched baselines and statistical adequacy",
     "Independent operator and another host",
     "Backup/disk-loss disaster recovery and broader upgrade paths",
@@ -153,10 +159,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/82",
+            "json_pointer": "/cases/168",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_001_fresh_independent_outcomes_qualify_only",
             "outcome": "PASS"
           }
@@ -166,8 +172,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -177,7 +183,8 @@
             "execution_state": "PASSED",
             "assertion_count": 19,
             "receipt_count": 5,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -234,7 +241,29 @@
           }
         ],
         "remaining": "Actual qualification and absence of a grant are checked; the entire BDD reference, freshness and zero-live-mutation assertion set is not individually bound."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/0",
+              "execution_state": "PASSED",
+              "assertion_count": 19,
+              "receipt_count": 5,
+              "faults": []
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-002",
@@ -251,34 +280,35 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/83",
+            "json_pointer": "/cases/169",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_002_self_report_is_not_independent_evidence",
             "outcome": "PASS"
           }
         ]
       },
       "connected": {
-        "status": "UNBOUND_NOT_RUN",
-        "acceptance_color": "AMBER",
-        "complete_scenario_certified": false,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+        "acceptance_color": "GREEN",
+        "complete_scenario_certified": true,
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
           {
             "case": "default",
             "json_pointer": "/cases/1",
-            "execution_state": "NOT_RUN",
-            "assertion_count": 0,
-            "receipt_count": 0,
-            "faults": []
+            "execution_state": "PASSED",
+            "assertion_count": 20,
+            "receipt_count": 5,
+            "faults": [],
+            "artifacts": []
           }
         ],
-        "remaining": "No public persisted self-report input distinct from independent outcomes. Caller attestation is rejected, but that is not the entire specified setup."
+        "remaining": null
       },
       "fresh_same_host": {
         "status": "UNMAPPED",
@@ -294,7 +324,29 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "No real-adapter self-reported-only qualification rejection scenario is mapped."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "UNBOUND_NOT_RUN",
+          "acceptance_color": "AMBER",
+          "complete_scenario_certified": false,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/1",
+              "execution_state": "NOT_RUN",
+              "assertion_count": 0,
+              "receipt_count": 0,
+              "faults": []
+            }
+          ],
+          "remaining": "No public persisted self-report input distinct from independent outcomes. Caller attestation is rejected, but that is not the entire specified setup."
+        }
+      ]
     },
     {
       "scenario_id": "BDD-003",
@@ -312,15 +364,15 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/84",
+            "json_pointer": "/cases/170",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_003_changed_environment",
             "outcome": "PASS"
           },
           {
-            "json_pointer": "/cases/85",
+            "json_pointer": "/cases/171",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_003_changed_skill",
             "outcome": "PASS"
           }
@@ -330,8 +382,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -341,7 +393,8 @@
             "execution_state": "PASSED",
             "assertion_count": 14,
             "receipt_count": 5,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           },
           {
             "case": "changed-environment",
@@ -349,7 +402,8 @@
             "execution_state": "PASSED",
             "assertion_count": 14,
             "receipt_count": 5,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -368,7 +422,37 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "No direct connected eligibility check covers both changed-skill and changed-environment outline rows."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "changed-skill",
+              "json_pointer": "/cases/2",
+              "execution_state": "PASSED",
+              "assertion_count": 14,
+              "receipt_count": 5,
+              "faults": []
+            },
+            {
+              "case": "changed-environment",
+              "json_pointer": "/cases/3",
+              "execution_state": "PASSED",
+              "assertion_count": 14,
+              "receipt_count": 5,
+              "faults": []
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-004",
@@ -385,10 +469,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/86",
+            "json_pointer": "/cases/172",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_004_unknown_is_neither_pass_nor_failure",
             "outcome": "PASS"
           }
@@ -398,8 +482,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -411,7 +495,8 @@
             "receipt_count": 5,
             "faults": [
               "Independent shadow observer availability injection; actual shadow state persisted."
-            ]
+            ],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -430,7 +515,31 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "No connected initial qualification scenario uses exactly two PASS plus one UNKNOWN and checks both counters."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/4",
+              "execution_state": "PASSED",
+              "assertion_count": 16,
+              "receipt_count": 5,
+              "faults": [
+                "Independent shadow observer availability injection; actual shadow state persisted."
+              ]
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-005",
@@ -447,10 +556,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/87",
+            "json_pointer": "/cases/173",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_005_stale_passes_hold_qualification",
             "outcome": "PASS"
           }
@@ -460,8 +569,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -472,8 +581,9 @@
             "assertion_count": 16,
             "receipt_count": 5,
             "faults": [
-              "Local coordinator clock fixed at 1791602146380; canonical services retain real wall time."
-            ]
+              "Local coordinator clock fixed at 1791603901219; canonical services retain real wall time."
+            ],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -492,7 +602,31 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "No connected stale-evidence qualification scenario is mapped."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/5",
+              "execution_state": "PASSED",
+              "assertion_count": 16,
+              "receipt_count": 5,
+              "faults": [
+                "Local coordinator clock fixed at 1791602146380; canonical services retain real wall time."
+              ]
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-006",
@@ -509,10 +643,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/88",
+            "json_pointer": "/cases/174",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_006_duplicate_attempt_cannot_inflate_qualification",
             "outcome": "PASS"
           }
@@ -522,8 +656,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -533,7 +667,8 @@
             "execution_state": "PASSED",
             "assertion_count": 15,
             "receipt_count": 3,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -552,7 +687,29 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "No connected duplicate shadow-delivery qualification-count scenario is mapped."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/6",
+              "execution_state": "PASSED",
+              "assertion_count": 15,
+              "receipt_count": 3,
+              "faults": []
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-007",
@@ -569,10 +726,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/89",
+            "json_pointer": "/cases/175",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_007_known_failure_prevents_qualification",
             "outcome": "PASS"
           }
@@ -582,8 +739,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -593,7 +750,8 @@
             "execution_state": "PASSED",
             "assertion_count": 17,
             "receipt_count": 6,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -612,7 +770,29 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "No connected initial three-PASS-plus-one-FAIL qualification-window scenario is mapped."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/7",
+              "execution_state": "PASSED",
+              "assertion_count": 17,
+              "receipt_count": 6,
+              "faults": []
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-008",
@@ -629,10 +809,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/90",
+            "json_pointer": "/cases/176",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_008_policy_grants_exact_bounded_authority",
             "outcome": "PASS"
           }
@@ -642,8 +822,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -653,7 +833,8 @@
             "execution_state": "PASSED",
             "assertion_count": 25,
             "receipt_count": 6,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -710,7 +891,29 @@
           }
         ],
         "remaining": "Actual signed grant and wire semantics are checked; a scenario binding for every requested TTL, scope and policy postcondition is still required."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/8",
+              "execution_state": "PASSED",
+              "assertion_count": 25,
+              "receipt_count": 6,
+              "faults": []
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-009",
@@ -727,10 +930,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/91",
+            "json_pointer": "/cases/177",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_009_qualification_cannot_override_policy_denial",
             "outcome": "PASS"
           }
@@ -740,8 +943,8 @@
         "status": "PARTIAL_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "AMBER",
         "complete_scenario_certified": false,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -751,7 +954,8 @@
             "execution_state": "PASSED",
             "assertion_count": 15,
             "receipt_count": 5,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": "Actual Foundation/OPA denies the requested resource at the requested time; a time-window-specific policy rule is not exercised."
@@ -790,7 +994,29 @@
           }
         ],
         "remaining": "Real OPA denial and unchanged mutation count are checked; the exact denial-window setup, absent-grant and retained-eligibility postconditions are not all asserted."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "PARTIAL_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "AMBER",
+          "complete_scenario_certified": false,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/9",
+              "execution_state": "PASSED",
+              "assertion_count": 15,
+              "receipt_count": 5,
+              "faults": []
+            }
+          ],
+          "remaining": "Actual Foundation/OPA denies the requested resource at the requested time; a time-window-specific policy rule is not exercised."
+        }
+      ]
     },
     {
       "scenario_id": "BDD-010",
@@ -810,25 +1036,25 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/92",
+            "json_pointer": "/cases/178",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_010_changed_revision",
             "outcome": "PASS"
           },
           {
-            "json_pointer": "/cases/93",
+            "json_pointer": "/cases/179",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_010_wrong_action",
             "outcome": "PASS"
           },
           {
-            "json_pointer": "/cases/94",
+            "json_pointer": "/cases/180",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_010_wrong_context",
             "outcome": "PASS"
           },
           {
-            "json_pointer": "/cases/95",
+            "json_pointer": "/cases/181",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_010_wrong_resource",
             "outcome": "PASS"
           }
@@ -838,8 +1064,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -849,7 +1075,8 @@
             "execution_state": "PASSED",
             "assertion_count": 14,
             "receipt_count": 6,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           },
           {
             "case": "wrong-resource",
@@ -857,7 +1084,8 @@
             "execution_state": "PASSED",
             "assertion_count": 14,
             "receipt_count": 6,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           },
           {
             "case": "wrong-context",
@@ -865,7 +1093,8 @@
             "execution_state": "PASSED",
             "assertion_count": 14,
             "receipt_count": 6,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           },
           {
             "case": "changed-revision",
@@ -873,7 +1102,8 @@
             "execution_state": "PASSED",
             "assertion_count": 14,
             "receipt_count": 6,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -930,7 +1160,53 @@
           }
         ],
         "remaining": "Wrong context and model target are checked. Wrong action, wrong resource and changed procedure revision outline rows are not all connected bindings."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "wrong-action",
+              "json_pointer": "/cases/10",
+              "execution_state": "PASSED",
+              "assertion_count": 14,
+              "receipt_count": 6,
+              "faults": []
+            },
+            {
+              "case": "wrong-resource",
+              "json_pointer": "/cases/11",
+              "execution_state": "PASSED",
+              "assertion_count": 14,
+              "receipt_count": 6,
+              "faults": []
+            },
+            {
+              "case": "wrong-context",
+              "json_pointer": "/cases/12",
+              "execution_state": "PASSED",
+              "assertion_count": 14,
+              "receipt_count": 6,
+              "faults": []
+            },
+            {
+              "case": "changed-revision",
+              "json_pointer": "/cases/13",
+              "execution_state": "PASSED",
+              "assertion_count": 14,
+              "receipt_count": 6,
+              "faults": []
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-011",
@@ -947,10 +1223,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/96",
+            "json_pointer": "/cases/182",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_011_expiry_equality_denies_passport",
             "outcome": "PASS"
           }
@@ -960,8 +1236,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -972,8 +1248,9 @@
             "assertion_count": 14,
             "receipt_count": 6,
             "faults": [
-              "Local coordinator clock fixed at 1791601849202; canonical services retain real wall time."
-            ]
+              "Local coordinator clock fixed at 1791603605148; canonical services retain real wall time."
+            ],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -992,7 +1269,31 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "No connected exact passport-expiry-equality scenario is mapped."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/14",
+              "execution_state": "PASSED",
+              "assertion_count": 14,
+              "receipt_count": 6,
+              "faults": [
+                "Local coordinator clock fixed at 1791601849202; canonical services retain real wall time."
+              ]
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-012",
@@ -1009,10 +1310,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/97",
+            "json_pointer": "/cases/183",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_012_scope_expiry_precedes_passport",
             "outcome": "PASS"
           }
@@ -1022,8 +1323,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -1034,8 +1335,9 @@
             "assertion_count": 15,
             "receipt_count": 6,
             "faults": [
-              "Local coordinator clock fixed at 1791601609570; canonical services retain real wall time."
-            ]
+              "Local coordinator clock fixed at 1791603365663; canonical services retain real wall time."
+            ],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -1074,7 +1376,31 @@
           }
         ],
         "remaining": "A real short scope expires before the admitted command; exact equality at the boundary and the full specified interval are not checked."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/15",
+              "execution_state": "PASSED",
+              "assertion_count": 15,
+              "receipt_count": 6,
+              "faults": [
+                "Local coordinator clock fixed at 1791601609570; canonical services retain real wall time."
+              ]
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-013",
@@ -1091,10 +1417,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/98",
+            "json_pointer": "/cases/184",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_013_revocation_invalidates_prior_admission",
             "outcome": "PASS"
           }
@@ -1104,8 +1430,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -1115,7 +1441,8 @@
             "execution_state": "PASSED",
             "assertion_count": 16,
             "receipt_count": 7,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -1154,7 +1481,29 @@
           }
         ],
         "remaining": "A prior admission is denied after canonical revoke with no mutation-count increase; a complete scenario binding including independent unchanged-state assertion is pending."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/16",
+              "execution_state": "PASSED",
+              "assertion_count": 16,
+              "receipt_count": 7,
+              "faults": []
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-014",
@@ -1172,47 +1521,53 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/99",
+            "json_pointer": "/cases/185",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_014_invalid_expiry",
             "outcome": "PASS"
           },
           {
-            "json_pointer": "/cases/100",
+            "json_pointer": "/cases/186",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_014_missing_expiry",
             "outcome": "PASS"
           }
         ]
       },
       "connected": {
-        "status": "UNBOUND_NOT_RUN",
-        "acceptance_color": "AMBER",
-        "complete_scenario_certified": false,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+        "acceptance_color": "GREEN",
+        "complete_scenario_certified": true,
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
           {
             "case": "missing-expiry",
             "json_pointer": "/cases/17",
-            "execution_state": "NOT_RUN",
-            "assertion_count": 0,
-            "receipt_count": 0,
-            "faults": []
+            "execution_state": "PASSED",
+            "assertion_count": 21,
+            "receipt_count": 6,
+            "faults": [
+              "Loopback forwarding proxy corrupts expiry in an actual canonical reply; original signature is retained and no credential is fabricated or re-signed."
+            ],
+            "artifacts": []
           },
           {
             "case": "invalid-expiry",
             "json_pointer": "/cases/18",
-            "execution_state": "NOT_RUN",
-            "assertion_count": 0,
-            "receipt_count": 0,
-            "faults": []
+            "execution_state": "PASSED",
+            "assertion_count": 21,
+            "receipt_count": 6,
+            "faults": [
+              "Loopback forwarding proxy corrupts expiry in an actual canonical reply; original signature is retained and no credential is fabricated or re-signed."
+            ],
+            "artifacts": []
           }
         ],
-        "remaining": "Malformed provider response requires a transport negative-control; a fabricated canonical service cannot be claimed as live evidence."
+        "remaining": null
       },
       "fresh_same_host": {
         "status": "UNMAPPED",
@@ -1228,7 +1583,37 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "No connected response-adapter scenario for both missing and invalid expiry is mapped; component negatives do not establish this connected run."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "UNBOUND_NOT_RUN",
+          "acceptance_color": "AMBER",
+          "complete_scenario_certified": false,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "missing-expiry",
+              "json_pointer": "/cases/17",
+              "execution_state": "NOT_RUN",
+              "assertion_count": 0,
+              "receipt_count": 0,
+              "faults": []
+            },
+            {
+              "case": "invalid-expiry",
+              "json_pointer": "/cases/18",
+              "execution_state": "NOT_RUN",
+              "assertion_count": 0,
+              "receipt_count": 0,
+              "faults": []
+            }
+          ],
+          "remaining": "Malformed provider response requires a transport negative-control; a fabricated canonical service cannot be claimed as live evidence."
+        }
+      ]
     },
     {
       "scenario_id": "BDD-015",
@@ -1245,10 +1630,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/101",
+            "json_pointer": "/cases/187",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_015_unconfirmed_authority_denies_new_mutation",
             "outcome": "PASS"
           }
@@ -1258,8 +1643,8 @@
         "status": "PARTIAL_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "AMBER",
         "complete_scenario_certified": false,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -1271,7 +1656,8 @@
             "receipt_count": 6,
             "faults": [
               "Actual Passport current-status SDK connection refused on unused loopback port 1; previously observed active snapshot retained only as test evidence."
-            ]
+            ],
+            "artifacts": []
           }
         ],
         "remaining": "Canonical current-status unavailability fails closed despite a previously observed active snapshot. There is no executable stale grant cache in this adapter, so the literal cached-status premise is not exercised."
@@ -1290,7 +1676,31 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "No connected current-authority-service outage with stale cache scenario is mapped."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "PARTIAL_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "AMBER",
+          "complete_scenario_certified": false,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/19",
+              "execution_state": "PASSED",
+              "assertion_count": 15,
+              "receipt_count": 6,
+              "faults": [
+                "Actual Passport current-status SDK connection refused on unused loopback port 1; previously observed active snapshot retained only as test evidence."
+              ]
+            }
+          ],
+          "remaining": "Canonical current-status unavailability fails closed despite a previously observed active snapshot. There is no executable stale grant cache in this adapter, so the literal cached-status premise is not exercised."
+        }
+      ]
     },
     {
       "scenario_id": "BDD-016",
@@ -1307,10 +1717,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/102",
+            "json_pointer": "/cases/188",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_016_independent_postcondition_and_correlation",
             "outcome": "PASS"
           }
@@ -1320,8 +1730,8 @@
         "status": "PARTIAL_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "AMBER",
         "complete_scenario_certified": false,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -1331,7 +1741,8 @@
             "execution_state": "PASSED",
             "assertion_count": 23,
             "receipt_count": 9,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": "Qualification and grant exist before the live attempt; records are linked by qualification/grant IDs, not retroactively assigned the later attempt ID required literally by this scenario."
@@ -1406,7 +1817,29 @@
           }
         ],
         "remaining": "Actual commit, independent PASS, Ledger and wire binding are checked; all per-scenario cross-stage correlation assertions are not separately bound."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "PARTIAL_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "AMBER",
+          "complete_scenario_certified": false,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/20",
+              "execution_state": "PASSED",
+              "assertion_count": 23,
+              "receipt_count": 9,
+              "faults": []
+            }
+          ],
+          "remaining": "Qualification and grant exist before the live attempt; records are linked by qualification/grant IDs, not retroactively assigned the later attempt ID required literally by this scenario."
+        }
+      ]
     },
     {
       "scenario_id": "BDD-017",
@@ -1424,26 +1857,26 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/103",
+            "json_pointer": "/cases/189",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_017_correct_version_with_unhealthy_state_is_failure",
             "outcome": "PASS"
           },
           {
-            "json_pointer": "/cases/104",
+            "json_pointer": "/cases/190",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_017_wrong_observed_postcondition_is_failure",
             "outcome": "PASS"
           }
         ]
       },
       "connected": {
-        "status": "PARTIAL_EXPLICIT_SERVICE_BINDING_PASS",
-        "acceptance_color": "AMBER",
-        "complete_scenario_certified": false,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+        "acceptance_color": "GREEN",
+        "complete_scenario_certified": true,
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -1451,24 +1884,26 @@
             "case": "wrong-version",
             "json_pointer": "/cases/21",
             "execution_state": "PASSED",
-            "assertion_count": 20,
-            "receipt_count": 11,
+            "assertion_count": 24,
+            "receipt_count": 12,
             "faults": [
               "Actual disposable registry writer receives wrong-version or unhealthy-state fault; independent reader observes persisted result."
-            ]
+            ],
+            "artifacts": []
           },
           {
             "case": "unhealthy",
             "json_pointer": "/cases/22",
             "execution_state": "PASSED",
-            "assertion_count": 20,
-            "receipt_count": 11,
+            "assertion_count": 24,
+            "receipt_count": 12,
             "faults": [
               "Actual disposable registry writer receives wrong-version or unhealthy-state fault; independent reader observes persisted result."
-            ]
+            ],
+            "artifacts": []
           }
         ],
-        "remaining": "The actual registry write completes and its independent postcondition fails. A separate procedure success assertion is not a public input, so the literal self-report-versus-observation premise is not fully bound."
+        "remaining": null
       },
       "fresh_same_host": {
         "status": "PARTIAL_EXPLICIT_EVIDENCE_REPEATED",
@@ -1504,7 +1939,41 @@
           }
         ],
         "remaining": "Wrong-version independent FAIL is checked. The healthy-version versus unhealthy-state case and complete postcondition assertions are not all connected bindings."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "PARTIAL_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "AMBER",
+          "complete_scenario_certified": false,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "wrong-version",
+              "json_pointer": "/cases/21",
+              "execution_state": "PASSED",
+              "assertion_count": 20,
+              "receipt_count": 11,
+              "faults": [
+                "Actual disposable registry writer receives wrong-version or unhealthy-state fault; independent reader observes persisted result."
+              ]
+            },
+            {
+              "case": "unhealthy",
+              "json_pointer": "/cases/22",
+              "execution_state": "PASSED",
+              "assertion_count": 20,
+              "receipt_count": 11,
+              "faults": [
+                "Actual disposable registry writer receives wrong-version or unhealthy-state fault; independent reader observes persisted result."
+              ]
+            }
+          ],
+          "remaining": "The actual registry write completes and its independent postcondition fails. A separate procedure success assertion is not a public input, so the literal self-report-versus-observation premise is not fully bound."
+        }
+      ]
     },
     {
       "scenario_id": "BDD-018",
@@ -1521,10 +1990,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/105",
+            "json_pointer": "/cases/191",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_018_unavailable_observer_is_unknown_and_holds",
             "outcome": "PASS"
           }
@@ -1534,8 +2003,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -1547,7 +2016,8 @@
             "receipt_count": 11,
             "faults": [
               "Independent live observer availability injection after actual durable commit."
-            ]
+            ],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -1604,7 +2074,31 @@
           }
         ],
         "remaining": "UNKNOWN, HOLD, withdrawal and next-attempt denial are checked; neither-pass-nor-failure counters and all completed-attempt fields lack a complete scenario binding."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/23",
+              "execution_state": "PASSED",
+              "assertion_count": 25,
+              "receipt_count": 11,
+              "faults": [
+                "Independent live observer availability injection after actual durable commit."
+              ]
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-019",
@@ -1621,10 +2115,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/106",
+            "json_pointer": "/cases/192",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_019_completed_retry_returns_result_without_mutation",
             "outcome": "PASS"
           }
@@ -1634,8 +2128,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -1645,7 +2139,8 @@
             "execution_state": "PASSED",
             "assertion_count": 18,
             "receipt_count": 9,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -1684,7 +2179,29 @@
           }
         ],
         "remaining": "The same returned observation and unchanged mutation count are checked; complete original-result, attempt and transport-retry linkage assertions are not separately bound."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/24",
+              "execution_state": "PASSED",
+              "assertion_count": 18,
+              "receipt_count": 9,
+              "faults": []
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-020",
@@ -1701,10 +2218,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/107",
+            "json_pointer": "/cases/193",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_020_changed_retry_payload_is_rejected",
             "outcome": "PASS"
           }
@@ -1714,8 +2231,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -1725,7 +2242,8 @@
             "execution_state": "PASSED",
             "assertion_count": 17,
             "receipt_count": 9,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -1744,7 +2262,29 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "No connected changed-payload reuse of an attempt ID scenario is mapped."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/25",
+              "execution_state": "PASSED",
+              "assertion_count": 17,
+              "receipt_count": 9,
+              "faults": []
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-021",
@@ -1763,20 +2303,20 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/108",
+            "json_pointer": "/cases/194",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_021_crash_after_mutation_before_observation_reconciles",
             "outcome": "PASS"
           },
           {
-            "json_pointer": "/cases/109",
+            "json_pointer": "/cases/195",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_021_lost_response_reconciles_after_restart",
             "outcome": "PASS"
           },
           {
-            "json_pointer": "/cases/110",
+            "json_pointer": "/cases/196",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_021_unavailable_reconciliation_never_blindly_repeats",
             "outcome": "PASS"
           }
@@ -1786,8 +2326,8 @@
         "status": "PARTIAL_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "AMBER",
         "complete_scenario_certified": false,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -1799,7 +2339,8 @@
             "receipt_count": 9,
             "faults": [
               "Transport response-loss hook throws only after actual durable commit/result."
-            ]
+            ],
+            "artifacts": []
           },
           {
             "case": "observer-interruption",
@@ -1809,7 +2350,8 @@
             "receipt_count": 9,
             "faults": [
               "Local observer exception after durable commit; restart uses new connections."
-            ]
+            ],
+            "artifacts": []
           },
           {
             "case": "reconciliation-unavailable",
@@ -1819,7 +2361,8 @@
             "receipt_count": 9,
             "faults": [
               "Local reconciliation-unavailable control; no claim of actual disk failure."
-            ]
+            ],
+            "artifacts": []
           }
         ],
         "remaining": "Real response loss and observation interruption are bound; unavailable reconciliation uses a local injected control, not a real inaccessible durable store or an explicit UNKNOWN response envelope."
@@ -1876,7 +2419,51 @@
           }
         ],
         "remaining": "A real child crash after commit and recovery without another mutation are checked; lost transport response and unavailable-reconciliation branches are not all bound."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "PARTIAL_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "AMBER",
+          "complete_scenario_certified": false,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "lost-response",
+              "json_pointer": "/cases/26",
+              "execution_state": "PASSED",
+              "assertion_count": 18,
+              "receipt_count": 9,
+              "faults": [
+                "Transport response-loss hook throws only after actual durable commit/result."
+              ]
+            },
+            {
+              "case": "observer-interruption",
+              "json_pointer": "/cases/27",
+              "execution_state": "PASSED",
+              "assertion_count": 19,
+              "receipt_count": 9,
+              "faults": [
+                "Local observer exception after durable commit; restart uses new connections."
+              ]
+            },
+            {
+              "case": "reconciliation-unavailable",
+              "json_pointer": "/cases/28",
+              "execution_state": "PASSED",
+              "assertion_count": 20,
+              "receipt_count": 9,
+              "faults": [
+                "Local reconciliation-unavailable control; no claim of actual disk failure."
+              ]
+            }
+          ],
+          "remaining": "Real response loss and observation interruption are bound; unavailable reconciliation uses a local injected control, not a real inaccessible durable store or an explicit UNKNOWN response envelope."
+        }
+      ]
     },
     {
       "scenario_id": "BDD-022",
@@ -1893,34 +2480,35 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/111",
+            "json_pointer": "/cases/197",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_022_foundation_check_only_is_not_execution",
             "outcome": "PASS"
           }
         ]
       },
       "connected": {
-        "status": "UNBOUND_NOT_RUN",
-        "acceptance_color": "AMBER",
-        "complete_scenario_certified": false,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+        "acceptance_color": "GREEN",
+        "complete_scenario_certified": true,
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
           {
             "case": "default",
             "json_pointer": "/cases/29",
-            "execution_state": "NOT_RUN",
-            "assertion_count": 0,
-            "receipt_count": 0,
-            "faults": []
+            "execution_state": "PASSED",
+            "assertion_count": 19,
+            "receipt_count": 6,
+            "faults": [],
+            "artifacts": []
           }
         ],
-        "remaining": "The current Foundation check response omits receipt_created; do not fabricate the explicitly required false field."
+        "remaining": null
       },
       "fresh_same_host": {
         "status": "UNMAPPED",
@@ -1936,7 +2524,29 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "No connected check-only Foundation proof-to-attempt mapping scenario is mapped."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "UNBOUND_NOT_RUN",
+          "acceptance_color": "AMBER",
+          "complete_scenario_certified": false,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/29",
+              "execution_state": "NOT_RUN",
+              "assertion_count": 0,
+              "receipt_count": 0,
+              "faults": []
+            }
+          ],
+          "remaining": "The current Foundation check response omits receipt_created; do not fabricate the explicitly required false field."
+        }
+      ]
     },
     {
       "scenario_id": "BDD-023",
@@ -1953,10 +2563,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/112",
+            "json_pointer": "/cases/198",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_023_known_failure_demotes_despite_remote_outage",
             "outcome": "PASS"
           }
@@ -1966,8 +2576,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -1979,7 +2589,8 @@
             "receipt_count": 17,
             "faults": [
               "Actual canonical SDK connection refused on unused loopback port 1; no fake server."
-            ]
+            ],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -2054,7 +2665,31 @@
           }
         ],
         "remaining": "Actual FAIL, Cascade demotion, withdrawal and pending delivery are checked; one complete same-attempt scenario with all next-denial, event-correlation and revision assertions remains pending."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/30",
+              "execution_state": "PASSED",
+              "assertion_count": 33,
+              "receipt_count": 17,
+              "faults": [
+                "Actual canonical SDK connection refused on unused loopback port 1; no fake server."
+              ]
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-024",
@@ -2071,10 +2706,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/113",
+            "json_pointer": "/cases/199",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_024_selective_withdrawal_preserves_other_grant",
             "outcome": "PASS"
           }
@@ -2084,8 +2719,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -2095,7 +2730,8 @@
             "execution_state": "PASSED",
             "assertion_count": 41,
             "receipt_count": 20,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -2152,7 +2788,29 @@
           }
         ],
         "remaining": "Read execution is checked after explicit selective revoke, and read-grant presence after FAIL; executing that unaffected grant after FAIL plus every unchanged-binding assertion remains pending."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/31",
+              "execution_state": "PASSED",
+              "assertion_count": 41,
+              "receipt_count": 20,
+              "faults": []
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-025",
@@ -2170,15 +2828,15 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/114",
+            "json_pointer": "/cases/200",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_025_missing_result",
             "outcome": "PASS"
           },
           {
-            "json_pointer": "/cases/115",
+            "json_pointer": "/cases/201",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_025_old_result",
             "outcome": "PASS"
           }
@@ -2188,8 +2846,8 @@
         "status": "PARTIAL_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "AMBER",
         "complete_scenario_certified": false,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -2197,24 +2855,27 @@
             "case": "missing-result",
             "json_pointer": "/cases/32",
             "execution_state": "PASSED",
-            "assertion_count": 31,
+            "assertion_count": 36,
             "receipt_count": 17,
             "faults": [
-              "Explicit public lifecycle reevaluation signal UNKNOWN; underlying detector behavior is not certified."
-            ]
+              "Actual case-local SQLite observation row removed while its original signed event and canonical receipt remain."
+            ],
+            "artifacts": []
           },
           {
             "case": "old-result",
             "json_pointer": "/cases/33",
             "execution_state": "PASSED",
-            "assertion_count": 31,
+            "assertion_count": 36,
             "receipt_count": 17,
             "faults": [
-              "Explicit public lifecycle reevaluation signal STALE; underlying detector behavior is not certified."
-            ]
+              "Local coordinator clock fixed at 1791602724809; canonical services retain real wall time.",
+              "Local coordinator clock fixed at 1791603324809; canonical services retain real wall time."
+            ],
+            "artifacts": []
           }
         ],
-        "remaining": "The public reevaluate API receives explicit UNKNOWN/STALE policy signals. Actual missing/stale evidence detection while a second grant stays fresh is not established by these calls."
+        "remaining": "Actual bound-reference missing/stale detection holds qualification with the required reason and preserves the unrelated grant. The execution boundary denies the withdrawn grant as REVOKED_AUTHORITY; it does not return the literal scenario hold reason."
       },
       "fresh_same_host": {
         "status": "PARTIAL_EXPLICIT_EVIDENCE_REPEATED",
@@ -2268,7 +2929,41 @@
           }
         ],
         "remaining": "UNKNOWN/HOLD is checked. The STALE outline row, no-new-FAIL count and unaffected second-skill use are not all connected bindings."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "PARTIAL_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "AMBER",
+          "complete_scenario_certified": false,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "missing-result",
+              "json_pointer": "/cases/32",
+              "execution_state": "PASSED",
+              "assertion_count": 31,
+              "receipt_count": 17,
+              "faults": [
+                "Explicit public lifecycle reevaluation signal UNKNOWN; underlying detector behavior is not certified."
+              ]
+            },
+            {
+              "case": "old-result",
+              "json_pointer": "/cases/33",
+              "execution_state": "PASSED",
+              "assertion_count": 31,
+              "receipt_count": 17,
+              "faults": [
+                "Explicit public lifecycle reevaluation signal STALE; underlying detector behavior is not certified."
+              ]
+            }
+          ],
+          "remaining": "The public reevaluate API receives explicit UNKNOWN/STALE policy signals. Actual missing/stale evidence detection while a second grant stays fresh is not established by these calls."
+        }
+      ]
     },
     {
       "scenario_id": "BDD-026",
@@ -2285,34 +2980,80 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/116",
+            "json_pointer": "/cases/202",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_026_revised_skill_requalifies_under_new_grant",
             "outcome": "PASS"
           }
         ]
       },
       "connected": {
-        "status": "UNBOUND_NOT_RUN",
-        "acceptance_color": "AMBER",
-        "complete_scenario_certified": false,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+        "acceptance_color": "GREEN",
+        "complete_scenario_certified": true,
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
           {
             "case": "default",
             "json_pointer": "/cases/34",
-            "execution_state": "NOT_RUN",
-            "assertion_count": 0,
-            "receipt_count": 0,
-            "faults": []
+            "execution_state": "PASSED",
+            "assertion_count": 54,
+            "receipt_count": 25,
+            "faults": [
+              "A copied controller package executes an added health-type validation; original sources and signatures are untouched, and versions are computed from file bytes."
+            ],
+            "artifacts": [
+              {
+                "path": "reports/service-bdd-live-004-procedure-revisions/026-default/manifest.json",
+                "sha256": "sha256:211e432fbee18e31ab9c61fc21afd1a353da4c3250e31bed2c368a627ae3da01",
+                "procedure_artifacts": [
+                  {
+                    "kind": "baseline",
+                    "directory": "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority",
+                    "procedure_revision": "sha256:de9a143cff3fa49127c2bcddf907e1c5ddae5b88ac8574e3c73cf2e513184002",
+                    "sources": {
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/connected.py": "sha256:c3db6de8cd588565ec66bad314ffae98551d8d482dc166164239acc815180e1f",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/runtime.py": "sha256:6e2b181587b834ca698bcc4ce0349f76a8fe418fe7768d7bafe1105952f936ad",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e"
+                    }
+                  },
+                  {
+                    "kind": "revised",
+                    "directory": "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority",
+                    "procedure_revision": "sha256:35bec3658d5dc4e6c14ba485d47aff0bb40a3ba1244db132d4c692e649f8e2c8",
+                    "sources": {
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/connected.py": "sha256:2bbc3c5745965948cf32d7253c9a23eebe311d03b80d89c661440bc44198a5a4",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/runtime.py": "sha256:6e2b181587b834ca698bcc4ce0349f76a8fe418fe7768d7bafe1105952f936ad",
+                      "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e"
+                    }
+                  }
+                ]
+              }
+            ]
           }
         ],
-        "remaining": "Requires an actually changed deterministic procedure artifact, not a model-context change or manually reassigned version string."
+        "remaining": null
       },
       "fresh_same_host": {
         "status": "UNMAPPED",
@@ -2328,7 +3069,29 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "Connected requalification changes model context while retaining the procedure revision; it does not establish the revised-skill scenario and all reinstatement links."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "UNBOUND_NOT_RUN",
+          "acceptance_color": "AMBER",
+          "complete_scenario_certified": false,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/34",
+              "execution_state": "NOT_RUN",
+              "assertion_count": 0,
+              "receipt_count": 0,
+              "faults": []
+            }
+          ],
+          "remaining": "Requires an actually changed deterministic procedure artifact, not a model-context change or manually reassigned version string."
+        }
+      ]
     },
     {
       "scenario_id": "BDD-027",
@@ -2345,10 +3108,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/117",
+            "json_pointer": "/cases/203",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_027_manual_reactivation_cannot_bypass_qualification",
             "outcome": "PASS"
           }
@@ -2358,8 +3121,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -2369,7 +3132,8 @@
             "execution_state": "PASSED",
             "assertion_count": 27,
             "receipt_count": 17,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -2388,7 +3152,29 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "No connected manual-reactivation-bypass rejection scenario is mapped."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/35",
+              "execution_state": "PASSED",
+              "assertion_count": 27,
+              "receipt_count": 17,
+              "faults": []
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-028",
@@ -2405,10 +3191,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/118",
+            "json_pointer": "/cases/204",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_028_concurrent_issue_has_one_current_revision",
             "outcome": "PASS"
           }
@@ -2418,8 +3204,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -2429,7 +3215,8 @@
             "execution_state": "PASSED",
             "assertion_count": 25,
             "receipt_count": 10,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -2468,7 +3255,29 @@
           }
         ],
         "remaining": "Concurrent real-service CAS yields one accepted and one denied result; complete current-passport and every-acknowledged-grant assertions remain pending."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/36",
+              "execution_state": "PASSED",
+              "assertion_count": 25,
+              "receipt_count": 10,
+              "faults": []
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-029",
@@ -2485,10 +3294,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/119",
+            "json_pointer": "/cases/205",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_029_acknowledged_revocation_fences_paused_commit",
             "outcome": "PASS"
           }
@@ -2498,8 +3307,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -2509,7 +3318,8 @@
             "execution_state": "PASSED",
             "assertion_count": 21,
             "receipt_count": 10,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -2548,7 +3358,29 @@
           }
         ],
         "remaining": "A deterministic pause admits before revoke and attempts commit after acknowledgement, with no count increase; complete independent unchanged-state scenario assertions remain pending."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/37",
+              "execution_state": "PASSED",
+              "assertion_count": 21,
+              "receipt_count": 10,
+              "faults": []
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-030",
@@ -2565,10 +3397,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/120",
+            "json_pointer": "/cases/206",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_030_prior_commit_remains_completed_after_revocation",
             "outcome": "PASS"
           }
@@ -2578,8 +3410,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -2589,7 +3421,8 @@
             "execution_state": "PASSED",
             "assertion_count": 27,
             "receipt_count": 13,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -2664,7 +3497,29 @@
           }
         ],
         "remaining": "The prior commit/readback wins ordering and the next command is denied; complete durable chronology/correlation assertions are not separately bound."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/38",
+              "execution_state": "PASSED",
+              "assertion_count": 27,
+              "receipt_count": 13,
+              "faults": []
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-031",
@@ -2681,10 +3536,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/121",
+            "json_pointer": "/cases/207",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_031_stale_update_cannot_revive_revoked_skill",
             "outcome": "PASS"
           }
@@ -2694,8 +3549,8 @@
         "status": "PARTIAL_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "AMBER",
         "complete_scenario_certified": false,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -2705,7 +3560,8 @@
             "execution_state": "PASSED",
             "assertion_count": 33,
             "receipt_count": 18,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": "The current public aggregate has one resource grant per skill. Stale changed-resource rejection is exercised, but adding a second read-health resource while retaining the first is not represented."
@@ -2724,7 +3580,29 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "Concurrent issuance evidence does not establish stale replacement after selective revocation while preserving unaffected read grants."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "PARTIAL_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "AMBER",
+          "complete_scenario_certified": false,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/39",
+              "execution_state": "PASSED",
+              "assertion_count": 33,
+              "receipt_count": 18,
+              "faults": []
+            }
+          ],
+          "remaining": "The current public aggregate has one resource grant per skill. Stale changed-resource rejection is exercised, but adding a second read-health resource while retaining the first is not represented."
+        }
+      ]
     },
     {
       "scenario_id": "BDD-032",
@@ -2741,10 +3619,10 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/122",
+            "json_pointer": "/cases/208",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_032_concurrent_duplicate_attempt_commits_once",
             "outcome": "PASS"
           }
@@ -2754,8 +3632,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -2765,7 +3643,8 @@
             "execution_state": "PASSED",
             "assertion_count": 22,
             "receipt_count": 11,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -2784,7 +3663,29 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "No connected concurrent duplicate command scenario is mapped; sequential retry is different evidence."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/40",
+              "execution_state": "PASSED",
+              "assertion_count": 22,
+              "receipt_count": 11,
+              "faults": []
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-033",
@@ -2802,15 +3703,15 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/123",
+            "json_pointer": "/cases/209",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_033_local_store_down",
             "outcome": "PASS"
           },
           {
-            "json_pointer": "/cases/124",
+            "json_pointer": "/cases/210",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_033_unauthenticated_writer",
             "outcome": "PASS"
           }
@@ -2820,8 +3721,8 @@
         "status": "UNBOUND_NOT_RUN",
         "acceptance_color": "AMBER",
         "complete_scenario_certified": false,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -2831,7 +3732,8 @@
             "execution_state": "NOT_RUN",
             "assertion_count": 0,
             "receipt_count": 0,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           },
           {
             "case": "unauthenticated",
@@ -2839,7 +3741,8 @@
             "execution_state": "NOT_RUN",
             "assertion_count": 0,
             "receipt_count": 0,
-            "faults": []
+            "faults": [],
+            "artifacts": []
           }
         ],
         "remaining": "The exposed boolean local-fault flags do not establish actual durable-store offline or writer authentication failure. Exact real failure and reason mapping remain unbound."
@@ -2858,7 +3761,37 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "No connected local-durability/untrusted-local-writer outline pair is mapped."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "UNBOUND_NOT_RUN",
+          "acceptance_color": "AMBER",
+          "complete_scenario_certified": false,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "local-store-down",
+              "json_pointer": "/cases/41",
+              "execution_state": "NOT_RUN",
+              "assertion_count": 0,
+              "receipt_count": 0,
+              "faults": []
+            },
+            {
+              "case": "unauthenticated",
+              "json_pointer": "/cases/42",
+              "execution_state": "NOT_RUN",
+              "assertion_count": 0,
+              "receipt_count": 0,
+              "faults": []
+            }
+          ],
+          "remaining": "The exposed boolean local-fault flags do not establish actual durable-store offline or writer authentication failure. Exact real failure and reason mapping remain unbound."
+        }
+      ]
     },
     {
       "scenario_id": "BDD-034",
@@ -2877,20 +3810,20 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/125",
+            "json_pointer": "/cases/211",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_034_after_commit",
             "outcome": "PASS"
           },
           {
-            "json_pointer": "/cases/126",
+            "json_pointer": "/cases/212",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_034_before_intent_send",
             "outcome": "PASS"
           },
           {
-            "json_pointer": "/cases/127",
+            "json_pointer": "/cases/213",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_034_remote_audit_unavailable_preserves_known_outcome",
             "outcome": "PASS"
           }
@@ -2900,8 +3833,8 @@
         "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
         "acceptance_color": "GREEN",
         "complete_scenario_certified": true,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
@@ -2913,7 +3846,8 @@
             "receipt_count": 9,
             "faults": [
               "Actual canonical SDK connection refused on unused loopback port 1; no fake server."
-            ]
+            ],
+            "artifacts": []
           },
           {
             "case": "after-commit",
@@ -2923,7 +3857,8 @@
             "receipt_count": 9,
             "faults": [
               "Actual canonical SDK connection refused on unused loopback port 1; no fake server."
-            ]
+            ],
+            "artifacts": []
           },
           {
             "case": "audit-unavailable",
@@ -2933,7 +3868,8 @@
             "receipt_count": 9,
             "faults": [
               "Actual canonical SDK connection refused on unused loopback port 1; no fake server."
-            ]
+            ],
+            "artifacts": []
           }
         ],
         "remaining": null
@@ -2952,7 +3888,51 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "The connected remote-outage mutation produces FAIL, not the PASS required by these outage rows; confirmed PASS preservation under both delivery-outage timings remains unmapped."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+          "acceptance_color": "GREEN",
+          "complete_scenario_certified": true,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "before-intent-send",
+              "json_pointer": "/cases/43",
+              "execution_state": "PASSED",
+              "assertion_count": 29,
+              "receipt_count": 9,
+              "faults": [
+                "Actual canonical SDK connection refused on unused loopback port 1; no fake server."
+              ]
+            },
+            {
+              "case": "after-commit",
+              "json_pointer": "/cases/44",
+              "execution_state": "PASSED",
+              "assertion_count": 29,
+              "receipt_count": 9,
+              "faults": [
+                "Actual canonical SDK connection refused on unused loopback port 1; no fake server."
+              ]
+            },
+            {
+              "case": "audit-unavailable",
+              "json_pointer": "/cases/45",
+              "execution_state": "PASSED",
+              "assertion_count": 29,
+              "receipt_count": 9,
+              "faults": [
+                "Actual canonical SDK connection refused on unused loopback port 1; no fake server."
+              ]
+            }
+          ],
+          "remaining": null
+        }
+      ]
     },
     {
       "scenario_id": "BDD-035",
@@ -2969,34 +3949,37 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/128",
+            "json_pointer": "/cases/214",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_035_modified_ledger_evidence_fails_verification",
             "outcome": "PASS"
           }
         ]
       },
       "connected": {
-        "status": "UNBOUND_NOT_RUN",
-        "acceptance_color": "AMBER",
-        "complete_scenario_certified": false,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+        "acceptance_color": "GREEN",
+        "complete_scenario_certified": true,
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
           {
             "case": "default",
             "json_pointer": "/cases/46",
-            "execution_state": "NOT_RUN",
-            "assertion_count": 0,
-            "receipt_count": 0,
-            "faults": []
+            "execution_state": "PASSED",
+            "assertion_count": 43,
+            "receipt_count": 19,
+            "faults": [
+              "Actual case-local stored signed observation payload changed without changing its signature, evidence digest, original event, or remote receipt; canonical ledger remains intact."
+            ],
+            "artifacts": []
           }
         ],
-        "remaining": "Requires an owned stored-payload tamper with canonical receipt verification, qualification exclusion and hold, plus reliable restoration."
+        "remaining": null
       },
       "fresh_same_host": {
         "status": "UNMAPPED",
@@ -3012,7 +3995,29 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "No connected deliberately modified Ledger outcome scenario with qualification exclusion and authority hold is mapped."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "UNBOUND_NOT_RUN",
+          "acceptance_color": "AMBER",
+          "complete_scenario_certified": false,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/46",
+              "execution_state": "NOT_RUN",
+              "assertion_count": 0,
+              "receipt_count": 0,
+              "faults": []
+            }
+          ],
+          "remaining": "Requires an owned stored-payload tamper with canonical receipt verification, qualification exclusion and hold, plus reliable restoration."
+        }
+      ]
     },
     {
       "scenario_id": "BDD-036",
@@ -3031,60 +4036,110 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/129",
+            "json_pointer": "/cases/215",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_036_expired_proof",
             "outcome": "PASS"
           },
           {
-            "json_pointer": "/cases/130",
+            "json_pointer": "/cases/216",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_036_old_skill",
             "outcome": "PASS"
           },
           {
-            "json_pointer": "/cases/131",
+            "json_pointer": "/cases/217",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_036_other_attempt",
             "outcome": "PASS"
           }
         ]
       },
       "connected": {
-        "status": "UNBOUND_NOT_RUN",
-        "acceptance_color": "AMBER",
-        "complete_scenario_certified": false,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+        "acceptance_color": "GREEN",
+        "complete_scenario_certified": true,
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
           {
             "case": "other-attempt",
             "json_pointer": "/cases/47",
-            "execution_state": "NOT_RUN",
-            "assertion_count": 0,
-            "receipt_count": 0,
-            "faults": []
+            "execution_state": "PASSED",
+            "assertion_count": 18,
+            "receipt_count": 2,
+            "faults": [],
+            "artifacts": []
           },
           {
             "case": "old-skill",
             "json_pointer": "/cases/48",
-            "execution_state": "NOT_RUN",
-            "assertion_count": 0,
-            "receipt_count": 0,
-            "faults": []
+            "execution_state": "PASSED",
+            "assertion_count": 27,
+            "receipt_count": 3,
+            "faults": [
+              "A copied controller package executes an added health-type validation; original sources and signatures are untouched, and versions are computed from file bytes."
+            ],
+            "artifacts": [
+              {
+                "path": "reports/service-bdd-live-004-procedure-revisions/036-old-skill/manifest.json",
+                "sha256": "sha256:6ce9fe99942733505edb53c4235295299ffefdc86fd97266b0622828f6add641",
+                "procedure_artifacts": [
+                  {
+                    "kind": "baseline",
+                    "directory": "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority",
+                    "procedure_revision": "sha256:de9a143cff3fa49127c2bcddf907e1c5ddae5b88ac8574e3c73cf2e513184002",
+                    "sources": {
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/connected.py": "sha256:c3db6de8cd588565ec66bad314ffae98551d8d482dc166164239acc815180e1f",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/runtime.py": "sha256:6e2b181587b834ca698bcc4ce0349f76a8fe418fe7768d7bafe1105952f936ad",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e"
+                    }
+                  },
+                  {
+                    "kind": "revised",
+                    "directory": "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority",
+                    "procedure_revision": "sha256:35bec3658d5dc4e6c14ba485d47aff0bb40a3ba1244db132d4c692e649f8e2c8",
+                    "sources": {
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/connected.py": "sha256:2bbc3c5745965948cf32d7253c9a23eebe311d03b80d89c661440bc44198a5a4",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/runtime.py": "sha256:6e2b181587b834ca698bcc4ce0349f76a8fe418fe7768d7bafe1105952f936ad",
+                      "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e"
+                    }
+                  }
+                ]
+              }
+            ]
           },
           {
             "case": "expired-proof",
             "json_pointer": "/cases/49",
-            "execution_state": "NOT_RUN",
-            "assertion_count": 0,
-            "receipt_count": 0,
-            "faults": []
+            "execution_state": "PASSED",
+            "assertion_count": 18,
+            "receipt_count": 2,
+            "faults": [
+              "Local coordinator clock fixed at 1791603923513; canonical services retain real wall time."
+            ],
+            "artifacts": []
           }
         ],
-        "remaining": "Canonical verification rejects binding/freshness mismatches, but exact attempt/skill/expiry reason mapping and no-authority assertions are not yet bound."
+        "remaining": null
       },
       "fresh_same_host": {
         "status": "UNMAPPED",
@@ -3100,7 +4155,45 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "No connected receipt replay suite covers another attempt, old skill, and expired proof."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "UNBOUND_NOT_RUN",
+          "acceptance_color": "AMBER",
+          "complete_scenario_certified": false,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "other-attempt",
+              "json_pointer": "/cases/47",
+              "execution_state": "NOT_RUN",
+              "assertion_count": 0,
+              "receipt_count": 0,
+              "faults": []
+            },
+            {
+              "case": "old-skill",
+              "json_pointer": "/cases/48",
+              "execution_state": "NOT_RUN",
+              "assertion_count": 0,
+              "receipt_count": 0,
+              "faults": []
+            },
+            {
+              "case": "expired-proof",
+              "json_pointer": "/cases/49",
+              "execution_state": "NOT_RUN",
+              "assertion_count": 0,
+              "receipt_count": 0,
+              "faults": []
+            }
+          ],
+          "remaining": "Canonical verification rejects binding/freshness mismatches, but exact attempt/skill/expiry reason mapping and no-authority assertions are not yet bound."
+        }
+      ]
     },
     {
       "scenario_id": "BDD-037",
@@ -3117,34 +4210,37 @@
         "initial_green_log": "reports/m1-bdd-green.log",
         "initial_green_log_sha256": "sha256:5645271a7993c7be0ba532d4a601cc2d85c931fa1a405d8a20644cded0a0133f",
         "report": "reports/component-verification.json",
-        "report_sha256": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86",
+        "report_sha256": "sha256:dd8becfaa506db6e216e30d6c249a60caba15d69b4050efbc9997d9abea084a3",
         "cases": [
           {
-            "json_pointer": "/cases/132",
+            "json_pointer": "/cases/218",
             "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_037_untrusted_signer_cannot_qualify",
             "outcome": "PASS"
           }
         ]
       },
       "connected": {
-        "status": "UNBOUND_NOT_RUN",
-        "acceptance_color": "AMBER",
-        "complete_scenario_certified": false,
-        "report": "reports/service-bdd-live-002.json",
-        "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+        "status": "COMPLETE_EXPLICIT_SERVICE_BINDING_PASS",
+        "acceptance_color": "GREEN",
+        "complete_scenario_certified": true,
+        "report": "reports/service-bdd-live-004.json",
+        "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
         "source_unchanged_during_run": true,
         "current_source_revalidation_required": false,
         "cases": [
           {
             "case": "default",
             "json_pointer": "/cases/50",
-            "execution_state": "NOT_RUN",
-            "assertion_count": 0,
-            "receipt_count": 0,
-            "faults": []
+            "execution_state": "PASSED",
+            "assertion_count": 22,
+            "receipt_count": 4,
+            "faults": [
+              "An outcome signed by a newly generated untrusted Ed25519 key is actually recorded by the authorized canonical ledger writer. The ledger signature is valid; the independent attester is not trusted."
+            ],
+            "artifacts": []
           }
         ],
-        "remaining": "Requires an actual intact canonical entry carrying an untrusted independent-outcome signer and qualification admission control."
+        "remaining": null
       },
       "fresh_same_host": {
         "status": "UNMAPPED",
@@ -3160,7 +4256,29 @@
         "complete_scenario_certified": false,
         "evidence": [],
         "remaining": "No connected intact-chain/untrusted-outcome-signer qualification rejection is mapped."
-      }
+      },
+      "prior_connected_runs": [
+        {
+          "status": "UNBOUND_NOT_RUN",
+          "acceptance_color": "AMBER",
+          "complete_scenario_certified": false,
+          "report": "reports/service-bdd-live-002.json",
+          "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+          "source_unchanged_during_run": true,
+          "current_source_revalidation_required": false,
+          "cases": [
+            {
+              "case": "default",
+              "json_pointer": "/cases/50",
+              "execution_state": "NOT_RUN",
+              "assertion_count": 0,
+              "receipt_count": 0,
+              "faults": []
+            }
+          ],
+          "remaining": "Requires an actual intact canonical entry carrying an untrusted independent-outcome signer and qualification admission control."
+        }
+      ]
     }
   ],
   "prior_coverage_snapshot": {
@@ -3181,18 +4299,19 @@
     "reports/component-verification.json": "sha256:661fab3dec414ab8c94cc8d6c70bba915a15fd21b13c34d50b3b0ddd1e0e9118"
   },
   "service_bdd_source_hashes": {
-    "tools/validate_bdd_connected.py": "sha256:109d96289707d1fefae02f01648eb3e117be3be1e3701b2e1456a224a3f339ea",
+    "tools/validate_bdd_connected.py": "sha256:a7b5ce6fbc20bcdb31809c1db7c9aa105136e1b75289ea8a05be420f12d31706",
     "tools/validate_connected.py": "sha256:dc9c007353e26c3b5a29305d522f85bb231ff6a6a7521a203fd3d4f17eeb5b2a",
     "features/bindings.json": "sha256:eb2d1bb46611964a100b5e5515f3f44d72d0cb5f94e08e16121147855da3d13d",
     "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
     "earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
-    "earned_authority/connected.py": "sha256:5a7000978b1de3068a5870dedb4303fa1e56e60cf07f1bd427af48c62afd3785",
+    "earned_authority/connected.py": "sha256:c3db6de8cd588565ec66bad314ffae98551d8d482dc166164239acc815180e1f",
     "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
     "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
     "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
     "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
     "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
-    "earned_authority/runtime.py": "sha256:f3b2bdd351a64e8168c7bf5771ca0d4bd460b6505dea595e288d0c68326969ce",
+    "earned_authority/runtime.py": "sha256:6e2b181587b834ca698bcc4ce0349f76a8fe418fe7768d7bafe1105952f936ad",
     "earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
     "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
     "features/concurrency.feature": "sha256:a593d6b2ee5ceb79260f97e0dbfd768843c2c7f4fcd5b6705e11797f023f0e27",
@@ -3208,26 +4327,55 @@
       "sha256": "sha256:444250307b71f5b21046300d0493a22ce428506e3368e159829a68c49263e429",
       "status": "HISTORICAL_SUPERSEDED_BY_STRONGER_BINDINGS",
       "limitation": "BDD019,030,032,034 recorded correct registry state but lacked explicit expected readback/count assertions; qualification/grant-only cases also gained explicit zero-mutation assertions. Do not use live001 for current complete certification."
+    },
+    {
+      "report": "reports/service-bdd-live-002.json",
+      "sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+      "status": "HISTORICAL_PRIOR_SOURCE_REVISION",
+      "counts": {
+        "scenario_ids": 37,
+        "cases": 51,
+        "passed_cases": 39,
+        "failed_cases": 0,
+        "blocked_cases": 0,
+        "unrun_cases": 12,
+        "complete_green_scenarios": 22
+      }
+    },
+    {
+      "report": "reports/service-bdd-live-003.json",
+      "sha256": "sha256:1c578f1c9dda227bf2b70b89209f4ed32a092b80565e993e57421a3061182786",
+      "status": "RED_REGRESSION_PRESERVED",
+      "counts": {
+        "scenario_ids": 37,
+        "cases": 51,
+        "passed_cases": 48,
+        "failed_cases": 1,
+        "blocked_cases": 0,
+        "unrun_cases": 2,
+        "complete_green_scenarios": 29
+      },
+      "observed_failure": "BDD002: no independent observations was incorrectly classified HOLD/STALE_EVIDENCE instead of HOLD/INSUFFICIENT_EVIDENCE. No authority was issued; fixed in controller with regression coverage before live004."
     }
   ],
   "service_bdd": {
-    "report": "reports/service-bdd-live-002.json",
-    "report_sha256": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2",
+    "report": "reports/service-bdd-live-004.json",
+    "report_sha256": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf",
     "execution_state": "COMPLETED_WITH_GAPS",
     "source_unchanged_during_run": true,
     "scope": "Named BDD assertions on actual local canonical services and fenced SQLite registry; no cross-host, product-value or hardware claim.",
     "counts": {
       "scenario_ids": 37,
       "cases": 51,
-      "passed_cases": 39,
+      "passed_cases": 49,
       "failed_cases": 0,
       "blocked_cases": 0,
-      "unrun_cases": 12,
-      "complete_green_scenarios": 22
+      "unrun_cases": 2,
+      "complete_green_scenarios": 30
     },
-    "assertions_recorded": 825,
-    "canonical_receipts_verified": 358,
-    "fault_controls": "Each case lists actual unavailable local service endpoints or explicit local clock/observer/reconciliation controls. No fake successful canonical service is used.",
+    "assertions_recorded": 1106,
+    "canonical_receipts_verified": 438,
+    "fault_controls": "Explicit local clocks, observations, persisted-row tamper/loss, real malformed-response forwarding proxy, and real unavailable service endpoints; no fake successful canonical service.",
     "fixture_parameter_mapping": {
       "agent-a": "fresh canonical identity per case",
       "skill-v1": "actual controller procedure_revision content digest",
@@ -3242,5 +4390,60 @@
     "fresh_same_host_combined_component_checks": "Prior revision same-host, same-operator rebuild count; does not establish current source or another host.",
     "current_service_bdd_assertions": "Includes setup and individual receipt-verification assertions, not separate business scenarios.",
     "current_service_bdd_verified_receipts": "Each recorded receipt was checked against its exact local event with the real canonical client."
+  },
+  "prior_coverage_snapshots": [
+    {
+      "report": "reports/service-bdd-coverage-after-service-bdd-live-002.json",
+      "sha256": "sha256:21f17d6985ded9ac6231ffcb69c12c19bc85aadd7e124d7d3e3086fd0392b423",
+      "scope": "Previous recorded source revision; retain exact prior report references."
+    }
+  ],
+  "procedure_artifact_hashes": {
+    "reports/service-bdd-live-004-procedure-revisions/026-default/manifest.json": "sha256:211e432fbee18e31ab9c61fc21afd1a353da4c3250e31bed2c368a627ae3da01",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/connected.py": "sha256:c3db6de8cd588565ec66bad314ffae98551d8d482dc166164239acc815180e1f",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/runtime.py": "sha256:6e2b181587b834ca698bcc4ce0349f76a8fe418fe7768d7bafe1105952f936ad",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/baseline/earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/connected.py": "sha256:2bbc3c5745965948cf32d7253c9a23eebe311d03b80d89c661440bc44198a5a4",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/runtime.py": "sha256:6e2b181587b834ca698bcc4ce0349f76a8fe418fe7768d7bafe1105952f936ad",
+    "reports/service-bdd-live-004-procedure-revisions/026-default/revised/earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/manifest.json": "sha256:6ce9fe99942733505edb53c4235295299ffefdc86fd97266b0622828f6add641",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/connected.py": "sha256:c3db6de8cd588565ec66bad314ffae98551d8d482dc166164239acc815180e1f",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/runtime.py": "sha256:6e2b181587b834ca698bcc4ce0349f76a8fe418fe7768d7bafe1105952f936ad",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/baseline/earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/connected.py": "sha256:2bbc3c5745965948cf32d7253c9a23eebe311d03b80d89c661440bc44198a5a4",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/runtime.py": "sha256:6e2b181587b834ca698bcc4ce0349f76a8fe418fe7768d7bafe1105952f936ad",
+    "reports/service-bdd-live-004-procedure-revisions/036-old-skill/revised/earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e"
   }
 }

@@ -1,0 +1,22 @@
+{
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "environment": "REAL_LOCAL_SERVICES",
+  "components": {
+    "bff": {
+      "image_id": "0bb08c4039c9f5d515635d2331e97f593c53d40d8684238bbab74d0a80d71aa2",
+      "running_image_id": "0bb08c4039c9f5d515635d2331e97f593c53d40d8684238bbab74d0a80d71aa2",
+      "matched": true
+    },
+    "gateway": {
+      "image_id": "6ecce5888e90a7bfac5f1344820ba0e983e42070e2fcb666616746c88debe40a",
+      "running_image_id": "6ecce5888e90a7bfac5f1344820ba0e983e42070e2fcb666616746c88debe40a",
+      "matched": true
+    }
+  },
+  "completed_at": "2026-10-10T03:33:20.273221+00:00",
+  "scope": "Original owned BFF/gateway recreated after ordinary restore retained old image IDs; exact running images now match freshly built tags. Durable databases and Passport state retained.",
+  "notes": [
+    "Two earlier ad hoc readiness probes assumed optional health-port fields existed in legacy config; corrected to documented defaults. Canonical services were healthy."
+  ]
+}

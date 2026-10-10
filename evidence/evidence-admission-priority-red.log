@@ -1,0 +1,117 @@
+....................................FFFF....                             [100%]
+=================================== FAILURES ===================================
+_ test_changed_signed_claim_is_tamper_even_when_changed_claim_would_be_untrusted[version-skill-v2] _
+
+setup = namespace(producer=<cryptography.hazmat.bindings._rust.openssl.ed25519.Ed25519PrivateKey object at 0x107452790>, ledge...44d09024a4c9870524651ef924cfa15'}, evaluator='sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15')
+field = 'version', value = 'skill-v2'
+
+    @pytest.mark.parametrize("field,value", [("version","skill-v2"),("context","demo-b"),
+        ("independent",False),("evaluator_digest",canonical_digest({"checker":"changed"}))])
+    def test_changed_signed_claim_is_tamper_even_when_changed_claim_would_be_untrusted(setup,field,value):
+        observation,_,_=package(setup)
+        observation[field]=value
+>       rejected(local_verify(setup,observation),"TAMPER_DETECTED")
+
+tests/test_evidence_admission.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = {'admitted': False, 'counts_as_pass': False, 'integrity': 'UNKNOWN', 'ledger_verification': None, ...}
+reason = 'TAMPER_DETECTED'
+
+    def rejected(result, reason, *, hold=True):
+        assert result["admitted"] is False
+>       assert result["reason"] == reason
+E       AssertionError: assert 'INVALID_EVIDENCE' == 'TAMPER_DETECTED'
+E         
+E         - TAMPER_DETECTED
+E         + INVALID_EVIDENCE
+
+tests/test_evidence_admission.py:78: AssertionError
+_ test_changed_signed_claim_is_tamper_even_when_changed_claim_would_be_untrusted[context-demo-b] _
+
+setup = namespace(producer=<cryptography.hazmat.bindings._rust.openssl.ed25519.Ed25519PrivateKey object at 0x107452a70>, ledge...44d09024a4c9870524651ef924cfa15'}, evaluator='sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15')
+field = 'context', value = 'demo-b'
+
+    @pytest.mark.parametrize("field,value", [("version","skill-v2"),("context","demo-b"),
+        ("independent",False),("evaluator_digest",canonical_digest({"checker":"changed"}))])
+    def test_changed_signed_claim_is_tamper_even_when_changed_claim_would_be_untrusted(setup,field,value):
+        observation,_,_=package(setup)
+        observation[field]=value
+>       rejected(local_verify(setup,observation),"TAMPER_DETECTED")
+
+tests/test_evidence_admission.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = {'admitted': False, 'counts_as_pass': False, 'integrity': 'UNKNOWN', 'ledger_verification': None, ...}
+reason = 'TAMPER_DETECTED'
+
+    def rejected(result, reason, *, hold=True):
+        assert result["admitted"] is False
+>       assert result["reason"] == reason
+E       AssertionError: assert 'INVALID_EVIDENCE' == 'TAMPER_DETECTED'
+E         
+E         - TAMPER_DETECTED
+E         + INVALID_EVIDENCE
+
+tests/test_evidence_admission.py:78: AssertionError
+_ test_changed_signed_claim_is_tamper_even_when_changed_claim_would_be_untrusted[independent-False] _
+
+setup = namespace(producer=<cryptography.hazmat.bindings._rust.openssl.ed25519.Ed25519PrivateKey object at 0x1074532b0>, ledge...44d09024a4c9870524651ef924cfa15'}, evaluator='sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15')
+field = 'independent', value = False
+
+    @pytest.mark.parametrize("field,value", [("version","skill-v2"),("context","demo-b"),
+        ("independent",False),("evaluator_digest",canonical_digest({"checker":"changed"}))])
+    def test_changed_signed_claim_is_tamper_even_when_changed_claim_would_be_untrusted(setup,field,value):
+        observation,_,_=package(setup)
+        observation[field]=value
+>       rejected(local_verify(setup,observation),"TAMPER_DETECTED")
+
+tests/test_evidence_admission.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = {'admitted': False, 'counts_as_pass': False, 'integrity': 'UNKNOWN', 'ledger_verification': None, ...}
+reason = 'TAMPER_DETECTED'
+
+    def rejected(result, reason, *, hold=True):
+        assert result["admitted"] is False
+>       assert result["reason"] == reason
+E       AssertionError: assert 'UNTRUSTED_ATTESTATION' == 'TAMPER_DETECTED'
+E         
+E         - TAMPER_DETECTED
+E         + UNTRUSTED_ATTESTATION
+
+tests/test_evidence_admission.py:78: AssertionError
+_ test_changed_signed_claim_is_tamper_even_when_changed_claim_would_be_untrusted[evaluator_digest-sha256:0184263db798e147e8cacadca30424bc67fba69e25ddb6ffd8629b73dd168fe3] _
+
+setup = namespace(producer=<cryptography.hazmat.bindings._rust.openssl.ed25519.Ed25519PrivateKey object at 0x107453630>, ledge...44d09024a4c9870524651ef924cfa15'}, evaluator='sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15')
+field = 'evaluator_digest'
+value = 'sha256:0184263db798e147e8cacadca30424bc67fba69e25ddb6ffd8629b73dd168fe3'
+
+    @pytest.mark.parametrize("field,value", [("version","skill-v2"),("context","demo-b"),
+        ("independent",False),("evaluator_digest",canonical_digest({"checker":"changed"}))])
+    def test_changed_signed_claim_is_tamper_even_when_changed_claim_would_be_untrusted(setup,field,value):
+        observation,_,_=package(setup)
+        observation[field]=value
+>       rejected(local_verify(setup,observation),"TAMPER_DETECTED")
+
+tests/test_evidence_admission.py:243: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = {'admitted': False, 'counts_as_pass': False, 'integrity': 'UNKNOWN', 'ledger_verification': None, ...}
+reason = 'TAMPER_DETECTED'
+
+    def rejected(result, reason, *, hold=True):
+        assert result["admitted"] is False
+>       assert result["reason"] == reason
+E       AssertionError: assert 'UNTRUSTED_ATTESTATION' == 'TAMPER_DETECTED'
+E         
+E         - TAMPER_DETECTED
+E         + UNTRUSTED_ATTESTATION
+
+tests/test_evidence_admission.py:78: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_evidence_admission.py::test_changed_signed_claim_is_tamper_even_when_changed_claim_would_be_untrusted[version-skill-v2]
+FAILED tests/test_evidence_admission.py::test_changed_signed_claim_is_tamper_even_when_changed_claim_would_be_untrusted[context-demo-b]
+FAILED tests/test_evidence_admission.py::test_changed_signed_claim_is_tamper_even_when_changed_claim_would_be_untrusted[independent-False]
+FAILED tests/test_evidence_admission.py::test_changed_signed_claim_is_tamper_even_when_changed_claim_would_be_untrusted[evaluator_digest-sha256:0184263db798e147e8cacadca30424bc67fba69e25ddb6ffd8629b73dd168fe3]
+4 failed, 40 passed in 0.18s

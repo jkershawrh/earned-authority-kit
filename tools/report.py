@@ -166,7 +166,7 @@ def main():
     component = read('reports/component-verification.json')
     pins = read('deploy/reference/sources.json')
     patches_current = all((ROOT / p['path']).is_file() and digest(ROOT / p['path']) == 'sha256:' + p['sha256'] for s in pins.get('sources', []) for p in s.get('patches', [])) and bool(pins.get('sources'))
-    combined_path = 'reports/operations-reference-combined.json'
+    combined_path = 'reports/evidence-reference-combined.json'
     combined = read(combined_path)
     pins_current = 'sha256:' + combined.get('source_manifest_sha256', '') == digest(ROOT / 'deploy/reference/sources.json') and patches_current
     children = {part: read(item.get('report','')) for part,item in combined.get('components',{}).items()}
@@ -198,7 +198,7 @@ def main():
         valid = bool(component.get('source_hashes')) and len(cases)==count and count>0
         add(key,lane,name,method,'LOCAL_COMPONENT',acceptance,'reports/component-verification.json', 'FAIL' if failures else ('PASS' if passed else 'UNKNOWN'),valid=valid,milestone=milestone,detail=f'{count} tests; exact named modules only')
 
-    module('CON-01','WP0','Draft schemas and producer/consumer proofs','CDD',['test_contracts','test_wire_contracts'],'Actual fixture records, signed proof binding and historical qualification lookup. Draft contract; wider service adoption is separate.','M1')
+    module('CON-01','WP0','Draft schemas and producer/consumer proofs','CDD',['test_contracts','test_wire_contracts','test_evidence_wire'],'Actual producer records, signed proof binding, historical qualification lookup and evidence admission events. Draft contract; older closed-enum consumers require an update.','M1')
     module('KIT-01','WP0','Evidence color evaluator','TDD',['test_rubric'],'Stale, missing, altered, unexecuted or wrong-environment evidence cannot satisfy a gate.','M1')
     module('BDD-LOCAL','WP5','Local earned-authority lifecycle','BDD',['test_lifecycle_bdd'],'BDD-001–037 have fixture bindings; counts include additional cases and the coverage check.','M1')
     module('EXEC-LOCAL','WP3','Durable registry and observation recovery','TDD',['test_runtime_security'],'Mutation intent, retry attribution, authenticated outbox and immutable qualification history in local SQLite.','M1')
@@ -207,12 +207,18 @@ def main():
     module('AUTH-OPS','WP1','Signed canonical operation receipt consumer','CDD',['test_passport_operations'],'Go-signed request/receipt vectors and exact consumer bindings; historical receipts do not confer current permission.','M2')
     module('AUDIT-LOCAL','WP4','Durable authority operation journal','TDD',['test_authority_journal'],'Local unit seams cover restart, lost response, stable event identity, pending-operation denial and conservative cancellation.','M1')
     module('LED-01','WP4','Canonical Ledger adapter','TDD',['test_ledger_client'],'Content/signature binding, idempotency, unavailable/stale/untrusted versus positively mismatched evidence.','M2')
+    module('EVID-VERIFY','WP4','Independent evidence admission','TDD',['test_evidence_admission'],'Trusted producer and evaluator, exact attempt/procedure/context/time bindings, canonical receipt and outcome distinction.','M2')
+    module('EVID-GUARD','WP2','Quarantine and qualification guards','TDD',['test_evidence_boundary','test_connected_evidence'],'Self-reports cannot qualify; quarantine blocks shared evidence at publication, grant and consumption. Audit cannot overwrite concurrent known failure.','M2')
 
     for key,lane,name,path,checknames,scope in [
-        ('POL-01','WP1','Foundation binding and real Rego engine','evidence/foundation-policy-binding-results.json',['green','race','rego'],'81 normal and 81 race leaf cases plus 3 actual OPA engine tests; overlapping cases.')]:
+        ('POL-01','WP1','Foundation binding and authorization-only responses','evidence/foundation-policy-only-results.json',['bff-green','bff-race','gateway-green','gateway-race','rego'],'85 BFF and 37 gateway leaf cases in normal and race runs, plus 3 actual OPA engine tests; repeated cases overlap.')]:
         data=read(path); checks=[data.get('checks',{}).get(n,{}) for n in checknames]
-        passed=all(c.get('passed',0)>0 and c.get('failed',1)==0 for c in checks)
-        add(key,lane,name,'TDD','CANONICAL_COMPONENT',scope,path,'PASS' if passed else 'UNKNOWN',valid=patches_current,baseline='RED',milestone='M2')
+        passed=all(c.get('passed',0)>0 and c.get('failed',1)==0 and c.get('skipped',0)==0 for c in checks)
+        patch=data.get('complete_patch',{})
+        provenance={c.get('log',''):c.get('sha256','') for c in checks}
+        provenance[patch.get('patch','')]=patch.get('sha256','')
+        valid=patches_current and patch.get('fresh_replay_matches_target') is True and all(name and (ROOT/name).is_file() and digest(ROOT/name)=='sha256:'+value for name,value in provenance.items())
+        add(key,lane,name,'TDD','CANONICAL_COMPONENT',scope,path,'PASS' if passed else 'UNKNOWN',valid=valid,baseline='RED',milestone='M2')
 
     path='evidence/canonical-passport-operations-result.json'; data=read(path)
     runs=[data.get(name,{}) for name in ('go_normal','go_race')]
@@ -233,13 +239,13 @@ def main():
         ('DEP-RESTORE','WP6','Persistent full-stack stop and restore','restore','BDD','6 checks preserve prior identity, authority revision/scopes, registry mutations and ledger receipts. Same host; no disk-loss claim.','M3'),
         ('AUDIT-RESTORE','WP4','Historical operation receipts after stack restart','authority_recovery_restored','BDD','Read-only revalidation of prior signed operation receipts, lifecycle events and ledger delivery after retained-state restart.','M3')]
     for key,lane,name,part,method,scope,milestone in live_specs:
-        path=combined.get('components',{}).get(part,{}).get('report',f'reports/operations-reference-{part.replace("_","-")}.json'); data=read(path); checks=data.get('checks',[])
+        path=combined.get('components',{}).get(part,{}).get('report',f'reports/evidence-reference-{part.replace("_","-")}.json'); data=read(path); checks=data.get('checks',[])
         failed=any(c.get('passed') is False for c in checks)
         passed=live_passed(part,data,recovery)
         add(key,lane,name,method,'REAL_LOCAL_SERVICES',scope,path,'FAIL' if failed else ('PASS' if passed else 'UNKNOWN'),valid=pins_current,milestone=milestone,detail=f'{len(checks)} executed checks')
     total=sum(c.get('checks',0) for c in combined.get('components',{}).values())
     add('DEP-BUILD','WP6','Fresh source reconstruction and one-command validation','BDD','FRESH_SAME_HOST',f'Five pinned upstream repositories, explicit patches, distinct keys/state/volumes and {total} recorded checks.',combined_path,'PASS' if combined.get('command_exit_code')==0 and combined.get('acceptance_color')=='GREEN' else 'UNKNOWN',valid=combined_valid,milestone='M3')
-    bdd_path='reports/service-bdd-live-002.json'; bdd=read(bdd_path)
+    bdd_path='reports/service-bdd-live-004.json'; bdd=read(bdd_path)
     statuses=bdd.get('scenario_acceptance',{})
     full=[key for key,status in statuses.items() if status=='GREEN']
     failed=any(status=='RED' for status in statuses.values())

@@ -1,0 +1,61 @@
+{
+  "recorded_at": "2026-10-10T03:31:33.310506+00:00",
+  "scope": "UNIT_PRODUCER_EXPORT_CONSUMER_CDD",
+  "status": "PASS_SCOPED_COMPONENT",
+  "contract_version": "0.1.0-draft.1",
+  "revision_policy": "Unpublished draft additive event enum identified by schema content hash; older closed-enum consumers are expected to reject these events. No stable published compatibility claim.",
+  "event_types_added": [
+    "PROCEDURE_REPORTED",
+    "EVIDENCE_ADMITTED",
+    "EVIDENCE_REJECTED"
+  ],
+  "owned_files_sha256": {
+    "contracts/lifecycle-event.schema.json": "ff4390844db2d78aede88d4413b78e1fc79f3c58857020ab92e63f892a04bc57",
+    "contracts/README.md": "85ef74d044be489f6af607cc93b35d2c90377da075118b7ef29d6eaa9b4bbad3",
+    "tests/test_evidence_wire.py": "df555f550c4d5e1ef4303ef573ae30eda53fc513625ab617787634249bf3c245"
+  },
+  "checks": {
+    "red": {
+      "failed": 6,
+      "deselected": 9,
+      "reason": "Actual runtime-produced events could not export because lifecycle event enum omitted the three new types."
+    },
+    "green": {
+      "passed": 15,
+      "failed": 0
+    },
+    "related_contract_regression": {
+      "passed": 75,
+      "subtests_passed": 8,
+      "failed": 0
+    }
+  },
+  "logs": {
+    "evidence-wire-red.log": {
+      "path": "evidence/evidence-wire-red.log",
+      "sha256": "6ac1f4ff39108a84f3b8fe1343fc89b03311a17bacf49903ee7e60c03a62da08"
+    },
+    "evidence-wire-green.log": {
+      "path": "evidence/evidence-wire-green.log",
+      "sha256": "7639c4ed0a2ed22fce7e4e1386776a89779938e35b2155d151dde3aba64c1f01"
+    },
+    "evidence-wire-regression.log": {
+      "path": "evidence/evidence-wire-regression.log",
+      "sha256": "360b18458e28cf3b537fabbc8911132587e1bb481e5eed1c08887809cd647c23"
+    }
+  },
+  "assertions": [
+    "Actual Runtime procedure reports and ConnectedRuntime evidence admission/rejection produce signed durable events.",
+    "Pending and recorded exports retain exact source and payload digests; recorded exports bind a verified receipt.",
+    "Consumer independently authenticates current source records and writer signatures.",
+    "Rehashing an altered proof cannot substitute for trusted source authentication.",
+    "Re-exporting tampered durable bytes cannot bypass original writer signature verification.",
+    "The prior event enum rejects each newly emitted event type.",
+    "Successful consumption is descriptive provenance, returns authorizes_execution=false and produces no authority or business mutation."
+  ],
+  "limits": [
+    "ConnectedRuntime clients in these tests are explicitly UNIT seams; this report does not claim live service BDD acceptance.",
+    "Parent full component run records integrated runtime source stability after concurrent fixes.",
+    "No runtime, wire mapper, client, other existing test or canonical source change was made in this CDD lane."
+  ]
+}

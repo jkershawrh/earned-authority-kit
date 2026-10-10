@@ -1,0 +1,129 @@
+........FFF..FFFFF.......                                                [100%]
+=================================== FAILURES ===================================
+__ test_preexisting_eligible_qualification_cannot_reuse_quarantined_evidence ___
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x109150560>
+
+    def test_preexisting_eligible_qualification_cannot_reuse_quarantined_evidence(rt):
+        ready(rt);other=rt.qualify(context=CONTEXT)
+        quarantine_first(rt)
+>       with pytest.raises(Denied,match='TAMPER_DETECTED'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_connected_evidence.py:150: Failed
+___ test_quarantine_during_evaluation_prevents_stale_eligibility_publication ___
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x109172480>
+
+    def test_quarantine_during_evaluation_prevents_stale_eligibility_publication(rt):
+        ready(rt);evaluate=rt.qualifier.evaluate
+        def interleaved(q,*args,**kwargs):
+            result=evaluate(q,*args,**kwargs)
+            quarantine_first(rt)
+            return result
+        rt.qualifier.evaluate=interleaved
+        other=rt.qualify(context=CONTEXT)
+>       assert other['disposition']=='HOLD' and other['reason']=='TAMPER_DETECTED'
+E       AssertionError: assert ('ELIGIBLE' == 'HOLD'
+E         
+E         - HOLD
+E         + ELIGIBLE)
+
+tests/test_connected_evidence.py:163: AssertionError
+_______ test_conflicting_valid_import_retries_do_not_duplicate_rejection _______
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x1091536e0>
+
+    def test_conflicting_valid_import_retries_do_not_duplicate_rejection(rt):
+        obs=rt.shadow(context=CONTEXT,attempt_id='collision');rt.flush_outbox()
+        body={k:v for k,v in obs.items() if k not in ('signature','evidence_digest')};body['observation_id']='other-observation'
+        other=rt._seal(body,'checker');other['evidence_digest']=canonical_digest(other)
+        with rt._tx() as db:event=rt._event(db,'OUTCOME_OBSERVED',attempt_id='collision',outcome=other)
+        receipt=rt.ledger.append(event,event['event_id'])
+        first=rt.admit_evidence(other,event,receipt,expected_attempt_id='collision',context=CONTEXT)
+        assert first['reason']=='IDEMPOTENCY_CONFLICT'
+        count=len(rt.events())
+        assert rt.admit_evidence(other,event,receipt,expected_attempt_id='collision',context=CONTEXT)==first
+>       assert len(rt.events())==count and rt.evidence_intakes()[0]['prior_decisions']==[]
+E       AssertionError: assert (4 == 3)
+E        +  where 4 = len([{'delivery': 'RECORDED', 'event': {'agent_id': 'reference-qualification-checker', 'attempt_id': 'collision', 'correla...'event-fd48482813814e528150a5ef712730fc', ...}, 'event_id': 'event-fd48482813814e528150a5ef712730fc', 'receipt': None}])
+E        +    where [{'delivery': 'RECORDED', 'event': {'agent_id': 'reference-qualification-checker', 'attempt_id': 'collision', 'correla...'event-fd48482813814e528150a5ef712730fc', ...}, 'event_id': 'event-fd48482813814e528150a5ef712730fc', 'receipt': None}] = events()
+E        +      where events = <earned_authority.connected.ConnectedRuntime object at 0x1091536e0>.events
+
+tests/test_connected_evidence.py:178: AssertionError
+_________ test_invalid_procedure_report_cannot_poison_outbox[kwargs0] __________
+
+runtime = <earned_authority.runtime.Runtime object at 0x109153d10>
+kwargs = {'agent': ''}
+
+    @pytest.mark.parametrize('kwargs',[{'agent':''},{'agent':'   '},{'attempt_id':'   '},{'skill':''},{'version':''}])
+    def test_invalid_procedure_report_cannot_poison_outbox(runtime,kwargs):
+        args={'attempt_id':'claim',**kwargs}
+>       with pytest.raises(Denied,match='INVALID_PROCEDURE_REPORT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_evidence_boundary.py:37: Failed
+_________ test_invalid_procedure_report_cannot_poison_outbox[kwargs1] __________
+
+runtime = <earned_authority.runtime.Runtime object at 0x109153ce0>
+kwargs = {'agent': '   '}
+
+    @pytest.mark.parametrize('kwargs',[{'agent':''},{'agent':'   '},{'attempt_id':'   '},{'skill':''},{'version':''}])
+    def test_invalid_procedure_report_cannot_poison_outbox(runtime,kwargs):
+        args={'attempt_id':'claim',**kwargs}
+>       with pytest.raises(Denied,match='INVALID_PROCEDURE_REPORT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_evidence_boundary.py:37: Failed
+_________ test_invalid_procedure_report_cannot_poison_outbox[kwargs2] __________
+
+runtime = <earned_authority.runtime.Runtime object at 0x109152540>
+kwargs = {'attempt_id': '   '}
+
+    @pytest.mark.parametrize('kwargs',[{'agent':''},{'agent':'   '},{'attempt_id':'   '},{'skill':''},{'version':''}])
+    def test_invalid_procedure_report_cannot_poison_outbox(runtime,kwargs):
+        args={'attempt_id':'claim',**kwargs}
+>       with pytest.raises(Denied,match='INVALID_PROCEDURE_REPORT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_evidence_boundary.py:37: Failed
+_________ test_invalid_procedure_report_cannot_poison_outbox[kwargs3] __________
+
+runtime = <earned_authority.runtime.Runtime object at 0x109150950>
+kwargs = {'skill': ''}
+
+    @pytest.mark.parametrize('kwargs',[{'agent':''},{'agent':'   '},{'attempt_id':'   '},{'skill':''},{'version':''}])
+    def test_invalid_procedure_report_cannot_poison_outbox(runtime,kwargs):
+        args={'attempt_id':'claim',**kwargs}
+>       with pytest.raises(Denied,match='INVALID_PROCEDURE_REPORT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_evidence_boundary.py:37: Failed
+_________ test_invalid_procedure_report_cannot_poison_outbox[kwargs4] __________
+
+runtime = <earned_authority.runtime.Runtime object at 0x1091711f0>
+kwargs = {'version': ''}
+
+    @pytest.mark.parametrize('kwargs',[{'agent':''},{'agent':'   '},{'attempt_id':'   '},{'skill':''},{'version':''}])
+    def test_invalid_procedure_report_cannot_poison_outbox(runtime,kwargs):
+        args={'attempt_id':'claim',**kwargs}
+>       with pytest.raises(Denied,match='INVALID_PROCEDURE_REPORT'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_evidence_boundary.py:37: Failed
+=========================== short test summary info ============================
+FAILED tests/test_connected_evidence.py::test_preexisting_eligible_qualification_cannot_reuse_quarantined_evidence
+FAILED tests/test_connected_evidence.py::test_quarantine_during_evaluation_prevents_stale_eligibility_publication
+FAILED tests/test_connected_evidence.py::test_conflicting_valid_import_retries_do_not_duplicate_rejection
+FAILED tests/test_evidence_boundary.py::test_invalid_procedure_report_cannot_poison_outbox[kwargs0]
+FAILED tests/test_evidence_boundary.py::test_invalid_procedure_report_cannot_poison_outbox[kwargs1]
+FAILED tests/test_evidence_boundary.py::test_invalid_procedure_report_cannot_poison_outbox[kwargs2]
+FAILED tests/test_evidence_boundary.py::test_invalid_procedure_report_cannot_poison_outbox[kwargs3]
+FAILED tests/test_evidence_boundary.py::test_invalid_procedure_report_cannot_poison_outbox[kwargs4]
+8 failed, 17 passed in 0.75s

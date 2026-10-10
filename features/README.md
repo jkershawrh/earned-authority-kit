@@ -7,23 +7,22 @@ interpreter. `bindings.json` maps all 37 current IDs to 51 separately reported
 behavioral cases. A further test verifies that the mapping covers the actual
 specifications. `reports/m1-bdd-green.log` and `reports/m1-bdd-report.json` record
 the initial executed snapshot. The final `reports/component-verification.json`
-also records all 52 BDD-module tests as passing within its 203-case component run;
+also records all 52 BDD-module tests as passing within its 321-case component run;
 the environment coverage file cites their individual case IDs. BDD-038 remains
 unbound future robot-simulation scope.
 
-Real canonical-service runners now also exist. Their 23 lifecycle checks and 17
-fault checks are recorded in `reports/connected-lifecycle.json` and
-`reports/connected-adversarial.json`. They include independent readback, actual
-Passport/OPA decisions, canonical Cascade/GCL calls, Ledger receipts, durable
-recovery and mutation-fence interleavings. They are not the 37-scenario BDD suite.
-`reports/bdd-environment-coverage.json` maps explicit partial evidence to 17 IDs
-and leaves 20 UNMAPPED. It certifies zero complete connected scenarios: all 37
-remain AMBER for full real-adapter acceptance and their complete outline rows.
+The dedicated `reports/service-bdd-live-004.json` exercises actual canonical
+services and passes 49 of 51 cases, with the two BDD-033 cases unrun. It completely
+covers 30 of 37 scenario IDs. BDD-009, 015, 016, 021, 025 and 031 retain explicit
+assertion gaps. `reports/bdd-environment-coverage.json` supplies case pointers and
+remaining gaps. Full real-adapter acceptance remains AMBER. The earlier live003
+run preserves the empty-evidence reason failure fixed before live004.
 
-The fresh same-host kit repeats those 40 checks and adds policy/service/restart
-checks, for 61 checks in `reports/clean-reference-combined.json`. This is M3
-reconstruction evidence on separate local state and service instances; it does
-not establish an independent installer, another host, OpenShift or robot safety.
+The fresh same-host reference separately passes 123 checks across policy,
+interfaces, lifecycle, faults, authority-operation recovery and persistent restart.
+See `reports/evidence-reference-combined.json` and its seven v2 child reports.
+These are reconstruction and recovery checks, not 123 additional BDD scenarios.
+They do not establish an independent installer, another host, OpenShift or robot safety.
 
 This is a separate local integration kit. ARE Foundation remains the
 S0/S1 identity, passport, scope, policy, and proof-before-execution boundary. Its

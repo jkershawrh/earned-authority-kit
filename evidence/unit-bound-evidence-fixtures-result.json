@@ -1,0 +1,26 @@
+{
+  "recorded_at": "2026-10-10T03:32:52.520059+00:00",
+  "scope": "UNIT_FIXTURE_ALIGNMENT_WITH_MANDATORY_BOUND_EVIDENCE",
+  "status": "PASS",
+  "owned_files_sha256": {
+    "tests/test_authority_journal.py": "212c83084dabcda38979b1e5a651f7ff2f683319761de084ea68dabf7be3b30c",
+    "tests/test_connected_security.py": "26bed459d5180330404f2937aa2045cc843be058ff048f4870b55b9eef170a77"
+  },
+  "changes": [
+    "Journal and deadline fixtures create three real signed shadow observations per qualification request and derive actual outcome_refs using local fixture scoring.",
+    "Qualification expiry remains explicitly bounded for deadline cases.",
+    "Signed FixtureLedger receives an explicitly UNIT detailed-verification adapter; runtime admission guards are unchanged."
+  ],
+  "red_log": "evidence/unit-bound-evidence-fixtures-red.log",
+  "green_log": "evidence/unit-bound-evidence-fixtures-green.log",
+  "green_tests_passed": 31,
+  "modules": [
+    "test_authority_journal",
+    "test_connected_security",
+    "test_connected_binding"
+  ],
+  "limitations": [
+    "All service substitutes remain explicitly UNIT fixtures; no canonical or live service acceptance is asserted.",
+    "No runtime, connected service, canonical source or other existing test module edited in this alignment."
+  ]
+}
