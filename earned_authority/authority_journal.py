@@ -119,7 +119,7 @@ class AuthorityJournal:
             if operation['grant_expires_at_ms']<=self.clock.now_ms:raise Denied('EXPIRED_SCOPE')
             if operation['policy_digest']!=self.policy.policy_digest:raise Denied('POLICY_REVISION_MISMATCH')
             invocation=operation['invocation']
-            self.policy.check(operation['agent_id'],invocation['action'],invocation['resource'])
+            self._check_requested_policy_window(operation['agent_id'],invocation['action'],invocation['resource'],invocation.get('requested_window'))
             # A synchronous policy response may cross a qualification/grant bound.
             if operation['grant_expires_at_ms']<=self.clock.now_ms or q['expires_at_ms']<=self.clock.now_ms:
                 raise Denied('EXPIRED_SCOPE')

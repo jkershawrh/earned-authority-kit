@@ -45,7 +45,9 @@
         "WITHDRAWAL_RECONCILED",
         "PROCEDURE_REPORTED",
         "EVIDENCE_ADMITTED",
-        "EVIDENCE_REJECTED"
+        "EVIDENCE_REJECTED",
+        "QUALIFICATION_CHECKED",
+        "AUTHORIZATION_CHECKED"
       ]
     },
     "occurred_at_ms": {

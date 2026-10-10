@@ -1,0 +1,128 @@
+{
+  "reviewed_at": "2026-10-10T05:41:50.252585+00:00",
+  "review_type": "INDEPENDENT_READ_ONLY_BOUNDARY_REVIEW",
+  "execution_scope": "Source inspection plus temporary local fixture reproductions; the final event-ID substitution regression ran independently with 2 passes and 25 deselected. No services were started by the boundary review; service deployment acceptance is recorded separately.",
+  "source_hashes": {
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "earned_authority/wire_contracts.py": "sha256:6f81d2809c367eb882d0eb78e70fad540ca75458f773a3d66d5f6ee66bb53c5c",
+    "earned_authority/connected.py": "sha256:bec79d5495744611a4d2c539e76ca7e8824b0f15ab649f2063ed8d775843796c",
+    "earned_authority/authority_journal.py": "sha256:289d449b197f49b94372a43e6022e0274c8971ec3f3acb94fed03ebf8b47d1af",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "tests/test_attempt_checks.py": "sha256:ed71a1981280a9d4988bf8b88d9cdc9fe0fae52c4f46858231480c4cf82c0b1d",
+    "tests/test_authority_observations.py": "sha256:41db09cd31a82169a436611bb7a198cc1e095e9f22ae6e29158607e0929d0664",
+    "tests/test_policy_windows.py": "sha256:5fe2fd527931cafe1eb28dbf68d11d7b210500276f2da5e039ae0048a49be8b5",
+    "docs/MULTI_RESOURCE_GRANTS.md": "sha256:b30804c6430d9f642fffb5e50e6a51ab474f7e8e7604acde1526611c0bdf95ed"
+  },
+  "findings": [
+    {
+      "id": "016-PRODUCER-MISATTRIBUTION",
+      "severity": "HIGH_EVIDENCE_INTEGRITY",
+      "status": "FIX_REVIEWED",
+      "observed": "A locally authenticated stored command naming an invented grant ID committed one fixture mutation; historical export/consume accepted that misattributed grant while still returning authorizes_execution=false.",
+      "reproduction_boundary": "Temporary explicit Runtime fixture; reviewer re-signed the command with its existing trusted fixture authority key and updated the stored command. This models a trusted producer semantic error, not an unauthenticated external exploit.",
+      "resolution": "Boundary fields now originate from actual returned authority/grant and must exactly match the signed command before check records or mutation.",
+      "regressions": "tests/test_attempt_checks.py::test_authenticated_command_cannot_misattribute_the_actual_authorization_check"
+    },
+    {
+      "id": "016-LEGACY-BUNDLE-COMPATIBILITY",
+      "severity": "COMPATIBILITY",
+      "status": "FIX_REVIEWED",
+      "observed": "Requiring the new checks input under the unchanged draft wire version would reject older serialized attempt bundles.",
+      "resolution": "Missing check proofs are accepted only after authenticating a legacy command with no execution-check marker; marked commands cannot downgrade.",
+      "regressions": [
+        "test_pre_upgrade_committed_attempt_remains_historical_without_fabricated_checks",
+        "test_new_attempt_cannot_remove_checks_proof_input_to_claim_legacy_format"
+      ]
+    },
+    {
+      "id": "016-CHECK-VERSION-TYPE",
+      "severity": "CONTRACT",
+      "status": "FIX_REVIEWED",
+      "observed": "Equality against version 1 accepted boolean True and floating 1.0.",
+      "resolution": "Explicit integer type and supported-version checks precede mutation and consumption.",
+      "regressions": "test_unknown_or_ambiguous_check_version_denies_before_mutation"
+    },
+    {
+      "id": "016-EXACT-CHECK-EVENT-IDENTITY",
+      "severity": "HIGH_EVIDENCE_INTEGRITY",
+      "status": "FIX_REVIEWED",
+      "observed": "Parent review found that a different authenticated lifecycle check event with the same attempt label could replace the actual event referenced by the attempt proof.",
+      "resolution": "The consumer now requires every exact authenticated check-proof event ID to appear among the lifecycle records, in addition to type, correlation and cardinality checks.",
+      "regressions": "test_same_attempt_label_cannot_substitute_a_different_authenticated_check_event[QUALIFICATION_CHECKED]"
+    },
+    {
+      "id": "016-EXACT-COMMIT-EVENT-IDENTITY",
+      "severity": "HIGH_EVIDENCE_INTEGRITY",
+      "status": "FIX_REVIEWED",
+      "observed": "Independent review reproduced the analogous gap for COMMITTED evidence: keep the original commit proof, replace only its lifecycle row with a different authenticated COMMITTED event for the same attempt, and the prior consumer accepted it.",
+      "reproduction_boundary": "Temporary local fixture with an additional event signed by the trusted fixture writer; a trusted-producer semantic attribution issue, not unauthenticated authority or execution.",
+      "resolution": "The exact-ID requirement now includes the original commit proof as well as both check proofs; the substituted commit row is rejected.",
+      "regressions": "test_same_attempt_label_cannot_substitute_a_different_authenticated_check_event[COMMITTED]"
+    },
+    {
+      "id": "015-SAME-REVISION-OBSERVATION-RACE",
+      "severity": "DIAGNOSTIC_CORRECTNESS",
+      "status": "FIX_REVIEWED",
+      "observed": "Identical-authority refreshes persisting in reverse order could regress the last-observed timestamp.",
+      "resolution": "A same-revision, same-digest observation with an older timestamp retains the newer prior record. Real readonly-write and signed replay-trigger regression cases also cover preserving/authenticating stored observations.",
+      "limits": "The observation is diagnostic history only and never grants offline permission."
+    },
+    {
+      "id": "031-MULTI-RESOURCE-GRANT-SET",
+      "severity": "INCOMPLETE_FEATURE",
+      "status": "OPEN_AMBER",
+      "observed": "The adapter keys grants by skill and cannot preserve two resource scopes under one skill during a fresh recomputation. Existing coverage proves stale rejection only.",
+      "resolution": "Deferred coordinated plan in docs/MULTI_RESOURCE_GRANTS.md; no partial hidden projection implemented."
+    }
+  ],
+  "window_review": {
+    "status": "NO_BLOCKING_DEFECT_FOUND_IN_READ_ONLY_PASS",
+    "checked": [
+      "Future interval ALLOW is insufficient for immediate grant; the trusted local clock must be within the interval.",
+      "The interval is signed into the scope binding; absolute expiry is capped at its exclusive end.",
+      "Grant-operation preflight and execution recheck the window after the synchronous policy call.",
+      "Operation replay preserves exact request/window identity and cannot turn a historical receipt into current permission.",
+      "Canonical policy supplies the evaluation timestamp and exact request/digest echoes; caller-supplied time is not authority."
+    ],
+    "recommended_regressions": [
+      "PREPARED operation recovered after window end cancels without issue.",
+      "DISPATCHED unresolved operation after window end stays pending without blind redispatch.",
+      "Historical signed receipt recovered after window end finalizes evidence but cannot execute.",
+      "Execution policy call crossing the exclusive end prevents mutation."
+    ],
+    "limits": [
+      "The fixed 2100-01-01 first-minute UTC interval is an explicitly configured demo rule, not a supplied business maintenance calendar.",
+      "Window enforcement trusts the local SystemClock; no cross-host clock-synchronization guarantee.",
+      "This review does not prove atomic distributed policy/authority mutation."
+    ],
+    "owner_regression_update": {
+      "reviewed_source": [
+        "test_prepared_window_grant_recovery_after_expiry_cancels_without_issuance",
+        "test_execution_policy_crossing_window_end_denies_before_mutation"
+      ],
+      "owner_reported_focused_passes": 57,
+      "scope": "UNIT service seams; source assertions independently inspected. Canonical normal/race and OPA evidence is maintained by the Foundation owner."
+    }
+  },
+  "authority_observation_review": {
+    "no_offline_permission_fallback_found": true,
+    "explicit_refresh_only": true,
+    "signed_and_agent_bound": true,
+    "cached_read_is_read_only": true,
+    "admission_and_commit_use_current_canonical_authority": true,
+    "bad_cache_does_not_block_live_authorization": true
+  },
+  "acceptance_color": "AMBER",
+  "acceptance_reason": "Review fixes are implemented and inspected; BDD031 remains open and this report is not live-service or product-value acceptance.",
+  "independent_final_regression": {
+    "command": "python -m pytest tests/test_attempt_checks.py -k same_attempt_label -q",
+    "executed": true,
+    "passed": 2,
+    "deselected": 25,
+    "exit_code": 0,
+    "source_hashes": {
+      "earned_authority/wire_contracts.py": "sha256:6f81d2809c367eb882d0eb78e70fad540ca75458f773a3d66d5f6ee66bb53c5c",
+      "tests/test_attempt_checks.py": "sha256:ed71a1981280a9d4988bf8b88d9cdc9fe0fae52c4f46858231480c4cf82c0b1d"
+    }
+  }
+}

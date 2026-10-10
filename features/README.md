@@ -7,14 +7,17 @@ interpreter. `bindings.json` maps all 37 current IDs to 51 separately reported
 behavioral cases. A further test verifies that the mapping covers the actual
 specifications. `reports/m1-bdd-green.log` and `reports/m1-bdd-report.json` record
 the initial executed snapshot. The final `reports/component-verification.json`
-also records all 52 BDD-module tests as passing within its 369-case component run;
+also records all 52 BDD-module tests as passing within its 437-case component run;
 the environment coverage file cites their individual case IDs. BDD-038 remains
 unbound future robot-simulation scope.
 
-The dedicated `reports/service-bdd-live-006.json` exercises actual canonical
-services and passes all 52 executed cases. It completely covers 33 of 37 scenario
-IDs. BDD-009, 015, 016 and 031 retain explicit assertion gaps even though their
-implemented cases pass. `reports/bdd-environment-coverage.json` supplies exact
+The dedicated `reports/service-bdd-live-008.json` exercises actual canonical
+services and passes all 52 executed cases. It completely covers 36 of 37 scenario
+IDs. BDD-031 retains an explicit multi-resource recomputation gap even though its
+implemented stale-update cases pass. BDD-009 uses the source-pinned demo blackout;
+BDD-015 persists an authenticated diagnostic snapshot that cannot authorize
+execution; BDD-016 records attempt-specific consumption checks without rewriting
+prior qualification or issuance history. `reports/bdd-environment-coverage.json` supplies exact
 case pointers and remaining gaps. Full real-adapter acceptance remains AMBER.
 Live005 preserves three failed storage-fault precondition assertions: retained
 SQLite connections prevented the intended file-permission failure. Live006 uses
@@ -24,7 +27,7 @@ Garbage collection in that setup is not a production storage-recovery guarantee.
 
 The fresh same-host reference separately passes 123 checks across policy,
 interfaces, lifecycle, faults, authority-operation recovery and persistent restart.
-See `reports/boundary-reference-combined.json` and its seven child reports.
+See `reports/observation-reference-combined.json` and its seven child reports.
 These are reconstruction and recovery checks, not 123 additional BDD scenarios.
 They do not establish an independent installer, another host, OpenShift or robot safety.
 

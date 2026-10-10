@@ -1,0 +1,50 @@
+{
+  "execution_state": "COMPLETED",
+  "acceptance_color": "AMBER",
+  "recorded_at": "2026-10-10T05:39:50.903117+00:00",
+  "scope": "Preserved first pipeline, superseded by subsequent wire-contract binding changes. Individual child execution results are historical and must not be reused as current-source acceptance.",
+  "components": [
+    {
+      "report": "reports/observation-reference-pre-final-policy.json",
+      "sha256": "sha256:bc297faadfac6ec41f21d758eb7eb637490e8a73beabfa9d3948b55296150d1f",
+      "recorded_status": "GREEN",
+      "checks": 8
+    },
+    {
+      "report": "reports/observation-reference-pre-final-services.json",
+      "sha256": "sha256:4f105d319d05f622ad860315bf5ebe1462d6457e00c94a0fe0aacbb395af1f5a",
+      "recorded_status": "GREEN",
+      "checks": 7
+    },
+    {
+      "report": "reports/observation-reference-pre-final-connected.json",
+      "sha256": "sha256:91dfee86d6dd2c985c133d70b292b3fb665beb784dc3a4827062e4df87fc8fce",
+      "recorded_status": "GREEN",
+      "checks": 23
+    },
+    {
+      "report": "reports/observation-reference-pre-final-adversarial.json",
+      "sha256": "sha256:5f00486b661a5e911a300ab43d0c85608bf67c61ca89c67e1df5119a6dd4b17b",
+      "recorded_status": "GREEN",
+      "checks": 17
+    },
+    {
+      "report": "reports/observation-reference-pre-final-authority-recovery.json",
+      "sha256": "sha256:3181beb4a5d693d54c676fce9665f86235a50ba66c65739fa45c3d2a5123ddf1",
+      "recorded_status": "GREEN",
+      "checks": 41
+    },
+    {
+      "report": "reports/observation-reference-pre-final-restore.json",
+      "sha256": "sha256:286952e95f33545a31866bd6dfe669e6d6b6a8a5646f74d6de791c482283d3b6",
+      "recorded_status": "GREEN",
+      "checks": 6
+    },
+    {
+      "report": "reports/observation-reference-pre-final-authority-recovery-restored.json",
+      "sha256": "sha256:f8b7cf063a5a5770d64e37a6a3cafe65e27b51d300e520276597397f688cceb5",
+      "recorded_status": "GREEN",
+      "checks": 21
+    }
+  ]
+}

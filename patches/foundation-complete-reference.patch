@@ -185,8 +185,31 @@ diff --git a/api/openapi.yaml b/api/openapi.yaml
      ScopeEvaluateResponse:
        type: object
        required: [decision, request_id, executed]
-@@ -737,12 +822,24 @@
+@@ -735,14 +820,47 @@
+         resource:
+           type: string
            example: model/champion
++        requested_window:
++          $ref: "#/components/schemas/RequestedPolicyWindow"
++    RequestedPolicyWindow:
++      type: object
++      additionalProperties: false
++      required: [not_before_ms, not_after_ms]
++      description: >-
++        Proposed half-open interval for model.promote_to_production. Bounds are
++        integer UTC epoch milliseconds with not_before_ms strictly less than
++        not_after_ms. Policy evaluation does not schedule or execute an action.
++      properties:
++        not_before_ms:
++          type: integer
++          format: int64
++          minimum: 0
++          maximum: 9007199254740991
++        not_after_ms:
++          type: integer
++          format: int64
++          minimum: 1
++          maximum: 9007199254740991
      PolicyEvaluationResponse:
        type: object
 -      required: [decision]
@@ -211,7 +234,7 @@ diff --git a/api/openapi.yaml b/api/openapi.yaml
        required: [decision_id, effect, reason]
        properties:
          decision_id:
-@@ -752,6 +849,17 @@
+@@ -752,6 +870,25 @@
            enum: [ALLOW, DENY]
          reason:
            type: string
@@ -226,6 +249,14 @@ diff --git a/api/openapi.yaml b/api/openapi.yaml
 +        policy_digest:
 +          type: string
 +          pattern: '^sha256:[a-f0-9]{64}$'
++        requested_window:
++          $ref: "#/components/schemas/RequestedPolicyWindow"
++        evaluated_at_ms:
++          type: integer
++          format: int64
++          minimum: 0
++          maximum: 9007199254740991
++          description: Actual OPA server clock; required by the canonical windowed decision binding, never supplied by the caller.
      DeploymentMetaResponse:
        type: object
        required: [deployment_stage, request_id]
@@ -365,7 +396,7 @@ diff --git a/docs/api-contract.md b/docs/api-contract.md
  
  ## Real OPA Policy
  
-@@ -295,3 +329,68 @@
+@@ -295,3 +329,96 @@
  Use `api/openapi.yaml` as the source for client generation. The API is small on
  purpose; consumers should model register, issue, verify, scope, and policy as
  one authority-check workflow rather than independent dashboard calls.
@@ -434,6 +465,34 @@ diff --git a/docs/api-contract.md b/docs/api-contract.md
 +no decision if binding data is absent. Regression tests under
 +`sx/s0s1-rest-bff/policy-tests` run with `opa test policy policy-tests` and are not
 +loaded into the production policy inventory.
++# Explicit demo policy window
++
++The canonical OPA policy declares the finite demo promotion blackout
++`demo-2100-01-01-first-minute`: `[4102444800000, 4102444860000)` UTC epoch
++milliseconds (2100-01-01 00:00:00–00:01:00 UTC). It is an operator-configured
++reference example, not a business maintenance calendar. Changing it requires a
++reviewed Rego source change, a new pinned policy digest and an immutable snapshot
++restart. Caller input cannot change the calendar or policy engine clock.
++
++`POST /v1/policy/evaluations` accepts optional `requested_window` with exactly
++`not_before_ms` and `not_after_ms` integer fields. Bounds must satisfy
++`0 <= not_before_ms < not_after_ms <= 9007199254740991`. Windowed requests are
++supported only for `model.promote_to_production`. The BFF rejects malformed or
++unsupported requests, and legacy stub/static routes cannot silently ignore a
++window. Existing requests without this field retain their rules outside the
++configured demo interval.
++
++Any overlap between the requested half-open interval and the demo blackout
++produces `DENY` with reason `POLICY_WINDOW_DENIED`. An interval ending exactly at
++blackout start, or starting exactly at blackout end, does not overlap. Immediate
++promotion checks also deny when actual OPA time lies in the blackout, including
++unwindowed requests. A requested interval cannot bypass an active blackout or
++relax other policy rules.
++
++Canonical decisions include `evaluated_at_ms` from OPA and echo the exact
++`requested_window` when supplied, in addition to the existing decision, subject
++and pinned policy binding. `executed` and `receipt_created` remain false.
++Evaluation of a future interval does not schedule execution or issue authority.
 diff --git a/s0/agent-registry-service/Dockerfile b/s0/agent-registry-service/Dockerfile
 --- a/s0/agent-registry-service/Dockerfile
 +++ b/s0/agent-registry-service/Dockerfile
@@ -628,6 +687,27 @@ new file mode 100644
 +		})
 +	}
 +}
+diff --git a/sx/are-api-gateway/internal/gateway/policy_window_test.go b/sx/are-api-gateway/internal/gateway/policy_window_test.go
+new file mode 100644
+--- /dev/null
++++ b/sx/are-api-gateway/internal/gateway/policy_window_test.go
+@@ -0,0 +1,16 @@
++package gateway
++
++import (
++	"net/http"
++	"net/http/httptest"
++	"testing"
++)
++
++func TestStaticPolicyCannotSilentlyIgnoreRequestedWindow(t *testing.T) {
++	gateway := NewGateway(allowToken{}, &StaticUpstreamClient{}, nil)
++	response := httptest.NewRecorder()
++	gateway.Handler().ServeHTTP(response, foundationRequest(http.MethodPost, "/v1/policy/evaluations", `{"decision_id":"window1","agent_id":"agent1","action_class":"model.promote_to_production","resource":"model/champion","requested_window":{"not_before_ms":4102444800000,"not_after_ms":4102444860000}}`, "window1"))
++	if response.Code != http.StatusBadGateway {
++		t.Fatalf("unsupported static path accepted window: %d %s", response.Code, response.Body.String())
++	}
++}
 diff --git a/sx/are-api-gateway/internal/gateway/s0s1_http_proxy.go b/sx/are-api-gateway/internal/gateway/s0s1_http_proxy.go
 --- a/sx/are-api-gateway/internal/gateway/s0s1_http_proxy.go
 +++ b/sx/are-api-gateway/internal/gateway/s0s1_http_proxy.go
@@ -656,7 +736,17 @@ diff --git a/sx/are-api-gateway/internal/gateway/s0s1_http_proxy.go b/sx/are-api
 diff --git a/sx/are-api-gateway/internal/gateway/upstream.go b/sx/are-api-gateway/internal/gateway/upstream.go
 --- a/sx/are-api-gateway/internal/gateway/upstream.go
 +++ b/sx/are-api-gateway/internal/gateway/upstream.go
-@@ -460,8 +460,9 @@
+@@ -427,6 +427,9 @@
+ 	if err := json.Unmarshal(req.Body, &payload); err != nil {
+ 		return jsonError(req.RequestID, "INVALID_ARGUMENT", "invalid json body", false, http.StatusBadRequest)
+ 	}
++	if _, supplied := payload["requested_window"]; supplied {
++		return jsonError(req.RequestID, "POLICY_ENGINE_UNAVAILABLE", "requested_window requires the canonical Foundation BFF policy route", false, http.StatusBadGateway)
++	}
+ 	decisionID, _ := payload["decision_id"].(string)
+ 	agentID, _ := payload["agent_id"].(string)
+ 	actionClass, _ := payload["action_class"].(string)
+@@ -460,8 +463,9 @@
  			"effect":      strings.ToUpper(effect),
  			"reason":      reason,
  		},
@@ -1107,7 +1197,18 @@ diff --git a/sx/s0s1-rest-bff/internal/api/api.go b/sx/s0s1-rest-bff/internal/ap
  	}
  	bodies, err := rp.ListPassportBodiesByAgent(ctx, agentID)
  	if err != nil {
-@@ -673,7 +849,17 @@
+@@ -661,7 +837,9 @@
+ func evaluatePolicy(w http.ResponseWriter, r *http.Request, eval policy.Evaluator) {
+ 	rid := requestID(r)
+ 	var payload map[string]any
+-	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
++	decoder := json.NewDecoder(r.Body)
++	decoder.UseNumber()
++	if err := decoder.Decode(&payload); err != nil {
+ 		jsonError(w, rid, "INVALID_ARGUMENT", "invalid json body", false, http.StatusBadRequest)
+ 		return
+ 	}
+@@ -673,7 +851,30 @@
  		jsonError(w, rid, "INVALID_ARGUMENT", "decision_id, agent_id, and action_class are required", false, http.StatusBadRequest)
  		return
  	}
@@ -1115,7 +1216,20 @@ diff --git a/sx/s0s1-rest-bff/internal/api/api.go b/sx/s0s1-rest-bff/internal/ap
 +	var effect, reason string
 +	var err error
 +	var decision any
-+	if canonical, ok := eval.(policy.DecisionEvaluator); ok {
++	if rawWindow, supplied := payload["requested_window"]; supplied {
++		window, parseErr := policy.ParseRequestedWindow(rawWindow)
++		if parseErr != nil || actionClass != "model.promote_to_production" {
++			jsonError(w, rid, "INVALID_ARGUMENT", "requested_window requires valid integer bounds and model.promote_to_production", false, http.StatusBadRequest)
++			return
++		}
++		if canonical, ok := eval.(policy.WindowDecisionEvaluator); ok {
++			var result policy.Evaluation
++			result, err = canonical.EvaluateWindowBound(r.Context(), decisionID, agentID, actionClass, resource, window)
++			effect, reason, decision = result.Effect, result.Reason, result
++		} else {
++			err = errors.New("policy evaluator cannot enforce requested_window")
++		}
++	} else if canonical, ok := eval.(policy.DecisionEvaluator); ok {
 +		var result policy.Evaluation
 +		result, err = canonical.EvaluateBound(r.Context(), decisionID, agentID, actionClass, resource)
 +		effect, reason, decision = result.Effect, result.Reason, result
@@ -1126,7 +1240,7 @@ diff --git a/sx/s0s1-rest-bff/internal/api/api.go b/sx/s0s1-rest-bff/internal/ap
  	if err != nil {
  		if errors.Is(err, policy.ErrDependencyTimeout) {
  			jsonError(w, rid, "DEPENDENCY_TIMEOUT", "policy engine timeout", true, http.StatusGatewayTimeout)
-@@ -687,11 +873,9 @@
+@@ -687,11 +888,9 @@
  		return
  	}
  	body, err := json.Marshal(map[string]any{
@@ -2000,6 +2114,138 @@ new file mode 100644
 +		}
 +	}
 +}
+diff --git a/sx/s0s1-rest-bff/internal/api/policy_window_test.go b/sx/s0s1-rest-bff/internal/api/policy_window_test.go
+new file mode 100644
+--- /dev/null
++++ b/sx/s0s1-rest-bff/internal/api/policy_window_test.go
+@@ -0,0 +1,127 @@
++package api
++
++import (
++	"are-s0s1-rest-bff/internal/policy"
++	"encoding/json"
++	"net/http"
++	"net/http/httptest"
++	"strings"
++	"testing"
++	"time"
++)
++
++const demoWindow = `{"not_before_ms":4102444800000,"not_after_ms":4102444860000}`
++
++func windowResult() map[string]any {
++	return map[string]any{"decision_id": "window1", "agent_id": "agent1", "action_class": "model.promote_to_production", "resource": "model/champion",
++		"effect": "DENY", "reason": "POLICY_WINDOW_DENIED", "policy_id": "policy/test.rego", "policy_digest": "sha256:" + strings.Repeat("a", 64),
++		"requested_window": map[string]any{"not_before_ms": int64(4102444800000), "not_after_ms": int64(4102444860000)}, "evaluated_at_ms": int64(1791500000000)}
++}
++
++func evaluateWindow(t *testing.T, evaluator policy.Evaluator, window string) *httptest.ResponseRecorder {
++	t.Helper()
++	handler, err := Handler(Config{Repo: policyCheckOnlyRepository{}, Policy: evaluator})
++	if err != nil {
++		t.Fatal(err)
++	}
++	body := `{"decision_id":"window1","agent_id":"agent1","action_class":"model.promote_to_production","resource":"model/champion","evaluated_at_ms":1,"now_ms":1,"requested_window":` + window + `}`
++	req := httptest.NewRequest(http.MethodPost, "/v1/policy/evaluations", strings.NewReader(body))
++	req.Header.Set("X-Request-ID", "request1")
++	req.Header.Set("Idempotency-Key", "window1")
++	response := httptest.NewRecorder()
++	handler.ServeHTTP(response, req)
++	return response
++}
++
++// HTTP transport fixture; real policy/clock behavior is tested with OPA below.
++func TestPolicyWindowForwardsExactIntervalAndEngineTime(t *testing.T) {
++	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		var body struct {
++			Input map[string]json.RawMessage `json:"input"`
++		}
++		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
++			t.Error(err)
++		}
++		if len(body.Input["requested_window"]) == 0 {
++			t.Error("requested interval omitted")
++		}
++		for _, key := range []string{"evaluated_at_ms", "now_ms"} {
++			if _, present := body.Input[key]; present {
++				t.Errorf("caller clock forwarded: %s", key)
++			}
++		}
++		_ = json.NewEncoder(w).Encode(map[string]any{"result": windowResult()})
++	}))
++	defer server.Close()
++	response := evaluateWindow(t, policy.NewOPAClient(server.URL, time.Second), demoWindow)
++	if response.Code != http.StatusOK {
++		t.Fatalf("status %d: %s", response.Code, response.Body.String())
++	}
++	var result struct {
++		Decision       map[string]json.RawMessage `json:"decision"`
++		Executed       bool                       `json:"executed"`
++		ReceiptCreated bool                       `json:"receipt_created"`
++	}
++	if err := json.Unmarshal(response.Body.Bytes(), &result); err != nil {
++		t.Fatal(err)
++	}
++	if string(result.Decision["reason"]) != `"POLICY_WINDOW_DENIED"` || string(result.Decision["evaluated_at_ms"]) != "1791500000000" {
++		t.Fatalf("canonical binding lost: %s", response.Body.String())
++	}
++	var got, want map[string]int64
++	_ = json.Unmarshal(result.Decision["requested_window"], &got)
++	_ = json.Unmarshal([]byte(demoWindow), &want)
++	if got["not_before_ms"] != want["not_before_ms"] || got["not_after_ms"] != want["not_after_ms"] || len(got) != 2 {
++		t.Fatalf("interval lost: %v", got)
++	}
++	if result.Executed || result.ReceiptCreated {
++		t.Fatal("policy check claims execution or receipt")
++	}
++}
++
++func TestPolicyWindowInvalidOrUnsupportedFailsClosed(t *testing.T) {
++	for name, window := range map[string]string{"null": "null", "string": `"window"`, "missing_start": `{"not_after_ms":2000}`, "missing_end": `{"not_before_ms":1000}`, "empty": "{}", "equal": `{"not_before_ms":1000,"not_after_ms":1000}`, "reversed": `{"not_before_ms":2000,"not_after_ms":1000}`, "negative": `{"not_before_ms":-1,"not_after_ms":1000}`, "fraction": `{"not_before_ms":1000.5,"not_after_ms":2000}`, "boolean": `{"not_before_ms":true,"not_after_ms":2000}`, "unknown": `{"not_before_ms":1000,"not_after_ms":2000,"now_ms":1500}`, "unsafe_integer": `{"not_before_ms":1000,"not_after_ms":9007199254740992}`} {
++		t.Run(name, func(t *testing.T) {
++			response := evaluateWindow(t, policy.Stub{}, window)
++			if response.Code != http.StatusBadRequest {
++				t.Fatalf("invalid window accepted: %d %s", response.Code, response.Body.String())
++			}
++		})
++	}
++	t.Run("unsupported_evaluator", func(t *testing.T) {
++		response := evaluateWindow(t, policy.Stub{}, demoWindow)
++		if response.Code != http.StatusBadGateway {
++			t.Fatalf("stub ignored window: %d %s", response.Code, response.Body.String())
++		}
++	})
++}
++
++func TestPolicyWindowRejectsUnboundEngineDecision(t *testing.T) {
++	for _, changed := range []string{"missing_window", "different_window", "missing_time", "negative_time", "fractional_time", "unsafe_time"} {
++		t.Run(changed, func(t *testing.T) {
++			result := windowResult()
++			switch changed {
++			case "missing_window":
++				delete(result, "requested_window")
++			case "different_window":
++				result["requested_window"] = map[string]int{"not_before_ms": 0, "not_after_ms": 1000}
++			case "missing_time":
++				delete(result, "evaluated_at_ms")
++			case "negative_time":
++				result["evaluated_at_ms"] = -1
++			case "fractional_time":
++				result["evaluated_at_ms"] = 1.5
++			case "unsafe_time":
++				result["evaluated_at_ms"] = int64(9007199254740992)
++			}
++			server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++				_ = json.NewEncoder(w).Encode(map[string]any{"result": result})
++			}))
++			defer server.Close()
++			response := evaluateWindow(t, policy.NewOPAClient(server.URL, time.Second), demoWindow)
++			if response.Code != http.StatusBadGateway {
++				t.Fatalf("invalid binding accepted: %d %s", response.Code, response.Body.String())
++			}
++		})
++	}
++}
 diff --git a/sx/s0s1-rest-bff/internal/policy/binding_test.go b/sx/s0s1-rest-bff/internal/policy/binding_test.go
 new file mode 100644
 --- /dev/null
@@ -2047,7 +2293,7 @@ diff --git a/sx/s0s1-rest-bff/internal/policy/evaluate.go b/sx/s0s1-rest-bff/int
  	"encoding/json"
  	"errors"
  	"fmt"
-@@ -16,6 +17,25 @@
+@@ -16,6 +17,64 @@
  // Evaluator decides policy effect for EvaluatePolicy REST payloads.
  type Evaluator interface {
  	Evaluate(ctx context.Context, decisionID, agentID, actionClass, resource string) (effect string, reason string, err error)
@@ -2056,24 +2302,63 @@ diff --git a/sx/s0s1-rest-bff/internal/policy/evaluate.go b/sx/s0s1-rest-bff/int
 +// Evaluation binds a decision to its evaluated input and immutable loaded policy.
 +// Policy binding comes from OPA data activated alongside the Rego, never input.
 +type Evaluation struct {
-+	DecisionID   string `json:"decision_id"`
-+	AgentID      string `json:"agent_id"`
-+	ActionClass  string `json:"action_class"`
-+	Resource     string `json:"resource"`
-+	PolicyID     string `json:"policy_id"`
-+	PolicyDigest string `json:"policy_digest"`
-+	Effect       string `json:"effect"`
-+	Reason       string `json:"reason"`
++	DecisionID      string           `json:"decision_id"`
++	AgentID         string           `json:"agent_id"`
++	ActionClass     string           `json:"action_class"`
++	Resource        string           `json:"resource"`
++	PolicyID        string           `json:"policy_id"`
++	PolicyDigest    string           `json:"policy_digest"`
++	Effect          string           `json:"effect"`
++	Reason          string           `json:"reason"`
++	RequestedWindow *RequestedWindow `json:"requested_window,omitempty"`
++	EvaluatedAtMS   *int64           `json:"evaluated_at_ms,omitempty"`
++}
++
++// RequestedWindow is a proposed half-open interval, not a scheduled permission.
++type RequestedWindow struct {
++	NotBeforeMS int64 `json:"not_before_ms"`
++	NotAfterMS  int64 `json:"not_after_ms"`
++}
++
++const MaxExactTimestampMS int64 = 9007199254740991
++
++func (w RequestedWindow) Valid() bool {
++	return w.NotBeforeMS >= 0 && w.NotBeforeMS < w.NotAfterMS && w.NotAfterMS <= MaxExactTimestampMS
++}
++
++// ParseRequestedWindow accepts exactly two integer JSON fields. In particular,
++// booleans, fractions, unknown fields and lossy float conversions cannot pass.
++func ParseRequestedWindow(value any) (RequestedWindow, error) {
++	fields, ok := value.(map[string]any)
++	if !ok || len(fields) != 2 {
++		return RequestedWindow{}, fmt.Errorf("invalid requested_window")
++	}
++	start, okStart := fields["not_before_ms"].(json.Number)
++	end, okEnd := fields["not_after_ms"].(json.Number)
++	if !okStart || !okEnd {
++		return RequestedWindow{}, fmt.Errorf("window endpoints must be integer milliseconds")
++	}
++	a, errA := start.Int64()
++	b, errB := end.Int64()
++	w := RequestedWindow{NotBeforeMS: a, NotAfterMS: b}
++	if errA != nil || errB != nil || !w.Valid() {
++		return RequestedWindow{}, fmt.Errorf("invalid requested_window bounds")
++	}
++	return w, nil
 +}
 +
 +// DecisionEvaluator provides the stronger canonical service contract. The legacy
 +// Evaluator remains available for deliberately configured local stub fixtures.
 +type DecisionEvaluator interface {
 +	EvaluateBound(context.Context, string, string, string, string) (Evaluation, error)
++}
++
++type WindowDecisionEvaluator interface {
++	EvaluateWindowBound(context.Context, string, string, string, string, RequestedWindow) (Evaluation, error)
  }
  
  // Stub matches sx/are-api-gateway StaticUpstreamClient.handleEvaluatePolicy (no OPA).
-@@ -52,17 +72,22 @@
+@@ -52,32 +111,50 @@
  	HTTPClient *http.Client
  }
  
@@ -2084,6 +2369,17 @@ diff --git a/sx/s0s1-rest-bff/internal/policy/evaluate.go b/sx/s0s1-rest-bff/int
 +}
 +
 +func (c *OPAClient) EvaluateBound(ctx context.Context, decisionID, agentID, actionClass, resource string) (Evaluation, error) {
++	return c.evaluateBound(ctx, decisionID, agentID, actionClass, resource, nil)
++}
++
++func (c *OPAClient) EvaluateWindowBound(ctx context.Context, decisionID, agentID, actionClass, resource string, window RequestedWindow) (Evaluation, error) {
++	if !window.Valid() || actionClass != "model.promote_to_production" {
++		return Evaluation{}, fmt.Errorf("invalid or unsupported requested_window")
++	}
++	return c.evaluateBound(ctx, decisionID, agentID, actionClass, resource, &window)
++}
++
++func (c *OPAClient) evaluateBound(ctx context.Context, decisionID, agentID, actionClass, resource string, window *RequestedWindow) (Evaluation, error) {
  	if strings.Contains(strings.ToLower(resource), "timeout") {
 -		return "", "", ErrDependencyTimeout
 +		return Evaluation{}, ErrDependencyTimeout
@@ -2096,15 +2392,30 @@ diff --git a/sx/s0s1-rest-bff/internal/policy/evaluate.go b/sx/s0s1-rest-bff/int
  	u, err := url.Parse(base + "/v1/data/are/evaluatepolicy/decision")
  	if err != nil {
 -		return "", "", fmt.Errorf("opa: parse url: %w", err)
-+		return Evaluation{}, fmt.Errorf("opa: parse url: %w", err)
- 	}
- 	body, err := json.Marshal(map[string]any{
- 		"input": map[string]any{
-@@ -73,11 +98,11 @@
- 		},
- 	})
- 	if err != nil {
+-	}
+-	body, err := json.Marshal(map[string]any{
+-		"input": map[string]any{
+-			"decision_id":  decisionID,
+-			"agent_id":     agentID,
+-			"action_class": actionClass,
+-			"resource":     resource,
+-		},
+-	})
+-	if err != nil {
 -		return "", "", err
++		return Evaluation{}, fmt.Errorf("opa: parse url: %w", err)
++	}
++	input := map[string]any{
++		"decision_id":  decisionID,
++		"agent_id":     agentID,
++		"action_class": actionClass,
++		"resource":     resource,
++	}
++	if window != nil {
++		input["requested_window"] = window
++	}
++	body, err := json.Marshal(map[string]any{"input": input})
++	if err != nil {
 +		return Evaluation{}, err
  	}
  	req, err := http.NewRequestWithContext(ctx, http.MethodPost, u.String(), bytes.NewReader(body))
@@ -2114,7 +2425,7 @@ diff --git a/sx/s0s1-rest-bff/internal/policy/evaluate.go b/sx/s0s1-rest-bff/int
  	}
  	req.Header.Set("Content-Type", "application/json")
  	client := c.HTTPClient
-@@ -86,29 +111,40 @@
+@@ -86,29 +163,47 @@
  	}
  	resp, err := client.Do(req)
  	if err != nil {
@@ -2140,14 +2451,16 @@ diff --git a/sx/s0s1-rest-bff/internal/policy/evaluate.go b/sx/s0s1-rest-bff/int
  	}
  	if err := json.Unmarshal(raw, &envelope); err != nil {
 -		return "", "", fmt.Errorf("opa: decode: %w", err)
-+		return Evaluation{}, fmt.Errorf("opa: decode: %w", err)
- 	}
+-	}
 -	if envelope.Result == nil || strings.TrimSpace(envelope.Result.Effect) == "" {
 -		return "", "", fmt.Errorf("opa: missing result.effect")
+-	}
+-	return strings.ToUpper(strings.TrimSpace(envelope.Result.Effect)), envelope.Result.Reason, nil
++		return Evaluation{}, fmt.Errorf("opa: decode: %w", err)
++	}
 +	if envelope.Result == nil {
 +		return Evaluation{}, fmt.Errorf("opa: missing bound result")
- 	}
--	return strings.ToUpper(strings.TrimSpace(envelope.Result.Effect)), envelope.Result.Reason, nil
++	}
 +	result := *envelope.Result
 +	if result.DecisionID != decisionID || result.AgentID != agentID || result.ActionClass != actionClass || result.Resource != resource {
 +		return Evaluation{}, fmt.Errorf("opa: evaluated request binding mismatch")
@@ -2161,6 +2474,13 @@ diff --git a/sx/s0s1-rest-bff/internal/policy/evaluate.go b/sx/s0s1-rest-bff/int
 +	}
 +	if result.Effect != "ALLOW" && result.Effect != "DENY" {
 +		return Evaluation{}, fmt.Errorf("opa: invalid effect")
++	}
++	if window != nil {
++		if result.RequestedWindow == nil || *result.RequestedWindow != *window || result.EvaluatedAtMS == nil || *result.EvaluatedAtMS < 0 || *result.EvaluatedAtMS > MaxExactTimestampMS {
++			return Evaluation{}, fmt.Errorf("opa: evaluated time-window binding mismatch")
++		}
++	} else if result.RequestedWindow != nil {
++		return Evaluation{}, fmt.Errorf("opa: unexpected requested_window")
 +	}
 +	return result, nil
  }
@@ -2690,22 +3010,136 @@ new file mode 100644
 +    result.policy_digest == binding.policy_digest
 +    result.policy_digest != request.policy_digest
 +}
+diff --git a/sx/s0s1-rest-bff/policy-tests/time_window_test.rego b/sx/s0s1-rest-bff/policy-tests/time_window_test.rego
+new file mode 100644
+--- /dev/null
++++ b/sx/s0s1-rest-bff/policy-tests/time_window_test.rego
+@@ -0,0 +1,70 @@
++package are.evaluatepolicy
++
++# Only unit engine tests replace this builtin. Production uses actual OPA time.
++window_result(window, now_ns) = result {
++    request := {"decision_id":"window1","agent_id":"agent1","action_class":"model.promote_to_production","resource":"model/champion","requested_window":window,"now_ms":0,"evaluated_at_ms":0,"demo_promotion_blackout":{}}
++    binding := {"policy_id":"policy/are_evaluatepolicy.rego","policy_digest":"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}
++    result := decision with input as request with data.are_policy_binding as binding with time.now_ns as now_ns
++}
++
++test_requested_end_equal_blackout_start_allows {
++    window := {"not_before_ms":4102444799999,"not_after_ms":4102444800000}
++    result := window_result(window,1000000000)
++    result.effect == "ALLOW"
++    object.get(result,"requested_window",null) == window
++    object.get(result,"evaluated_at_ms",null) == 1000
++}
++test_requested_start_equal_blackout_start_denies {
++    result := window_result({"not_before_ms":4102444800000,"not_after_ms":4102444800001},1000000000)
++    result.effect == "DENY"
++    result.reason == "POLICY_WINDOW_DENIED"
++}
++test_requested_end_equal_blackout_end_denies {
++    result := window_result({"not_before_ms":4102444859999,"not_after_ms":4102444860000},1000000000)
++    result.effect == "DENY"
++}
++test_requested_start_equal_blackout_end_allows {
++    result := window_result({"not_before_ms":4102444860000,"not_after_ms":4102444860001},1000000000)
++    result.effect == "ALLOW"
++}
++test_requested_interval_contains_blackout_denies {
++    result := window_result({"not_before_ms":4102444799999,"not_after_ms":4102444860001},1000000000)
++    result.effect == "DENY"
++}
++test_invalid_windows_deny {
++    windows := [null,{},"window",{"not_before_ms":1},{"not_after_ms":2},{"not_before_ms":1,"not_after_ms":1},{"not_before_ms":2,"not_after_ms":1},{"not_before_ms":-1,"not_after_ms":2},{"not_before_ms":1.5,"not_after_ms":2},{"not_before_ms":true,"not_after_ms":2},{"not_before_ms":1,"not_after_ms":9007199254740992},{"not_before_ms":1,"not_after_ms":2,"now_ms":1}]
++    denied := [w | w := windows[_]; r := window_result(w,1000000000); r.effect == "DENY"; r.reason == "INVALID_REQUESTED_WINDOW"]
++    count(denied) == count(windows)
++}
++test_immediate_at_blackout_start_denies_despite_caller_clock {
++    request := {"agent_id":"agent1","action_class":"model.promote_to_production","resource":"model/champion","now_ms":0}
++    result := outcome with input as request with time.now_ns as 4102444800000000000
++    result.effect == "DENY"
++    result.reason == "POLICY_WINDOW_DENIED"
++}
++test_immediate_at_blackout_end_allows {
++    request := {"agent_id":"agent1","action_class":"model.promote_to_production","resource":"model/champion"}
++    result := outcome with input as request with time.now_ns as 4102444860000000000
++    result.effect == "ALLOW"
++}
++test_immediate_blackout_cannot_be_bypassed_by_nonoverlapping_request {
++    result := window_result({"not_before_ms":1,"not_after_ms":2},4102444800000000000)
++    result.effect == "DENY"
++    result.reason == "POLICY_WINDOW_DENIED"
++}
++test_blackout_does_not_restrict_unrelated_action {
++    request := {"agent_id":"agent1","action_class":"demo.read","resource":"urn:dataset/health"}
++    result := outcome with input as request with time.now_ns as 4102444800000000000
++    result.effect == "ALLOW"
++}
++test_window_does_not_relax_resource_rule {
++    request := {"agent_id":"agent1","action_class":"model.promote_to_production","resource":"model/experimental","requested_window":{"not_before_ms":1,"not_after_ms":2}}
++    result := outcome with input as request with time.now_ns as 1000000000
++    result.effect == "DENY"
++}
++test_window_unsupported_for_other_actions {
++    request := {"agent_id":"agent1","action_class":"demo.read","resource":"urn:dataset/health","requested_window":{"not_before_ms":1,"not_after_ms":2}}
++    result := outcome with input as request with time.now_ns as 1000000000
++    result.effect == "DENY"
++    result.reason == "REQUESTED_WINDOW_UNSUPPORTED_ACTION"
++}
 diff --git a/sx/s0s1-rest-bff/policy/are_evaluatepolicy.rego b/sx/s0s1-rest-bff/policy/are_evaluatepolicy.rego
 --- a/sx/s0s1-rest-bff/policy/are_evaluatepolicy.rego
 +++ b/sx/s0s1-rest-bff/policy/are_evaluatepolicy.rego
-@@ -6,9 +6,9 @@
+@@ -6,9 +6,48 @@
  # resources and remains check-only at the API boundary.
  package are.evaluatepolicy
  
 -default decision = {"effect": "DENY", "reason": "no policy matched action class"}
-+default outcome = {"effect": "DENY", "reason": "no policy matched action class"}
++# Explicit operator-configured DEMO interval, not a business maintenance calendar.
++# 2100-01-01 00:00:00–00:01:00 UTC. Change this source through normal review,
++# repin its digest, and restart the immutable policy snapshot to reconfigure it.
++demo_promotion_blackout := {"id":"demo-2100-01-01-first-minute", "not_before_ms":4102444800000, "not_after_ms":4102444860000}
++evaluated_at_ms := floor(time.now_ns() / 1000000)
  
 -decision = {"effect": "DENY", "reason": "forbidden action class for demo"} {
-+outcome = {"effect": "DENY", "reason": "forbidden action class for demo"} {
++window_provided { _ := input.requested_window }
++valid_requested_window {
++    w := input.requested_window
++    is_object(w)
++    count(w) == 2
++    is_number(w.not_before_ms)
++    is_number(w.not_after_ms)
++    floor(w.not_before_ms) == w.not_before_ms
++    floor(w.not_after_ms) == w.not_after_ms
++    w.not_before_ms >= 0
++    w.not_before_ms < w.not_after_ms
++    w.not_after_ms <= 9007199254740991
++}
++promotion_blackout {
++    evaluated_at_ms >= demo_promotion_blackout.not_before_ms
++    evaluated_at_ms < demo_promotion_blackout.not_after_ms
++}
++promotion_blackout {
++    valid_requested_window
++    input.requested_window.not_before_ms < demo_promotion_blackout.not_after_ms
++    input.requested_window.not_after_ms > demo_promotion_blackout.not_before_ms
++}
++window_binding = {"requested_window": input.requested_window} { window_provided } else = {}
++
++default outcome = {"effect": "DENY", "reason": "no policy matched action class"}
++
++outcome = {"effect":"DENY", "reason":"INVALID_REQUESTED_WINDOW"} {
++    window_provided
++    not valid_requested_window
++} else = {"effect":"DENY", "reason":"REQUESTED_WINDOW_UNSUPPORTED_ACTION"} {
++    window_provided
++    input.action_class != "model.promote_to_production"
++} else = {"effect":"DENY", "reason":"POLICY_WINDOW_DENIED"} {
++    input.action_class == "model.promote_to_production"
++    promotion_blackout
++} else = {"effect": "DENY", "reason": "forbidden action class for demo"} {
  	input.action_class == "demo.forbidden_action"
  } else = {"effect": "ALLOW", "reason": "read scope allowed"} {
  	input.action_class == "demo.read"
-@@ -20,6 +20,42 @@
+@@ -20,6 +59,43 @@
  	not contains(lower(input.resource), "experimental")
  } else = {"effect": "DENY", "reason": "model promotion requires a governed non-experimental model resource"} {
  	input.action_class == "model.promote_to_production"
@@ -2738,7 +3172,7 @@ diff --git a/sx/s0s1-rest-bff/policy/are_evaluatepolicy.rego b/sx/s0s1-rest-bff/
 +# Binding metadata is loaded in the same immutable directory/bundle activation as
 +# this module. Omitting it leaves decision undefined (the BFF fails closed).
 +# Never populate these fields from the request or mutable external discovery.
-+decision = {
++decision = object.union({
 +    "effect": outcome.effect,
 +    "reason": outcome.reason,
 +    "decision_id": input.decision_id,
@@ -2747,4 +3181,5 @@ diff --git a/sx/s0s1-rest-bff/policy/are_evaluatepolicy.rego b/sx/s0s1-rest-bff/
 +    "resource": input.resource,
 +    "policy_id": data.are_policy_binding.policy_id,
 +    "policy_digest": data.are_policy_binding.policy_digest,
-+}
++    "evaluated_at_ms": evaluated_at_ms,
++}, window_binding)

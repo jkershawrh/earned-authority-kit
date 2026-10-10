@@ -1,0 +1,160 @@
+[
+  {
+    "location": {
+      "file": "/tests/are_evaluatepolicy_test.rego",
+      "row": 3,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_decision_binds_evaluated_input_and_policy",
+    "duration": 7657368
+  },
+  {
+    "location": {
+      "file": "/tests/are_evaluatepolicy_test.rego",
+      "row": 16,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_missing_policy_binding_does_not_produce_allow",
+    "duration": 174293
+  },
+  {
+    "location": {
+      "file": "/tests/are_evaluatepolicy_test.rego",
+      "row": 21,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_request_cannot_supply_policy_digest",
+    "duration": 218084
+  },
+  {
+    "location": {
+      "file": "/tests/time_window_test.rego",
+      "row": 10,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_requested_end_equal_blackout_start_allows",
+    "fail": true,
+    "duration": 751337
+  },
+  {
+    "location": {
+      "file": "/tests/time_window_test.rego",
+      "row": 17,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_requested_start_equal_blackout_start_denies",
+    "fail": true,
+    "duration": 187376
+  },
+  {
+    "location": {
+      "file": "/tests/time_window_test.rego",
+      "row": 22,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_requested_end_equal_blackout_end_denies",
+    "fail": true,
+    "duration": 143084
+  },
+  {
+    "location": {
+      "file": "/tests/time_window_test.rego",
+      "row": 26,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_requested_start_equal_blackout_end_allows",
+    "duration": 144959
+  },
+  {
+    "location": {
+      "file": "/tests/time_window_test.rego",
+      "row": 30,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_requested_interval_contains_blackout_denies",
+    "fail": true,
+    "duration": 124626
+  },
+  {
+    "location": {
+      "file": "/tests/time_window_test.rego",
+      "row": 34,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_invalid_windows_deny",
+    "fail": true,
+    "duration": 1101714
+  },
+  {
+    "location": {
+      "file": "/tests/time_window_test.rego",
+      "row": 39,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_immediate_at_blackout_start_denies_despite_caller_clock",
+    "fail": true,
+    "duration": 112959
+  },
+  {
+    "location": {
+      "file": "/tests/time_window_test.rego",
+      "row": 45,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_immediate_at_blackout_end_allows",
+    "duration": 105083
+  },
+  {
+    "location": {
+      "file": "/tests/time_window_test.rego",
+      "row": 50,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_immediate_blackout_cannot_be_bypassed_by_nonoverlapping_request",
+    "fail": true,
+    "duration": 142417
+  },
+  {
+    "location": {
+      "file": "/tests/time_window_test.rego",
+      "row": 55,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_blackout_does_not_restrict_unrelated_action",
+    "duration": 93209
+  },
+  {
+    "location": {
+      "file": "/tests/time_window_test.rego",
+      "row": 60,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_window_does_not_relax_resource_rule",
+    "duration": 124334
+  },
+  {
+    "location": {
+      "file": "/tests/time_window_test.rego",
+      "row": 65,
+      "col": 1
+    },
+    "package": "data.are.evaluatepolicy",
+    "name": "test_window_unsupported_for_other_actions",
+    "fail": true,
+    "duration": 84584
+  }
+]

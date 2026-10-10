@@ -1,0 +1,26 @@
+.F                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_same_attempt_label_cannot_substitute_a_different_authenticated_check_event[COMMITTED] _
+
+rt = <earned_authority.runtime.Runtime object at 0x10bd46960>
+kind = 'COMMITTED'
+
+    @pytest.mark.parametrize('kind',['QUALIFICATION_CHECKED','COMMITTED'])
+    def test_same_attempt_label_cannot_substitute_a_different_authenticated_check_event(rt,kind):
+        rt.execute(attempt_id='live');b=bundle(rt,'live')
+        source=next(r['event'] for r in rt.events() if r['event']['attempt_id']=='live' and r['event']['event_type']==kind)
+        fields={k:v for k,v in source.items() if k not in ('event_id','event_type','agent_id','attempt_id','occurred_at_ms')}
+        fields['authority_revision']=999
+        with rt._tx() as db:other=rt._event(db,kind,'agent-a','live',**fields)
+        row=next(r for r in rt.events() if r['event_id']==other['event_id'])
+        replacement=WireBundle();replacement.add('lifecycle-event','event',event=replacement.proof('event',row))
+        b.records=[r for r in b.records if not (r['kind']=='lifecycle-event' and r['value']['event_type']==kind)]
+        b.records.extend(replacement.records);b.proof_store.update(replacement.proof_store)
+>       with pytest.raises(WireContractError):consume_bundle(b,trust=RuntimeTrust(rt),now_ms=rt.clock.now_ms)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.wire_contracts.WireContractError'>
+
+tests/test_attempt_checks.py:106: Failed
+=========================== short test summary info ============================
+FAILED tests/test_attempt_checks.py::test_same_attempt_label_cannot_substitute_a_different_authenticated_check_event[COMMITTED]
+1 failed, 1 passed, 25 deselected in 0.39s

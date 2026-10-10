@@ -78,6 +78,7 @@
       "sx/are-api-gateway/internal/gateway/gateway.go",
       "sx/are-api-gateway/internal/gateway/phase1_contract.go",
       "sx/are-api-gateway/internal/gateway/policy_check_only_test.go",
+      "sx/are-api-gateway/internal/gateway/policy_window_test.go",
       "sx/are-api-gateway/internal/gateway/s0s1_http_proxy.go",
       "sx/are-api-gateway/internal/gateway/upstream.go",
       "sx/s0s1-rest-bff/cmd/are-s0s1-rest-bff/main.go",
@@ -89,6 +90,7 @@
       "sx/s0s1-rest-bff/internal/api/canonical_delegation_test.go",
       "sx/s0s1-rest-bff/internal/api/policy_binding_test.go",
       "sx/s0s1-rest-bff/internal/api/policy_check_only_test.go",
+      "sx/s0s1-rest-bff/internal/api/policy_window_test.go",
       "sx/s0s1-rest-bff/internal/policy/binding_test.go",
       "sx/s0s1-rest-bff/internal/policy/evaluate.go",
       "sx/s0s1-rest-bff/internal/policy/evaluate_test.go",
@@ -100,10 +102,11 @@
       "sx/s0s1-rest-bff/internal/s0delegate/passport_ops.go",
       "sx/s0s1-rest-bff/internal/s0delegate/passport_ops_test.go",
       "sx/s0s1-rest-bff/policy-tests/are_evaluatepolicy_test.rego",
+      "sx/s0s1-rest-bff/policy-tests/time_window_test.rego",
       "sx/s0s1-rest-bff/policy/are_evaluatepolicy.rego"
     ],
-    "bytes": 109741,
-    "sha256": "afc03ba6e79d77a95548043f865832aa0b499d81303c87689f8c5612ac9bf1a1",
+    "bytes": 130631,
+    "sha256": "e1be4068e14a7441ad5e1538a317035c60798944da1a6c83d3039cc105838479",
     "apply_check_exit_code": 0,
     "fresh_replay_matches_target": true
   }

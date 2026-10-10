@@ -1,0 +1,35 @@
+..........F.............                                                 [100%]
+=================================== FAILURES ===================================
+_______ test_unbound_denial_cannot_claim_policy_window_reason[<lambda>9] _______
+
+change = <function <lambda> at 0x10c120d60>
+
+    @pytest.mark.parametrize('change',[
+        lambda d:d.update(agent_id='other'),lambda d:d.update(policy_digest='sha256:'+'2'*64),
+        lambda d:d.pop('requested_window'),lambda d:d.update(requested_window={'not_before_ms':1,'not_after_ms':2}),
+        lambda d:d.pop('evaluated_at_ms'),lambda d:d.update(evaluated_at_ms=True),
+        lambda d:d.update(evaluated_at_ms=-1),lambda d:d.update(evaluated_at_ms=1.5),
+        lambda d:d.update(evaluated_at_ms=9007199254740992),
+        lambda d:d['requested_window'].update(not_before_ms=float(DEMO['not_before_ms'])),
+    ])
+    def test_unbound_denial_cannot_claim_policy_window_reason(change):
+>       denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+
+tests/test_policy_windows.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+call = <function test_unbound_denial_cannot_claim_policy_window_reason.<locals>.<lambda> at 0x10c123420>
+reason = 'POLICY_DECISION_BINDING_MISMATCH'
+
+    def denied(call,reason):
+        with pytest.raises(Denied) as got:call()
+>       assert got.value.reason==reason
+E       AssertionError: assert 'POLICY_WINDOW_DENIED' == 'POLICY_DECIS...DING_MISMATCH'
+E         
+E         - POLICY_DECISION_BINDING_MISMATCH
+E         + POLICY_WINDOW_DENIED
+
+tests/test_policy_windows.py:26: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>9]
+1 failed, 23 passed in 0.30s

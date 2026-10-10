@@ -1,0 +1,181 @@
+{
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "environment": "REAL_LOCAL_SERVICES",
+  "command_exit_code": 0,
+  "command": [
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/ledger-venv/bin/python",
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/run-observation-validation-v2.py"
+  ],
+  "preparation_command": [
+    "python3",
+    "deploy/reference/bootstrap.py",
+    "--workspace",
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference",
+    "--instance",
+    "ea-observation",
+    "--port-offset",
+    "5000"
+  ],
+  "lifecycle_commands": [
+    {
+      "stage": "start",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "start"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "policy",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/validate_policy.py",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/reference-runtime/v2-policy.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "services",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "validate-services",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/reference-runtime/v2-services.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "connected",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "validate-connected",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/reference-runtime/v2-connected.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "adversarial",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "validate-adversarial",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/reference-runtime/v2-adversarial.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "authority_recovery",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "validate-authority-recovery",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/reference-runtime/v2-authority-recovery.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "restore",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/validate_restore.py",
+        "--prior-report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/reference-runtime/v2-connected.json",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/reference-runtime/v2-restore.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "authority_recovery_restored",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tools/validate_authority_recovery.py",
+        "--config",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/reference-runtime/reference.env",
+        "--ledger-config",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/ledger-runtime/local.env",
+        "--state-dir",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/reference-runtime/connected-validation",
+        "--verify-existing-report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/reference-runtime/v2-authority-recovery.json",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/reference-runtime/v2-authority-recovery-restored.json"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "completed_at": "2026-10-10T05:42:35.874740+00:00",
+  "components": {
+    "policy": {
+      "report": "reports/observation-reference-v2-policy.json",
+      "status": "GREEN",
+      "checks": 8,
+      "source_stable": true
+    },
+    "services": {
+      "report": "reports/observation-reference-v2-services.json",
+      "status": "GREEN",
+      "checks": 7,
+      "source_stable": true
+    },
+    "connected": {
+      "report": "reports/observation-reference-v2-connected.json",
+      "status": "GREEN",
+      "checks": 23,
+      "source_stable": true
+    },
+    "adversarial": {
+      "report": "reports/observation-reference-v2-adversarial.json",
+      "status": "GREEN",
+      "checks": 17,
+      "source_stable": true
+    },
+    "authority_recovery": {
+      "report": "reports/observation-reference-v2-authority-recovery.json",
+      "status": "GREEN",
+      "checks": 41,
+      "source_stable": true
+    },
+    "restore": {
+      "report": "reports/observation-reference-v2-restore.json",
+      "status": "GREEN",
+      "checks": 6,
+      "source_stable": true
+    },
+    "authority_recovery_restored": {
+      "report": "reports/observation-reference-v2-authority-recovery-restored.json",
+      "status": "GREEN",
+      "checks": 21,
+      "source_stable": true
+    }
+  },
+  "artifacts": {
+    "reports/observation-reference-v2-policy.json": "sha256:e4346c7def9f65e483e5b498facc6ffc153e9fdf94d6e61b46225f3a99b98522",
+    "reports/observation-reference-v2-services.json": "sha256:9946e78c01144164a459f0ae622e1a457173078eaf2cce39a8dd995709674dc9",
+    "reports/observation-reference-v2-connected.json": "sha256:28a6d8b8bfd2d5261c642c5476f9ec4f93fd3b19f3536b5dbb9ad27a6e5575df",
+    "reports/observation-reference-v2-adversarial.json": "sha256:f404fc9054c824cae07e625494f57a16aaae1e61e27793698564424c9947792e",
+    "reports/observation-reference-v2-authority-recovery.json": "sha256:201571375cd480acd8621140f906159bbe2937bfc695a8553bc583615f412287",
+    "reports/observation-reference-v2-restore.json": "sha256:a857378e506eb30ec290215e5a98f0f6bbf60c2f379cd85001f3491840ff4c04",
+    "reports/observation-reference-v2-authority-recovery-restored.json": "sha256:83c830c629850ce84679f57ff66c28e66162f3be61918ca79d5ada5520e11190",
+    "reports/observation-reference-bootstrap.json": "sha256:4c7f00d86c8c7e6de2587d229e5ad09a1216f9e87f52ccdb12d6e527e664e012",
+    "reports/observation-reference-build-manifest.json": "sha256:934111becbb97c9cd718350cab23385731d0b102bdfdbd618480d92bd1283c9d",
+    "reports/observation-reference-images.json": "sha256:041beda6cb181ea1acae6997635dde75bf2d40e9f9cb32878d63dff80c060047"
+  },
+  "source_manifest_sha256": "b1d8f2e4bb7fdd8ee3b6b906eccb7c89132d951fe1bf88b5e88ca065ceb91d3a",
+  "scope": "Same host; independently fetched and patched canonical sources, distinct virtual environment, keys, state, networks, ports and volumes. Prepared with the documented bootstrap; reran all seven documented validation stages after the final check-and-commit event identity fix, then actual full stack restart and readback of existing operation and ledger evidence. The earlier per-stage-green run remains explicitly superseded because its source versions differed across stages. Behavior-scenario acceptance is recorded separately.",
+  "limits": [
+    "Not a different host or independent human installer",
+    "No statistical held-out product-value claim",
+    "No backup/disk-loss recovery claim",
+    "No hardware or production deployment claim",
+    "No universal distributed atomicity or safety claim"
+  ]
+}

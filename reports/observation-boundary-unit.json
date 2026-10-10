@@ -1,0 +1,427 @@
+{
+  "source_hashes": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:289d449b197f49b94372a43e6022e0274c8971ec3f3acb94fed03ebf8b47d1af",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:bec79d5495744611a4d2c539e76ca7e8824b0f15ab649f2063ed8d775843796c",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "earned_authority/wire_contracts.py": "sha256:6f81d2809c367eb882d0eb78e70fad540ca75458f773a3d66d5f6ee66bb53c5c",
+    "tests/test_attempt_checks.py": "sha256:ed71a1981280a9d4988bf8b88d9cdc9fe0fae52c4f46858231480c4cf82c0b1d",
+    "tests/test_authority_journal.py": "sha256:212c83084dabcda38979b1e5a651f7ff2f683319761de084ea68dabf7be3b30c",
+    "tests/test_authority_observations.py": "sha256:41db09cd31a82169a436611bb7a198cc1e095e9f22ae6e29158607e0929d0664",
+    "tests/test_connected_binding.py": "sha256:e60d9378ade1725c7dd858529b2f3b2696181c583d85d8edc064e408288f4ce5",
+    "tests/test_connected_evidence.py": "sha256:b558926ae3fbb2b55a64fd57956a10d2e7e4fd33d2ce4ef360eed1477e1ad21a",
+    "tests/test_connected_security.py": "sha256:26bed459d5180330404f2937aa2045cc843be058ff048f4870b55b9eef170a77",
+    "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
+    "tests/test_evidence_admission.py": "sha256:47c59f09d7a8cf3236e9e46f0581b7c1fb9c5e809329316e280252da613c31f9",
+    "tests/test_evidence_boundary.py": "sha256:403f53cb0b9a6fbd00a94688bbde80b43a720e73028255e4cfa4b0bd8cf4a5e0",
+    "tests/test_evidence_wire.py": "sha256:df555f550c4d5e1ef4303ef573ae30eda53fc513625ab617787634249bf3c245",
+    "tests/test_execution_boundary.py": "sha256:1811ef8b07274fc78b561e66923bf0850e6b6ff916e1bd40135b464cb916ba11",
+    "tests/test_hold_diagnostics.py": "sha256:b4709f4388a917e7c091a030ba36a3fe5c40df21b07a5e5eb2d554ef8e2af4b1",
+    "tests/test_ledger_client.py": "sha256:6a05dce90f5dfa0627c188000ad12951dbbb96e7df7f7f149cd4e640438765f2",
+    "tests/test_lifecycle_bdd.py": "sha256:a376b2d47c059aea4ae5ffc79ef007eb9eff7eed1964702ec643a564c4866cdc",
+    "tests/test_passport_client.py": "sha256:d86ff13cf90f3fdae60f68de7ab85af51d1ca55777245c72478d531a361153b7",
+    "tests/test_passport_operations.py": "sha256:7e158bc68d3e548f6f0756e758ff904ead8acbf2f5a2a9f79b4d7db777f6cf80",
+    "tests/test_policy_windows.py": "sha256:5fe2fd527931cafe1eb28dbf68d11d7b210500276f2da5e039ae0048a49be8b5",
+    "tests/test_qualification_client.py": "sha256:fa875d69b98440ce13545e17517f986cc4c045cbecf214c316cbe34bde9392b1",
+    "tests/test_reconciliation_wire.py": "sha256:b9cb6efee8f9afae333a327b76e6651c7dce06f5064d9768de48ba8996d69d6d",
+    "tests/test_rubric.py": "sha256:845e476cc97af2be8c4f913a60b1cae6ae76f0a0c81a217f4b581c5712a213db",
+    "tests/test_runtime_security.py": "sha256:76ea516ef8d41bdd974a084ba8ea6a83071745bd09e1a51783668d0b9d60b025",
+    "tests/test_wire_contracts.py": "sha256:69b1d2a86b3decb724d832de0caf601d67ab89a227b075df936e86afcadbe280",
+    "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
+    "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
+    "contracts/fixtures/attempt.json": "sha256:d6a7e3571ab9b4698f01175b21e128fa45a01acadc69f507ffc6c1bcb58e9041",
+    "contracts/fixtures/authority.json": "sha256:d36365cb845dc72a1c52550cff017282a5f69d5b00a9472bf173bd2e5626979a",
+    "contracts/fixtures/lifecycle-event.json": "sha256:075e93e0e71ec0ff30ed8929ed989795b60ab1b7161c9d11b716e265050a7057",
+    "contracts/fixtures/outcome.json": "sha256:bd8bfaba9be520fe2c9c6cb8d5eb5fde843c1b553424923640dafed181142f16",
+    "contracts/fixtures/passport-canonical-v2.json": "sha256:40b5c68eb6333ed1fdd6a4db28bc5013253ac17f20e0f1efa85c2d23699dff66",
+    "contracts/fixtures/passport-operations-v1.json": "sha256:7fb91f569080ac5da3b289ca9f62e5a8342e2bbb620e5020db5d1617fa2c2aff",
+    "contracts/fixtures/qualification-client-cases.json": "sha256:5d201b632a3a1a323136fdcad0905f258492988fb7a79e1051eb0675f114742e",
+    "contracts/fixtures/qualification.json": "sha256:c0b8c64ec3860f9a7aa785892bef5aef4e188962275880b069ab6df3114f93bb",
+    "contracts/fixtures/runtime-wire-records.json": "sha256:cbe6c1b5bed7c50ae739983fea588a45986ce3b2a12abb7f1f771e7906e4537d",
+    "contracts/lifecycle-event.schema.json": "sha256:3c9b88bfe5a4fd5300786e0fd57656e660fa49db134b0cd0245a86dd1697a16d",
+    "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
+    "contracts/qualification.schema.json": "sha256:2a4a4f6921a3f839b6b4a554f0c8fa019600d14411d5cfd8355f119aa28449b3",
+    "contracts/unknown-reconciliation-result.schema.json": "sha256:6193e4fcadc9a2ee7f89b043306aaf088124a272adc9227f5453e56881faf8e6",
+    "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
+    "features/concurrency.feature": "sha256:a593d6b2ee5ceb79260f97e0dbfd768843c2c7f4fcd5b6705e11797f023f0e27",
+    "features/execution_and_evidence.feature": "sha256:5c03e38759cae3c8d84536efdd463c91492183e72ce0d3941a9b8ae7b8a23ded",
+    "features/future_robot_simulation.feature": "sha256:916435ba5489e20024f589161dc3a4e3a5df5c23f211a211a9baab8a6ea33771",
+    "features/ledger_integrity.feature": "sha256:6f3039c21f36f2b0d052b168d30547d3a5ec76ca39b2046f653a59b3a4e442a6",
+    "features/qualification.feature": "sha256:8545997b35e1600c7f2e63e4e743ca5f3563aa4ef295cb6b395fda614a286629",
+    "features/withdrawal_and_requalification.feature": "sha256:417a22c6940ab6b0fb70e2c0e44d27646da5c18d9ac10e242b7f8a27bc7fa8da",
+    "requirements-dev.txt": "sha256:1a4272ec830941ecba77716e4b18e0588ec0de3c63e368fe712c6ac0354091c3",
+    "deploy/reference/requirements.lock.txt": "sha256:ccc6272d5f11ef46daba25236ea4c0436a8569109851873f6f85b2a867ab2aa2",
+    "tools/verify.py": "sha256:f50c482fdc25ae553c3d1dc3753a5af7ad89828f299868e972b61a9fcb3bf1da"
+  },
+  "source_hashes_before": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:289d449b197f49b94372a43e6022e0274c8971ec3f3acb94fed03ebf8b47d1af",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:bec79d5495744611a4d2c539e76ca7e8824b0f15ab649f2063ed8d775843796c",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "earned_authority/wire_contracts.py": "sha256:6f81d2809c367eb882d0eb78e70fad540ca75458f773a3d66d5f6ee66bb53c5c",
+    "tests/test_attempt_checks.py": "sha256:ed71a1981280a9d4988bf8b88d9cdc9fe0fae52c4f46858231480c4cf82c0b1d",
+    "tests/test_authority_journal.py": "sha256:212c83084dabcda38979b1e5a651f7ff2f683319761de084ea68dabf7be3b30c",
+    "tests/test_authority_observations.py": "sha256:41db09cd31a82169a436611bb7a198cc1e095e9f22ae6e29158607e0929d0664",
+    "tests/test_connected_binding.py": "sha256:e60d9378ade1725c7dd858529b2f3b2696181c583d85d8edc064e408288f4ce5",
+    "tests/test_connected_evidence.py": "sha256:b558926ae3fbb2b55a64fd57956a10d2e7e4fd33d2ce4ef360eed1477e1ad21a",
+    "tests/test_connected_security.py": "sha256:26bed459d5180330404f2937aa2045cc843be058ff048f4870b55b9eef170a77",
+    "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
+    "tests/test_evidence_admission.py": "sha256:47c59f09d7a8cf3236e9e46f0581b7c1fb9c5e809329316e280252da613c31f9",
+    "tests/test_evidence_boundary.py": "sha256:403f53cb0b9a6fbd00a94688bbde80b43a720e73028255e4cfa4b0bd8cf4a5e0",
+    "tests/test_evidence_wire.py": "sha256:df555f550c4d5e1ef4303ef573ae30eda53fc513625ab617787634249bf3c245",
+    "tests/test_execution_boundary.py": "sha256:1811ef8b07274fc78b561e66923bf0850e6b6ff916e1bd40135b464cb916ba11",
+    "tests/test_hold_diagnostics.py": "sha256:b4709f4388a917e7c091a030ba36a3fe5c40df21b07a5e5eb2d554ef8e2af4b1",
+    "tests/test_ledger_client.py": "sha256:6a05dce90f5dfa0627c188000ad12951dbbb96e7df7f7f149cd4e640438765f2",
+    "tests/test_lifecycle_bdd.py": "sha256:a376b2d47c059aea4ae5ffc79ef007eb9eff7eed1964702ec643a564c4866cdc",
+    "tests/test_passport_client.py": "sha256:d86ff13cf90f3fdae60f68de7ab85af51d1ca55777245c72478d531a361153b7",
+    "tests/test_passport_operations.py": "sha256:7e158bc68d3e548f6f0756e758ff904ead8acbf2f5a2a9f79b4d7db777f6cf80",
+    "tests/test_policy_windows.py": "sha256:5fe2fd527931cafe1eb28dbf68d11d7b210500276f2da5e039ae0048a49be8b5",
+    "tests/test_qualification_client.py": "sha256:fa875d69b98440ce13545e17517f986cc4c045cbecf214c316cbe34bde9392b1",
+    "tests/test_reconciliation_wire.py": "sha256:b9cb6efee8f9afae333a327b76e6651c7dce06f5064d9768de48ba8996d69d6d",
+    "tests/test_rubric.py": "sha256:845e476cc97af2be8c4f913a60b1cae6ae76f0a0c81a217f4b581c5712a213db",
+    "tests/test_runtime_security.py": "sha256:76ea516ef8d41bdd974a084ba8ea6a83071745bd09e1a51783668d0b9d60b025",
+    "tests/test_wire_contracts.py": "sha256:69b1d2a86b3decb724d832de0caf601d67ab89a227b075df936e86afcadbe280",
+    "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
+    "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
+    "contracts/fixtures/attempt.json": "sha256:d6a7e3571ab9b4698f01175b21e128fa45a01acadc69f507ffc6c1bcb58e9041",
+    "contracts/fixtures/authority.json": "sha256:d36365cb845dc72a1c52550cff017282a5f69d5b00a9472bf173bd2e5626979a",
+    "contracts/fixtures/lifecycle-event.json": "sha256:075e93e0e71ec0ff30ed8929ed989795b60ab1b7161c9d11b716e265050a7057",
+    "contracts/fixtures/outcome.json": "sha256:bd8bfaba9be520fe2c9c6cb8d5eb5fde843c1b553424923640dafed181142f16",
+    "contracts/fixtures/passport-canonical-v2.json": "sha256:40b5c68eb6333ed1fdd6a4db28bc5013253ac17f20e0f1efa85c2d23699dff66",
+    "contracts/fixtures/passport-operations-v1.json": "sha256:7fb91f569080ac5da3b289ca9f62e5a8342e2bbb620e5020db5d1617fa2c2aff",
+    "contracts/fixtures/qualification-client-cases.json": "sha256:5d201b632a3a1a323136fdcad0905f258492988fb7a79e1051eb0675f114742e",
+    "contracts/fixtures/qualification.json": "sha256:c0b8c64ec3860f9a7aa785892bef5aef4e188962275880b069ab6df3114f93bb",
+    "contracts/fixtures/runtime-wire-records.json": "sha256:cbe6c1b5bed7c50ae739983fea588a45986ce3b2a12abb7f1f771e7906e4537d",
+    "contracts/lifecycle-event.schema.json": "sha256:3c9b88bfe5a4fd5300786e0fd57656e660fa49db134b0cd0245a86dd1697a16d",
+    "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
+    "contracts/qualification.schema.json": "sha256:2a4a4f6921a3f839b6b4a554f0c8fa019600d14411d5cfd8355f119aa28449b3",
+    "contracts/unknown-reconciliation-result.schema.json": "sha256:6193e4fcadc9a2ee7f89b043306aaf088124a272adc9227f5453e56881faf8e6",
+    "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
+    "features/concurrency.feature": "sha256:a593d6b2ee5ceb79260f97e0dbfd768843c2c7f4fcd5b6705e11797f023f0e27",
+    "features/execution_and_evidence.feature": "sha256:5c03e38759cae3c8d84536efdd463c91492183e72ce0d3941a9b8ae7b8a23ded",
+    "features/future_robot_simulation.feature": "sha256:916435ba5489e20024f589161dc3a4e3a5df5c23f211a211a9baab8a6ea33771",
+    "features/ledger_integrity.feature": "sha256:6f3039c21f36f2b0d052b168d30547d3a5ec76ca39b2046f653a59b3a4e442a6",
+    "features/qualification.feature": "sha256:8545997b35e1600c7f2e63e4e743ca5f3563aa4ef295cb6b395fda614a286629",
+    "features/withdrawal_and_requalification.feature": "sha256:417a22c6940ab6b0fb70e2c0e44d27646da5c18d9ac10e242b7f8a27bc7fa8da",
+    "requirements-dev.txt": "sha256:1a4272ec830941ecba77716e4b18e0588ec0de3c63e368fe712c6ac0354091c3",
+    "deploy/reference/requirements.lock.txt": "sha256:ccc6272d5f11ef46daba25236ea4c0436a8569109851873f6f85b2a867ab2aa2",
+    "tools/verify.py": "sha256:f50c482fdc25ae553c3d1dc3753a5af7ad89828f299868e972b61a9fcb3bf1da"
+  },
+  "source_unchanged_during_run": true,
+  "started_at_ms": 1791610800179,
+  "finished_at_ms": 1791610815790,
+  "status": "PASS",
+  "scope": "ATTEMPT_CHECKS_DIAGNOSTIC_AUTHORITY_AND_WINDOW_COMPONENTS",
+  "modules": [
+    "test_attempt_checks",
+    "test_authority_observations",
+    "test_policy_windows"
+  ],
+  "tests_run": 68,
+  "cases": [
+    {
+      "test": "tests/test_attempt_checks.py::test_checks_bind_actual_boundary_without_rewriting_prior_qualification_or_grant",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_retry_and_restart_preserve_one_check_pair",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_command_cannot_misattribute_the_actual_authorization_check[grant_id-invented-grant]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_command_cannot_misattribute_the_actual_authorization_check[passport_id-invented-passport]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_command_cannot_misattribute_the_actual_authorization_check[skill_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_command_cannot_misattribute_the_actual_authorization_check[context_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_command_cannot_misattribute_the_actual_authorization_check[policy_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_actual_check_write_failure_rolls_back_checks_intent_and_mutation[AUTHORIZATION_CHECKED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_actual_check_write_failure_rolls_back_checks_intent_and_mutation[QUALIFICATION_CHECKED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[qualification_revision-999]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[qualification_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[grant_id-borrowed-grant]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[policy_decision_id-admission-only-decision]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[command_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[correlation_id-another-attempt]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[resource-another-resource]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[authorizes_execution-True]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_consumer_rejects_omitted_check_record_even_with_retained_authenticated_proof",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_same_attempt_label_cannot_substitute_a_different_authenticated_check_event[QUALIFICATION_CHECKED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_same_attempt_label_cannot_substitute_a_different_authenticated_check_event[COMMITTED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_requested_attempt_has_no_claim_of_completed_checks",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_pre_upgrade_committed_attempt_remains_historical_without_fabricated_checks",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_new_attempt_cannot_remove_checks_proof_input_to_claim_legacy_format",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_unknown_or_ambiguous_check_version_denies_before_mutation[True]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_unknown_or_ambiguous_check_version_denies_before_mutation[1.0]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_unknown_or_ambiguous_check_version_denies_before_mutation[2]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_unknown_or_ambiguous_check_version_denies_before_mutation[None]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_explicit_refresh_records_verified_snapshot_without_execution_authority",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_cached_observation_survives_restart_without_calling_canonical_service",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_cached_active_grant_cannot_admit_or_commit_during_current_status_outage",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_canonical_revocation_overrides_cached_active_observation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_malformed_canonical_response_cannot_refresh_cache[False]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_malformed_canonical_response_cannot_refresh_cache[True]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_tampered_diagnostic_record_is_rejected_without_network_fallback",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_bad_diagnostic_cache_is_not_an_input_to_live_authorization",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_signed_observation_cannot_be_reindexed_to_another_agent",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_actual_wrong_local_signing_key_cannot_replace_cached_observation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_delayed_older_observation_cannot_overwrite_later_revision",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_same_revision_conflicting_observation_does_not_replace_known_record",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_delayed_same_revision_observation_cannot_regress_observed_time",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_actual_readonly_sqlite_write_preserves_prior_diagnostic_snapshot",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_trigger_replay_of_valid_signed_record_cannot_replace_exact_observation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_foundation_propagates_only_bound_window_denial",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>0]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>1]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>2]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>3]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>4]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>5]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>6]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>7]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>8]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>9]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window0]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window1]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window2]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window3]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window4]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window5]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window6]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_policy_window_denial_preserves_eligibility_and_creates_no_authority",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_future_window_allow_does_not_schedule_or_issue_immediate_authority",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_active_window_is_signed_and_caps_scope_exactly",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_preflight_rechecks_window_after_synchronous_policy",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_legacy_grant_keeps_prior_invocation_and_signed_shape",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_window_rechecked_at_execution_even_when_scope_and_passport_live",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_prepared_window_grant_recovery_after_expiry_cancels_without_issuance",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_execution_policy_crossing_window_end_denies_before_mutation",
+      "outcome": "PASS"
+    }
+  ],
+  "verification_report": "reports/component-verification.json",
+  "artifacts": {
+    "reports/component-verification.json": "sha256:97174414e3724fc645121d9f97661c16b700b0a55afd78e2ef1938758f14a949",
+    "reports/attempt-checks-red.log": "sha256:9cc0b9e92cbd2e3ca4f4ffcf0d1bdb87e666584cfcdef7832621cfbda8a1e88e",
+    "reports/attempt-checks-producer-binding-red.log": "sha256:12b6fccb491d52fe517390abbb9585f8a24f5d7b09db5cf1a72b9ebd62adc862",
+    "reports/attempt-checks-compatibility-red.log": "sha256:fe63d542cb12d02e26bc88d25e435a92eb665ecd372caa02dc9049797e157ce8",
+    "reports/authority-observations-red.log": "sha256:5391f798889e648513b48ee9a8a3654bf5563bee83858e602f10bd07c7f8bff5",
+    "reports/authority-observations-race-red.log": "sha256:15ceea51760fa190991081c72fe2719b3e0998c473fbcc435a9d903585077cc3",
+    "reports/authority-observations-final-green.log": "sha256:d75603f9786468f1512af75d1b71c88f548072b4a5f03f4f6e0bcccba8804844",
+    "reports/attempt-checks-event-identity-red.log": "sha256:f6aa20d1a1c42d7be0f30b1550c351168c3fce6cd056a10326eb3a83f1ed848b",
+    "reports/attempt-commit-event-identity-red.log": "sha256:50dd21cf7c1b21a79468cdbf3fe1032ec64bba8a679beba2be889a26df18cc6e"
+  },
+  "limits": [
+    "Component tests include explicit local service seams; canonical and live service checks are separate.",
+    "Attempt check events authenticate local consumption assertions, not new canonical grants or independent outcomes.",
+    "Cached ACTIVE means observed in the past and never permits execution.",
+    "Configured demo calendar is not an approved business calendar; no future action scheduler."
+  ]
+}

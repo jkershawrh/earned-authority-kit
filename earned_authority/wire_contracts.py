@@ -149,7 +149,9 @@ def _map(kind, inputs):
         for key in ('skill_digest', 'context_digest', 'passport_id', 'authority_revision', 'grant_id',
                     'policy_digest', 'resource', 'requested_at_ms'):
             value[key] = command[key]
-        commits = inputs['commits']
+        commits = inputs['commits']; checks = inputs.get('checks',[])
+        require(type(command.get('execution_checks_version',1)) is int and command.get('execution_checks_version',1)==1,
+                'unsupported execution checks version')
         if a['state'] == 'COMMITTED':
             require(len(commits) == 1, 'committed attempt requires exactly one durable commit event')
             e = commits[0]['event']
@@ -157,8 +159,27 @@ def _map(kind, inputs):
                     and e['agent_id'] == command['agent'] and e['authority_revision'] == command['authority_revision']
                     and e['policy_decision_id'] == value['policy_decision_id'], 'commit receipt binding mismatch')
             value['mutation_receipt_ref'] = 'local-event:' + e['event_id'] + ':' + canonical_digest(e)
+            if command.get('execution_checks_version')==1 or checks:
+                expected_types={'QUALIFICATION_CHECKED':'ELIGIBLE','AUTHORIZATION_CHECKED':'ALLOW'}
+                require(len(checks)==2 and {r['event']['event_type'] for r in checks}==set(expected_types),
+                        'attempt requires exactly one qualification and authorization check')
+                expected={k:command[k] for k in ('skill_digest','context_digest','qualification_id','qualification_digest',
+                          'passport_id','grant_id','authority_revision','policy_digest','action','resource')}
+                expected.update(command_digest=canonical_digest(command),qualification_revision=q['qualification_revision'],
+                                policy_decision_id=value['policy_decision_id'],check_stage='MUTATION_BOUNDARY',
+                                authorizes_execution=False,agent_id=command['agent'],attempt_id=command['attempt_id'],
+                                correlation_id=command['attempt_id'])
+                for row in checks:
+                    check=row['event']
+                    require(all(type(check.get(k)) is type(v) and check.get(k)==v for k,v in expected.items()),
+                            'attempt check binding mismatch')
+                    require(check['result']==expected_types[check['event_type']], 'attempt check result mismatch')
+                    require(command['requested_at_ms']<=check['occurred_at_ms']<=e['occurred_at_ms']
+                            and q['evaluated_at_ms']<=check['occurred_at_ms']<q['expires_at_ms'],
+                            'attempt check outside qualified execution time')
         else:
             require(not commits, 'requested attempt cannot have a commit receipt')
+            require(not checks, 'requested attempt cannot claim completed boundary checks')
     elif kind == 'outcome':
         o = inputs['observation']; command = inputs.get('attempt', {}).get('command')
         condition = _observation_binding(o, command)
@@ -215,9 +236,11 @@ def export_runtime(runtime, *, qualification_ids=(), agent='agent-a', attempt_id
             attempt = runtime.attempts(aid); require(attempt is not None, 'attempt missing')
             commits = [bundle.proof('event', row) for row in events
                        if row['event']['attempt_id'] == aid and row['event']['event_type'] == 'COMMITTED']
+            checks = [bundle.proof('event', row) for row in events if row['event']['attempt_id']==aid
+                      and row['event']['event_type'] in ('QUALIFICATION_CHECKED','AUTHORIZATION_CHECKED')]
             command = attempt['command']
             historical = runtime.qualification_at(command['qualification_id'], digest=command['qualification_digest'])
-            bundle.add('attempt', 'attempt', attempt=bundle.proof('attempt', attempt), commits=commits,
+            bundle.add('attempt', 'attempt', attempt=bundle.proof('attempt', attempt), commits=commits, checks=checks,
                        qualification=bundle.proof('qualification-history', historical))
             if attempt.get('outcome'):
                 outcomes.add(attempt['outcome']['observation_id'])
@@ -292,17 +315,21 @@ def consume_bundle(bundle, *, trust, now_ms):
                 require(trust.authenticate(proof['kind'], proof['body']), 'source authentication rejected')
                 verified[ref] = proof
             return proof['body']
-        indexed = {}; seen = set()
+        indexed = {}; seen = set(); attempt_event_ids = {}
         for record in bundle.records:
             require(set(record) == {'kind', 'source_digest', 'primary', 'inputs', 'value'}, 'unknown record envelope fields')
             kind = record['kind']; require(kind in KINDS, 'unknown record kind')
             expected_inputs = {
                 'qualification': {'qualification': 'qualification', 'observations': 'observation'},
                 'authority': {'authority': 'authority'},
-                'attempt': {'attempt': 'attempt', 'commits': 'event', 'qualification': 'qualification-history'},
+                'attempt': {'attempt': 'attempt', 'commits': 'event', 'checks': 'event', 'qualification': 'qualification-history'},
                 'outcome': {'observation': 'observation', **({'attempt': 'attempt'} if 'attempt' in record['inputs'] else {})},
                 'lifecycle-event': {'event': 'event'},
             }[kind]
+            if kind=='attempt' and 'checks' not in record['inputs']:
+                source=resolve(record['inputs']['attempt'])
+                require('execution_checks_version' not in source['command'], 'new attempt cannot omit check proofs')
+                expected_inputs.pop('checks')
             expected_primary = {'qualification': 'qualification', 'authority': 'authority', 'attempt': 'attempt',
                                 'outcome': 'observation', 'lifecycle-event': 'event'}[kind]
             require(record['primary'] == expected_primary and set(record['inputs']) == set(expected_inputs),
@@ -321,6 +348,8 @@ def consume_bundle(bundle, *, trust, now_ms):
                         value.get('observation_id') or value.get('event_id') or value.get('attempt_id'))
             require(identity not in seen, 'duplicate wire record')
             seen.add(identity); indexed.setdefault(kind, []).append((value, primary))
+            if kind=='attempt':
+                attempt_event_ids[value['attempt_id']]=[r['event']['event_id'] for r in inputs.get('checks',[])+inputs['commits']]
             if kind == 'qualification' and value['disposition'] == 'ELIGIBLE':
                 require(value['observed_until_ms'] <= now_ms < value['expires_at_ms'], 'eligible qualification stale or future')
             if kind == 'outcome':
@@ -344,8 +373,14 @@ def consume_bundle(bundle, *, trust, now_ms):
                 require(oid in outcomes and outcomes[oid]['attempt_id'] == attempt['attempt_id'],
                         'attempt outcome record missing or mismatched')
             if attempt['state'] == 'COMMITTED':
+                require(all(event_id in events for event_id in attempt_event_ids[attempt['attempt_id']]),
+                        'exact attempt check or commit lifecycle record missing')
                 require(any(e['event_type'] == 'COMMITTED' and e['correlation_id'] == attempt['attempt_id']
                             for e in events.values()), 'durable commit lifecycle record missing')
+                if raw['command'].get('execution_checks_version')==1:
+                    for kind in ('QUALIFICATION_CHECKED','AUTHORIZATION_CHECKED'):
+                        require(sum(e['event_type']==kind and e['correlation_id']==attempt['attempt_id']
+                                    for e in events.values())==1, 'attempt check lifecycle record missing or duplicated')
         require(len(indexed.get('authority', [])) <= 1, 'bundle contains multiple current credentials')
         for authority, _ in indexed.get('authority', []):
             for grant in authority['grants']:

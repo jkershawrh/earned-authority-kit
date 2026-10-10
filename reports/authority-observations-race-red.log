@@ -1,0 +1,26 @@
+............F..                                                          [100%]
+=================================== FAILURES ===================================
+_____ test_delayed_same_revision_observation_cannot_regress_observed_time ______
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10986f170>
+
+    def test_delayed_same_revision_observation_cannot_regress_observed_time(rt):
+        ready(rt)
+        rt.clock.advance(100)
+        newer = rt.refresh_authority_observation()
+        # UNIT ordering: the same verified snapshot's earlier read persists later.
+        rt.clock.advance(-50)
+>       assert rt.refresh_authority_observation() == newer
+E       AssertionError: assert {'agent_id': ...': False, ...} == {'agent_id': ...': False, ...}
+E         
+E         Omitting 8 identical items, use -vv to show
+E         Differing items:
+E         {'signature': 'Rv929KPC/pyAFQWWindrgPLmrhoFAQrjItBHDSfDtIVMPd3gt/1Z6byfTssHElA5v8E2mKXMrd8ldmS1Gx4jDg=='} != {'signature': 'v2Hn3RrPi9MWNVIsbPX8zyi6614wbm3BWxYAGrUhJR1c3F1pSb6zy7d4Cm37yeMDESJ1t9rmC2zH4OC7YnPTDA=='}
+E         {'observed_at_ms': 1000050} != {'observed_at_ms': 1000100}
+E         {'observation_id': 'authority-observation-9c5462be40cc488d9bbb0dda2b8aaecb'} != {'observation_id': 'authority-observation-95a988b53fe64bd2ba1af0134cdab8a1'}
+E         Use -v to get more diff
+
+tests/test_authority_observations.py:169: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_authority_observations.py::test_delayed_same_revision_observation_cannot_regress_observed_time
+1 failed, 14 passed in 1.20s

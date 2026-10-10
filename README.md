@@ -2,7 +2,7 @@
 
 This kit connects a deterministic procedure's qualification to bounded authority, enforced mutation, independent readback, selective withdrawal and requalification. It uses ARE Foundation, Agent Passport, ARE Immutable Ledger, Cascade Compression and deterministic GCL. Foundation keeps its S0/S1 role; higher-stage qualification lives in the integration layer.
 
-**Three bounded engineering milestones have executable evidence:** a local fixture; connected canonical services; and a fresh same-host reference installation with persistent restart. The latest component run passes **369 tests**, and the fresh-reference deployment passes **123 checks**. The dedicated service behavior run passes 52 executed cases and completes **33 of 37 scenarios**; four scenarios remain partial. These counts describe different suites and are not statistical trials. The full roadmap remains **AMBER**: business value has not been evaluated, complete real-service coverage is not established, and broader deployment/recovery gates remain open.
+**Three bounded engineering milestones have executable evidence:** a local fixture; connected canonical services; and a fresh same-host reference installation with persistent restart. The latest component run passes **437 tests**, and the fresh-reference deployment passes **123 checks**. The dedicated service behavior run passes 52 executed cases and completes **36 of 37 scenarios**; one scenario remains partial. These counts describe different suites and are not statistical trials. The full roadmap remains **AMBER**: business value has not been evaluated, complete real-service coverage is not established, and broader deployment/recovery gates remain open.
 
 Start with [the visual roadmap](roadmap.html), [the parallel work plan](docs/ROADMAP.md), [deployment instructions](deploy/reference/README.md) and [scope and remaining gaps](docs/BOUNDARIES.md). **EDD means evaluation-driven development.** The [evaluation protocol](evaluations/README.md) is drafted but unexecuted; it needs a chosen value target, actual human baseline and preregistered sample/risk criteria.
 
@@ -39,6 +39,8 @@ Independent evidence now has a receipt-backed admission path. Procedure self-rep
 
 Mutation now verifies the exact persisted intent signature before changing the registry. Retries first read the existing attempt without creating a missing database. Uncertain commit acknowledgements and storage failures after commit return an explicit, unpersisted UNKNOWN response; recovery preserves the original attempt and avoids another mutation. See the [reconciliation contract](contracts/unknown-reconciliation-result.md).
 
+The current increment records the exact qualification and authorization checks for each execution attempt, persists historical authority snapshots for outage diagnostics, and enforces an explicitly configured demo blackout. A cached ACTIVE status cannot authorize execution. Windowed authority is usable only inside the signed interval. [Multi-resource grant recomputation](docs/MULTI_RESOURCE_GRANTS.md) remains the final partial service scenario.
+
 ## Layout and evidence
 
 - `earned_authority/`: fixture and connected runtimes, canonical service adapters, signed proof mapping and conservative readiness assessment.
@@ -47,7 +49,7 @@ Mutation now verifies the exact persisted intent signature before changing the r
 - `evaluations/`: evaluation-driven development protocol, comparators, metrics and stopping rules; no measured business-value results.
 - `deploy/`: pinned sources, dependency locks, local service profiles and repeatable validation/recovery commands.
 - `patches/` and `evidence/`: reviewable Passport/Foundation patches and retained red/green evidence. Original tracked user source was preserved.
-- `reports/`: [369-test component run](reports/component-verification.json), [fresh-reference run](reports/boundary-reference-combined.json), [service behavior run](reports/service-bdd-live-006.json), [environment coverage](reports/bdd-environment-coverage.json) and [readiness matrix](reports/readiness.json).
+- `reports/`: [437-test component run](reports/component-verification.json), [fresh-reference run](reports/observation-reference-combined.json), [service behavior run](reports/service-bdd-live-008.json), [environment coverage](reports/bdd-environment-coverage.json) and [readiness matrix](reports/readiness.json).
 
 ## Color rules
 

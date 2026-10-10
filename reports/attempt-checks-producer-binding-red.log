@@ -1,0 +1,112 @@
+FFFFF                                                                    [100%]
+=================================== FAILURES ===================================
+_ test_authenticated_command_cannot_misattribute_the_actual_authorization_check[grant_id-invented-grant] _
+
+rt = <earned_authority.runtime.Runtime object at 0x107352ae0>, key = 'grant_id'
+value = 'invented-grant'
+
+    @pytest.mark.parametrize('key,value',[
+        ('grant_id','invented-grant'),('passport_id','invented-passport'),
+        ('skill_digest','sha256:'+'0'*64),('context_digest','sha256:'+'0'*64),
+        ('policy_digest','sha256:'+'0'*64),
+    ])
+    def test_authenticated_command_cannot_misattribute_the_actual_authorization_check(rt,key,value):
+        cmd=rt.admit(attempt_id='live');cmd[key]=value;cmd=rt._seal(cmd,'authority')
+        # A trusted producer can make a semantic mistake; a valid signature alone
+        # must not let an attempt name a different current grant or policy.
+        with rt._db() as db:db.execute('UPDATE attempts SET command=? WHERE id=?',(json.dumps(cmd),'live'))
+>       with pytest.raises(Denied,match='BINDING_MISMATCH'):rt.commit(cmd)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_attempt_checks.py:62: Failed
+_ test_authenticated_command_cannot_misattribute_the_actual_authorization_check[passport_id-invented-passport] _
+
+rt = <earned_authority.runtime.Runtime object at 0x10737b1a0>
+key = 'passport_id', value = 'invented-passport'
+
+    @pytest.mark.parametrize('key,value',[
+        ('grant_id','invented-grant'),('passport_id','invented-passport'),
+        ('skill_digest','sha256:'+'0'*64),('context_digest','sha256:'+'0'*64),
+        ('policy_digest','sha256:'+'0'*64),
+    ])
+    def test_authenticated_command_cannot_misattribute_the_actual_authorization_check(rt,key,value):
+        cmd=rt.admit(attempt_id='live');cmd[key]=value;cmd=rt._seal(cmd,'authority')
+        # A trusted producer can make a semantic mistake; a valid signature alone
+        # must not let an attempt name a different current grant or policy.
+        with rt._db() as db:db.execute('UPDATE attempts SET command=? WHERE id=?',(json.dumps(cmd),'live'))
+>       with pytest.raises(Denied,match='BINDING_MISMATCH'):rt.commit(cmd)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_attempt_checks.py:62: Failed
+_ test_authenticated_command_cannot_misattribute_the_actual_authorization_check[skill_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000] _
+
+rt = <earned_authority.runtime.Runtime object at 0x10737bf20>
+key = 'skill_digest'
+value = 'sha256:0000000000000000000000000000000000000000000000000000000000000000'
+
+    @pytest.mark.parametrize('key,value',[
+        ('grant_id','invented-grant'),('passport_id','invented-passport'),
+        ('skill_digest','sha256:'+'0'*64),('context_digest','sha256:'+'0'*64),
+        ('policy_digest','sha256:'+'0'*64),
+    ])
+    def test_authenticated_command_cannot_misattribute_the_actual_authorization_check(rt,key,value):
+        cmd=rt.admit(attempt_id='live');cmd[key]=value;cmd=rt._seal(cmd,'authority')
+        # A trusted producer can make a semantic mistake; a valid signature alone
+        # must not let an attempt name a different current grant or policy.
+        with rt._db() as db:db.execute('UPDATE attempts SET command=? WHERE id=?',(json.dumps(cmd),'live'))
+>       with pytest.raises(Denied,match='BINDING_MISMATCH'):rt.commit(cmd)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_attempt_checks.py:62: Failed
+_ test_authenticated_command_cannot_misattribute_the_actual_authorization_check[context_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000] _
+
+rt = <earned_authority.runtime.Runtime object at 0x1073bf680>
+key = 'context_digest'
+value = 'sha256:0000000000000000000000000000000000000000000000000000000000000000'
+
+    @pytest.mark.parametrize('key,value',[
+        ('grant_id','invented-grant'),('passport_id','invented-passport'),
+        ('skill_digest','sha256:'+'0'*64),('context_digest','sha256:'+'0'*64),
+        ('policy_digest','sha256:'+'0'*64),
+    ])
+    def test_authenticated_command_cannot_misattribute_the_actual_authorization_check(rt,key,value):
+        cmd=rt.admit(attempt_id='live');cmd[key]=value;cmd=rt._seal(cmd,'authority')
+        # A trusted producer can make a semantic mistake; a valid signature alone
+        # must not let an attempt name a different current grant or policy.
+        with rt._db() as db:db.execute('UPDATE attempts SET command=? WHERE id=?',(json.dumps(cmd),'live'))
+>       with pytest.raises(Denied,match='BINDING_MISMATCH'):rt.commit(cmd)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_attempt_checks.py:62: Failed
+_ test_authenticated_command_cannot_misattribute_the_actual_authorization_check[policy_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000] _
+
+rt = <earned_authority.runtime.Runtime object at 0x1073bf5c0>
+key = 'policy_digest'
+value = 'sha256:0000000000000000000000000000000000000000000000000000000000000000'
+
+    @pytest.mark.parametrize('key,value',[
+        ('grant_id','invented-grant'),('passport_id','invented-passport'),
+        ('skill_digest','sha256:'+'0'*64),('context_digest','sha256:'+'0'*64),
+        ('policy_digest','sha256:'+'0'*64),
+    ])
+    def test_authenticated_command_cannot_misattribute_the_actual_authorization_check(rt,key,value):
+        cmd=rt.admit(attempt_id='live');cmd[key]=value;cmd=rt._seal(cmd,'authority')
+        # A trusted producer can make a semantic mistake; a valid signature alone
+        # must not let an attempt name a different current grant or policy.
+        with rt._db() as db:db.execute('UPDATE attempts SET command=? WHERE id=?',(json.dumps(cmd),'live'))
+>       with pytest.raises(Denied,match='BINDING_MISMATCH'):rt.commit(cmd)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_attempt_checks.py:62: Failed
+=========================== short test summary info ============================
+FAILED tests/test_attempt_checks.py::test_authenticated_command_cannot_misattribute_the_actual_authorization_check[grant_id-invented-grant]
+FAILED tests/test_attempt_checks.py::test_authenticated_command_cannot_misattribute_the_actual_authorization_check[passport_id-invented-passport]
+FAILED tests/test_attempt_checks.py::test_authenticated_command_cannot_misattribute_the_actual_authorization_check[skill_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000]
+FAILED tests/test_attempt_checks.py::test_authenticated_command_cannot_misattribute_the_actual_authorization_check[context_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000]
+FAILED tests/test_attempt_checks.py::test_authenticated_command_cannot_misattribute_the_actual_authorization_check[policy_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000]
+5 failed, 15 deselected in 0.33s

@@ -1,0 +1,91 @@
+F.FF..                                                                   [100%]
+=================================== FAILURES ===================================
+_ test_pre_upgrade_committed_attempt_remains_historical_without_fabricated_checks _
+
+rt = <earned_authority.runtime.Runtime object at 0x10bda2930>
+
+    def test_pre_upgrade_committed_attempt_remains_historical_without_fabricated_checks(rt):
+        cmd=rt.admit(attempt_id='old')
+        assert cmd.get('execution_checks_version')==1
+        legacy={k:v for k,v in cmd.items() if k not in ('execution_checks_version','signature','signer')}
+        legacy=rt._seal(legacy,'authority')
+        with rt._db() as db:db.execute('UPDATE attempts SET command=? WHERE id=?',(json.dumps(legacy),'old'))
+        rt.commit(legacy)
+        with rt._db() as db:db.execute("DELETE FROM events WHERE json_extract(body,'$.event_type') IN ('QUALIFICATION_CHECKED','AUTHORIZATION_CHECKED')")
+        b=bundle(rt,'old')
+        next(r for r in b.records if r['kind']=='attempt')['inputs'].pop('checks')
+>       assert consume_bundle(b,trust=RuntimeTrust(rt),now_ms=rt.clock.now_ms)['verified']
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_attempt_checks.py:110: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/wire_contracts.py:330: in consume_bundle
+    require(record['primary'] == expected_primary and set(record['inputs']) == set(expected_inputs),
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+condition = False, reason = 'record input contract mismatch'
+
+    def require(condition, reason):
+        if not condition:
+>           raise WireContractError(reason)
+E           earned_authority.wire_contracts.WireContractError: record input contract mismatch
+
+earned_authority/wire_contracts.py:24: WireContractError
+_____ test_unknown_or_ambiguous_check_version_denies_before_mutation[True] _____
+
+rt = <earned_authority.runtime.Runtime object at 0x10be4d160>, version = True
+
+    @pytest.mark.parametrize('version',[True,1.0,2,None])
+    def test_unknown_or_ambiguous_check_version_denies_before_mutation(rt,version):
+        cmd=rt.admit(attempt_id='live');cmd['execution_checks_version']=version;cmd=rt._seal(cmd,'authority')
+        with rt._db() as db:db.execute('UPDATE attempts SET command=? WHERE id=?',(json.dumps(cmd),'live'))
+>       with pytest.raises(Denied,match='BINDING_MISMATCH'):rt.commit(cmd)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_attempt_checks.py:122: Failed
+_____ test_unknown_or_ambiguous_check_version_denies_before_mutation[1.0] ______
+
+rt = <earned_authority.runtime.Runtime object at 0x10be1acc0>, version = 1.0
+
+    @pytest.mark.parametrize('version',[True,1.0,2,None])
+    def test_unknown_or_ambiguous_check_version_denies_before_mutation(rt,version):
+        cmd=rt.admit(attempt_id='live');cmd['execution_checks_version']=version;cmd=rt._seal(cmd,'authority')
+        with rt._db() as db:db.execute('UPDATE attempts SET command=? WHERE id=?',(json.dumps(cmd),'live'))
+>       with pytest.raises(Denied,match='BINDING_MISMATCH'):rt.commit(cmd)
+                                                            ^^^^^^^^^^^^^^
+
+tests/test_attempt_checks.py:122: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/runtime.py:523: in commit
+    self._commit_local(command,actual,healthy,observer_available)
+earned_authority/runtime.py:590: in _commit_local
+    checked.update(command_digest=canonical_digest(command),qualification_revision=q['qualification_revision'],
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/contracts.py:69: in canonical_digest
+    check(value)
+earned_authority/contracts.py:66: in check
+    for item in node.values(): check(item)
+                               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+node = 1.0
+
+    def check(node):
+        if node is None or type(node) in (str, bool, int):
+            return
+        if isinstance(node, list):
+            for item in node: check(item)
+            return
+        if isinstance(node, dict) and all(isinstance(k, str) for k in node):
+            for item in node.values(): check(item)
+            return
+>       raise ValueError("canonical contract payloads permit only JSON with integer numbers")
+E       ValueError: canonical contract payloads permit only JSON with integer numbers
+
+earned_authority/contracts.py:68: ValueError
+=========================== short test summary info ============================
+FAILED tests/test_attempt_checks.py::test_pre_upgrade_committed_attempt_remains_historical_without_fabricated_checks
+FAILED tests/test_attempt_checks.py::test_unknown_or_ambiguous_check_version_denies_before_mutation[True]
+FAILED tests/test_attempt_checks.py::test_unknown_or_ambiguous_check_version_denies_before_mutation[1.0]
+3 failed, 3 passed, 19 deselected in 0.27s

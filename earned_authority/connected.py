@@ -16,11 +16,19 @@ from pathlib import Path
 from .contracts import canonical_digest,load_unique_json
 from .runtime import Runtime,Denied,ident,encoded
 from .authority_journal import AuthorityJournal
+from .authority_observations import AuthorityObservations
 from .passport_client import issue_operation_request,revoke_operation_request
 from .evidence_admission import EvidenceAdmission
 
 ACTIONS={'release':'model.promote_to_production','read':'demo.read','read-health':'demo.read'}
 BINDING='earned_authority_binding_v1'
+
+def validate_requested_window(value):
+    if (not isinstance(value,dict) or set(value)!={'not_before_ms','not_after_ms'}
+        or any(type(v) is not int for v in value.values())
+        or not 0<=value['not_before_ms']<value['not_after_ms']<=9007199254740991):
+        raise Denied('INVALID_REQUESTED_WINDOW')
+    return dict(value)
 
 class SystemClock:
     @property
@@ -52,27 +60,39 @@ class FoundationPolicy:
             raise Denied('POLICY_REVISION_MISMATCH')
         return hashes
 
-    def check(self,agent,action,resource):
+    def check(self,agent,action,resource,requested_window=None):
+        window=validate_requested_window(requested_window) if requested_window is not None else None
         try:
             before=self._inventory()
             request={'decision_id':ident('decision'),'agent_id':agent,'action_class':ACTIONS[action],'resource':resource}
+            if window is not None:request['requested_window']=window
             response=self.request('/v1/policy/evaluations',request)
             if self._inventory()!=before: raise Denied('POLICY_REVISION_MISMATCH')
             decision=response.get('decision',{})
-            if decision.get('effect')!='ALLOW': raise Denied('POLICY_DENIED')
             expected={**request,'policy_id':self.policy_id,'policy_digest':self.policy_digest}
             if any(decision.get(k)!=v for k,v in expected.items()): raise Denied('POLICY_DECISION_BINDING_MISMATCH')
+            if window is None and 'requested_window' in decision:raise Denied('POLICY_DECISION_BINDING_MISMATCH')
+            if window is not None:
+                try:validate_requested_window(decision.get('requested_window'))
+                except Denied as exc:raise Denied('POLICY_DECISION_BINDING_MISMATCH') from exc
+            if window is not None or decision.get('reason')=='POLICY_WINDOW_DENIED':
+                at=decision.get('evaluated_at_ms')
+                if type(at) is not int or not 0<=at<=9007199254740991:raise Denied('POLICY_DECISION_BINDING_MISMATCH')
+            if decision.get('effect')=='DENY':
+                raise Denied('POLICY_WINDOW_DENIED' if decision.get('reason')=='POLICY_WINDOW_DENIED' else 'POLICY_DENIED')
+            if decision.get('effect')!='ALLOW':raise Denied('POLICY_DECISION_BINDING_MISMATCH')
             return response
         except Denied: raise
         except Exception as exc: raise Denied('POLICY_UNCONFIRMED') from exc
 
-class ConnectedRuntime(AuthorityJournal,Runtime):
+class ConnectedRuntime(AuthorityObservations,AuthorityJournal,Runtime):
     mode='REAL_LOCAL_SERVICES'
     def __init__(self,path,*,passport,policy,ledger,qualification_client,fence_path):
         self.passport=passport;self.policy=policy;self.qualifier=qualification_client
         self.fence_path=str(fence_path)
         Path(self.fence_path).parent.mkdir(parents=True,exist_ok=True)
         super().__init__(path,clock=SystemClock(),ledger=ledger)
+        self._init_authority_observations()
         with self._tx() as db:
             db.execute('CREATE TABLE IF NOT EXISTS shadow_registry(attempt_id TEXT PRIMARY KEY,version TEXT NOT NULL,healthy INTEGER NOT NULL)')
             db.execute('CREATE TABLE IF NOT EXISTS withdrawals(agent TEXT NOT NULL,skill TEXT NOT NULL,attempt_id TEXT NOT NULL,reason TEXT NOT NULL,PRIMARY KEY(agent,skill))')
@@ -306,11 +326,25 @@ class ConnectedRuntime(AuthorityJournal,Runtime):
                 'context_constraints':{BINDING:encoded(body).decode()},'scope_ttl_seconds':remaining})
         return scopes
 
+    def _check_requested_policy_window(self,agent,action,resource,window=None):
+        if window is None:return self.policy.check(agent,action,resource)
+        window=validate_requested_window(window)
+        result=self.policy.check(agent,action,resource,requested_window=window)
+        # A policy interval evaluation is not a scheduling service. Only a
+        # currently active interval may back immediately usable authority.
+        if not window['not_before_ms']<=self.clock.now_ms<window['not_after_ms']:
+            raise Denied('WINDOW_NOT_ACTIVE')
+        return result
+
     def grant(self,qid,agent='agent-a',action='release',resource='model/champion',ttl_ms=300000,
-              scope_ttl_ms=None,policy_allow=None,expected_revision=None,operation_id=None):
+              scope_ttl_ms=None,policy_allow=None,expected_revision=None,operation_id=None,requested_window=None):
         if policy_allow is not None: raise Denied('CALLER_CANNOT_AUTHORIZE')
         if type(ttl_ms) is not int or ttl_ms<=0 or (scope_ttl_ms is not None and (type(scope_ttl_ms) is not int or scope_ttl_ms<=0)): raise Denied('INVALID_AUTHORITY')
         invocation={'kind':'GRANT','qid':qid,'agent':agent,'action':action,'resource':resource,'ttl_ms':ttl_ms,'scope_ttl_ms':scope_ttl_ms,'expected_revision':expected_revision}
+        window=validate_requested_window(requested_window) if requested_window is not None else None
+        if window is not None:
+            if action!='release':raise Denied('INVALID_REQUESTED_WINDOW')
+            invocation['requested_window']=window
         with self._authority_serial():
             self._authority_durability()
             resumed=self._resume_authority_operation(operation_id,invocation)
@@ -320,7 +354,7 @@ class ConnectedRuntime(AuthorityJournal,Runtime):
             q=self.qualification(qid)
             self.eligibility(qid,q['version'],q['context'])
             if q['version']!=self.procedure_revision: raise Denied('SKILL_REVISION_MISMATCH')
-            self.policy.check(agent,action,resource)
+            self._check_requested_policy_window(agent,action,resource,window)
             raw=self.passport.current(agent,require_valid=False)
             current=self._normalize(raw,agent)
             if expected_revision is not None and current['revision']!=expected_revision: raise Denied('REVISION_CONFLICT')
@@ -329,6 +363,9 @@ class ConnectedRuntime(AuthorityJournal,Runtime):
                'skill_digest':q['skill_digest'],'context_digest':q['context_digest'],'qualification_id':qid,
                'qualification_digest':canonical_digest(q),'policy_digest':self.policy.policy_digest,
                'action':action,'resource':resource,'expires_at_ms':min(expiry,self.clock.now_ms+(scope_ttl_ms or ttl_ms))}
+            if window is not None:
+                g['requested_window']=window
+                g['expires_at_ms']=min(g['expires_at_ms'],window['not_after_ms'])
             if g['expires_at_ms']-self.clock.now_ms<1000:raise Denied('EXPIRED_SCOPE')
             grants=current['grants'];grants[q['skill']]=g;scopes=self._requests(grants)
             oid=operation_id or ident('authority-op')
@@ -371,6 +408,9 @@ class ConnectedRuntime(AuthorityJournal,Runtime):
         if expected_revision is not None and a['revision']!=expected_revision: raise Denied('REVOKED_AUTHORITY')
         if a['expires_at_ms']<=self.clock.now_ms: raise Denied('EXPIRED_PASSPORT')
         if g['expires_at_ms']<=self.clock.now_ms: raise Denied('EXPIRED_SCOPE')
+        window=validate_requested_window(g['requested_window']) if 'requested_window' in g else None
+        if window is not None and not window['not_before_ms']<=self.clock.now_ms<window['not_after_ms']:
+            raise Denied('WINDOW_NOT_ACTIVE')
         if intent['version']!=self.procedure_revision: raise Denied('SKILL_REVISION_MISMATCH')
         for name in ('version','context','action','resource'):
             if g[name]!=intent[name]: raise Denied('SCOPE_MISMATCH')
@@ -380,7 +420,7 @@ class ConnectedRuntime(AuthorityJournal,Runtime):
             if g[field]!=q[field]: raise Denied('BINDING_MISMATCH')
         if self.policy.policy_digest!=g['policy_digest']: raise Denied('POLICY_REVISION_MISMATCH')
         if intent['action']=='release' and intent['target']!=intent['context'].get('model_version'): raise Denied('CONTEXT_TARGET_MISMATCH')
-        decision=self.policy.check(intent['agent'],intent['action'],intent['resource'])
+        decision=self._check_requested_policy_window(intent['agent'],intent['action'],intent['resource'],window)
         g['_policy_decision_id']=decision['decision']['decision_id']
         # Policy evaluation is synchronous but may have crossed an absolute deadline.
         if a['expires_at_ms']<=self.clock.now_ms: raise Denied('EXPIRED_PASSPORT')

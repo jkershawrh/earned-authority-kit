@@ -1,0 +1,9 @@
+{"Time":"2026-10-10T00:32:58.4132-05:00","Action":"start","Package":"are-api-gateway/internal/gateway"}
+{"Time":"2026-10-10T00:32:59.419074-05:00","Action":"run","Package":"are-api-gateway/internal/gateway","Test":"TestStaticPolicyCannotSilentlyIgnoreRequestedWindow"}
+{"Time":"2026-10-10T00:32:59.419136-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestStaticPolicyCannotSilentlyIgnoreRequestedWindow","Output":"=== RUN   TestStaticPolicyCannotSilentlyIgnoreRequestedWindow\n"}
+{"Time":"2026-10-10T00:32:59.419267-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestStaticPolicyCannotSilentlyIgnoreRequestedWindow","Output":"    policy_window_test.go:8: unsupported static path accepted window: 200 {\"decision\":{\"decision_id\":\"window1\",\"effect\":\"ALLOW\",\"reason\":\"policy-evaluated\"},\"executed\":false,\"receipt_created\":false,\"request_id\":\"req-1\"}\n"}
+{"Time":"2026-10-10T00:32:59.419319-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Test":"TestStaticPolicyCannotSilentlyIgnoreRequestedWindow","Output":"--- FAIL: TestStaticPolicyCannotSilentlyIgnoreRequestedWindow (0.00s)\n"}
+{"Time":"2026-10-10T00:32:59.419325-05:00","Action":"fail","Package":"are-api-gateway/internal/gateway","Test":"TestStaticPolicyCannotSilentlyIgnoreRequestedWindow","Elapsed":0}
+{"Time":"2026-10-10T00:32:59.419343-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Output":"FAIL\n"}
+{"Time":"2026-10-10T00:32:59.420079-05:00","Action":"output","Package":"are-api-gateway/internal/gateway","Output":"FAIL\tare-api-gateway/internal/gateway\t1.007s\n"}
+{"Time":"2026-10-10T00:32:59.420097-05:00","Action":"fail","Package":"are-api-gateway/internal/gateway","Elapsed":1.007}

@@ -1,0 +1,22 @@
+{
+  "schema_version": "0.1.0-draft.1",
+  "published": false,
+  "scope": "Attempt-check lifecycle event enum and producer/consumer proof-input update; no new execution permission",
+  "before": {
+    "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
+    "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
+    "contracts/lifecycle-event.schema.json": "sha256:ff4390844db2d78aede88d4413b78e1fc79f3c58857020ab92e63f892a04bc57",
+    "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
+    "contracts/qualification.schema.json": "sha256:2a4a4f6921a3f839b6b4a554f0c8fa019600d14411d5cfd8355f119aa28449b3",
+    "contracts/unknown-reconciliation-result.schema.json": "sha256:6193e4fcadc9a2ee7f89b043306aaf088124a272adc9227f5453e56881faf8e6"
+  },
+  "after": {
+    "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
+    "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
+    "contracts/lifecycle-event.schema.json": "sha256:3c9b88bfe5a4fd5300786e0fd57656e660fa49db134b0cd0245a86dd1697a16d",
+    "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
+    "contracts/qualification.schema.json": "sha256:2a4a4f6921a3f839b6b4a554f0c8fa019600d14411d5cfd8355f119aa28449b3",
+    "contracts/unknown-reconciliation-result.schema.json": "sha256:6193e4fcadc9a2ee7f89b043306aaf088124a272adc9227f5453e56881faf8e6"
+  },
+  "compatibility": "New attempts require two bound check source proofs; prior closed-enum/input consumers must update. Legacy commands without execution_checks_version remain historical and do not satisfy complete per-attempt check evidence."
+}

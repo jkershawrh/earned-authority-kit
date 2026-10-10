@@ -1,7 +1,8 @@
 # Draft contracts and runtime bindings
 
 The unpublished contract version remains `0.1.0-draft.1`. Its revision hashes are
-recorded in `reports/wire-schema-revision.json`; this draft has not been released
+recorded in `reports/attempt-checks-schema-revision.json` (earlier revisions are
+retained in `reports/wire-schema-revision.json`); this draft has not been released
 as a stable external protocol.
 
 `earned_authority.wire_contracts.export_runtime` exports actual qualifications,
@@ -70,6 +71,25 @@ outcome, and evidence admission or rejection describes an intake decision. None
 of these events grants authority, confirms business execution or creates an
 independent outcome by itself. A recorded Ledger receipt authenticates the event
 assertion and its binding; it does not change that meaning.
+
+`QUALIFICATION_CHECKED` and `AUTHORIZATION_CHECKED` record consumption of an
+existing qualification and grant at one attempt's mutation boundary. They share
+that attempt's ID and bind its signed command digest, immutable qualification
+revision/digest, exact skill/context, passport/grant/revision, and the policy
+decision obtained at execution. The original qualification and grant publication
+records retain their original IDs and timestamps. These local writer attestations
+do not claim that the canonical issuer signed a new credential for this attempt.
+They are persisted in the same registry transaction before INTENT and mutation;
+failure to persist or authenticate either rolls back that transaction.
+
+New signed commands carry `execution_checks_version: 1`. Their committed wire
+attempts require exactly one matching check of each kind, authenticated source
+proofs, and both lifecycle records in the bundle. Replays preserve the existing
+pair. Pre-upgrade commands without that marker remain historical records and are
+not assigned fabricated checks or counted as complete BDD-016 evidence. Exported
+attempt envelopes now include a `checks` proof-input list; consumers must update
+with producers. Previously serialized envelopes may omit that list only when
+their authenticated original command has no version marker. This changes the unpublished draft, not a stable public protocol.
 
 This is an additive change within the unpublished `0.1.0-draft.1` working draft,
 identified by its schema content hash. A consumer pinned to the prior closed enum

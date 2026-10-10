@@ -1,0 +1,145 @@
+FFFFFFFFFFF                                                              [100%]
+=================================== FAILURES ===================================
+_ test_explicit_refresh_records_verified_snapshot_without_execution_authority __
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10710b140>
+
+    def test_explicit_refresh_records_verified_snapshot_without_execution_authority(rt):
+        ready(rt)
+>       assert rt.cached_authority_observation() is None
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ConnectedRuntime' object has no attribute 'cached_authority_observation'. Did you mean: '_new_authority_operation'?
+
+tests/test_authority_observations.py:25: AttributeError
+__ test_cached_observation_survives_restart_without_calling_canonical_service __
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10717cc50>
+
+    def test_cached_observation_survives_restart_without_calling_canonical_service(rt):
+        ready(rt)
+>       observed = rt.refresh_authority_observation()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ConnectedRuntime' object has no attribute 'refresh_authority_observation'. Did you mean: '_finish_authority_operation'?
+
+tests/test_authority_observations.py:41: AttributeError
+_ test_cached_active_grant_cannot_admit_or_commit_during_current_status_outage _
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x106a844d0>
+
+    def test_cached_active_grant_cannot_admit_or_commit_during_current_status_outage(rt):
+        ready(rt)
+>       observed = rt.refresh_authority_observation()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ConnectedRuntime' object has no attribute 'refresh_authority_observation'. Did you mean: '_finish_authority_operation'?
+
+tests/test_authority_observations.py:51: AttributeError
+________ test_canonical_revocation_overrides_cached_active_observation _________
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10717f500>
+
+    def test_canonical_revocation_overrides_cached_active_observation(rt):
+        ready(rt)
+>       observed = rt.refresh_authority_observation()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ConnectedRuntime' object has no attribute 'refresh_authority_observation'. Did you mean: '_finish_authority_operation'?
+
+tests/test_authority_observations.py:72: AttributeError
+________ test_malformed_canonical_response_cannot_refresh_cache[False] _________
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x107128bf0>
+has_cache = False
+
+    @pytest.mark.parametrize('has_cache', [False, True])
+    def test_malformed_canonical_response_cannot_refresh_cache(rt, has_cache):
+        ready(rt)
+        previous = rt.refresh_authority_observation() if has_cache else None
+        def invalid(*args, **kwargs):
+            raise Denied('INVALID_CANONICAL_AUTHORITY')
+        rt.passport.current = invalid
+>       with pytest.raises(Denied) as failure: rt.refresh_authority_observation()
+                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ConnectedRuntime' object has no attribute 'refresh_authority_observation'. Did you mean: '_finish_authority_operation'?
+
+tests/test_authority_observations.py:90: AttributeError
+_________ test_malformed_canonical_response_cannot_refresh_cache[True] _________
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10712aea0>
+has_cache = True
+
+    @pytest.mark.parametrize('has_cache', [False, True])
+    def test_malformed_canonical_response_cannot_refresh_cache(rt, has_cache):
+        ready(rt)
+>       previous = rt.refresh_authority_observation() if has_cache else None
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ConnectedRuntime' object has no attribute 'refresh_authority_observation'. Did you mean: '_finish_authority_operation'?
+
+tests/test_authority_observations.py:86: AttributeError
+_____ test_tampered_diagnostic_record_is_rejected_without_network_fallback _____
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10717d820>
+
+    def test_tampered_diagnostic_record_is_rejected_without_network_fallback(rt):
+        ready(rt)
+>       observed = rt.refresh_authority_observation()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ConnectedRuntime' object has no attribute 'refresh_authority_observation'. Did you mean: '_finish_authority_operation'?
+
+tests/test_authority_observations.py:97: AttributeError
+_________ test_signed_observation_cannot_be_reindexed_to_another_agent _________
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10717f020>
+
+    def test_signed_observation_cannot_be_reindexed_to_another_agent(rt):
+        ready(rt)
+>       observed = rt.refresh_authority_observation()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ConnectedRuntime' object has no attribute 'refresh_authority_observation'. Did you mean: '_finish_authority_operation'?
+
+tests/test_authority_observations.py:108: AttributeError
+____ test_actual_wrong_local_signing_key_cannot_replace_cached_observation _____
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10717d3a0>
+
+    def test_actual_wrong_local_signing_key_cannot_replace_cached_observation(rt):
+        ready(rt)
+>       observed = rt.refresh_authority_observation()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ConnectedRuntime' object has no attribute 'refresh_authority_observation'. Did you mean: '_finish_authority_operation'?
+
+tests/test_authority_observations.py:117: AttributeError
+________ test_delayed_older_observation_cannot_overwrite_later_revision ________
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x106a84bc0>
+
+    def test_delayed_older_observation_cannot_overwrite_later_revision(rt):
+        ready(rt)
+        old_snapshot = rt.authority()
+>       rt.refresh_authority_observation()
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ConnectedRuntime' object has no attribute 'refresh_authority_observation'. Did you mean: '_finish_authority_operation'?
+
+tests/test_authority_observations.py:130: AttributeError
+___ test_same_revision_conflicting_observation_does_not_replace_known_record ___
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x107129400>
+
+    def test_same_revision_conflicting_observation_does_not_replace_known_record(rt):
+        ready(rt)
+>       observed = rt.refresh_authority_observation()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'ConnectedRuntime' object has no attribute 'refresh_authority_observation'. Did you mean: '_finish_authority_operation'?
+
+tests/test_authority_observations.py:141: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_authority_observations.py::test_explicit_refresh_records_verified_snapshot_without_execution_authority
+FAILED tests/test_authority_observations.py::test_cached_observation_survives_restart_without_calling_canonical_service
+FAILED tests/test_authority_observations.py::test_cached_active_grant_cannot_admit_or_commit_during_current_status_outage
+FAILED tests/test_authority_observations.py::test_canonical_revocation_overrides_cached_active_observation
+FAILED tests/test_authority_observations.py::test_malformed_canonical_response_cannot_refresh_cache[False]
+FAILED tests/test_authority_observations.py::test_malformed_canonical_response_cannot_refresh_cache[True]
+FAILED tests/test_authority_observations.py::test_tampered_diagnostic_record_is_rejected_without_network_fallback
+FAILED tests/test_authority_observations.py::test_signed_observation_cannot_be_reindexed_to_another_agent
+FAILED tests/test_authority_observations.py::test_actual_wrong_local_signing_key_cannot_replace_cached_observation
+FAILED tests/test_authority_observations.py::test_delayed_older_observation_cannot_overwrite_later_revision
+FAILED tests/test_authority_observations.py::test_same_revision_conflicting_observation_does_not_replace_known_record
+11 failed in 1.01s

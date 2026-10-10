@@ -1,0 +1,45 @@
+{
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "completed_at": "2026-10-10T05:38:19.494483+00:00",
+  "images": [
+    {
+      "container": "earned-authority-foundation-bff",
+      "image_tag": "localhost/earned-authority-foundation-bff:reference",
+      "expected_image_id": "8357ac8e9492af47f51e87004996506e24d8cd9244da9503e42422a2fa7f852e",
+      "running_image_id": "8357ac8e9492af47f51e87004996506e24d8cd9244da9503e42422a2fa7f852e",
+      "matched": true
+    },
+    {
+      "container": "earned-authority-foundation-gateway",
+      "image_tag": "localhost/earned-authority-foundation-gateway:reference",
+      "expected_image_id": "70b4ab7ef64c30f6adb78c3ace0e086b2f4e7f201df4b2e267f75a6355950b12",
+      "running_image_id": "70b4ab7ef64c30f6adb78c3ace0e086b2f4e7f201df4b2e267f75a6355950b12",
+      "matched": true
+    }
+  ],
+  "health": [
+    {
+      "url": "http://127.0.0.1:29599/health",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:29586/healthz",
+      "status": 200
+    },
+    {
+      "url": "http://127.0.0.1:29580/readyz",
+      "status": 200
+    }
+  ],
+  "loaded_opa_modules": {
+    "policy/are_evaluatepolicy.rego": "sha256:cba16c8345271f6ef2ad493e2597bfcb2618b54760185638c6c0e4be912a470e",
+    "authz/authorization.rego": "sha256:d885c168086acda4556c80dd6b8911c6ada7c7b514a8632379b831179900cc52"
+  },
+  "running_build_manifest": "reports/observation-reference-build-manifest.json",
+  "recreated_services": [
+    "s0s1-rest-bff",
+    "gateway"
+  ],
+  "scope": "Original owned stack restored; immutable policy explicitly refreshed; BFF/gateway recreated onto the independently reconstructed canonical image IDs. Existing authority, keys and database volumes retained."
+}

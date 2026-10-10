@@ -479,7 +479,7 @@ class Runtime:
                 if old[0]!=request_digest: raise Denied('IDEMPOTENCY_CONFLICT')
                 return json.loads(old[1])
             a,g=self._check(db,intent,expected_revision)
-            cmd={**intent,'request_digest':request_digest,'requested_at_ms':self.clock.now_ms,'policy_decision_id':g['_policy_decision_id'],'authority_revision':a['revision'],'passport_id':a['passport_id'],
+            cmd={**intent,'execution_checks_version':1,'request_digest':request_digest,'requested_at_ms':self.clock.now_ms,'policy_decision_id':g['_policy_decision_id'],'authority_revision':a['revision'],'passport_id':a['passport_id'],
                  'grant_id':g['grant_id'],'skill_digest':g['skill_digest'],'context_digest':g['context_digest'],
                  'qualification_id':g['qualification_id'],'qualification_digest':g['qualification_digest'],
                  'policy_digest':g['policy_digest']}
@@ -576,6 +576,22 @@ class Runtime:
                 result=json.loads(row[1])
             else:
                 a,g=self._check(db,command,command['authority_revision'])
+                if type(command.get('execution_checks_version',1)) is not int or command.get('execution_checks_version',1)!=1:
+                    raise Denied('BINDING_MISMATCH')
+                checked={k:g[k] for k in ('skill_digest','context_digest','qualification_id','qualification_digest',
+                         'grant_id','policy_digest','action','resource')}
+                checked.update(passport_id=a['passport_id'],authority_revision=a['revision'])
+                if any(type(command.get(k)) is not type(v) or command.get(k)!=v for k,v in checked.items()):
+                    raise Denied('BINDING_MISMATCH')
+                qrow=db.execute('SELECT body FROM qualifications WHERE id=?',(g['qualification_id'],)).fetchone()
+                q=json.loads(qrow[0]) if qrow else None
+                if q is None or canonical_digest(q)!=command['qualification_digest']:raise Denied('BINDING_MISMATCH')
+                # These records attest consumption at this attempt's boundary.
+                # Earlier qualification and grant publication records stay intact.
+                checked.update(command_digest=canonical_digest(command),qualification_revision=q['qualification_revision'],
+                               policy_decision_id=g['_policy_decision_id'],check_stage='MUTATION_BOUNDARY',authorizes_execution=False)
+                self._event(db,'QUALIFICATION_CHECKED',command['agent'],command['attempt_id'],**checked,result='ELIGIBLE')
+                self._event(db,'AUTHORIZATION_CHECKED',command['agent'],command['attempt_id'],**checked,result='ALLOW')
                 self._event(db,'INTENT',command['agent'],command['attempt_id'],command=command)
                 if command['action']=='release':
                     db.execute('INSERT OR REPLACE INTO registry(resource,version,healthy,attempt_id) VALUES (?,?,?,?)',

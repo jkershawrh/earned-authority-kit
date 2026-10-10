@@ -1,0 +1,527 @@
+FFFFFFFFFFFFFFFFFFFFF.F                                                  [100%]
+=================================== FAILURES ===================================
+_____________ test_foundation_propagates_only_bound_window_denial ______________
+
+    def test_foundation_propagates_only_bound_window_denial():
+>       denied(lambda:foundation().check('agent','release','model/champion',requested_window=DEMO),'POLICY_WINDOW_DENIED')
+
+tests/test_policy_windows.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   denied(lambda:foundation().check('agent','release','model/champion',requested_window=DEMO),'POLICY_WINDOW_DENIED')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: FoundationPolicy.check() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:30: TypeError
+_______ test_unbound_denial_cannot_claim_policy_window_reason[<lambda>0] _______
+
+change = <function <lambda> at 0x10841c360>
+
+    @pytest.mark.parametrize('change',[
+        lambda d:d.update(agent_id='other'),lambda d:d.update(policy_digest='sha256:'+'2'*64),
+        lambda d:d.pop('requested_window'),lambda d:d.update(requested_window={'not_before_ms':1,'not_after_ms':2}),
+        lambda d:d.pop('evaluated_at_ms'),lambda d:d.update(evaluated_at_ms=True),
+        lambda d:d.update(evaluated_at_ms=-1),lambda d:d.update(evaluated_at_ms=1.5),
+        lambda d:d.update(evaluated_at_ms=9007199254740992),
+    ])
+    def test_unbound_denial_cannot_claim_policy_window_reason(change):
+>       denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+
+tests/test_policy_windows.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: FoundationPolicy.check() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:41: TypeError
+_______ test_unbound_denial_cannot_claim_policy_window_reason[<lambda>1] _______
+
+change = <function <lambda> at 0x10841c400>
+
+    @pytest.mark.parametrize('change',[
+        lambda d:d.update(agent_id='other'),lambda d:d.update(policy_digest='sha256:'+'2'*64),
+        lambda d:d.pop('requested_window'),lambda d:d.update(requested_window={'not_before_ms':1,'not_after_ms':2}),
+        lambda d:d.pop('evaluated_at_ms'),lambda d:d.update(evaluated_at_ms=True),
+        lambda d:d.update(evaluated_at_ms=-1),lambda d:d.update(evaluated_at_ms=1.5),
+        lambda d:d.update(evaluated_at_ms=9007199254740992),
+    ])
+    def test_unbound_denial_cannot_claim_policy_window_reason(change):
+>       denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+
+tests/test_policy_windows.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: FoundationPolicy.check() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:41: TypeError
+_______ test_unbound_denial_cannot_claim_policy_window_reason[<lambda>2] _______
+
+change = <function <lambda> at 0x10841c4a0>
+
+    @pytest.mark.parametrize('change',[
+        lambda d:d.update(agent_id='other'),lambda d:d.update(policy_digest='sha256:'+'2'*64),
+        lambda d:d.pop('requested_window'),lambda d:d.update(requested_window={'not_before_ms':1,'not_after_ms':2}),
+        lambda d:d.pop('evaluated_at_ms'),lambda d:d.update(evaluated_at_ms=True),
+        lambda d:d.update(evaluated_at_ms=-1),lambda d:d.update(evaluated_at_ms=1.5),
+        lambda d:d.update(evaluated_at_ms=9007199254740992),
+    ])
+    def test_unbound_denial_cannot_claim_policy_window_reason(change):
+>       denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+
+tests/test_policy_windows.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: FoundationPolicy.check() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:41: TypeError
+_______ test_unbound_denial_cannot_claim_policy_window_reason[<lambda>3] _______
+
+change = <function <lambda> at 0x10841c540>
+
+    @pytest.mark.parametrize('change',[
+        lambda d:d.update(agent_id='other'),lambda d:d.update(policy_digest='sha256:'+'2'*64),
+        lambda d:d.pop('requested_window'),lambda d:d.update(requested_window={'not_before_ms':1,'not_after_ms':2}),
+        lambda d:d.pop('evaluated_at_ms'),lambda d:d.update(evaluated_at_ms=True),
+        lambda d:d.update(evaluated_at_ms=-1),lambda d:d.update(evaluated_at_ms=1.5),
+        lambda d:d.update(evaluated_at_ms=9007199254740992),
+    ])
+    def test_unbound_denial_cannot_claim_policy_window_reason(change):
+>       denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+
+tests/test_policy_windows.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: FoundationPolicy.check() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:41: TypeError
+_______ test_unbound_denial_cannot_claim_policy_window_reason[<lambda>4] _______
+
+change = <function <lambda> at 0x10841c5e0>
+
+    @pytest.mark.parametrize('change',[
+        lambda d:d.update(agent_id='other'),lambda d:d.update(policy_digest='sha256:'+'2'*64),
+        lambda d:d.pop('requested_window'),lambda d:d.update(requested_window={'not_before_ms':1,'not_after_ms':2}),
+        lambda d:d.pop('evaluated_at_ms'),lambda d:d.update(evaluated_at_ms=True),
+        lambda d:d.update(evaluated_at_ms=-1),lambda d:d.update(evaluated_at_ms=1.5),
+        lambda d:d.update(evaluated_at_ms=9007199254740992),
+    ])
+    def test_unbound_denial_cannot_claim_policy_window_reason(change):
+>       denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+
+tests/test_policy_windows.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: FoundationPolicy.check() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:41: TypeError
+_______ test_unbound_denial_cannot_claim_policy_window_reason[<lambda>5] _______
+
+change = <function <lambda> at 0x10841c680>
+
+    @pytest.mark.parametrize('change',[
+        lambda d:d.update(agent_id='other'),lambda d:d.update(policy_digest='sha256:'+'2'*64),
+        lambda d:d.pop('requested_window'),lambda d:d.update(requested_window={'not_before_ms':1,'not_after_ms':2}),
+        lambda d:d.pop('evaluated_at_ms'),lambda d:d.update(evaluated_at_ms=True),
+        lambda d:d.update(evaluated_at_ms=-1),lambda d:d.update(evaluated_at_ms=1.5),
+        lambda d:d.update(evaluated_at_ms=9007199254740992),
+    ])
+    def test_unbound_denial_cannot_claim_policy_window_reason(change):
+>       denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+
+tests/test_policy_windows.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: FoundationPolicy.check() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:41: TypeError
+_______ test_unbound_denial_cannot_claim_policy_window_reason[<lambda>6] _______
+
+change = <function <lambda> at 0x10841c720>
+
+    @pytest.mark.parametrize('change',[
+        lambda d:d.update(agent_id='other'),lambda d:d.update(policy_digest='sha256:'+'2'*64),
+        lambda d:d.pop('requested_window'),lambda d:d.update(requested_window={'not_before_ms':1,'not_after_ms':2}),
+        lambda d:d.pop('evaluated_at_ms'),lambda d:d.update(evaluated_at_ms=True),
+        lambda d:d.update(evaluated_at_ms=-1),lambda d:d.update(evaluated_at_ms=1.5),
+        lambda d:d.update(evaluated_at_ms=9007199254740992),
+    ])
+    def test_unbound_denial_cannot_claim_policy_window_reason(change):
+>       denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+
+tests/test_policy_windows.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: FoundationPolicy.check() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:41: TypeError
+_______ test_unbound_denial_cannot_claim_policy_window_reason[<lambda>7] _______
+
+change = <function <lambda> at 0x10841c7c0>
+
+    @pytest.mark.parametrize('change',[
+        lambda d:d.update(agent_id='other'),lambda d:d.update(policy_digest='sha256:'+'2'*64),
+        lambda d:d.pop('requested_window'),lambda d:d.update(requested_window={'not_before_ms':1,'not_after_ms':2}),
+        lambda d:d.pop('evaluated_at_ms'),lambda d:d.update(evaluated_at_ms=True),
+        lambda d:d.update(evaluated_at_ms=-1),lambda d:d.update(evaluated_at_ms=1.5),
+        lambda d:d.update(evaluated_at_ms=9007199254740992),
+    ])
+    def test_unbound_denial_cannot_claim_policy_window_reason(change):
+>       denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+
+tests/test_policy_windows.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: FoundationPolicy.check() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:41: TypeError
+_______ test_unbound_denial_cannot_claim_policy_window_reason[<lambda>8] _______
+
+change = <function <lambda> at 0x10841c860>
+
+    @pytest.mark.parametrize('change',[
+        lambda d:d.update(agent_id='other'),lambda d:d.update(policy_digest='sha256:'+'2'*64),
+        lambda d:d.pop('requested_window'),lambda d:d.update(requested_window={'not_before_ms':1,'not_after_ms':2}),
+        lambda d:d.pop('evaluated_at_ms'),lambda d:d.update(evaluated_at_ms=True),
+        lambda d:d.update(evaluated_at_ms=-1),lambda d:d.update(evaluated_at_ms=1.5),
+        lambda d:d.update(evaluated_at_ms=9007199254740992),
+    ])
+    def test_unbound_denial_cannot_claim_policy_window_reason(change):
+>       denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+
+tests/test_policy_windows.py:41: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   denied(lambda:foundation(change).check('agent','release','model/champion',requested_window=DEMO),'POLICY_DECISION_BINDING_MISMATCH')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: FoundationPolicy.check() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:41: TypeError
+__ test_invalid_grant_window_is_rejected_before_authority_or_policy[window0] ___
+
+ready = (<earned_authority.connected.ConnectedRuntime object at 0x108473b00>, {'canonical_evaluation': {'cascade': {}, 'dispos...xt_digest': 'sha256:6d9885a8b5edc548fcf94091df76d9e4bcd6f5f863e612edaa5175e8693503ee', 'disposition': 'ELIGIBLE', ...})
+window = {}
+
+    @pytest.mark.parametrize('window',[{}, {'not_before_ms':True,'not_after_ms':2},
+        {'not_before_ms':1.5,'not_after_ms':2},{'not_before_ms':2,'not_after_ms':2},
+        {'not_before_ms':-1,'not_after_ms':2},{'not_before_ms':1,'not_after_ms':9007199254740992},
+        {'not_before_ms':1,'not_after_ms':2,'now_ms':1}])
+    def test_invalid_grant_window_is_rejected_before_authority_or_policy(ready,window):
+>       rt,q=ready;denied(lambda:rt.grant(q['qualification_id'],requested_window=window),'INVALID_REQUESTED_WINDOW')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_policy_windows.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   rt,q=ready;denied(lambda:rt.grant(q['qualification_id'],requested_window=window),'INVALID_REQUESTED_WINDOW')
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:63: TypeError
+__ test_invalid_grant_window_is_rejected_before_authority_or_policy[window1] ___
+
+ready = (<earned_authority.connected.ConnectedRuntime object at 0x1084d63c0>, {'canonical_evaluation': {'cascade': {}, 'dispos...xt_digest': 'sha256:6d9885a8b5edc548fcf94091df76d9e4bcd6f5f863e612edaa5175e8693503ee', 'disposition': 'ELIGIBLE', ...})
+window = {'not_after_ms': 2, 'not_before_ms': True}
+
+    @pytest.mark.parametrize('window',[{}, {'not_before_ms':True,'not_after_ms':2},
+        {'not_before_ms':1.5,'not_after_ms':2},{'not_before_ms':2,'not_after_ms':2},
+        {'not_before_ms':-1,'not_after_ms':2},{'not_before_ms':1,'not_after_ms':9007199254740992},
+        {'not_before_ms':1,'not_after_ms':2,'now_ms':1}])
+    def test_invalid_grant_window_is_rejected_before_authority_or_policy(ready,window):
+>       rt,q=ready;denied(lambda:rt.grant(q['qualification_id'],requested_window=window),'INVALID_REQUESTED_WINDOW')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_policy_windows.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   rt,q=ready;denied(lambda:rt.grant(q['qualification_id'],requested_window=window),'INVALID_REQUESTED_WINDOW')
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:63: TypeError
+__ test_invalid_grant_window_is_rejected_before_authority_or_policy[window2] ___
+
+ready = (<earned_authority.connected.ConnectedRuntime object at 0x108470aa0>, {'canonical_evaluation': {'cascade': {}, 'dispos...xt_digest': 'sha256:6d9885a8b5edc548fcf94091df76d9e4bcd6f5f863e612edaa5175e8693503ee', 'disposition': 'ELIGIBLE', ...})
+window = {'not_after_ms': 2, 'not_before_ms': 1.5}
+
+    @pytest.mark.parametrize('window',[{}, {'not_before_ms':True,'not_after_ms':2},
+        {'not_before_ms':1.5,'not_after_ms':2},{'not_before_ms':2,'not_after_ms':2},
+        {'not_before_ms':-1,'not_after_ms':2},{'not_before_ms':1,'not_after_ms':9007199254740992},
+        {'not_before_ms':1,'not_after_ms':2,'now_ms':1}])
+    def test_invalid_grant_window_is_rejected_before_authority_or_policy(ready,window):
+>       rt,q=ready;denied(lambda:rt.grant(q['qualification_id'],requested_window=window),'INVALID_REQUESTED_WINDOW')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_policy_windows.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   rt,q=ready;denied(lambda:rt.grant(q['qualification_id'],requested_window=window),'INVALID_REQUESTED_WINDOW')
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:63: TypeError
+__ test_invalid_grant_window_is_rejected_before_authority_or_policy[window3] ___
+
+ready = (<earned_authority.connected.ConnectedRuntime object at 0x1084d7a10>, {'canonical_evaluation': {'cascade': {}, 'dispos...xt_digest': 'sha256:6d9885a8b5edc548fcf94091df76d9e4bcd6f5f863e612edaa5175e8693503ee', 'disposition': 'ELIGIBLE', ...})
+window = {'not_after_ms': 2, 'not_before_ms': 2}
+
+    @pytest.mark.parametrize('window',[{}, {'not_before_ms':True,'not_after_ms':2},
+        {'not_before_ms':1.5,'not_after_ms':2},{'not_before_ms':2,'not_after_ms':2},
+        {'not_before_ms':-1,'not_after_ms':2},{'not_before_ms':1,'not_after_ms':9007199254740992},
+        {'not_before_ms':1,'not_after_ms':2,'now_ms':1}])
+    def test_invalid_grant_window_is_rejected_before_authority_or_policy(ready,window):
+>       rt,q=ready;denied(lambda:rt.grant(q['qualification_id'],requested_window=window),'INVALID_REQUESTED_WINDOW')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_policy_windows.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   rt,q=ready;denied(lambda:rt.grant(q['qualification_id'],requested_window=window),'INVALID_REQUESTED_WINDOW')
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:63: TypeError
+__ test_invalid_grant_window_is_rejected_before_authority_or_policy[window4] ___
+
+ready = (<earned_authority.connected.ConnectedRuntime object at 0x1084723f0>, {'canonical_evaluation': {'cascade': {}, 'dispos...xt_digest': 'sha256:6d9885a8b5edc548fcf94091df76d9e4bcd6f5f863e612edaa5175e8693503ee', 'disposition': 'ELIGIBLE', ...})
+window = {'not_after_ms': 2, 'not_before_ms': -1}
+
+    @pytest.mark.parametrize('window',[{}, {'not_before_ms':True,'not_after_ms':2},
+        {'not_before_ms':1.5,'not_after_ms':2},{'not_before_ms':2,'not_after_ms':2},
+        {'not_before_ms':-1,'not_after_ms':2},{'not_before_ms':1,'not_after_ms':9007199254740992},
+        {'not_before_ms':1,'not_after_ms':2,'now_ms':1}])
+    def test_invalid_grant_window_is_rejected_before_authority_or_policy(ready,window):
+>       rt,q=ready;denied(lambda:rt.grant(q['qualification_id'],requested_window=window),'INVALID_REQUESTED_WINDOW')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_policy_windows.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   rt,q=ready;denied(lambda:rt.grant(q['qualification_id'],requested_window=window),'INVALID_REQUESTED_WINDOW')
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:63: TypeError
+__ test_invalid_grant_window_is_rejected_before_authority_or_policy[window5] ___
+
+ready = (<earned_authority.connected.ConnectedRuntime object at 0x10842b980>, {'canonical_evaluation': {'cascade': {}, 'dispos...xt_digest': 'sha256:6d9885a8b5edc548fcf94091df76d9e4bcd6f5f863e612edaa5175e8693503ee', 'disposition': 'ELIGIBLE', ...})
+window = {'not_after_ms': 9007199254740992, 'not_before_ms': 1}
+
+    @pytest.mark.parametrize('window',[{}, {'not_before_ms':True,'not_after_ms':2},
+        {'not_before_ms':1.5,'not_after_ms':2},{'not_before_ms':2,'not_after_ms':2},
+        {'not_before_ms':-1,'not_after_ms':2},{'not_before_ms':1,'not_after_ms':9007199254740992},
+        {'not_before_ms':1,'not_after_ms':2,'now_ms':1}])
+    def test_invalid_grant_window_is_rejected_before_authority_or_policy(ready,window):
+>       rt,q=ready;denied(lambda:rt.grant(q['qualification_id'],requested_window=window),'INVALID_REQUESTED_WINDOW')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_policy_windows.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   rt,q=ready;denied(lambda:rt.grant(q['qualification_id'],requested_window=window),'INVALID_REQUESTED_WINDOW')
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:63: TypeError
+__ test_invalid_grant_window_is_rejected_before_authority_or_policy[window6] ___
+
+ready = (<earned_authority.connected.ConnectedRuntime object at 0x10842a810>, {'canonical_evaluation': {'cascade': {}, 'dispos...xt_digest': 'sha256:6d9885a8b5edc548fcf94091df76d9e4bcd6f5f863e612edaa5175e8693503ee', 'disposition': 'ELIGIBLE', ...})
+window = {'not_after_ms': 2, 'not_before_ms': 1, 'now_ms': 1}
+
+    @pytest.mark.parametrize('window',[{}, {'not_before_ms':True,'not_after_ms':2},
+        {'not_before_ms':1.5,'not_after_ms':2},{'not_before_ms':2,'not_after_ms':2},
+        {'not_before_ms':-1,'not_after_ms':2},{'not_before_ms':1,'not_after_ms':9007199254740992},
+        {'not_before_ms':1,'not_after_ms':2,'now_ms':1}])
+    def test_invalid_grant_window_is_rejected_before_authority_or_policy(ready,window):
+>       rt,q=ready;denied(lambda:rt.grant(q['qualification_id'],requested_window=window),'INVALID_REQUESTED_WINDOW')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_policy_windows.py:63: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   rt,q=ready;denied(lambda:rt.grant(q['qualification_id'],requested_window=window),'INVALID_REQUESTED_WINDOW')
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:63: TypeError
+___ test_policy_window_denial_preserves_eligibility_and_creates_no_authority ___
+
+ready = (<earned_authority.connected.ConnectedRuntime object at 0x10842b410>, {'canonical_evaluation': {'cascade': {}, 'dispos...xt_digest': 'sha256:6d9885a8b5edc548fcf94091df76d9e4bcd6f5f863e612edaa5175e8693503ee', 'disposition': 'ELIGIBLE', ...})
+
+    def test_policy_window_denial_preserves_eligibility_and_creates_no_authority(ready):
+        rt,q=ready;rt.policy.reject=True
+>       denied(lambda:rt.grant(q['qualification_id'],requested_window=DEMO),'POLICY_WINDOW_DENIED')
+
+tests/test_policy_windows.py:69: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   denied(lambda:rt.grant(q['qualification_id'],requested_window=DEMO),'POLICY_WINDOW_DENIED')
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:69: TypeError
+___ test_future_window_allow_does_not_schedule_or_issue_immediate_authority ____
+
+ready = (<earned_authority.connected.ConnectedRuntime object at 0x1084f4950>, {'canonical_evaluation': {'cascade': {}, 'dispos...xt_digest': 'sha256:6d9885a8b5edc548fcf94091df76d9e4bcd6f5f863e612edaa5175e8693503ee', 'disposition': 'ELIGIBLE', ...})
+
+    def test_future_window_allow_does_not_schedule_or_issue_immediate_authority(ready):
+>       rt,q=ready;denied(lambda:rt.grant(q['qualification_id'],requested_window=DEMO),'WINDOW_NOT_ACTIVE')
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_policy_windows.py:75: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_policy_windows.py:25: in denied
+    with pytest.raises(Denied) as got:call()
+                                      ^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   rt,q=ready;denied(lambda:rt.grant(q['qualification_id'],requested_window=DEMO),'WINDOW_NOT_ACTIVE')
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:75: TypeError
+_____________ test_active_window_is_signed_and_caps_scope_exactly ______________
+
+ready = (<earned_authority.connected.ConnectedRuntime object at 0x1084f7440>, {'canonical_evaluation': {'cascade': {}, 'dispos...xt_digest': 'sha256:6d9885a8b5edc548fcf94091df76d9e4bcd6f5f863e612edaa5175e8693503ee', 'disposition': 'ELIGIBLE', ...})
+
+    def test_active_window_is_signed_and_caps_scope_exactly(ready):
+        rt,q=ready;window={'not_before_ms':rt.clock.now_ms,'not_after_ms':rt.clock.now_ms+5123}
+>       a=rt.grant(q['qualification_id'],requested_window=window,operation_id='window-operation')
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:81: TypeError
+___________ test_preflight_rechecks_window_after_synchronous_policy ____________
+
+ready = (<earned_authority.connected.ConnectedRuntime object at 0x1084f5790>, {'canonical_evaluation': {'cascade': {}, 'dispos...xt_digest': 'sha256:6d9885a8b5edc548fcf94091df76d9e4bcd6f5f863e612edaa5175e8693503ee', 'disposition': 'ELIGIBLE', ...})
+
+    def test_preflight_rechecks_window_after_synchronous_policy(ready):
+        rt,q=ready;window={'not_before_ms':rt.clock.now_ms,'not_after_ms':rt.clock.now_ms+2000}
+        def after():
+            if len(rt.policy.calls)==2:rt.clock.advance(2000)
+        rt.policy.after=after
+>       with pytest.raises(Denied):rt.grant(q['qualification_id'],requested_window=window)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:104: TypeError
+_____ test_window_rechecked_at_execution_even_when_scope_and_passport_live _____
+
+ready = (<earned_authority.connected.ConnectedRuntime object at 0x108f267e0>, {'canonical_evaluation': {'cascade': {}, 'dispos...xt_digest': 'sha256:6d9885a8b5edc548fcf94091df76d9e4bcd6f5f863e612edaa5175e8693503ee', 'disposition': 'ELIGIBLE', ...})
+
+    def test_window_rechecked_at_execution_even_when_scope_and_passport_live(ready):
+        rt,q=ready;window={'not_before_ms':rt.clock.now_ms,'not_after_ms':rt.clock.now_ms+5000}
+>       rt.grant(q['qualification_id'],requested_window=window)
+E       TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'requested_window'
+
+tests/test_policy_windows.py:116: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_policy_windows.py::test_foundation_propagates_only_bound_window_denial
+FAILED tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>0]
+FAILED tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>1]
+FAILED tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>2]
+FAILED tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>3]
+FAILED tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>4]
+FAILED tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>5]
+FAILED tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>6]
+FAILED tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>7]
+FAILED tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>8]
+FAILED tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window0]
+FAILED tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window1]
+FAILED tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window2]
+FAILED tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window3]
+FAILED tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window4]
+FAILED tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window5]
+FAILED tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window6]
+FAILED tests/test_policy_windows.py::test_policy_window_denial_preserves_eligibility_and_creates_no_authority
+FAILED tests/test_policy_windows.py::test_future_window_allow_does_not_schedule_or_issue_immediate_authority
+FAILED tests/test_policy_windows.py::test_active_window_is_signed_and_caps_scope_exactly
+FAILED tests/test_policy_windows.py::test_preflight_rechecks_window_after_synchronous_policy
+FAILED tests/test_policy_windows.py::test_window_rechecked_at_execution_even_when_scope_and_passport_live
+22 failed, 1 passed in 0.37s

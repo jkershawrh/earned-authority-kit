@@ -1,0 +1,256 @@
+FFFFFFFFFFFFF.F                                                          [100%]
+=================================== FAILURES ===================================
+_ test_checks_bind_actual_boundary_without_rewriting_prior_qualification_or_grant _
+
+rt = <earned_authority.runtime.Runtime object at 0x10afda420>
+
+    def test_checks_bind_actual_boundary_without_rewriting_prior_qualification_or_grant(rt):
+        before=copy.deepcopy(rt.events());cmd=rt.admit(attempt_id='live')
+        q=rt.qualification_at(cmd['qualification_id'],digest=cmd['qualification_digest'])
+        rt.clock.advance(1);result=rt.commit(cmd);checks=rows(rt,'live')
+>       assert {r['event']['event_type'] for r in checks}==CHECKS and len(checks)==2
+E       AssertionError: assert (set() == {'AUTHORIZATI...TION_CHECKED'}
+E         
+E         Extra items in the right set:
+E         'AUTHORIZATION_CHECKED'
+E         'QUALIFICATION_CHECKED'
+E         Use -v to get more diff)
+
+tests/test_attempt_checks.py:30: AssertionError
+________________ test_retry_and_restart_preserve_one_check_pair ________________
+
+rt = <earned_authority.runtime.Runtime object at 0x10affe9f0>
+
+    def test_retry_and_restart_preserve_one_check_pair(rt):
+        cmd=rt.admit(attempt_id='live');rt.commit(cmd);first=rows(rt,'live')
+        restarted=Runtime(rt.path,clock=rt.clock)
+        restarted.retry(cmd)
+>       assert len(first)==2 and rows(restarted,'live')==first and restarted.mutation_count==1
+E       assert (0 == 2)
+E        +  where 0 = len([])
+
+tests/test_attempt_checks.py:50: AssertionError
+_ test_actual_check_write_failure_rolls_back_checks_intent_and_mutation[AUTHORIZATION_CHECKED] _
+
+rt = <earned_authority.runtime.Runtime object at 0x10b03a0f0>
+kind = 'AUTHORIZATION_CHECKED'
+
+    @pytest.mark.parametrize('kind',sorted(CHECKS))
+    def test_actual_check_write_failure_rolls_back_checks_intent_and_mutation(rt,kind):
+        cmd=rt.admit(attempt_id='live')
+        with rt._db() as db:
+            db.execute("CREATE TRIGGER refuse_check BEFORE INSERT ON events WHEN json_extract(NEW.body,'$.event_type')='"+kind+"' BEGIN SELECT RAISE(ABORT,'check persistence unavailable'); END")
+>       with pytest.raises(Denied,match='LOCAL_DURABILITY_UNAVAILABLE'):rt.commit(cmd)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_attempt_checks.py:57: Failed
+_ test_actual_check_write_failure_rolls_back_checks_intent_and_mutation[QUALIFICATION_CHECKED] _
+
+rt = <earned_authority.runtime.Runtime object at 0x10affe870>
+kind = 'QUALIFICATION_CHECKED'
+
+    @pytest.mark.parametrize('kind',sorted(CHECKS))
+    def test_actual_check_write_failure_rolls_back_checks_intent_and_mutation(rt,kind):
+        cmd=rt.admit(attempt_id='live')
+        with rt._db() as db:
+            db.execute("CREATE TRIGGER refuse_check BEFORE INSERT ON events WHEN json_extract(NEW.body,'$.event_type')='"+kind+"' BEGIN SELECT RAISE(ABORT,'check persistence unavailable'); END")
+>       with pytest.raises(Denied,match='LOCAL_DURABILITY_UNAVAILABLE'):rt.commit(cmd)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_attempt_checks.py:57: Failed
+_ test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[qualification_revision-999] _
+
+rt = <earned_authority.runtime.Runtime object at 0x10b039460>
+key = 'qualification_revision', value = 999
+
+    @pytest.mark.parametrize('key,value',[
+        ('qualification_revision',999),('qualification_digest','sha256:'+'0'*64),
+        ('grant_id','borrowed-grant'),('policy_decision_id','admission-only-decision'),
+        ('command_digest','sha256:'+'0'*64),('correlation_id','another-attempt'),
+        ('resource','another-resource'),('authorizes_execution',True),
+    ])
+    def test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof(rt,key,value):
+        cmd=rt.admit(attempt_id='live');rt.commit(cmd)
+>       checks=rows(rt,'live');assert len(checks)==2
+                               ^^^^^^^^^^^^^^^^^^^^^
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests/test_attempt_checks.py:70: AssertionError
+_ test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[qualification_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000] _
+
+rt = <earned_authority.runtime.Runtime object at 0x10affffe0>
+key = 'qualification_digest'
+value = 'sha256:0000000000000000000000000000000000000000000000000000000000000000'
+
+    @pytest.mark.parametrize('key,value',[
+        ('qualification_revision',999),('qualification_digest','sha256:'+'0'*64),
+        ('grant_id','borrowed-grant'),('policy_decision_id','admission-only-decision'),
+        ('command_digest','sha256:'+'0'*64),('correlation_id','another-attempt'),
+        ('resource','another-resource'),('authorizes_execution',True),
+    ])
+    def test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof(rt,key,value):
+        cmd=rt.admit(attempt_id='live');rt.commit(cmd)
+>       checks=rows(rt,'live');assert len(checks)==2
+                               ^^^^^^^^^^^^^^^^^^^^^
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests/test_attempt_checks.py:70: AssertionError
+_ test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[grant_id-borrowed-grant] _
+
+rt = <earned_authority.runtime.Runtime object at 0x10b03a690>, key = 'grant_id'
+value = 'borrowed-grant'
+
+    @pytest.mark.parametrize('key,value',[
+        ('qualification_revision',999),('qualification_digest','sha256:'+'0'*64),
+        ('grant_id','borrowed-grant'),('policy_decision_id','admission-only-decision'),
+        ('command_digest','sha256:'+'0'*64),('correlation_id','another-attempt'),
+        ('resource','another-resource'),('authorizes_execution',True),
+    ])
+    def test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof(rt,key,value):
+        cmd=rt.admit(attempt_id='live');rt.commit(cmd)
+>       checks=rows(rt,'live');assert len(checks)==2
+                               ^^^^^^^^^^^^^^^^^^^^^
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests/test_attempt_checks.py:70: AssertionError
+_ test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[policy_decision_id-admission-only-decision] _
+
+rt = <earned_authority.runtime.Runtime object at 0x10b0389b0>
+key = 'policy_decision_id', value = 'admission-only-decision'
+
+    @pytest.mark.parametrize('key,value',[
+        ('qualification_revision',999),('qualification_digest','sha256:'+'0'*64),
+        ('grant_id','borrowed-grant'),('policy_decision_id','admission-only-decision'),
+        ('command_digest','sha256:'+'0'*64),('correlation_id','another-attempt'),
+        ('resource','another-resource'),('authorizes_execution',True),
+    ])
+    def test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof(rt,key,value):
+        cmd=rt.admit(attempt_id='live');rt.commit(cmd)
+>       checks=rows(rt,'live');assert len(checks)==2
+                               ^^^^^^^^^^^^^^^^^^^^^
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests/test_attempt_checks.py:70: AssertionError
+_ test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[command_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000] _
+
+rt = <earned_authority.runtime.Runtime object at 0x10aacfad0>
+key = 'command_digest'
+value = 'sha256:0000000000000000000000000000000000000000000000000000000000000000'
+
+    @pytest.mark.parametrize('key,value',[
+        ('qualification_revision',999),('qualification_digest','sha256:'+'0'*64),
+        ('grant_id','borrowed-grant'),('policy_decision_id','admission-only-decision'),
+        ('command_digest','sha256:'+'0'*64),('correlation_id','another-attempt'),
+        ('resource','another-resource'),('authorizes_execution',True),
+    ])
+    def test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof(rt,key,value):
+        cmd=rt.admit(attempt_id='live');rt.commit(cmd)
+>       checks=rows(rt,'live');assert len(checks)==2
+                               ^^^^^^^^^^^^^^^^^^^^^
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests/test_attempt_checks.py:70: AssertionError
+_ test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[correlation_id-another-attempt] _
+
+rt = <earned_authority.runtime.Runtime object at 0x10b038a10>
+key = 'correlation_id', value = 'another-attempt'
+
+    @pytest.mark.parametrize('key,value',[
+        ('qualification_revision',999),('qualification_digest','sha256:'+'0'*64),
+        ('grant_id','borrowed-grant'),('policy_decision_id','admission-only-decision'),
+        ('command_digest','sha256:'+'0'*64),('correlation_id','another-attempt'),
+        ('resource','another-resource'),('authorizes_execution',True),
+    ])
+    def test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof(rt,key,value):
+        cmd=rt.admit(attempt_id='live');rt.commit(cmd)
+>       checks=rows(rt,'live');assert len(checks)==2
+                               ^^^^^^^^^^^^^^^^^^^^^
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests/test_attempt_checks.py:70: AssertionError
+_ test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[resource-another-resource] _
+
+rt = <earned_authority.runtime.Runtime object at 0x10afff9e0>, key = 'resource'
+value = 'another-resource'
+
+    @pytest.mark.parametrize('key,value',[
+        ('qualification_revision',999),('qualification_digest','sha256:'+'0'*64),
+        ('grant_id','borrowed-grant'),('policy_decision_id','admission-only-decision'),
+        ('command_digest','sha256:'+'0'*64),('correlation_id','another-attempt'),
+        ('resource','another-resource'),('authorizes_execution',True),
+    ])
+    def test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof(rt,key,value):
+        cmd=rt.admit(attempt_id='live');rt.commit(cmd)
+>       checks=rows(rt,'live');assert len(checks)==2
+                               ^^^^^^^^^^^^^^^^^^^^^
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests/test_attempt_checks.py:70: AssertionError
+_ test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[authorizes_execution-True] _
+
+rt = <earned_authority.runtime.Runtime object at 0x10b03bc50>
+key = 'authorizes_execution', value = True
+
+    @pytest.mark.parametrize('key,value',[
+        ('qualification_revision',999),('qualification_digest','sha256:'+'0'*64),
+        ('grant_id','borrowed-grant'),('policy_decision_id','admission-only-decision'),
+        ('command_digest','sha256:'+'0'*64),('correlation_id','another-attempt'),
+        ('resource','another-resource'),('authorizes_execution',True),
+    ])
+    def test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof(rt,key,value):
+        cmd=rt.admit(attempt_id='live');rt.commit(cmd)
+>       checks=rows(rt,'live');assert len(checks)==2
+                               ^^^^^^^^^^^^^^^^^^^^^
+E       assert 0 == 2
+E        +  where 0 = len([])
+
+tests/test_attempt_checks.py:70: AssertionError
+_ test_consumer_rejects_omitted_check_record_even_with_retained_authenticated_proof _
+
+rt = <earned_authority.runtime.Runtime object at 0x10afffe00>
+
+    def test_consumer_rejects_omitted_check_record_even_with_retained_authenticated_proof(rt):
+        rt.execute(attempt_id='live');b=bundle(rt,'live')
+        b.records=[r for r in b.records if not (r['kind']=='lifecycle-event' and r['value']['event_type']=='QUALIFICATION_CHECKED')]
+>       with pytest.raises(WireContractError):consume_bundle(b,trust=RuntimeTrust(rt),now_ms=rt.clock.now_ms)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.wire_contracts.WireContractError'>
+
+tests/test_attempt_checks.py:80: Failed
+_ test_pre_upgrade_committed_attempt_remains_historical_without_fabricated_checks _
+
+rt = <earned_authority.runtime.Runtime object at 0x10b0b6de0>
+
+    def test_pre_upgrade_committed_attempt_remains_historical_without_fabricated_checks(rt):
+        cmd=rt.admit(attempt_id='old')
+>       assert cmd.get('execution_checks_version')==1
+E       AssertionError: assert None == 1
+E        +  where None = <built-in method get of dict object at 0x10b016c00>('execution_checks_version')
+E        +    where <built-in method get of dict object at 0x10b016c00> = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'old', 'authority_revision': 1, ...}.get
+
+tests/test_attempt_checks.py:89: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_attempt_checks.py::test_checks_bind_actual_boundary_without_rewriting_prior_qualification_or_grant
+FAILED tests/test_attempt_checks.py::test_retry_and_restart_preserve_one_check_pair
+FAILED tests/test_attempt_checks.py::test_actual_check_write_failure_rolls_back_checks_intent_and_mutation[AUTHORIZATION_CHECKED]
+FAILED tests/test_attempt_checks.py::test_actual_check_write_failure_rolls_back_checks_intent_and_mutation[QUALIFICATION_CHECKED]
+FAILED tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[qualification_revision-999]
+FAILED tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[qualification_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000]
+FAILED tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[grant_id-borrowed-grant]
+FAILED tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[policy_decision_id-admission-only-decision]
+FAILED tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[command_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000]
+FAILED tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[correlation_id-another-attempt]
+FAILED tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[resource-another-resource]
+FAILED tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[authorizes_execution-True]
+FAILED tests/test_attempt_checks.py::test_consumer_rejects_omitted_check_record_even_with_retained_authenticated_proof
+FAILED tests/test_attempt_checks.py::test_pre_upgrade_committed_attempt_remains_historical_without_fabricated_checks
+14 failed, 1 passed in 0.60s

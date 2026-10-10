@@ -1,0 +1,21 @@
+{
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "completed_at": "2026-10-10T05:42:35.873526+00:00",
+  "images": [
+    {
+      "container": "ea-observation-foundation-bff",
+      "image_tag": "localhost/earned-authority-foundation-bff:reference",
+      "running_image_id": "8357ac8e9492af47f51e87004996506e24d8cd9244da9503e42422a2fa7f852e",
+      "expected_image_id": "8357ac8e9492af47f51e87004996506e24d8cd9244da9503e42422a2fa7f852e",
+      "matched": true
+    },
+    {
+      "container": "ea-observation-foundation-gateway",
+      "image_tag": "localhost/earned-authority-foundation-gateway:reference",
+      "running_image_id": "70b4ab7ef64c30f6adb78c3ace0e086b2f4e7f201df4b2e267f75a6355950b12",
+      "expected_image_id": "70b4ab7ef64c30f6adb78c3ace0e086b2f4e7f201df4b2e267f75a6355950b12",
+      "matched": true
+    }
+  ]
+}

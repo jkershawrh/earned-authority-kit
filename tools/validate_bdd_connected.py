@@ -40,9 +40,6 @@ from earned_authority.runtime import ControlledClock, Denied, ident, encoded
 # These cases remain unbound until the exact requirement has an observable API.
 UNBOUND = {}
 PARTIAL = {
-    9: 'Actual Foundation/OPA denies the requested resource at the requested time; a time-window-specific policy rule is not exercised.',
-    15: 'Canonical current-status unavailability fails closed despite a previously observed active snapshot. There is no executable stale grant cache in this adapter, so the literal cached-status premise is not exercised.',
-    16: 'Qualification and grant exist before the live attempt; records are linked by qualification/grant IDs, not retroactively assigned the later attempt ID required literally by this scenario.',
     31: 'The current public aggregate has one resource grant per skill. Stale changed-resource rejection is exercised, but adding a second read-health resource while retaining the first is not represented.',
 }
 
@@ -473,10 +470,29 @@ class Case:
             self.check('independent evidence refs resolve', all(any(o['evidence_digest']==ref['evidence_digest'] and rt._verified(o,{'checker'})
                        for o in rt.observations()) for ref in self.q['outcome_refs']))
         elif n == 9:
-            q = self.qualify()
-            self.deny('real policy denies otherwise eligible grant', lambda:rt.grant(q['qualification_id'],agent=self.agent,resource='model/experimental'),'POLICY_DENIED')
+            q=self.qualify();before_authority=self.authority();before_operations=rt.authority_operations(self.agent)
+            allowed=rt.policy.check(self.agent,'release','model/champion')
+            self.eq('same actor action and resource pass ordinary current policy',allowed['decision']['effect'],'ALLOW')
+            window={'not_before_ms':4102444800000,'not_after_ms':4102444860000}
+            request={'decision_id':ident('bdd-window-decision'),'agent_id':self.agent,
+                     'action_class':'model.promote_to_production','resource':'model/champion','requested_window':window}
+            before=rt.clock.now_ms
+            response=rt.policy.request('/v1/policy/evaluations',request)
+            after=rt.clock.now_ms;decision=response['decision']
+            self.eq('actual canonical policy denies requested blackout window',(decision['effect'],decision['reason']),('DENY','POLICY_WINDOW_DENIED'))
+            for field,value in request.items():self.eq('canonical temporal decision binds '+field,decision[field],value)
+            self.eq('temporal decision binds loaded source policy',(decision['policy_id'],decision['policy_digest']),(rt.policy.policy_id,rt.policy.policy_digest))
+            evaluated=decision['evaluated_at_ms']
+            self.check('evaluation time comes from actual service near request time',type(evaluated) is int and before-5000<=evaluated<=after+5000,
+                       evaluated_at_ms=evaluated,request_started_at_ms=before,response_received_at_ms=after,clock_tolerance_ms=5000)
+            self.eq('policy denial is check-only and creates no execution receipt',(response['executed'],response['receipt_created']),(False,False))
+            self.deny('verified temporal denial prevents otherwise eligible grant',lambda:rt.grant(q['qualification_id'],agent=self.agent,resource='model/champion',requested_window=window),'POLICY_WINDOW_DENIED')
             self.eq('no active grant', self.authority()['grants'], {})
+            self.eq('temporal denial leaves canonical authority unchanged',self.authority(),before_authority)
+            self.eq('temporal denial creates no authority operation',rt.authority_operations(self.agent),before_operations)
+            self.eq('temporal denial creates no grant event',self.events('GRANTED'),[])
             self.eq('qualification remains eligible', rt.eligibility(q['qualification_id'],rt.procedure_revision,self.context),q)
+            self.eq('subsequent ordinary policy evaluation remains allowed',rt.policy.check(self.agent,'release','model/champion')['decision']['effect'],'ALLOW')
         elif n == 10:
             self.ready()
             changes = {'wrong-action':{'action':'delete'},'wrong-resource':{'resource':'model/other'},
@@ -499,6 +515,7 @@ class Case:
             self.deny('prior admitted command refused at actual mutation fence',lambda:rt.commit(command),'REVOKED_AUTHORITY')
         elif n == 14:
             self.ready();known=self.authority();original=rt.passport
+            self.eq('malformed-response test starts without diagnostic cache',rt.cached_authority_observation(self.agent),None)
             relay=MalformedPassportRelay(original,self.label)
             config=read_config(self.args.config)
             proxy=PassportClient('127.0.0.1:'+str(relay.port),original.token,original.public_key,
@@ -514,28 +531,76 @@ class Case:
                 self.check('fault actually forwarded real service replies',len(relay.calls)>=2,calls=relay.calls)
                 self.check('expiry fault changed wire content',all(c['upstream_response_digest']!=c['forwarded_response_digest']
                            or c['upstream_metadata_digest']!=c['forwarded_metadata_digest'] for c in relay.calls))
+                self.deny('invalid canonical response cannot populate diagnostic cache',lambda:rt.refresh_authority_observation(self.agent),'INVALID_AUTHORITY')
+                self.eq('invalid authority leaves no cached observation',rt.cached_authority_observation(self.agent),None)
             finally:rt.passport=original;proxy.close();relay.close()
             self.eq('valid canonical authority remains unchanged after removing bad transport',self.authority(),known)
         elif n == 15:
-            self.ready(); known = self.authority(); original = rt.passport
+            self.ready();known=self.authority();before_events=copy.deepcopy(rt.events())
+            observed=rt.refresh_authority_observation(self.agent)
+            self.eq('cached snapshot was actually fetched from current canonical authority',observed['authority'],known)
+            self.eq('observed grant was marked active',observed['authority']['status'],'ACTIVE')
+            self.eq('cache binds exact authority snapshot',observed['authority_digest'],canonical_digest(known))
+            self.check('cached release grant is present','release-model' in observed['authority']['grants'])
+            self.check('diagnostic observation is authenticated by pinned local writer',rt._verified(observed,{'writer'}))
+            self.eq('diagnostic data explicitly cannot authorize execution',(observed['can_authorize_execution'],observed['requires_current_check']),(False,True))
+            self.eq('diagnostic refresh does not create execution or ledger events',rt.events(),before_events)
+            self.reopen();rt=self.rt
+            self.eq('locally cached active observation survives restart',rt.cached_authority_observation(self.agent),observed)
+            old_command=self.admit();original=rt.passport
             config = read_config(self.args.config)
             refused = PassportClient('127.0.0.1:1',original.token,original.public_key,
                 sdk_path=config.get('PASSPORT_SDK_DIR',str(ROOT.parents[1]/'work/passport-python-sdk')),timeout_seconds=1)
-            rt.passport = refused; self.faults.append('Actual Passport current-status SDK connection refused on unused loopback port 1; previously observed active snapshot retained only as test evidence.')
+            rt.passport = refused; self.faults.append('Actual Passport current-status SDK connection refused on unused loopback port 1. An authenticated ACTIVE observation is durably cached and survives restart for offline diagnostics; it is explicitly non-authorizing and is never an executable fallback.')
             try:
-                self.check('previous observed grant was active',known['status']=='ACTIVE')
-                self.deny('unavailable canonical current authority fails closed',lambda:rt.commit(self.admit()),'AUTHORITY_UNCONFIRMED')
+                aid=ident('cached-authority-new-attempt')
+                self.eq('offline diagnostic cache remains available while service is unreachable',rt.cached_authority_observation(self.agent),observed)
+                self.deny('new mutation held despite cached active grant',lambda:rt.commit(self.admit(attempt_id=aid)),'AUTHORITY_UNCONFIRMED')
+                self.eq('cached status cannot create an admitted attempt',rt.attempts(aid),None)
+                self.eq('cached status cannot create an intent',self.events('INTENT',aid),[])
+                self.deny('prior admitted mutation also needs current authority',lambda:rt.commit(old_command),'AUTHORITY_UNCONFIRMED')
+                self.deny('failed diagnostic refresh cannot fabricate current authority',lambda:rt.refresh_authority_observation(self.agent),'AUTHORITY_UNCONFIRMED')
+                self.eq('unavailable refresh preserves exact historical observation and time',rt.cached_authority_observation(self.agent),observed)
             finally:refused.close();rt.passport=original
+            self.eq('canonical authority was not changed by diagnostic outage',self.authority(),known)
         elif n == 16:
-            self.ready();cmd=self.admit();result=rt.commit(cmd)
+            self.ready()
+            qualification=copy.deepcopy(self.q)
+            original_records={row['event_id']:copy.deepcopy(row['event']) for row in rt.events()}
+            cmd=self.admit();result=rt.commit(cmd)
+            self.eq('new command requires per-attempt boundary check evidence',cmd['execution_checks_version'],1)
             self.eq('one committed mutation',rt.mutation_count,1)
             self.eq('independent actual registry postcondition',rt.read('model/champion'),{'version':'model-v2','healthy':True})
             self.eq('observed outcome PASS',result['outcome']['outcome'],'PASS')
             self.eq('outcome attempt correlation',result['outcome']['attempt_id'],cmd['attempt_id'])
             self.eq('outcome exact skill binding',result['outcome']['skill_digest'],cmd['skill_digest'])
             self.eq('execution exact authority revision',result['authority_revision'],cmd['authority_revision'])
-            self.eq('one authenticated durable intent',len(self.events('INTENT',cmd['attempt_id'])),1)
-            self.eq('one durable commit',len(self.events('COMMITTED',cmd['attempt_id'])),1)
+            self.check('actual boundary policy decision is fresh',bool(result['policy_decision_id']) and result['policy_decision_id']!=cmd['policy_decision_id'])
+            trace={}
+            for kind in ('QUALIFICATION_CHECKED','AUTHORIZATION_CHECKED','INTENT','COMMITTED','OUTCOME_OBSERVED'):
+                rows=self.events(kind,cmd['attempt_id'])
+                self.eq('one correlated '+kind+' record',len(rows),1)
+                row=rows[0];event=row['event'];trace[kind]=event
+                self.eq(kind+' exact attempt and correlation binding',(event['attempt_id'],event['correlation_id']),(cmd['attempt_id'],cmd['attempt_id']))
+                self.check(kind+' has an authentic canonical receipt for these exact bytes',row['delivery']=='RECORDED'
+                           and row['receipt'] is not None and rt.ledger.verify(row['receipt'],event))
+            for kind,expected_result in (('QUALIFICATION_CHECKED','ELIGIBLE'),('AUTHORIZATION_CHECKED','ALLOW')):
+                event=trace[kind]
+                self.eq(kind+' is a check at the mutation boundary',(event['check_stage'],event['result'],event['authorizes_execution']),('MUTATION_BOUNDARY',expected_result,False))
+                self.eq(kind+' binds exact authenticated command',event['command_digest'],canonical_digest(cmd))
+                self.eq(kind+' binds immutable qualification revision',event['qualification_revision'],qualification['qualification_revision'])
+                self.eq(kind+' binds actual boundary policy decision',event['policy_decision_id'],result['policy_decision_id'])
+                for field in ('skill_digest','context_digest','qualification_id','qualification_digest','passport_id','grant_id','authority_revision','policy_digest','action','resource'):
+                    self.eq(kind+' exact '+field,event[field],cmd[field])
+            self.eq('durable intent retains exact command',trace['INTENT']['command'],cmd)
+            self.eq('outcome event retains exact independent observation',trace['OUTCOME_OBSERVED']['outcome'],result['outcome'])
+            current_records={row['event_id']:row['event'] for row in rt.events()}
+            self.eq('prior issuance and qualification records retain original IDs, times and contents',
+                    {key:current_records[key] for key in original_records},original_records)
+            self.eq('original qualification remains the immutable referenced evaluation',
+                    rt.qualification_at(cmd['qualification_id'],digest=cmd['qualification_digest']),qualification)
+            self.check('per-attempt check records are distinct from original qualification and issuance',
+                       all(trace[kind]['event_id'] not in original_records for kind in ('QUALIFICATION_CHECKED','AUTHORIZATION_CHECKED')))
         elif n == 17:
             self.ready();cmd=self.admit()
             report=rt.record_procedure_report(cmd['attempt_id'],reported_outcome='PASS',agent=self.agent,
@@ -942,7 +1007,10 @@ def run(args):
             'fixture_parameter_mapping':{'agent-a':'fresh canonical identity per case','skill-v1':'actual controller procedure_revision content digest',
                 'demo-a':'fresh isolated context per case','registry-a/model-a':'model/champion',
                 'qual-policy-v1':'demo3 canonical adapter profile; three fresh independent outcomes',
-                'auth-policy-v1':'actual loaded Foundation/OPA policy revision'},
+                'auth-policy-v1':'actual loaded Foundation/OPA policy revision',
+                'BDD-009 requested window':'Explicit source-configured demo blackout 2100-01-01T00:00:00Z through 00:01:00Z; real OPA evaluation time, no business calendar claim',
+                'BDD-015 cached grant':'Durable last-verified current-authority observation for diagnostics; never an executable authorization fallback',
+                'BDD-016 qualification and authorization records':'Per-attempt consumption checks at mutation boundary; prior evaluation and grant creation records retain their original IDs and timestamps'},
             'exit_codes':{'0':'prepared inventory or all selected scenarios fully green','1':'observed failed assertion or runtime operation',
                           '2':'blocked, partial, unbound, or sources changed; acceptance incomplete'}}
     path=args.report or ROOT/'reports'/(run_id+'.json')
