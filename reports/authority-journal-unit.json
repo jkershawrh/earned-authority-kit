@@ -1,0 +1,247 @@
+{
+  "status": "PASS",
+  "scope": "LOCAL_COORDINATOR_JOURNAL_UNIT_SEAMS_EXTRACTED_FROM_FULL_COMPONENT_RUN",
+  "tests_run": 31,
+  "journal_cases": 17,
+  "errors": 0,
+  "skipped": 0,
+  "source_hashes": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+    "earned_authority/connected.py": "sha256:5a7000978b1de3068a5870dedb4303fa1e56e60cf07f1bd427af48c62afd3785",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:f3b2bdd351a64e8168c7bf5771ca0d4bd460b6505dea595e288d0c68326969ce",
+    "earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "tests/test_authority_journal.py": "sha256:24d594dde9d91cf075bd6db0840c44a31fb3e7eabddef47d0540ba9e3d38a7a8",
+    "tests/test_connected_binding.py": "sha256:e60d9378ade1725c7dd858529b2f3b2696181c583d85d8edc064e408288f4ce5",
+    "tests/test_connected_security.py": "sha256:243d364aabbabfd2400f6bae70dbb16c3859c627ce73f2bd2f31e6fcc59278fb",
+    "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
+    "tests/test_ledger_client.py": "sha256:6a05dce90f5dfa0627c188000ad12951dbbb96e7df7f7f149cd4e640438765f2",
+    "tests/test_lifecycle_bdd.py": "sha256:a376b2d47c059aea4ae5ffc79ef007eb9eff7eed1964702ec643a564c4866cdc",
+    "tests/test_passport_client.py": "sha256:d86ff13cf90f3fdae60f68de7ab85af51d1ca55777245c72478d531a361153b7",
+    "tests/test_passport_operations.py": "sha256:7e158bc68d3e548f6f0756e758ff904ead8acbf2f5a2a9f79b4d7db777f6cf80",
+    "tests/test_qualification_client.py": "sha256:fa875d69b98440ce13545e17517f986cc4c045cbecf214c316cbe34bde9392b1",
+    "tests/test_rubric.py": "sha256:845e476cc97af2be8c4f913a60b1cae6ae76f0a0c81a217f4b581c5712a213db",
+    "tests/test_runtime_security.py": "sha256:76ea516ef8d41bdd974a084ba8ea6a83071745bd09e1a51783668d0b9d60b025",
+    "tests/test_wire_contracts.py": "sha256:69b1d2a86b3decb724d832de0caf601d67ab89a227b075df936e86afcadbe280",
+    "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
+    "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
+    "contracts/fixtures/attempt.json": "sha256:d6a7e3571ab9b4698f01175b21e128fa45a01acadc69f507ffc6c1bcb58e9041",
+    "contracts/fixtures/authority.json": "sha256:d36365cb845dc72a1c52550cff017282a5f69d5b00a9472bf173bd2e5626979a",
+    "contracts/fixtures/lifecycle-event.json": "sha256:075e93e0e71ec0ff30ed8929ed989795b60ab1b7161c9d11b716e265050a7057",
+    "contracts/fixtures/outcome.json": "sha256:bd8bfaba9be520fe2c9c6cb8d5eb5fde843c1b553424923640dafed181142f16",
+    "contracts/fixtures/passport-canonical-v2.json": "sha256:40b5c68eb6333ed1fdd6a4db28bc5013253ac17f20e0f1efa85c2d23699dff66",
+    "contracts/fixtures/passport-operations-v1.json": "sha256:7fb91f569080ac5da3b289ca9f62e5a8342e2bbb620e5020db5d1617fa2c2aff",
+    "contracts/fixtures/qualification-client-cases.json": "sha256:5d201b632a3a1a323136fdcad0905f258492988fb7a79e1051eb0675f114742e",
+    "contracts/fixtures/qualification.json": "sha256:c0b8c64ec3860f9a7aa785892bef5aef4e188962275880b069ab6df3114f93bb",
+    "contracts/fixtures/runtime-wire-records.json": "sha256:cbe6c1b5bed7c50ae739983fea588a45986ce3b2a12abb7f1f771e7906e4537d",
+    "contracts/lifecycle-event.schema.json": "sha256:4032643e426de95c0ccd08ac9da535c8929dfff4dbb8e69b61a79effa7c2b4a3",
+    "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
+    "contracts/qualification.schema.json": "sha256:2a4a4f6921a3f839b6b4a554f0c8fa019600d14411d5cfd8355f119aa28449b3",
+    "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
+    "features/concurrency.feature": "sha256:a593d6b2ee5ceb79260f97e0dbfd768843c2c7f4fcd5b6705e11797f023f0e27",
+    "features/execution_and_evidence.feature": "sha256:5c03e38759cae3c8d84536efdd463c91492183e72ce0d3941a9b8ae7b8a23ded",
+    "features/future_robot_simulation.feature": "sha256:916435ba5489e20024f589161dc3a4e3a5df5c23f211a211a9baab8a6ea33771",
+    "features/ledger_integrity.feature": "sha256:6f3039c21f36f2b0d052b168d30547d3a5ec76ca39b2046f653a59b3a4e442a6",
+    "features/qualification.feature": "sha256:8545997b35e1600c7f2e63e4e743ca5f3563aa4ef295cb6b395fda614a286629",
+    "features/withdrawal_and_requalification.feature": "sha256:417a22c6940ab6b0fb70e2c0e44d27646da5c18d9ac10e242b7f8a27bc7fa8da",
+    "requirements-dev.txt": "sha256:1a4272ec830941ecba77716e4b18e0588ec0de3c63e368fe712c6ac0354091c3",
+    "deploy/reference/requirements.lock.txt": "sha256:ccc6272d5f11ef46daba25236ea4c0436a8569109851873f6f85b2a867ab2aa2",
+    "tools/verify.py": "sha256:f50c482fdc25ae553c3d1dc3753a5af7ad89828f299868e972b61a9fcb3bf1da"
+  },
+  "artifacts": {
+    "reports/authority-journal-green.log": "sha256:a2e0ed943d6e1d07705b9bb29e0f6780f030c7b414d6e214eaca35a75c9a6f39",
+    "reports/authority-journal-red.log": "sha256:68c4a1f5e24cc6a39741a8f4ceb59b346c820ab66556da4a98feb0d9b423418d",
+    "reports/authority-cancellation-red.log": "sha256:5c3a09a849b8b1a06569b27a30459bea4fd4b8be7110c960a0172eda7dacf8aa",
+    "reports/unaffected-expiry-red.log": "sha256:ddd14094c73c40c3ec7c24c5fb189614da813312eeb3c51795b4ba95211d07b7",
+    "reports/component-verification.json": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
+  },
+  "limits": [
+    "Stateful unit Passport seam; actual canonical process crash acceptance is separate",
+    "CAS cancellation assumes canonical monotonicity and second receipt lookup after observed advancement",
+    "Privileged state rollback and other hosts remain outside scope"
+  ],
+  "started_at_ms": 1791601333733,
+  "finished_at_ms": 1791601343163,
+  "source_hashes_before": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+    "earned_authority/connected.py": "sha256:5a7000978b1de3068a5870dedb4303fa1e56e60cf07f1bd427af48c62afd3785",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:f3b2bdd351a64e8168c7bf5771ca0d4bd460b6505dea595e288d0c68326969ce",
+    "earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "tests/test_authority_journal.py": "sha256:24d594dde9d91cf075bd6db0840c44a31fb3e7eabddef47d0540ba9e3d38a7a8",
+    "tests/test_connected_binding.py": "sha256:e60d9378ade1725c7dd858529b2f3b2696181c583d85d8edc064e408288f4ce5",
+    "tests/test_connected_security.py": "sha256:243d364aabbabfd2400f6bae70dbb16c3859c627ce73f2bd2f31e6fcc59278fb",
+    "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
+    "tests/test_ledger_client.py": "sha256:6a05dce90f5dfa0627c188000ad12951dbbb96e7df7f7f149cd4e640438765f2",
+    "tests/test_lifecycle_bdd.py": "sha256:a376b2d47c059aea4ae5ffc79ef007eb9eff7eed1964702ec643a564c4866cdc",
+    "tests/test_passport_client.py": "sha256:d86ff13cf90f3fdae60f68de7ab85af51d1ca55777245c72478d531a361153b7",
+    "tests/test_passport_operations.py": "sha256:7e158bc68d3e548f6f0756e758ff904ead8acbf2f5a2a9f79b4d7db777f6cf80",
+    "tests/test_qualification_client.py": "sha256:fa875d69b98440ce13545e17517f986cc4c045cbecf214c316cbe34bde9392b1",
+    "tests/test_rubric.py": "sha256:845e476cc97af2be8c4f913a60b1cae6ae76f0a0c81a217f4b581c5712a213db",
+    "tests/test_runtime_security.py": "sha256:76ea516ef8d41bdd974a084ba8ea6a83071745bd09e1a51783668d0b9d60b025",
+    "tests/test_wire_contracts.py": "sha256:69b1d2a86b3decb724d832de0caf601d67ab89a227b075df936e86afcadbe280",
+    "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
+    "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
+    "contracts/fixtures/attempt.json": "sha256:d6a7e3571ab9b4698f01175b21e128fa45a01acadc69f507ffc6c1bcb58e9041",
+    "contracts/fixtures/authority.json": "sha256:d36365cb845dc72a1c52550cff017282a5f69d5b00a9472bf173bd2e5626979a",
+    "contracts/fixtures/lifecycle-event.json": "sha256:075e93e0e71ec0ff30ed8929ed989795b60ab1b7161c9d11b716e265050a7057",
+    "contracts/fixtures/outcome.json": "sha256:bd8bfaba9be520fe2c9c6cb8d5eb5fde843c1b553424923640dafed181142f16",
+    "contracts/fixtures/passport-canonical-v2.json": "sha256:40b5c68eb6333ed1fdd6a4db28bc5013253ac17f20e0f1efa85c2d23699dff66",
+    "contracts/fixtures/passport-operations-v1.json": "sha256:7fb91f569080ac5da3b289ca9f62e5a8342e2bbb620e5020db5d1617fa2c2aff",
+    "contracts/fixtures/qualification-client-cases.json": "sha256:5d201b632a3a1a323136fdcad0905f258492988fb7a79e1051eb0675f114742e",
+    "contracts/fixtures/qualification.json": "sha256:c0b8c64ec3860f9a7aa785892bef5aef4e188962275880b069ab6df3114f93bb",
+    "contracts/fixtures/runtime-wire-records.json": "sha256:cbe6c1b5bed7c50ae739983fea588a45986ce3b2a12abb7f1f771e7906e4537d",
+    "contracts/lifecycle-event.schema.json": "sha256:4032643e426de95c0ccd08ac9da535c8929dfff4dbb8e69b61a79effa7c2b4a3",
+    "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
+    "contracts/qualification.schema.json": "sha256:2a4a4f6921a3f839b6b4a554f0c8fa019600d14411d5cfd8355f119aa28449b3",
+    "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
+    "features/concurrency.feature": "sha256:a593d6b2ee5ceb79260f97e0dbfd768843c2c7f4fcd5b6705e11797f023f0e27",
+    "features/execution_and_evidence.feature": "sha256:5c03e38759cae3c8d84536efdd463c91492183e72ce0d3941a9b8ae7b8a23ded",
+    "features/future_robot_simulation.feature": "sha256:916435ba5489e20024f589161dc3a4e3a5df5c23f211a211a9baab8a6ea33771",
+    "features/ledger_integrity.feature": "sha256:6f3039c21f36f2b0d052b168d30547d3a5ec76ca39b2046f653a59b3a4e442a6",
+    "features/qualification.feature": "sha256:8545997b35e1600c7f2e63e4e743ca5f3563aa4ef295cb6b395fda614a286629",
+    "features/withdrawal_and_requalification.feature": "sha256:417a22c6940ab6b0fb70e2c0e44d27646da5c18d9ac10e242b7f8a27bc7fa8da",
+    "requirements-dev.txt": "sha256:1a4272ec830941ecba77716e4b18e0588ec0de3c63e368fe712c6ac0354091c3",
+    "deploy/reference/requirements.lock.txt": "sha256:ccc6272d5f11ef46daba25236ea4c0436a8569109851873f6f85b2a867ab2aa2",
+    "tools/verify.py": "sha256:f50c482fdc25ae553c3d1dc3753a5af7ad89828f299868e972b61a9fcb3bf1da"
+  },
+  "source_unchanged_during_run": true,
+  "cases": [
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_advanced_authority_without_matching_operation_cancels_stale_cas",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_crash_after_intent_before_rpc_recovers_once",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_dispatched_unknown_is_not_cancelled_when_policy_changes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_event_and_applied_marker_commit_atomically",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_failed_local_intent_never_calls_canonical_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_idempotent_public_retry_does_not_reissue",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_later_replacement_does_not_erase_old_operation_evidence",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_local_intent_tamper_blocks_recovery_and_execution",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_lost_response_recovers_without_new_revision",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_missing_lookup_never_infers_success_from_current_revision",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_never_dispatched_intent_is_cancelled_when_policy_changes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_operation_id_cannot_be_rebound",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_pending_operation_blocks_existing_authority",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_precondition_refusal_without_cas_advance_cannot_cancel_unknown_dispatch",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_remote_success_before_local_event_recovers_from_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_revoke_to_empty_has_its_own_historical_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_untrusted_local_writer_cannot_revoke",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_binding.py::BindingRegression::test_a_signed_grant_cannot_borrow_another_skills_qualification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_binding.py::PolicyDecisionBinding::test_another_evaluated_policy_denies",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_binding.py::PolicyDecisionBinding::test_decision_for_another_subject_denies",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_binding.py::PolicyDecisionBinding::test_matching_evaluation_binding_passes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_binding.py::PolicyDecisionBinding::test_missing_evaluated_policy_binding_denies",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::PassportVerificationSnapshotBoundary::test_matching_verification_snapshot_is_accepted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::PassportVerificationSnapshotBoundary::test_other_passport_at_same_agent_generation_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::PassportVerificationSnapshotBoundary::test_second_rpc_notfound_is_not_an_empty_aggregate",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::PassportVerificationSnapshotBoundary::test_verify_envelope_different_from_signed_snapshot_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::PassportVerificationSnapshotBoundary::test_verify_expiry_different_from_signed_snapshot_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::ConnectedDeadlineAndWithdrawalBoundary::test_delayed_old_withdrawal_does_not_revoke_requalified_grant",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::ConnectedDeadlineAndWithdrawalBoundary::test_scope_expiring_during_policy_call_cannot_commit",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::ConnectedDeadlineAndWithdrawalBoundary::test_short_requested_grant_cannot_disappear_behind_other_live_skill",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::ConnectedDeadlineAndWithdrawalBoundary::test_unaffected_scope_keeps_exact_absolute_expiry_on_replacement",
+      "outcome": "PASS"
+    }
+  ],
+  "verification_report": "reports/component-verification.json",
+  "green_log_scope": "Retained focused development run; final execution is in component-verification.json and kit-tests.log"
+}

@@ -1,0 +1,73 @@
+{
+  "status": "PASS",
+  "scope": "READINESS_REPORT_PROVENANCE_NEGATIVE_CONTROLS",
+  "checks": [
+    {
+      "check": "current_complete_evidence_passes",
+      "expected": "GREEN",
+      "actual": "GREEN",
+      "passed": true
+    },
+    {
+      "check": "missing_child_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "changed_child_without_rebound_digest_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "stale_child_source_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "fresh_aggregate_cannot_refresh_expired_child",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "short_all_green_check_set_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "duplicate_check_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "wrong_named_check_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "37_arbitrary_green_ids_do_not_complete_BDD",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    }
+  ],
+  "finished_at_ms": 1791601636478,
+  "source_hashes": {
+    "tools/report.py": "sha256:ec98bb4a7de0394cf2739f0de1c70c791017d0a4af30ed606959fcd55b39dd70",
+    "tools/verify_report_provenance.py": "sha256:8219433b30c8e06a7416c31c61115d4df6617c0ebeab232c48dc9e91ccbf79f2"
+  },
+  "artifacts": {
+    "reports/operations-reference-combined.json": "sha256:c6c07235ce7f094397117527fb62f50aa30e9ea63a76450f2c7f65ac0d003f0e",
+    "reports/service-bdd-live-002.json": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2"
+  },
+  "limitations": [
+    "Isolated altered evidence copies; original execution records unchanged",
+    "Does not execute the underlying services"
+  ]
+}

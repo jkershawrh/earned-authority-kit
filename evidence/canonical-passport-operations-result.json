@@ -1,0 +1,205 @@
+{
+  "recorded_at": "2026-10-10T03:01:09.655158+00:00",
+  "scope": "CANONICAL_PASSPORT_OPERATION_RECOVERY_COMPONENT",
+  "status": "PASS_COMPONENT_CHECKS_LIVE_PROCESS_RECOVERY_PENDING",
+  "upstream_head": "c5e9e4ef780a51647ebafb9f7239e75cd223b596",
+  "source_dir": "work/passport-track",
+  "source_inventory_sha256": "a8dfc8cf3bc447f7a4ca3546c3512980a4b50547bee39683d31332f17a258469",
+  "source_files_sha256": {
+    "Dockerfile": "02d72aa3f468cb68b887bd2098f9618e980f2e6abecc37e66e8680c23e25aa91",
+    "README.md": "a06078d69489162b162e122a95e5c9cdce4addee2322906d16e8b44d9fc12928",
+    "api/openapi.yaml": "e708e882ea3f776d8d71b387f17295485bdbecc657d0d621a6961e1a4591a383",
+    "cmd/agent-passport/main.go": "68d3d42ec185f81b1643ba5049c86a5293a7612daef8f97aa007c1af934bdd58",
+    "cmd/passport-grpc-probe/main.go": "09bf5ca48887f5f3c983a13b05d42ba572bceceb7ca4875c5825880f45c7a7cd",
+    "deploy/compose/docker-compose.yml": "994e524c5f5f3ed8e6650144e49ceb11e779a62499e32035c5466edfcf7f4de0",
+    "docs/white-paper.md": "1dccd5287bda2ab000a08e086eee5d31a165adfa1542bd7c103cac3cde491baa",
+    "examples/grpc-client/passport_ops.go": "bf4a39a9866753c329b0547f520f5f3d7e4d86cf1ca5720ee8be1715fbd1afa1",
+    "go.mod": "9ed8c07d51d511d28654501513e5c778e594ea32bae5b016d21daa884f6fecd2",
+    "go.sum": "bc3f9b763b85e6795b9397fac78b12a219ed063786905eed2ae3cd6f4f5e7546",
+    "internal/config/config.go": "edfad0d3736fe17ae936aeeebbfd7c3c0096b8d133ec6c551f90f29df4642d43",
+    "internal/domain/passport.go": "715c7da811f5ba0fc464a850fd96a0b9eaabf9f76c0b5579393cc5b851ba66b9",
+    "internal/grpc/authority_metadata.go": "5519611e9a622839deed2809266da9c835acdb4426657d8e873d3c6c6b7e7e03",
+    "internal/grpc/operations.go": "9d44d438a6f0e06fa20a6310be1dc28c9a0ab562abfc02df9d032165796860d6",
+    "internal/grpc/operations_transport_test.go": "1c9c0c75725b7851755e9077a692c48b4e657c2108dc0c0890623e8c8add8042",
+    "internal/grpc/server.go": "95b67a7ab1fad133d9d0ce65e43710dbb1031cba300049a1d5d2b9d20275248e",
+    "internal/grpc/transport_test.go": "6cda728aa406479bddb1f18b4ce8ba81ed7649dea996764d32240a34a9d80a88",
+    "internal/local/durable.go": "3248b8bab44cf628327d105a9f7197cf0b0a93036a4566b5a9a3188ef8e9f036",
+    "internal/local/durable_test.go": "b95e99db98f8e45e36aae43d242115f588bb52988acc091fb68a3b85bdc7024d",
+    "internal/local/wiring.go": "52113700edb5e752f2f0bf761914663619906dca34de234f3eee31062e62caea",
+    "internal/metrics/metrics.go": "c2c5664994504a7e7698ca9025da8fbf3a923386884e8532f1576263d37103da",
+    "internal/service/canonical.go": "d19b0ebe88bc3b2ba5f16501c06583f2aefb0189528757492265783be247c946",
+    "internal/service/canonical_vector_test.go": "5e221c01b42dd5221a585888bf4ff40b74540a91c24940aaa838479ec7b5cfc8",
+    "internal/service/file_store.go": "9849c0c211fe2c9a72bcf8e3e1023397f06f083bf0afb5c795f0771143a97da8",
+    "internal/service/flock_other.go": "084ca14664f196e26facf507ee50c14b598f726ec7837bc4df6aa3c2a5512cf1",
+    "internal/service/flock_unix.go": "dab05a418f822071020d0ab13915415f70ab7355ba635090456ea39fc3934d67",
+    "internal/service/hardening_test.go": "59dac3737a5e21d0b10413ddf8409c4f6535931ec33ea2e5bcb0ae556a204580",
+    "internal/service/operation_vector_test.go": "e9f93d3c5a0056f1ede95920252f971b1d10935dd14849e8915e6ba05ee6cc33",
+    "internal/service/operations.go": "4f46365db9255dc56a37f1e456dc0907fd739bce41719adef416940587f70dc1",
+    "internal/service/operations_test.go": "37ed4b471878b63865fda45b0177520b3f42a5783e99360c1e841d3c7564e6ee",
+    "internal/service/persistence.go": "78b1e846266f37a3170a2a0f3e8cbef13494a04d175e306f422fb6e7d5742da5",
+    "internal/service/persistence_test.go": "5d14d9614fff23a7fce9df1874dd30fa44dca3d6754dcdca81c055269fa7dd57",
+    "internal/service/service.go": "3503b5de6c693023db9ffd01e02d89a9fa5a5992c72719cb5d1410cd953df694",
+    "internal/service/service_test.go": "6951e4f62b1f56adf84ef9d5ef54154a19fc9db89ac5fc9873ff2db27f4c2ff6",
+    "internal/service/testdata/canonical-v2.json": "40b5c68eb6333ed1fdd6a4db28bc5013253ac17f20e0f1efa85c2d23699dff66",
+    "internal/service/testdata/operations-v1.json": "7fb91f569080ac5da3b289ca9f62e5a8342e2bbb620e5020db5d1617fa2c2aff",
+    "migrations/001_init.sql": "ef52018fb4527008856d93aa448568e4345b407dffaec24f2a6f13e5b4da7260",
+    "migrations/002_outbox.sql": "f2872f1ca22e2575e26e64263f51a4dc530eeb225a17192ed80ada2e9141699c",
+    "migrations/003_policy_version.sql": "d83d0b9c3ee217fa4ebb85b19a17aedb313cdf6f6de78424f0f6aed362c0293d",
+    "proto/passport_issuance.pb.go": "4d397c3f1a57638b656b9e3dc73ba8f3101b6797b28131b5e14ea07efc4323b7",
+    "proto/passport_issuance.proto": "a2678ccb2e62c348b268a5c0ba12229a4bcd10ec2cf77b0cb36d7b5f27426283",
+    "proto/passport_issuance_grpc.pb.go": "81b9a08b6004f4ce319521b3dedccb558144cf3683a9584e42eec2bcb87e4726",
+    "tests/passport_deep_test.py": "38334d329f00f7abea76fedf07c6e7d71303f47413e9feffeb0032587b388b38"
+  },
+  "increment_baseline_inventory_sha256": "c79e7ac4f0626a3a7dea0ca03929cb217a67f2a3b6444956113666aa31b43de1",
+  "go_normal": {
+    "log": "evidence/passport-operations-green.jsonl",
+    "sha256": "2c017b4a37006c148c686cde1a02beaf27d7b377dc12d3c8efd02132dceea154",
+    "top_level_tests_passed": 44,
+    "leaf_cases_passed": 76,
+    "package_count_passed": 3,
+    "failures": []
+  },
+  "go_race": {
+    "log": "evidence/passport-operations-race.jsonl",
+    "sha256": "c4df33514e17bab61c2a20a14fbdc8b64535d54365f92fc84623434d4a796667",
+    "top_level_tests_passed": 44,
+    "leaf_cases_passed": 76,
+    "package_count_passed": 3,
+    "failures": []
+  },
+  "python": {
+    "log": "evidence/passport-operations-client-green.log",
+    "sha256": "db3906ce1d605a412794ed5c37b3ebbe44c2ebffd18723b317e389e003ded2eb",
+    "passed": 24,
+    "scope": "14 operation unit/provider-vector tests plus 10 prior Passport consumer tests; mock transport seam explicitly UNIT"
+  },
+  "red_evidence": [
+    {
+      "path": "evidence/passport-operations-red.jsonl",
+      "sha256": "f1f086f19943a84cfec46669f5b41423ed7b8120aa8fd5004e40046a94054962"
+    },
+    {
+      "path": "evidence/passport-operations-transport-red.jsonl",
+      "sha256": "9d5575801266fc359b77b9222e78bf170d75833ab3b15fac2981ddfe3033119b"
+    },
+    {
+      "path": "evidence/passport-operations-client-red.log",
+      "sha256": "3b66e77aefcbb2e96cfa4bc0339b3bc7e6c1d6b0b6995a263adcbbb6363e0300"
+    },
+    {
+      "path": "evidence/passport-operations-normalization-red.log",
+      "sha256": "a1e02fdbc26b36cc49e7026dd99fec458ff9512b5c4cd9dcab8bdde369faa7f4"
+    }
+  ],
+  "contract": {
+    "additive_rpcs": [
+      "ApplyPassportOperation",
+      "GetPassportOperation"
+    ],
+    "version": "are.passport.operation.v1",
+    "module_helpers": [
+      "issue_operation_request",
+      "revoke_operation_request",
+      "canonical_operation_request"
+    ],
+    "historical_lookup": "operation(agent, operation_id, expected_request=None) returns pinned-verified signed receipt; only canonical NOT_FOUND returns None; historical evidence does not confer current authority",
+    "full_request_bound": true,
+    "same_request_retry_no_revision_advance": true,
+    "state_schema_version": 2,
+    "migration": "V1 validates and loads without rewriting; next successful mutation writes V2 with empty historical operation map plus new operation; prior operations are not synthesized",
+    "authentication": "Apply and Get operation require configured bearer mutation token",
+    "fixture": "contracts/fixtures/passport-operations-v1.json",
+    "fixture_sha256": "7fb91f569080ac5da3b289ca9f62e5a8342e2bbb620e5020db5d1617fa2c2aff"
+  },
+  "generated": {
+    "protoc": "v5.29.6",
+    "protoc_gen_go": "v1.36.12",
+    "protoc_gen_go_grpc": "v1.6.2",
+    "proto_sha256": "a2678ccb2e62c348b268a5c0ba12229a4bcd10ec2cf77b0cb36d7b5f27426283",
+    "python_sdk_files_sha256": {
+      "passport_issuance_pb2.py": "afa65207dc6f7caab4967f1fdc6a7e388a977c9df35b61c512e0f5c6f686f932",
+      "passport_issuance_pb2_grpc.py": "578b5d751c65a060b31cbb3cc2707bced804f0f96b4d32e7d853c04bcfcd7333"
+    }
+  },
+  "python_owned_files_sha256": {
+    "earned_authority/passport_client.py": "fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "tests/test_passport_operations.py": "7e158bc68d3e548f6f0756e758ff904ead8acbf2f5a2a9f79b4d7db777f6cf80"
+  },
+  "complete_patch": {
+    "patch": "patches/canonical-passport-hardening.patch",
+    "files": [
+      "README.md",
+      "cmd/agent-passport/main.go",
+      "internal/config/config.go",
+      "internal/domain/passport.go",
+      "internal/grpc/authority_metadata.go",
+      "internal/grpc/operations.go",
+      "internal/grpc/operations_transport_test.go",
+      "internal/grpc/server.go",
+      "internal/grpc/transport_test.go",
+      "internal/local/durable.go",
+      "internal/local/durable_test.go",
+      "internal/local/wiring.go",
+      "internal/service/canonical.go",
+      "internal/service/canonical_vector_test.go",
+      "internal/service/file_store.go",
+      "internal/service/flock_other.go",
+      "internal/service/flock_unix.go",
+      "internal/service/hardening_test.go",
+      "internal/service/operation_vector_test.go",
+      "internal/service/operations.go",
+      "internal/service/operations_test.go",
+      "internal/service/persistence.go",
+      "internal/service/persistence_test.go",
+      "internal/service/service.go",
+      "internal/service/testdata/canonical-v2.json",
+      "internal/service/testdata/operations-v1.json",
+      "proto/passport_issuance.pb.go",
+      "proto/passport_issuance.proto",
+      "proto/passport_issuance_grpc.pb.go"
+    ],
+    "bytes": 214596,
+    "sha256": "1f633ff8b4dd0f8e71de5e4a435d2ac5bae205a5e75a6618fa0b052a4cb7cbf7",
+    "apply_check_exit_code": 0,
+    "fresh_replay_matches_target": true
+  },
+  "legacy_retained_state": "evidence/passport-operations-legacy-state.json",
+  "original_source_preservation": [
+    {
+      "repository": "/Users/jkershaw/Documents/are-foundation",
+      "baseline": "evidence/foundation-baseline.json",
+      "head": "cb4e2209bcbafbbf6229ec5d096edaa296551832",
+      "tracked_file_count": 241,
+      "head_matches": true,
+      "tracked_inventory_matches": true,
+      "all_recorded_hashes_match": true,
+      "status_matches": true,
+      "working_diff_matches": true,
+      "mismatches": [],
+      "verified_unchanged_within_recorded_scope": true
+    },
+    {
+      "repository": "/Users/jkershaw/Documents/agent-passport",
+      "baseline": "evidence/canonical-passport-baseline.json",
+      "head": "c5e9e4ef780a51647ebafb9f7239e75cd223b596",
+      "tracked_file_count": 24,
+      "head_matches": true,
+      "tracked_inventory_matches": true,
+      "all_recorded_hashes_match": true,
+      "status_matches": true,
+      "working_diff_matches": true,
+      "mismatches": [],
+      "verified_unchanged_within_recorded_scope": true
+    }
+  ],
+  "limits": [
+    "Component tests are not a claim of full cross-service crash recovery; packaging/root own live subprocess acceptance.",
+    "Legacy Issue/Revoke RPCs remain compatible and produce no operation receipt; coordinator uses new RPCs.",
+    "Single writer process and same-OS shared-volume flock; no distributed lease or HA guarantee.",
+    "Host/storage administrators trusted; rollback protection against a privileged saved-state/key rollback not implemented.",
+    "Historical receipts retained without compaction; key rotation, version downgrade and receipt garbage collection not implemented.",
+    "FAILED_PRECONDITION still maps multiple refusals; coordinator cancellation must require monotonic generation advance and final absent receipt lookup.",
+    "Original ignored/untracked file contents were not hashed, consistent with original snapshot scope.",
+    "EDD evaluations and the full real-service 37-scenario BDD corpus are not asserted by this component report."
+  ]
+}

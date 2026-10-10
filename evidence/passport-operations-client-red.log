@@ -1,0 +1,129 @@
+test_altered_nested_passport_signature_denied (test_passport_operations.OperationReceiptVerification.test_altered_nested_passport_signature_denied) ... FAIL
+test_empty_state_cannot_make_revoke_request (test_passport_operations.OperationReceiptVerification.test_empty_state_cannot_make_revoke_request) ... ok
+test_other_agent_or_operation_denied (test_passport_operations.OperationReceiptVerification.test_other_agent_or_operation_denied) ... 
+  test_other_agent_or_operation_denied (test_passport_operations.OperationReceiptVerification.test_other_agent_or_operation_denied) (kw={'agent': 'other'}) ... FAIL
+  test_other_agent_or_operation_denied (test_passport_operations.OperationReceiptVerification.test_other_agent_or_operation_denied) (kw={'operation_id': 'other'}) ... FAIL
+test_receipt_cannot_claim_different_scope_than_request (test_passport_operations.OperationReceiptVerification.test_receipt_cannot_claim_different_scope_than_request) ... FAIL
+test_request_reason_scope_and_cas_mismatch_denied (test_passport_operations.OperationReceiptVerification.test_request_reason_scope_and_cas_mismatch_denied) ... 
+  test_request_reason_scope_and_cas_mismatch_denied (test_passport_operations.OperationReceiptVerification.test_request_reason_scope_and_cas_mismatch_denied) (field='reason') ... FAIL
+  test_request_reason_scope_and_cas_mismatch_denied (test_passport_operations.OperationReceiptVerification.test_request_reason_scope_and_cas_mismatch_denied) (field='scope') ... FAIL
+  test_request_reason_scope_and_cas_mismatch_denied (test_passport_operations.OperationReceiptVerification.test_request_reason_scope_and_cas_mismatch_denied) (field='cas') ... FAIL
+test_unknown_or_duplicate_receipt_fields_denied (test_passport_operations.OperationReceiptVerification.test_unknown_or_duplicate_receipt_fields_denied) ... FAIL
+test_unpinned_receipt_signature_denied (test_passport_operations.OperationReceiptVerification.test_unpinned_receipt_signature_denied) ... FAIL
+test_valid_receipt_derives_historical_authority (test_passport_operations.OperationReceiptVerification.test_valid_receipt_derives_historical_authority) ... ERROR
+test_wrong_result_revision_or_target_denied (test_passport_operations.OperationReceiptVerification.test_wrong_result_revision_or_target_denied) ... 
+  test_wrong_result_revision_or_target_denied (test_passport_operations.OperationReceiptVerification.test_wrong_result_revision_or_target_denied) (key='agent_revision') ... FAIL
+  test_wrong_result_revision_or_target_denied (test_passport_operations.OperationReceiptVerification.test_wrong_result_revision_or_target_denied) (key='active_passport_id') ... FAIL
+
+======================================================================
+ERROR: test_valid_receipt_derives_historical_authority (test_passport_operations.OperationReceiptVerification.test_valid_receipt_derives_historical_authority)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_passport_operations.py", line 31, in test_valid_receipt_derives_historical_authority
+    got=self.verify();self.assertEqual(self.passport,got['authority']['subject']);self.assertEqual(1,got['authority']['revision'])
+                                                     ~~~^^^^^^^^^^^^^
+KeyError: 'authority'
+
+======================================================================
+FAIL: test_altered_nested_passport_signature_denied (test_passport_operations.OperationReceiptVerification.test_altered_nested_passport_signature_denied)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_passport_operations.py", line 50, in test_altered_nested_passport_signature_denied
+    with self.assertRaises(Denied):self.verify()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Denied not raised
+
+======================================================================
+FAIL: test_other_agent_or_operation_denied (test_passport_operations.OperationReceiptVerification.test_other_agent_or_operation_denied) (kw={'agent': 'other'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_passport_operations.py", line 36, in test_other_agent_or_operation_denied
+    with self.subTest(kw=kw),self.assertRaises(Denied):self.verify(**kw)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Denied not raised
+
+======================================================================
+FAIL: test_other_agent_or_operation_denied (test_passport_operations.OperationReceiptVerification.test_other_agent_or_operation_denied) (kw={'operation_id': 'other'})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_passport_operations.py", line 36, in test_other_agent_or_operation_denied
+    with self.subTest(kw=kw),self.assertRaises(Denied):self.verify(**kw)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Denied not raised
+
+======================================================================
+FAIL: test_receipt_cannot_claim_different_scope_than_request (test_passport_operations.OperationReceiptVerification.test_receipt_cannot_claim_different_scope_than_request)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_passport_operations.py", line 54, in test_receipt_cannot_claim_different_scope_than_request
+    with self.assertRaises(Denied):self.verify()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Denied not raised
+
+======================================================================
+FAIL: test_request_reason_scope_and_cas_mismatch_denied (test_passport_operations.OperationReceiptVerification.test_request_reason_scope_and_cas_mismatch_denied) (field='reason')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_passport_operations.py", line 43, in test_request_reason_scope_and_cas_mismatch_denied
+    with self.subTest(field=field),self.assertRaises(Denied):self.verify(expected_request=expected)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Denied not raised
+
+======================================================================
+FAIL: test_request_reason_scope_and_cas_mismatch_denied (test_passport_operations.OperationReceiptVerification.test_request_reason_scope_and_cas_mismatch_denied) (field='scope')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_passport_operations.py", line 43, in test_request_reason_scope_and_cas_mismatch_denied
+    with self.subTest(field=field),self.assertRaises(Denied):self.verify(expected_request=expected)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Denied not raised
+
+======================================================================
+FAIL: test_request_reason_scope_and_cas_mismatch_denied (test_passport_operations.OperationReceiptVerification.test_request_reason_scope_and_cas_mismatch_denied) (field='cas')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_passport_operations.py", line 43, in test_request_reason_scope_and_cas_mismatch_denied
+    with self.subTest(field=field),self.assertRaises(Denied):self.verify(expected_request=expected)
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Denied not raised
+
+======================================================================
+FAIL: test_unknown_or_duplicate_receipt_fields_denied (test_passport_operations.OperationReceiptVerification.test_unknown_or_duplicate_receipt_fields_denied)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_passport_operations.py", line 57, in test_unknown_or_duplicate_receipt_fields_denied
+    with self.assertRaises(Denied):self.verify()
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Denied not raised
+
+======================================================================
+FAIL: test_unpinned_receipt_signature_denied (test_passport_operations.OperationReceiptVerification.test_unpinned_receipt_signature_denied)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_passport_operations.py", line 33, in test_unpinned_receipt_signature_denied
+    with self.assertRaises(Denied):verify_operation_receipt(self.receipt(key=Ed25519PrivateKey.generate()),self.pem,'agent','op1')
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Denied not raised
+
+======================================================================
+FAIL: test_wrong_result_revision_or_target_denied (test_passport_operations.OperationReceiptVerification.test_wrong_result_revision_or_target_denied) (key='agent_revision')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_passport_operations.py", line 47, in test_wrong_result_revision_or_target_denied
+    with self.subTest(key=key),self.assertRaises(Denied):self.verify(body)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Denied not raised
+
+======================================================================
+FAIL: test_wrong_result_revision_or_target_denied (test_passport_operations.OperationReceiptVerification.test_wrong_result_revision_or_target_denied) (key='active_passport_id')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tests/test_passport_operations.py", line 47, in test_wrong_result_revision_or_target_denied
+    with self.subTest(key=key),self.assertRaises(Denied):self.verify(body)
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Denied not raised
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.014s
+
+FAILED (failures=11, errors=1)

@@ -1,0 +1,284 @@
+FFFFFFFFFFFFFFF                                                          [100%]
+=================================== FAILURES ===================================
+____ AuthorityJournalTests.test_crash_after_intent_before_rpc_recovers_once ____
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_crash_after_intent_before_rpc_recovers_once>
+
+    def test_crash_after_intent_before_rpc_recovers_once(self):
+        self.stop_at('intent_committed')
+>       with self.assertRaises(Crash):self.grant()
+                                      ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:94: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'operation_id'
+
+tests/test_authority_journal.py:91: TypeError
+_ AuthorityJournalTests.test_dispatched_unknown_is_not_cancelled_when_policy_changes _
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_dispatched_unknown_is_not_cancelled_when_policy_changes>
+
+    def test_dispatched_unknown_is_not_cancelled_when_policy_changes(self):
+        self.stop_at('intent_committed')
+>       with self.assertRaises(Crash):self.grant()
+                                      ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:177: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'operation_id'
+
+tests/test_authority_journal.py:91: TypeError
+____ AuthorityJournalTests.test_event_and_applied_marker_commit_atomically _____
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_event_and_applied_marker_commit_atomically>
+
+    def test_event_and_applied_marker_commit_atomically(self):
+        self.stop_at('event_committed')
+>       with self.assertRaises(Crash):self.grant()
+                                      ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:109: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'operation_id'
+
+tests/test_authority_journal.py:91: TypeError
+_ AuthorityJournalTests.test_failed_local_intent_never_calls_canonical_mutation _
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_failed_local_intent_never_calls_canonical_mutation>
+
+    def test_failed_local_intent_never_calls_canonical_mutation(self):
+        self.rt.local_durability_available=False
+>       with self.assertRaises(Denied):self.grant()
+                                       ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:148: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'operation_id'
+
+tests/test_authority_journal.py:91: TypeError
+_____ AuthorityJournalTests.test_idempotent_public_retry_does_not_reissue ______
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_idempotent_public_retry_does_not_reissue>
+
+    def test_idempotent_public_retry_does_not_reissue(self):
+>       self.grant();self.grant()
+        ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:134: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_idempotent_public_retry_does_not_reissue>
+kwargs = {}
+
+>   def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'operation_id'
+
+tests/test_authority_journal.py:91: TypeError
+_ AuthorityJournalTests.test_later_replacement_does_not_erase_old_operation_evidence _
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_later_replacement_does_not_erase_old_operation_evidence>
+
+    def test_later_replacement_does_not_erase_old_operation_evidence(self):
+        self.stop_at('remote_committed')
+>       with self.assertRaises(Crash):self.grant()
+                                      ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:127: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'operation_id'
+
+tests/test_authority_journal.py:91: TypeError
+_ AuthorityJournalTests.test_local_intent_tamper_blocks_recovery_and_execution _
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_local_intent_tamper_blocks_recovery_and_execution>
+
+    def test_local_intent_tamper_blocks_recovery_and_execution(self):
+        self.stop_at('intent_committed')
+>       with self.assertRaises(Crash):self.grant()
+                                      ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:156: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'operation_id'
+
+tests/test_authority_journal.py:91: TypeError
+____ AuthorityJournalTests.test_lost_response_recovers_without_new_revision ____
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_lost_response_recovers_without_new_revision>
+
+    def test_lost_response_recovers_without_new_revision(self):
+        self.passport.lose_response=True
+>       with self.assertRaises(Denied):self.grant()
+                                       ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:114: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'operation_id'
+
+tests/test_authority_journal.py:91: TypeError
+_ AuthorityJournalTests.test_missing_lookup_never_infers_success_from_current_revision _
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_missing_lookup_never_infers_success_from_current_revision>
+
+    def test_missing_lookup_never_infers_success_from_current_revision(self):
+        self.stop_at('remote_committed')
+>       with self.assertRaises(Crash):self.grant()
+                                      ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:165: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'operation_id'
+
+tests/test_authority_journal.py:91: TypeError
+_ AuthorityJournalTests.test_never_dispatched_intent_is_cancelled_when_policy_changes _
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_never_dispatched_intent_is_cancelled_when_policy_changes>
+
+    def test_never_dispatched_intent_is_cancelled_when_policy_changes(self):
+        self.stop_at('intent_committed')
+>       with self.assertRaises(Crash):self.grant()
+                                      ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:172: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'operation_id'
+
+tests/test_authority_journal.py:91: TypeError
+__________ AuthorityJournalTests.test_operation_id_cannot_be_rebound ___________
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_operation_id_cannot_be_rebound>
+
+    def test_operation_id_cannot_be_rebound(self):
+>       self.grant();other=self.qualify(model='model-v3')
+        ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:137: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_operation_id_cannot_be_rebound>
+kwargs = {}
+
+>   def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'operation_id'
+
+tests/test_authority_journal.py:91: TypeError
+____ AuthorityJournalTests.test_pending_operation_blocks_existing_authority ____
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_pending_operation_blocks_existing_authority>
+
+    def test_pending_operation_blocks_existing_authority(self):
+>       self.grant();other=self.qualify('read-health')
+        ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:141: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_pending_operation_blocks_existing_authority>
+kwargs = {}
+
+>   def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'operation_id'
+
+tests/test_authority_journal.py:91: TypeError
+_ AuthorityJournalTests.test_remote_success_before_local_event_recovers_from_receipt _
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_remote_success_before_local_event_recovers_from_receipt>
+
+    def test_remote_success_before_local_event_recovers_from_receipt(self):
+        self.stop_at('remote_committed')
+>       with self.assertRaises(Crash):self.grant()
+                                      ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'operation_id'
+
+tests/test_authority_journal.py:91: TypeError
+__ AuthorityJournalTests.test_revoke_to_empty_has_its_own_historical_receipt ___
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_revoke_to_empty_has_its_own_historical_receipt>
+
+    def test_revoke_to_empty_has_its_own_historical_receipt(self):
+>       self.grant();self.stop_at('remote_committed')
+        ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_revoke_to_empty_has_its_own_historical_receipt>
+kwargs = {}
+
+>   def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'operation_id'
+
+tests/test_authority_journal.py:91: TypeError
+_______ AuthorityJournalTests.test_untrusted_local_writer_cannot_revoke ________
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_untrusted_local_writer_cannot_revoke>
+
+    def test_untrusted_local_writer_cannot_revoke(self):
+>       self.grant();self.rt.local_writer_authenticated=False
+        ^^^^^^^^^^^^
+
+tests/test_authority_journal.py:151: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_untrusted_local_writer_cannot_revoke>
+kwargs = {}
+
+>   def grant(self,**kwargs):return self.rt.grant(self.q['qualification_id'],operation_id='op-grant',**kwargs)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConnectedRuntime.grant() got an unexpected keyword argument 'operation_id'
+
+tests/test_authority_journal.py:91: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_crash_after_intent_before_rpc_recovers_once
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_dispatched_unknown_is_not_cancelled_when_policy_changes
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_event_and_applied_marker_commit_atomically
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_failed_local_intent_never_calls_canonical_mutation
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_idempotent_public_retry_does_not_reissue
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_later_replacement_does_not_erase_old_operation_evidence
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_local_intent_tamper_blocks_recovery_and_execution
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_lost_response_recovers_without_new_revision
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_missing_lookup_never_infers_success_from_current_revision
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_never_dispatched_intent_is_cancelled_when_policy_changes
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_operation_id_cannot_be_rebound
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_pending_operation_blocks_existing_authority
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_remote_success_before_local_event_recovers_from_receipt
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_revoke_to_empty_has_its_own_historical_receipt
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_untrusted_local_writer_cannot_revoke
+15 failed in 0.28s

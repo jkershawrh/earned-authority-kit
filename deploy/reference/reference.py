@@ -11,6 +11,7 @@ import sys
 import time
 from urllib.request import Request, urlopen
 from uuid import uuid4
+from evidence import source_hashes, bind_sources
 
 HERE = Path(__file__).resolve().parent
 KIT = HERE.parents[1]
@@ -114,6 +115,7 @@ def foundation_request(method, path, payload=None, *, idem=None):
 
 
 def validate_services(report_path):
+    before_hashes = source_hashes()
     run_id = "reference-service-" + str(uuid4())
     checks = []
     def check(name, passed, **evidence):
@@ -154,6 +156,7 @@ def validate_services(report_path):
         report["execution_state"] = "ABORTED"
         report["acceptance_color"] = "RED"
         report["error"] = type(exc).__name__ + ": " + str(exc)
+    bind_sources(report, before_hashes)
     report["finished_at"] = datetime.now(timezone.utc).isoformat()
     report_path.parent.mkdir(parents=True, exist_ok=True)
     report_path.write_text(json.dumps(report, indent=2) + "\n")
@@ -162,10 +165,13 @@ def validate_services(report_path):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("command", choices=["start", "start-passport", "stop", "restore", "validate-services", "validate-connected", "validate-adversarial", "status"])
-    parser.add_argument("--report", type=Path, default=KIT / "reports/reference-services.json")
+    parser.add_argument("command", choices=["start", "start-passport", "stop", "restore", "validate-services", "validate-connected", "validate-adversarial", "validate-authority-recovery", "status"])
+    parser.add_argument("--report", type=Path)
     parser.add_argument("--state-dir", type=Path, default=RUNTIME / "connected-validation")
     args = parser.parse_args()
+    if args.report is None:
+        args.report = KIT / "reports" / {"validate-connected": "reference-connected.json", "validate-adversarial": "reference-adversarial.json",
+                  "validate-authority-recovery": "authority-recovery.json"}.get(args.command, "reference-services.json")
     if args.command in ("start", "restore"):
         compose("ledger", "up", "-d", "--no-build")
         compose("reference", "up", "-d")
@@ -182,8 +188,9 @@ def main():
         report = validate_services(args.report)
         print(json.dumps({"report": str(args.report), "acceptance_color": report["acceptance_color"]}))
         return 0 if report["execution_state"] == "COMPLETED" else 1
-    elif args.command in ("validate-connected", "validate-adversarial"):
-        runner = "validate_connected.py" if args.command == "validate-connected" else "validate_adversarial.py"
+    elif args.command in ("validate-connected", "validate-adversarial", "validate-authority-recovery"):
+        runner = {"validate-connected": "validate_connected.py", "validate-adversarial": "validate_adversarial.py",
+                  "validate-authority-recovery": "validate_authority_recovery.py"}[args.command]
         run([sys.executable, KIT / "tools" / runner, "--config", ENV_FILE,
              "--ledger-config", LEDGER_ENV, "--state-dir", args.state_dir,
              "--report", args.report], "connected-validation.log")

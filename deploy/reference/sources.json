@@ -33,16 +33,18 @@
       "config_key": "PASSPORT_SOURCE_DIR",
       "mode": "canonical standalone service with explicit durable reference patch; same host OS as fenced executor",
       "interfaces": [
-        "are.passport.v1.PassportIssuanceService/IssuePassport",
+        "are.passport.v1.PassportIssuanceService/ApplyPassportOperation",
+        "GetPassportOperation",
+        "IssuePassport",
         "GetAgentPassport",
         "VerifyPassport",
         "RevokePassport"
       ],
-      "authority_boundary": "one active aggregate passport, signed exact scopes, durable authority revisions, authenticated CAS mutation",
+      "authority_boundary": "one active aggregate passport, signed exact scopes, durable authority revisions, authenticated CAS mutation; signed historical operation receipts reconcile a local intent without restoring past authority",
       "patches": [
         {
           "path": "patches/canonical-passport-hardening.patch",
-          "sha256": "3e14b40bed023e9e2e60cd5b7886f4aafdab0319cb13514ffc5c62af9be26f50"
+          "sha256": "1f633ff8b4dd0f8e71de5e4a435d2ac5bae205a5e75a6618fa0b052a4cb7cbf7"
         }
       ],
       "reconstruction_status": "PINNED_WITH_EXPLICIT_COMPLETE_PATCH"

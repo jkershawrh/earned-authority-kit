@@ -1,0 +1,1269 @@
+{
+  "run_id": "service-bdd-9cc3ef0a77cf46b28a81fddba845a7a7",
+  "started_at": "2026-10-10T02:56:11.627408+00:00",
+  "execution_state": "PREPARED",
+  "environment": "REAL_LOCAL_SERVICES_WITH_EXPLICIT_LOCAL_FAULT_CONTROLS",
+  "acceptance_color": "AMBER",
+  "cases": [
+    {
+      "scenario_id": "BDD-001",
+      "case": "default",
+      "requirements": {
+        "feature": "features/qualification.feature",
+        "line": 12,
+        "steps": [
+          "Given 3 distinct shadow attempts for \"skill-v1\" in \"demo-a\" have independently verified PASS outcomes",
+          "And all outcomes are inside the qualification evidence window",
+          "When qualification is evaluated",
+          "Then the qualification is ELIGIBLE for \"skill-v1\" in \"demo-a\"",
+          "And it references all 3 attempt IDs and their evidence digests",
+          "And it binds the checker revision and qualification-policy revision",
+          "And no passport grant has been issued",
+          "And no live registry mutation has occurred"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-002",
+      "case": "default",
+      "requirements": {
+        "feature": "features/qualification.feature",
+        "line": 23,
+        "steps": [
+          "Given the procedure reports success on 3 shadow attempts",
+          "And no independent checker outcome exists for those attempts",
+          "When qualification is evaluated",
+          "Then the qualification disposition is HOLD",
+          "And the reason is INSUFFICIENT_EVIDENCE",
+          "And no passport grant is issued"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "No public persisted self-report input distinct from independent outcomes. Caller attestation is rejected, but that is not the entire specified setup.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-003",
+      "case": "changed-skill",
+      "requirements": {
+        "feature": "features/qualification.feature",
+        "line": 32,
+        "steps": [
+          "Given a fresh eligible qualification for \"skill-v1\" in \"demo-a\"",
+          "When eligibility is requested for revision \"<revision>\" in context \"<context>\"",
+          "Then eligibility is rejected with reason \"<reason>\"",
+          "And the original qualification remains unchanged"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-003",
+      "case": "changed-environment",
+      "requirements": {
+        "feature": "features/qualification.feature",
+        "line": 32,
+        "steps": [
+          "Given a fresh eligible qualification for \"skill-v1\" in \"demo-a\"",
+          "When eligibility is requested for revision \"<revision>\" in context \"<context>\"",
+          "Then eligibility is rejected with reason \"<reason>\"",
+          "And the original qualification remains unchanged"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-004",
+      "case": "default",
+      "requirements": {
+        "feature": "features/qualification.feature",
+        "line": 44,
+        "steps": [
+          "Given 2 distinct independent PASS outcomes and 1 UNKNOWN outcome",
+          "When qualification is evaluated",
+          "Then the qualification disposition is HOLD",
+          "And the reason is EVIDENCE_UNCONFIRMED",
+          "And its counted passes equal 2",
+          "And its counted failures equal 0",
+          "And no passport grant is issued",
+          "And the UNKNOWN reason remains available for review"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-005",
+      "case": "default",
+      "requirements": {
+        "feature": "features/qualification.feature",
+        "line": 55,
+        "steps": [
+          "Given 3 independent PASS outcomes outside the permitted evidence window",
+          "When qualification is evaluated at the controlled current time",
+          "Then the qualification disposition is HOLD",
+          "And the reason is STALE_EVIDENCE",
+          "And the historical outcomes remain PASS",
+          "And no passport grant is issued"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-006",
+      "case": "default",
+      "requirements": {
+        "feature": "features/qualification.feature",
+        "line": 64,
+        "steps": [
+          "Given 1 independently verified shadow attempt is delivered 3 times",
+          "When qualification is evaluated",
+          "Then exactly 1 distinct attempt is counted",
+          "And the qualification disposition is HOLD",
+          "And the reason is INSUFFICIENT_EVIDENCE"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-007",
+      "case": "default",
+      "requirements": {
+        "feature": "features/qualification.feature",
+        "line": 72,
+        "steps": [
+          "Given 3 independent PASS outcomes and 1 independent FAIL outcome in the selected window",
+          "When qualification is evaluated",
+          "Then the qualification is INELIGIBLE",
+          "And the reason is KNOWN_FAILURE",
+          "And all 4 outcomes remain in the evidence history"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-008",
+      "case": "default",
+      "requirements": {
+        "feature": "features/authority.feature",
+        "line": 8,
+        "steps": [
+          "Given policy \"auth-policy-v1\" permits only \"release\" on \"registry-a/model-a\" in \"demo-a\"",
+          "When a 300-second grant is requested for that exact qualification",
+          "Then the issued grant binds the agent, skill revision, qualification ID, and policy revision",
+          "And its command contract binds exact skill, context, qualification, and policy digests",
+          "And it identifies the monotonic current authority revision",
+          "And the grant permits only \"release\" on \"registry-a/model-a\" in \"demo-a\"",
+          "And its validity does not exceed the requested 300 seconds or qualification validity",
+          "And the independently verified evidence references remain resolvable"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-009",
+      "case": "default",
+      "requirements": {
+        "feature": "features/authority.feature",
+        "line": 19,
+        "steps": [
+          "Given policy \"auth-policy-v1\" denies release during the requested window",
+          "When a grant is requested for the eligible qualification",
+          "Then the request is DENIED",
+          "And no active grant is created",
+          "And the qualification remains eligible for a later policy evaluation"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-010",
+      "case": "wrong-action",
+      "requirements": {
+        "feature": "features/authority.feature",
+        "line": 27,
+        "steps": [
+          "Given an active grant permits \"release\" on \"registry-a/model-a\" in \"demo-a\" for \"skill-v1\"",
+          "When an attempt requests \"<action>\" on \"<resource>\" in \"<context>\" using \"<revision>\"",
+          "Then the execution boundary denies the mutation",
+          "And an independent registry read confirms no state change"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-010",
+      "case": "wrong-resource",
+      "requirements": {
+        "feature": "features/authority.feature",
+        "line": 27,
+        "steps": [
+          "Given an active grant permits \"release\" on \"registry-a/model-a\" in \"demo-a\" for \"skill-v1\"",
+          "When an attempt requests \"<action>\" on \"<resource>\" in \"<context>\" using \"<revision>\"",
+          "Then the execution boundary denies the mutation",
+          "And an independent registry read confirms no state change"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-010",
+      "case": "wrong-context",
+      "requirements": {
+        "feature": "features/authority.feature",
+        "line": 27,
+        "steps": [
+          "Given an active grant permits \"release\" on \"registry-a/model-a\" in \"demo-a\" for \"skill-v1\"",
+          "When an attempt requests \"<action>\" on \"<resource>\" in \"<context>\" using \"<revision>\"",
+          "Then the execution boundary denies the mutation",
+          "And an independent registry read confirms no state change"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-010",
+      "case": "changed-revision",
+      "requirements": {
+        "feature": "features/authority.feature",
+        "line": 27,
+        "steps": [
+          "Given an active grant permits \"release\" on \"registry-a/model-a\" in \"demo-a\" for \"skill-v1\"",
+          "When an attempt requests \"<action>\" on \"<resource>\" in \"<context>\" using \"<revision>\"",
+          "Then the execution boundary denies the mutation",
+          "And an independent registry read confirms no state change"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-011",
+      "case": "default",
+      "requirements": {
+        "feature": "features/authority.feature",
+        "line": 41,
+        "steps": [
+          "Given the grant's passport expires at controlled time \"T\"",
+          "When a mutation is evaluated at time \"T\"",
+          "Then the execution boundary denies the mutation with reason EXPIRED_PASSPORT",
+          "And an independent registry read confirms no state change"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-012",
+      "case": "default",
+      "requirements": {
+        "feature": "features/authority.feature",
+        "line": 48,
+        "steps": [
+          "Given the passport remains valid for 300 seconds",
+          "And the requested scope expires after 60 seconds",
+          "When that scope is used at elapsed time 60 seconds",
+          "Then the execution boundary denies the mutation with reason EXPIRED_SCOPE",
+          "And an independent registry read confirms no state change"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-013",
+      "case": "default",
+      "requirements": {
+        "feature": "features/authority.feature",
+        "line": 56,
+        "steps": [
+          "Given a grant passed admission before revocation",
+          "And the authoritative service has since acknowledged that grant's revocation",
+          "When the admitted attempt reaches the registry mutation boundary",
+          "Then the execution boundary denies the mutation with reason REVOKED_AUTHORITY",
+          "And an independent registry read confirms no state change",
+          "And enforcement uses a mutation fence rather than only a prior status check"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-014",
+      "case": "missing-expiry",
+      "requirements": {
+        "feature": "features/authority.feature",
+        "line": 65,
+        "steps": [
+          "Given a passport response has an absent or invalid expiry timestamp",
+          "When the adapter validates the response for execution",
+          "Then the response is rejected as INVALID_AUTHORITY",
+          "And no executable grant is cached"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "Malformed provider response requires a transport negative-control; a fabricated canonical service cannot be claimed as live evidence.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-014",
+      "case": "invalid-expiry",
+      "requirements": {
+        "feature": "features/authority.feature",
+        "line": 65,
+        "steps": [
+          "Given a passport response has an absent or invalid expiry timestamp",
+          "When the adapter validates the response for execution",
+          "Then the response is rejected as INVALID_AUTHORITY",
+          "And no executable grant is cached"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "Malformed provider response requires a transport negative-control; a fabricated canonical service cannot be claimed as live evidence.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-015",
+      "case": "default",
+      "requirements": {
+        "feature": "features/authority.feature",
+        "line": 72,
+        "steps": [
+          "Given a locally cached grant is marked active",
+          "And the authoritative current-status service is unavailable",
+          "When a new registry mutation is attempted",
+          "Then the mutation is HELD with reason AUTHORITY_UNCONFIRMED",
+          "And an independent registry read confirms no state change"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-016",
+      "case": "default",
+      "requirements": {
+        "feature": "features/execution_and_evidence.feature",
+        "line": 8,
+        "steps": [
+          "Given attempt \"attempt-1\" requests model version \"model-v2\"",
+          "And its authenticated intent has been durably stored in the local outbox",
+          "When the authorized deterministic procedure completes",
+          "And the independent checker observes version \"model-v2\" with the required health state",
+          "Then the outcome is PASS",
+          "And qualification, authorization, execution, observation, and ledger records share \"attempt-1\"",
+          "And the execution record includes the exact skill and grant revisions",
+          "And the command binds the exact skill, context, qualification, and policy digests",
+          "And the mutation count is 1"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "Qualification and grant exist before the live attempt; records are linked by qualification/grant IDs, not retroactively assigned the later attempt ID required literally by this scenario.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-017",
+      "case": "wrong-version",
+      "requirements": {
+        "feature": "features/execution_and_evidence.feature",
+        "line": 20,
+        "steps": [
+          "Given the procedure reports a successful release of \"model-v2\"",
+          "But the independent checker observes the registry still serving \"model-v1\"",
+          "When the required observation window completes",
+          "Then the outcome is FAIL with reason POSTCONDITION_NOT_MET",
+          "And the procedure's reported success does not override the observation"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-017",
+      "case": "unhealthy",
+      "requirements": {
+        "feature": "features/execution_and_evidence.feature",
+        "line": 20,
+        "steps": [
+          "Given the procedure reports a successful release of \"model-v2\"",
+          "But the independent checker observes the registry still serving \"model-v1\"",
+          "When the required observation window completes",
+          "Then the outcome is FAIL with reason POSTCONDITION_NOT_MET",
+          "And the procedure's reported success does not override the observation"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-018",
+      "case": "default",
+      "requirements": {
+        "feature": "features/execution_and_evidence.feature",
+        "line": 28,
+        "steps": [
+          "Given an authorized registry mutation has completed",
+          "And the independent checker cannot read its postcondition within the required window",
+          "When the outcome is finalized for that window",
+          "Then the outcome is UNKNOWN with reason OBSERVATION_UNAVAILABLE",
+          "And the mutation is recorded as completed",
+          "And the attempt adds neither a qualification pass nor a qualification failure",
+          "And new mutations under the affected grant are HELD pending evidence or review"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-019",
+      "case": "default",
+      "requirements": {
+        "feature": "features/execution_and_evidence.feature",
+        "line": 38,
+        "steps": [
+          "Given attempt \"attempt-1\" completed with payload digest \"payload-a\"",
+          "When the same logical attempt is retried with digest \"payload-a\"",
+          "Then the original result and attempt ID are returned",
+          "And the mutation count remains 1",
+          "And the transport retry is linked to the original attempt"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-020",
+      "case": "default",
+      "requirements": {
+        "feature": "features/execution_and_evidence.feature",
+        "line": 46,
+        "steps": [
+          "Given attempt \"attempt-1\" was accepted with payload digest \"payload-a\"",
+          "When a retry supplies \"attempt-1\" with payload digest \"payload-b\"",
+          "Then the retry is DENIED with reason IDEMPOTENCY_CONFLICT",
+          "And no additional mutation occurs"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-021",
+      "case": "lost-response",
+      "requirements": {
+        "feature": "features/execution_and_evidence.feature",
+        "line": 53,
+        "steps": [
+          "Given the execution response was lost after the registry may have committed \"attempt-1\"",
+          "When the caller retries \"attempt-1\"",
+          "Then the adapter first reconciles the registry's durable attempt record",
+          "And if committed it returns that commit without a second mutation",
+          "And if commitment cannot be established it reports UNKNOWN",
+          "And it does not blindly repeat the mutation"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "Real response loss and observation interruption are bound; unavailable reconciliation uses a local injected control, not a real inaccessible durable store or an explicit UNKNOWN response envelope.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-021",
+      "case": "observer-interruption",
+      "requirements": {
+        "feature": "features/execution_and_evidence.feature",
+        "line": 53,
+        "steps": [
+          "Given the execution response was lost after the registry may have committed \"attempt-1\"",
+          "When the caller retries \"attempt-1\"",
+          "Then the adapter first reconciles the registry's durable attempt record",
+          "And if committed it returns that commit without a second mutation",
+          "And if commitment cannot be established it reports UNKNOWN",
+          "And it does not blindly repeat the mutation"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "Real response loss and observation interruption are bound; unavailable reconciliation uses a local injected control, not a real inaccessible durable store or an explicit UNKNOWN response envelope.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-021",
+      "case": "reconciliation-unavailable",
+      "requirements": {
+        "feature": "features/execution_and_evidence.feature",
+        "line": 53,
+        "steps": [
+          "Given the execution response was lost after the registry may have committed \"attempt-1\"",
+          "When the caller retries \"attempt-1\"",
+          "Then the adapter first reconciles the registry's durable attempt record",
+          "And if committed it returns that commit without a second mutation",
+          "And if commitment cannot be established it reports UNKNOWN",
+          "And it does not blindly repeat the mutation"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "Real response loss and observation interruption are bound; unavailable reconciliation uses a local injected control, not a real inaccessible durable store or an explicit UNKNOWN response envelope.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-022",
+      "case": "default",
+      "requirements": {
+        "feature": "features/execution_and_evidence.feature",
+        "line": 62,
+        "steps": [
+          "Given Foundation reports ALLOW with \"executed=false\" and \"receipt_created=false\"",
+          "When the kit constructs its attempt evidence",
+          "Then it records authorization checked",
+          "And it does not record execution completed",
+          "And it does not record a ledger receipt as created",
+          "And it tracks executor state, independent outcome, and ledger delivery as separate states"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "The current Foundation check response omits receipt_created; do not fabricate the explicitly required false field.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-023",
+      "case": "default",
+      "requirements": {
+        "feature": "features/withdrawal_and_requalification.feature",
+        "line": 7,
+        "steps": [
+          "Given an independent FAIL outcome is accepted for \"release-model\"",
+          "And the remote ledger is unavailable while authenticated local outbox writes remain durable",
+          "When the lifecycle policy applies the outcome",
+          "Then \"release-model\" is DEMOTED",
+          "And its grant is REVOKED",
+          "And revocation acknowledgement does not wait for a remote ledger receipt",
+          "And the revocation event remains durably queued with ledger delivery PENDING",
+          "And the next release attempt is denied before registry mutation",
+          "And the evidence identifies the failed attempt and the revocation revision"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-024",
+      "case": "default",
+      "requirements": {
+        "feature": "features/withdrawal_and_requalification.feature",
+        "line": 19,
+        "steps": [
+          "Given the \"release-model\" grant has been revoked after a known failure",
+          "When the agent requests \"read-health\" under its unaffected qualification",
+          "Then the request remains authorized",
+          "And the new effective passport contains the unchanged \"read-health\" grant",
+          "And the previous passport revision cannot revive \"release-model\""
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-025",
+      "case": "missing-result",
+      "requirements": {
+        "feature": "features/withdrawal_and_requalification.feature",
+        "line": 27,
+        "steps": [
+          "Given the required \"release-model\" evidence becomes \"<state>\"",
+          "When the lifecycle policy reevaluates authority",
+          "Then new release mutations are HELD with reason \"<reason>\"",
+          "And the affected qualification disposition is HOLD",
+          "And no new FAIL outcome is recorded",
+          "And \"read-health\" remains authorized under its unaffected qualification"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "The public reevaluate API receives explicit UNKNOWN/STALE policy signals. Actual missing/stale evidence detection while a second grant stays fresh is not established by these calls.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-025",
+      "case": "old-result",
+      "requirements": {
+        "feature": "features/withdrawal_and_requalification.feature",
+        "line": 27,
+        "steps": [
+          "Given the required \"release-model\" evidence becomes \"<state>\"",
+          "When the lifecycle policy reevaluates authority",
+          "Then new release mutations are HELD with reason \"<reason>\"",
+          "And the affected qualification disposition is HOLD",
+          "And no new FAIL outcome is recorded",
+          "And \"read-health\" remains authorized under its unaffected qualification"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "The public reevaluate API receives explicit UNKNOWN/STALE policy signals. Actual missing/stale evidence detection while a second grant stays fresh is not established by these calls.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-026",
+      "case": "default",
+      "requirements": {
+        "feature": "features/withdrawal_and_requalification.feature",
+        "line": 41,
+        "steps": [
+          "Given \"release-model\" revision \"skill-v1\" was demoted",
+          "And revision \"skill-v2\" has 3 fresh independent shadow PASS outcomes in the required context",
+          "When \"skill-v2\" passes qualification and receives separate policy approval",
+          "Then a new grant is issued for \"skill-v2\" and its new qualification",
+          "And \"skill-v1\" remains unauthorized",
+          "And the reinstatement record references both the new evidence and prior withdrawal"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "Requires an actually changed deterministic procedure artifact, not a model-context change or manually reassigned version string.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-027",
+      "case": "default",
+      "requirements": {
+        "feature": "features/withdrawal_and_requalification.feature",
+        "line": 50,
+        "steps": [
+          "Given \"release-model\" was demoted and has no current eligible qualification",
+          "When a request attempts to mark its grant active without evidence and policy approval",
+          "Then the request is DENIED",
+          "And the revoked grant remains ineffective"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-028",
+      "case": "default",
+      "requirements": {
+        "feature": "features/concurrency.feature",
+        "line": 6,
+        "steps": [
+          "Given two requests both observed authority revision 4 for the same agent",
+          "When they concurrently request different replacement passports",
+          "Then only one request can commit a transition from revision 4",
+          "And the other receives a conflict or reevaluates against the committed revision",
+          "And exactly one passport revision is effective",
+          "And every acknowledged grant is represented in that effective revision"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-029",
+      "case": "default",
+      "requirements": {
+        "feature": "features/concurrency.feature",
+        "line": 15,
+        "steps": [
+          "Given an attempt passed admission under authority revision 4",
+          "And the attempt pauses before the registry commit boundary",
+          "When revocation commits authority revision 5 and is acknowledged",
+          "And the attempt resumes",
+          "Then the registry refuses the revision-4 mutation",
+          "And an independent registry read confirms no state change"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-030",
+      "case": "default",
+      "requirements": {
+        "feature": "features/concurrency.feature",
+        "line": 24,
+        "steps": [
+          "Given a mutation committed under authority revision 4",
+          "When revocation then commits authority revision 5",
+          "Then the prior attempt remains recorded as committed before revocation",
+          "And its independent outcome still must be established",
+          "And the next mutation under revision 4 is denied",
+          "And the evidence does not claim revocation undid the prior mutation"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-031",
+      "case": "default",
+      "requirements": {
+        "feature": "features/concurrency.feature",
+        "line": 33,
+        "steps": [
+          "Given an updater read a passport containing \"release-model\" and \"read-health\" at revision 4",
+          "And another request revoked \"release-model\" at revision 5",
+          "When the updater submits its revision-4 replacement adding another \"read-health\" resource",
+          "Then that stale replacement cannot commit as current authority",
+          "And any recomputed replacement preserves the release revocation",
+          "And the unaffected read-health grants remain available"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "The current public aggregate has one resource grant per skill. Stale changed-resource rejection is exercised, but adding a second read-health resource while retaining the first is not represented.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-032",
+      "case": "default",
+      "requirements": {
+        "feature": "features/concurrency.feature",
+        "line": 42,
+        "steps": [
+          "Given two transport requests carry the same attempt ID and payload digest",
+          "When they reach the registry concurrently under valid authority",
+          "Then at most one registry mutation commits",
+          "And both requests resolve to the same durable attempt result",
+          "And only one attempt contributes to qualification evidence"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-033",
+      "case": "local-store-down",
+      "requirements": {
+        "feature": "features/ledger_integrity.feature",
+        "line": 9,
+        "steps": [
+          "Given no durable authenticated local intent exists for \"attempt-1\"",
+          "And persisting its local intent fails because \"<cause>\"",
+          "When \"attempt-1\" reaches the execution boundary",
+          "Then the attempt is DENIED with reason \"<reason>\"",
+          "And an independent registry read confirms no state change"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "The exposed boolean local-fault flags do not establish actual durable-store offline or writer authentication failure. Exact real failure and reason mapping remain unbound.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-033",
+      "case": "unauthenticated",
+      "requirements": {
+        "feature": "features/ledger_integrity.feature",
+        "line": 9,
+        "steps": [
+          "Given no durable authenticated local intent exists for \"attempt-1\"",
+          "And persisting its local intent fails because \"<cause>\"",
+          "When \"attempt-1\" reaches the execution boundary",
+          "Then the attempt is DENIED with reason \"<reason>\"",
+          "And an independent registry read confirms no state change"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "The exposed boolean local-fault flags do not establish actual durable-store offline or writer authentication failure. Exact real failure and reason mapping remain unbound.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-034",
+      "case": "before-intent-send",
+      "requirements": {
+        "feature": "features/ledger_integrity.feature",
+        "line": 22,
+        "steps": [
+          "Given the authenticated intent for \"attempt-1\" is durable in the local outbox",
+          "And authority for \"attempt-1\" remains valid at the registry commit boundary",
+          "And the remote ledger outage begins \"<outage_point>\"",
+          "When the mutation commits and the independent checker confirms its required postcondition",
+          "Then \"attempt-1\" remains recorded as committed with evidence delivery pending",
+          "And the independent outcome remains PASS",
+          "And no remote ledger receipt is fabricated",
+          "And the exact outcome record is retained in a durable retry buffer",
+          "And the remote outage alone does not hold qualification or revoke otherwise valid authority",
+          "And recovery reconciles actual registry state before any execution retry",
+          "And recovery retries evidence delivery without repeating the registry mutation",
+          "And duplicate ledger deliveries cannot create a second qualification outcome"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-034",
+      "case": "after-commit",
+      "requirements": {
+        "feature": "features/ledger_integrity.feature",
+        "line": 22,
+        "steps": [
+          "Given the authenticated intent for \"attempt-1\" is durable in the local outbox",
+          "And authority for \"attempt-1\" remains valid at the registry commit boundary",
+          "And the remote ledger outage begins \"<outage_point>\"",
+          "When the mutation commits and the independent checker confirms its required postcondition",
+          "Then \"attempt-1\" remains recorded as committed with evidence delivery pending",
+          "And the independent outcome remains PASS",
+          "And no remote ledger receipt is fabricated",
+          "And the exact outcome record is retained in a durable retry buffer",
+          "And the remote outage alone does not hold qualification or revoke otherwise valid authority",
+          "And recovery reconciles actual registry state before any execution retry",
+          "And recovery retries evidence delivery without repeating the registry mutation",
+          "And duplicate ledger deliveries cannot create a second qualification outcome"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-034",
+      "case": "audit-unavailable",
+      "requirements": {
+        "feature": "features/ledger_integrity.feature",
+        "line": 22,
+        "steps": [
+          "Given the authenticated intent for \"attempt-1\" is durable in the local outbox",
+          "And authority for \"attempt-1\" remains valid at the registry commit boundary",
+          "And the remote ledger outage begins \"<outage_point>\"",
+          "When the mutation commits and the independent checker confirms its required postcondition",
+          "Then \"attempt-1\" remains recorded as committed with evidence delivery pending",
+          "And the independent outcome remains PASS",
+          "And no remote ledger receipt is fabricated",
+          "And the exact outcome record is retained in a durable retry buffer",
+          "And the remote outage alone does not hold qualification or revoke otherwise valid authority",
+          "And recovery reconciles actual registry state before any execution retry",
+          "And recovery retries evidence delivery without repeating the registry mutation",
+          "And duplicate ledger deliveries cannot create a second qualification outcome"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-035",
+      "case": "default",
+      "requirements": {
+        "feature": "features/ledger_integrity.feature",
+        "line": 42,
+        "steps": [
+          "Given a valid receipt binds an outcome's content digest",
+          "When the stored outcome payload is altered without a matching valid receipt",
+          "Then evidence verification reports TAMPER_DETECTED",
+          "And the altered outcome is excluded from qualification",
+          "And affected authority is HELD for review"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "Requires an owned stored-payload tamper with canonical receipt verification, qualification exclusion and hold, plus reliable restoration.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-036",
+      "case": "other-attempt",
+      "requirements": {
+        "feature": "features/ledger_integrity.feature",
+        "line": 50,
+        "steps": [
+          "Given an otherwise valid receipt belongs to \"<receipt_binding>\"",
+          "When it is offered as evidence for \"attempt-current\" and its current skill revision",
+          "Then the evidence is rejected with reason \"<reason>\"",
+          "And no new mutation is authorized by that receipt"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "Canonical verification rejects binding/freshness mismatches, but exact attempt/skill/expiry reason mapping and no-authority assertions are not yet bound.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-036",
+      "case": "old-skill",
+      "requirements": {
+        "feature": "features/ledger_integrity.feature",
+        "line": 50,
+        "steps": [
+          "Given an otherwise valid receipt belongs to \"<receipt_binding>\"",
+          "When it is offered as evidence for \"attempt-current\" and its current skill revision",
+          "Then the evidence is rejected with reason \"<reason>\"",
+          "And no new mutation is authorized by that receipt"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "Canonical verification rejects binding/freshness mismatches, but exact attempt/skill/expiry reason mapping and no-authority assertions are not yet bound.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-036",
+      "case": "expired-proof",
+      "requirements": {
+        "feature": "features/ledger_integrity.feature",
+        "line": 50,
+        "steps": [
+          "Given an otherwise valid receipt belongs to \"<receipt_binding>\"",
+          "When it is offered as evidence for \"attempt-current\" and its current skill revision",
+          "Then the evidence is rejected with reason \"<reason>\"",
+          "And no new mutation is authorized by that receipt"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "Canonical verification rejects binding/freshness mismatches, but exact attempt/skill/expiry reason mapping and no-authority assertions are not yet bound.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    },
+    {
+      "scenario_id": "BDD-037",
+      "case": "default",
+      "requirements": {
+        "feature": "features/ledger_integrity.feature",
+        "line": 63,
+        "steps": [
+          "Given an outcome record is on an intact ledger chain",
+          "And its signer is not trusted to attest independent outcomes",
+          "When qualification evaluates that outcome",
+          "Then the outcome is excluded with reason UNTRUSTED_ATTESTATION",
+          "And no qualification pass is counted",
+          "And no grant is issued from that assertion"
+        ]
+      },
+      "execution_state": "NOT_RUN",
+      "acceptance_color": "AMBER",
+      "complete_scenario_candidate": false,
+      "limitation": "Requires an actual intact canonical entry carrying an untrusted independent-outcome signer and qualification admission control.",
+      "assertions": [],
+      "faults": [],
+      "receipts": []
+    }
+  ],
+  "scope": "Named BDD assertions on actual local canonical services and fenced SQLite registry; no cross-host, product-value or hardware claim.",
+  "source_hashes_before": {
+    "tools/validate_bdd_connected.py": "sha256:6de1c6c7d4f58f70f0d337441a6e0bd037bbe8dce56b5532619ad68a95e9abcc",
+    "tools/validate_connected.py": "sha256:dc9c007353e26c3b5a29305d522f85bb231ff6a6a7521a203fd3d4f17eeb5b2a",
+    "features/bindings.json": "sha256:eb2d1bb46611964a100b5e5515f3f44d72d0cb5f94e08e16121147855da3d13d",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:2a379d9d31034a95afbd325f3aad712e4b3b45374ad38361df00f50dcf28f64a",
+    "earned_authority/connected.py": "sha256:9ec015cd8d4b0da2c79a9a09716223e5ddf02ca35fde34e25d898fed6e385a4f",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:90ba5373a0877d8efbb76c1617c85ff240a2a080e16542de4fee5f2566254286",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:f3b2bdd351a64e8168c7bf5771ca0d4bd460b6505dea595e288d0c68326969ce",
+    "earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
+    "features/concurrency.feature": "sha256:a593d6b2ee5ceb79260f97e0dbfd768843c2c7f4fcd5b6705e11797f023f0e27",
+    "features/execution_and_evidence.feature": "sha256:5c03e38759cae3c8d84536efdd463c91492183e72ce0d3941a9b8ae7b8a23ded",
+    "features/future_robot_simulation.feature": "sha256:916435ba5489e20024f589161dc3a4e3a5df5c23f211a211a9baab8a6ea33771",
+    "features/ledger_integrity.feature": "sha256:6f3039c21f36f2b0d052b168d30547d3a5ec76ca39b2046f653a59b3a4e442a6",
+    "features/qualification.feature": "sha256:8545997b35e1600c7f2e63e4e743ca5f3563aa4ef295cb6b395fda614a286629",
+    "features/withdrawal_and_requalification.feature": "sha256:417a22c6940ab6b0fb70e2c0e44d27646da5c18d9ac10e242b7f8a27bc7fa8da"
+  },
+  "EDD": "evaluation-driven development; no preregistered value result",
+  "CUT": "unconfirmed",
+  "source_hashes": {
+    "tools/validate_bdd_connected.py": "sha256:6de1c6c7d4f58f70f0d337441a6e0bd037bbe8dce56b5532619ad68a95e9abcc",
+    "tools/validate_connected.py": "sha256:dc9c007353e26c3b5a29305d522f85bb231ff6a6a7521a203fd3d4f17eeb5b2a",
+    "features/bindings.json": "sha256:eb2d1bb46611964a100b5e5515f3f44d72d0cb5f94e08e16121147855da3d13d",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:2a379d9d31034a95afbd325f3aad712e4b3b45374ad38361df00f50dcf28f64a",
+    "earned_authority/connected.py": "sha256:9ec015cd8d4b0da2c79a9a09716223e5ddf02ca35fde34e25d898fed6e385a4f",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:90ba5373a0877d8efbb76c1617c85ff240a2a080e16542de4fee5f2566254286",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:f3b2bdd351a64e8168c7bf5771ca0d4bd460b6505dea595e288d0c68326969ce",
+    "earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
+    "features/concurrency.feature": "sha256:a593d6b2ee5ceb79260f97e0dbfd768843c2c7f4fcd5b6705e11797f023f0e27",
+    "features/execution_and_evidence.feature": "sha256:5c03e38759cae3c8d84536efdd463c91492183e72ce0d3941a9b8ae7b8a23ded",
+    "features/future_robot_simulation.feature": "sha256:916435ba5489e20024f589161dc3a4e3a5df5c23f211a211a9baab8a6ea33771",
+    "features/ledger_integrity.feature": "sha256:6f3039c21f36f2b0d052b168d30547d3a5ec76ca39b2046f653a59b3a4e442a6",
+    "features/qualification.feature": "sha256:8545997b35e1600c7f2e63e4e743ca5f3563aa4ef295cb6b395fda614a286629",
+    "features/withdrawal_and_requalification.feature": "sha256:417a22c6940ab6b0fb70e2c0e44d27646da5c18d9ac10e242b7f8a27bc7fa8da"
+  },
+  "source_unchanged_during_run": true,
+  "finished_at": "2026-10-10T02:56:11.629582+00:00",
+  "scenario_acceptance": {
+    "BDD-001": "AMBER",
+    "BDD-002": "AMBER",
+    "BDD-003": "AMBER",
+    "BDD-004": "AMBER",
+    "BDD-005": "AMBER",
+    "BDD-006": "AMBER",
+    "BDD-007": "AMBER",
+    "BDD-008": "AMBER",
+    "BDD-009": "AMBER",
+    "BDD-010": "AMBER",
+    "BDD-011": "AMBER",
+    "BDD-012": "AMBER",
+    "BDD-013": "AMBER",
+    "BDD-014": "AMBER",
+    "BDD-015": "AMBER",
+    "BDD-016": "AMBER",
+    "BDD-017": "AMBER",
+    "BDD-018": "AMBER",
+    "BDD-019": "AMBER",
+    "BDD-020": "AMBER",
+    "BDD-021": "AMBER",
+    "BDD-022": "AMBER",
+    "BDD-023": "AMBER",
+    "BDD-024": "AMBER",
+    "BDD-025": "AMBER",
+    "BDD-026": "AMBER",
+    "BDD-027": "AMBER",
+    "BDD-028": "AMBER",
+    "BDD-029": "AMBER",
+    "BDD-030": "AMBER",
+    "BDD-031": "AMBER",
+    "BDD-032": "AMBER",
+    "BDD-033": "AMBER",
+    "BDD-034": "AMBER",
+    "BDD-035": "AMBER",
+    "BDD-036": "AMBER",
+    "BDD-037": "AMBER"
+  },
+  "counts": {
+    "scenario_ids": 37,
+    "cases": 51,
+    "passed_cases": 0,
+    "failed_cases": 0,
+    "blocked_cases": 0,
+    "unrun_cases": 51,
+    "complete_green_scenarios": 0
+  }
+}

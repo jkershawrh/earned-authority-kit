@@ -9,6 +9,7 @@ from pathlib import Path
 import subprocess
 import sys
 from types import SimpleNamespace
+from evidence import source_hashes, bind_sources
 
 HERE = Path(__file__).resolve().parent
 KIT = HERE.parents[1]
@@ -16,6 +17,7 @@ TASK = Path(os.environ.get("EA_WORKSPACE", str(KIT.parents[1]))).resolve()
 
 
 def main():
+    before_hashes = source_hashes()
     p = argparse.ArgumentParser()
     p.add_argument("--prior-report", type=Path, required=True)
     p.add_argument("--report", type=Path, required=True)
@@ -65,6 +67,7 @@ def main():
         report.update(execution_state="COMPLETED", acceptance_color="GREEN")
     except Exception as exc:
         report.update(execution_state="ABORTED", acceptance_color="RED", error=type(exc).__name__ + ": " + str(exc))
+    bind_sources(report, before_hashes)
     report["finished_at"] = datetime.now(timezone.utc).isoformat()
     args.report.parent.mkdir(parents=True, exist_ok=True)
     args.report.write_text(json.dumps(report, indent=2) + "\n")

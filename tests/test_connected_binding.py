@@ -7,6 +7,7 @@ from earned_authority.contracts import canonical_digest
 class BindingRegression(unittest.TestCase):
     def test_a_signed_grant_cannot_borrow_another_skills_qualification(self):
         rt=ConnectedRuntime.__new__(ConnectedRuntime);rt.clock=ControlledClock();rt.procedure_revision='rev1'
+        rt._assert_authority_ready=lambda db,agent:None  # this test isolates skill binding
         q={'qualification_id':'q1','skill':'original-skill','version':'rev1','context':{'model_version':'model-v2'},
            'skill_digest':'sha256:'+'1'*64,'context_digest':'sha256:'+'2'*64}
         grant={**q,'skill':'different-skill','action':'release','resource':'model/champion',

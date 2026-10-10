@@ -1,6 +1,6 @@
 {
-  "generated_at_ms": 1791597770268,
-  "kit_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+  "generated_at_ms": 1791601636578,
+  "kit_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
   "overall_integration_readiness": "AMBER",
   "milestones": [
     {
@@ -12,7 +12,8 @@
         "CON-01",
         "KIT-01",
         "BDD-LOCAL",
-        "EXEC-LOCAL"
+        "EXEC-LOCAL",
+        "AUDIT-LOCAL"
       ]
     },
     {
@@ -23,13 +24,15 @@
       "requirements": [
         "QUAL-01",
         "AUTH-CLIENT",
+        "AUTH-OPS",
         "LED-01",
-        "AUTH-01",
         "POL-01",
+        "AUTH-01",
         "POL-LIVE",
         "SVC-LIVE",
         "ARC-LIVE",
-        "FAULT-LIVE"
+        "FAULT-LIVE",
+        "AUDIT-ATOMIC"
       ]
     },
     {
@@ -39,12 +42,13 @@
       "scope": "Fresh same-host reconstruction and full persistent restart.",
       "requirements": [
         "DEP-RESTORE",
+        "AUDIT-RESTORE",
         "DEP-BUILD"
       ]
     }
   ],
   "kit_tests": {
-    "tests_run": 203,
+    "tests_run": 235,
     "failures": 0,
     "errors": 0,
     "skipped": 0,
@@ -55,7 +59,7 @@
   "rows": [
     {
       "id": "CON-01",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "CDD"
@@ -75,7 +79,7 @@
     },
     {
       "id": "KIT-01",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -95,7 +99,7 @@
     },
     {
       "id": "BDD-LOCAL",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "BDD"
@@ -115,7 +119,7 @@
     },
     {
       "id": "EXEC-LOCAL",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -135,7 +139,7 @@
     },
     {
       "id": "QUAL-01",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -155,7 +159,7 @@
     },
     {
       "id": "AUTH-CLIENT",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -170,12 +174,52 @@
       "baseline": "AMBER",
       "release_required": true,
       "milestone": "M2",
-      "implementation": "23 tests; exact named modules only",
+      "implementation": "24 tests; exact named modules only",
+      "artifact": "reports/component-verification.json"
+    },
+    {
+      "id": "AUTH-OPS",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "environment": "LOCAL_COMPONENT",
+      "required_methods": [
+        "CDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP1",
+      "component": "Signed canonical operation receipt consumer",
+      "acceptance": "Go-signed request/receipt vectors and exact consumer bindings; historical receipts do not confer current permission.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M2",
+      "implementation": "14 tests; exact named modules only",
+      "artifact": "reports/component-verification.json"
+    },
+    {
+      "id": "AUDIT-LOCAL",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "environment": "LOCAL_COMPONENT",
+      "required_methods": [
+        "TDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP4",
+      "component": "Durable authority operation journal",
+      "acceptance": "Local unit seams cover restart, lost response, stable event identity, pending-operation denial and conservative cancellation.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M1",
+      "implementation": "17 tests; exact named modules only",
       "artifact": "reports/component-verification.json"
     },
     {
       "id": "LED-01",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -194,28 +238,8 @@
       "artifact": "reports/component-verification.json"
     },
     {
-      "id": "AUTH-01",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
-      "environment": "CANONICAL_COMPONENT",
-      "required_methods": [
-        "TDD"
-      ],
-      "max_age_ms": 604800000,
-      "status": "GREEN",
-      "reason": "All required methods passed for this revision and environment",
-      "missing_methods": [],
-      "lane": "WP1",
-      "component": "Passport service and race regressions",
-      "acceptance": "49 normal and 49 race-detector leaf cases; overlapping cases, not 98 unique tests.",
-      "baseline": "RED",
-      "release_required": true,
-      "milestone": "M2",
-      "implementation": "Recorded execution",
-      "artifact": "evidence/canonical-passport-results.json"
-    },
-    {
       "id": "POL-01",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "CANONICAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -234,8 +258,28 @@
       "artifact": "evidence/foundation-policy-binding-results.json"
     },
     {
+      "id": "AUTH-01",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "environment": "CANONICAL_COMPONENT",
+      "required_methods": [
+        "TDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP1",
+      "component": "Passport operation persistence and races",
+      "acceptance": "44 tests / 76 leaf cases in normal and race-detector runs, including legacy-state migration and exact request retries. Runs overlap; they are not independent trials.",
+      "baseline": "RED",
+      "release_required": true,
+      "milestone": "M2",
+      "implementation": "Recorded execution",
+      "artifact": "evidence/canonical-passport-operations-result.json"
+    },
+    {
       "id": "POL-LIVE",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "CDD"
@@ -251,11 +295,11 @@
       "release_required": true,
       "milestone": "M2",
       "implementation": "8 executed checks",
-      "artifact": "reports/clean-reference-combined-policy.json"
+      "artifact": "reports/operations-reference-policy.json"
     },
     {
       "id": "SVC-LIVE",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "CDD"
@@ -271,11 +315,11 @@
       "release_required": true,
       "milestone": "M2",
       "implementation": "7 executed checks",
-      "artifact": "reports/clean-reference-combined-services.json"
+      "artifact": "reports/operations-reference-services.json"
     },
     {
       "id": "ARC-LIVE",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -291,11 +335,11 @@
       "release_required": true,
       "milestone": "M2",
       "implementation": "23 executed checks",
-      "artifact": "reports/clean-reference-combined-connected.json"
+      "artifact": "reports/operations-reference-connected.json"
     },
     {
       "id": "FAULT-LIVE",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -311,11 +355,31 @@
       "release_required": true,
       "milestone": "M2",
       "implementation": "17 executed checks",
-      "artifact": "reports/clean-reference-combined-adversarial.json"
+      "artifact": "reports/operations-reference-adversarial.json"
+    },
+    {
+      "id": "AUDIT-ATOMIC",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "environment": "REAL_LOCAL_SERVICES",
+      "required_methods": [
+        "BDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP4",
+      "component": "Authority-to-audit process crash recovery",
+      "acceptance": "Real process termination, lost RPC reply, local persistence failure and historical receipt reconciliation. Separate service commits; no distributed atomic transaction.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M2",
+      "implementation": "41 executed checks",
+      "artifact": "reports/operations-reference-authority-recovery.json"
     },
     {
       "id": "DEP-RESTORE",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -331,11 +395,31 @@
       "release_required": true,
       "milestone": "M3",
       "implementation": "6 executed checks",
-      "artifact": "reports/clean-reference-combined-restore.json"
+      "artifact": "reports/operations-reference-restore.json"
+    },
+    {
+      "id": "AUDIT-RESTORE",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "environment": "REAL_LOCAL_SERVICES",
+      "required_methods": [
+        "BDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP4",
+      "component": "Historical operation receipts after stack restart",
+      "acceptance": "Read-only revalidation of prior signed operation receipts, lifecycle events and ledger delivery after retained-state restart.",
+      "baseline": "AMBER",
+      "release_required": true,
+      "milestone": "M3",
+      "implementation": "21 executed checks",
+      "artifact": "reports/operations-reference-authority-recovery-restored.json"
     },
     {
       "id": "DEP-BUILD",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "FRESH_SAME_HOST",
       "required_methods": [
         "BDD"
@@ -346,16 +430,36 @@
       "missing_methods": [],
       "lane": "WP6",
       "component": "Fresh source reconstruction and one-command validation",
-      "acceptance": "Five pinned upstream repositories, explicit patches, distinct keys/state/volumes and 61 combined checks.",
+      "acceptance": "Five pinned upstream repositories, explicit patches, distinct keys/state/volumes and 123 recorded checks.",
       "baseline": "AMBER",
       "release_required": true,
       "milestone": "M3",
       "implementation": "Recorded execution",
-      "artifact": "reports/clean-reference-combined.json"
+      "artifact": "reports/operations-reference-combined.json"
+    },
+    {
+      "id": "BDD-SERVICE",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "environment": "REAL_LOCAL_SERVICES",
+      "required_methods": [
+        "BDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP5",
+      "component": "Explicit complete service behaviors",
+      "acceptance": "22 complete scenario IDs: BDD-001, BDD-003, BDD-004, BDD-005, BDD-006, BDD-007, BDD-008, BDD-010, BDD-011, BDD-012, BDD-013, BDD-018, BDD-019, BDD-020, BDD-023, BDD-024, BDD-027, BDD-028, BDD-029, BDD-030, BDD-032, BDD-034. Every named scenario requires all its outline rows and assertions.",
+      "baseline": "AMBER",
+      "release_required": false,
+      "milestone": null,
+      "implementation": "Partial and unbound scenarios retain their own gaps in the raw report",
+      "artifact": "reports/service-bdd-live-002.json"
     },
     {
       "id": "BDD-CORE",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "SERVICE_ACCEPTANCE",
       "required_methods": [
         "BDD"
@@ -368,38 +472,16 @@
       ],
       "lane": "WP5",
       "component": "All 37 behaviors on real service adapters",
-      "acceptance": "Fixture coverage and the connected checks are separate; complete scenario-by-scenario real coverage is not asserted.",
+      "acceptance": "22 of 37 complete scenarios recorded; fixture and partial assertion passes cannot complete the remainder.",
       "baseline": "AMBER",
       "release_required": true,
       "milestone": null,
-      "implementation": "Acceptance outstanding",
-      "artifact": null
-    },
-    {
-      "id": "AUDIT-ATOMIC",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
-      "environment": "CROSS_SERVICE_RECOVERY",
-      "required_methods": [
-        "BDD"
-      ],
-      "max_age_ms": 604800000,
-      "status": "AMBER",
-      "reason": "Missing current, executed, artifact-verified evidence",
-      "missing_methods": [
-        "BDD"
-      ],
-      "lane": "WP4",
-      "component": "Authority change and lifecycle event crash recovery",
-      "acceptance": "Source review identifies a crash window after Passport change and before local GRANTED/REVOKED recording. Durable authority-operation intents and crash injection remain follow-on work.",
-      "baseline": "AMBER",
-      "release_required": true,
-      "milestone": null,
-      "implementation": "Acceptance outstanding",
-      "artifact": null
+      "implementation": "Recorded execution",
+      "artifact": "reports/service-bdd-live-002.json"
     },
     {
       "id": "EDD-PLAN",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "HELD_OUT_EVALUATION",
       "required_methods": [
         "EDD"
@@ -421,7 +503,7 @@
     },
     {
       "id": "EDD-RUN",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "HELD_OUT_EVALUATION",
       "required_methods": [
         "EDD"
@@ -443,7 +525,7 @@
     },
     {
       "id": "DEP-EXTERNAL",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "INDEPENDENT_REPRODUCTION",
       "required_methods": [
         "BDD"
@@ -465,7 +547,7 @@
     },
     {
       "id": "DEP-RH",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "OPENSHIFT",
       "required_methods": [
         "BDD"
@@ -487,7 +569,7 @@
     },
     {
       "id": "ROB-01",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "SIMULATION",
       "required_methods": [
         "EDD"
@@ -509,7 +591,7 @@
     },
     {
       "id": "BASE-01",
-      "target_revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "target_revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "HISTORICAL_BASELINE",
       "required_methods": [
         "TDD"
@@ -531,95 +613,106 @@
   "evidence": [
     {
       "requirement_id": "CON-01",
-      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "LOCAL_COMPONENT",
       "method": "CDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791597541466,
+      "timestamp_ms": 1791601343163,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:661fab3dec414ab8c94cc8d6c70bba915a15fd21b13c34d50b3b0ddd1e0e9118"
+      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
     },
     {
       "requirement_id": "KIT-01",
-      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791597541466,
+      "timestamp_ms": 1791601343163,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:661fab3dec414ab8c94cc8d6c70bba915a15fd21b13c34d50b3b0ddd1e0e9118"
+      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
     },
     {
       "requirement_id": "BDD-LOCAL",
-      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "LOCAL_COMPONENT",
       "method": "BDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791597541466,
+      "timestamp_ms": 1791601343163,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:661fab3dec414ab8c94cc8d6c70bba915a15fd21b13c34d50b3b0ddd1e0e9118"
+      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
     },
     {
       "requirement_id": "EXEC-LOCAL",
-      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791597541466,
+      "timestamp_ms": 1791601343163,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:661fab3dec414ab8c94cc8d6c70bba915a15fd21b13c34d50b3b0ddd1e0e9118"
+      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
     },
     {
       "requirement_id": "QUAL-01",
-      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791597541466,
+      "timestamp_ms": 1791601343163,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:661fab3dec414ab8c94cc8d6c70bba915a15fd21b13c34d50b3b0ddd1e0e9118"
+      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
     },
     {
       "requirement_id": "AUTH-CLIENT",
-      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791597541466,
+      "timestamp_ms": 1791601343163,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:661fab3dec414ab8c94cc8d6c70bba915a15fd21b13c34d50b3b0ddd1e0e9118"
+      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
+    },
+    {
+      "requirement_id": "AUTH-OPS",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "environment": "LOCAL_COMPONENT",
+      "method": "CDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791601343163,
+      "executed": true,
+      "artifact": "reports/component-verification.json",
+      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
+    },
+    {
+      "requirement_id": "AUDIT-LOCAL",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "environment": "LOCAL_COMPONENT",
+      "method": "TDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791601343163,
+      "executed": true,
+      "artifact": "reports/component-verification.json",
+      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
     },
     {
       "requirement_id": "LED-01",
-      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791597541466,
+      "timestamp_ms": 1791601343163,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:661fab3dec414ab8c94cc8d6c70bba915a15fd21b13c34d50b3b0ddd1e0e9118"
-    },
-    {
-      "requirement_id": "AUTH-01",
-      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
-      "environment": "CANONICAL_COMPONENT",
-      "method": "TDD",
-      "outcome": "PASS",
-      "timestamp_ms": 1791596954035,
-      "executed": true,
-      "artifact": "evidence/canonical-passport-results.json",
-      "artifact_digest": "sha256:d14b9866efa5abfb93729fb9883ebd4fdfc438ae68e1c3ce50365ba6b6a390cd"
+      "artifact_digest": "sha256:a25492a1af4818d58ea8be318ff9f7b9d02bd5ad6e5161125cb283b1fd50ad86"
     },
     {
       "requirement_id": "POL-01",
-      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "CANONICAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -629,74 +722,129 @@
       "artifact_digest": "sha256:aee2413d8e5e18be52a2bdc12ea9e4094f1eb503e5bd704affa7c4a931e195a0"
     },
     {
+      "requirement_id": "AUTH-01",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "environment": "CANONICAL_COMPONENT",
+      "method": "TDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791601269655,
+      "executed": true,
+      "artifact": "evidence/canonical-passport-operations-result.json",
+      "artifact_digest": "sha256:4be016611eb5c848455ce2855900019634dbc65b2f20837b2c8f66212a8ee048"
+    },
+    {
       "requirement_id": "POL-LIVE",
-      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "CDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791597444351,
+      "timestamp_ms": 1791601513518,
       "executed": true,
-      "artifact": "reports/clean-reference-combined-policy.json",
-      "artifact_digest": "sha256:f5821f9292be5d9dadd43cdf8a1422076b11ca772006cea7cb4c789837b9d70a"
+      "artifact": "reports/operations-reference-policy.json",
+      "artifact_digest": "sha256:6e3cc540615eaaf01b4812af45a7abf97450e124a19d248bd83f8a18f740e43d"
     },
     {
       "requirement_id": "SVC-LIVE",
-      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "CDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791597444455,
+      "timestamp_ms": 1791601513639,
       "executed": true,
-      "artifact": "reports/clean-reference-combined-services.json",
-      "artifact_digest": "sha256:42f4d05ec6af96f0cdf97ff217729b6d35c39182186fe83799ec7a8cf1f9fc6a"
+      "artifact": "reports/operations-reference-services.json",
+      "artifact_digest": "sha256:4975017de61bd38515d56abd8d82d1d441238dcd992198ce29a58d2347f612e7"
     },
     {
       "requirement_id": "ARC-LIVE",
-      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791597446617,
+      "timestamp_ms": 1791601517582,
       "executed": true,
-      "artifact": "reports/clean-reference-combined-connected.json",
-      "artifact_digest": "sha256:6e647b74558106fd388439681bed9a6325367c91a52f2cf067bd8e0c31ffdedf"
+      "artifact": "reports/operations-reference-connected.json",
+      "artifact_digest": "sha256:d446b11d03e60a780c8ca191dadcd6774756d0ec077efec9c3e8706c47c1e8b7"
     },
     {
       "requirement_id": "FAULT-LIVE",
-      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791597451862,
+      "timestamp_ms": 1791601523228,
       "executed": true,
-      "artifact": "reports/clean-reference-combined-adversarial.json",
-      "artifact_digest": "sha256:72e84f7a97d5e6ac54c29f4b6e0bcda27c868d543c8fc2feeca73c157a38b4dc"
+      "artifact": "reports/operations-reference-adversarial.json",
+      "artifact_digest": "sha256:72c9ed54454e3962efaceccb1a9370108b733d206e3117e64e928da51de80d85"
+    },
+    {
+      "requirement_id": "AUDIT-ATOMIC",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "environment": "REAL_LOCAL_SERVICES",
+      "method": "BDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791601538564,
+      "executed": true,
+      "artifact": "reports/operations-reference-authority-recovery.json",
+      "artifact_digest": "sha256:522d5d8c4d928f3d748986c9d21b3d75d461526074116d24b4400297926f6d64"
     },
     {
       "requirement_id": "DEP-RESTORE",
-      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791597467917,
+      "timestamp_ms": 1791601555389,
       "executed": true,
-      "artifact": "reports/clean-reference-combined-restore.json",
-      "artifact_digest": "sha256:1920a77e61ee5db194ec6dcfb8b6e3ac0105deffde8340df4b25d1c2bc2547ec"
+      "artifact": "reports/operations-reference-restore.json",
+      "artifact_digest": "sha256:3ecfa5abf969eb11988b9d3b8b3cc4b1d3c3b68eaae9e402be96db6b3cd16297"
+    },
+    {
+      "requirement_id": "AUDIT-RESTORE",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "environment": "REAL_LOCAL_SERVICES",
+      "method": "BDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791601555933,
+      "executed": true,
+      "artifact": "reports/operations-reference-authority-recovery-restored.json",
+      "artifact_digest": "sha256:500c0c89538a153ee820df7e330eaa835ff49163b384aa16488328de49bc69d4"
     },
     {
       "requirement_id": "DEP-BUILD",
-      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "FRESH_SAME_HOST",
       "method": "BDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791597488270,
+      "timestamp_ms": 1791601566161,
       "executed": true,
-      "artifact": "reports/clean-reference-combined.json",
-      "artifact_digest": "sha256:9705efca81fa3fb47bc9e4f449dee2e70b09e5247be0e0d1c7a5b72aa37ad01b"
+      "artifact": "reports/operations-reference-combined.json",
+      "artifact_digest": "sha256:c6c07235ce7f094397117527fb62f50aa30e9ea63a76450f2c7f65ac0d003f0e"
+    },
+    {
+      "requirement_id": "BDD-SERVICE",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "environment": "REAL_LOCAL_SERVICES",
+      "method": "BDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791601563615,
+      "executed": true,
+      "artifact": "reports/service-bdd-live-002.json",
+      "artifact_digest": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2"
+    },
+    {
+      "requirement_id": "BDD-CORE",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
+      "environment": "SERVICE_ACCEPTANCE",
+      "method": "BDD",
+      "outcome": "UNKNOWN",
+      "timestamp_ms": 1791601563615,
+      "executed": true,
+      "artifact": "reports/service-bdd-live-002.json",
+      "artifact_digest": "sha256:c93af53b845027f4d6d4653e779fd19c5360ab673dccb5795ca17075b7ca1cf2"
     },
     {
       "requirement_id": "BASE-01",
-      "revision": "sha256:426294a0ef6cc2f2c30178acf0a89e232d2d6d99436172f5f128d3a8d6bfa1bc",
+      "revision": "sha256:cff78807b1390011554c0e0eb932ce1be7c8c2673db0c9c49fd815349577310a",
       "environment": "HISTORICAL_BASELINE",
       "method": "TDD",
       "outcome": "FAIL",

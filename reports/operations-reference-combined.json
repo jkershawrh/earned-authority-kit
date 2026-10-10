@@ -1,0 +1,82 @@
+{
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "environment": "REAL_LOCAL_SERVICES",
+  "command_exit_code": 0,
+  "command": [
+    "python3",
+    "deploy/reference/bootstrap.py",
+    "--workspace",
+    "work/operation-reference",
+    "--instance",
+    "ea-ops",
+    "--port-offset",
+    "2000",
+    "--validate"
+  ],
+  "completed_at": "2026-10-10T03:06:06.161047+00:00",
+  "components": {
+    "policy": {
+      "report": "reports/operations-reference-policy.json",
+      "status": "GREEN",
+      "checks": 8,
+      "source_stable": true
+    },
+    "services": {
+      "report": "reports/operations-reference-services.json",
+      "status": "GREEN",
+      "checks": 7,
+      "source_stable": true
+    },
+    "connected": {
+      "report": "reports/operations-reference-connected.json",
+      "status": "GREEN",
+      "checks": 23,
+      "source_stable": true
+    },
+    "adversarial": {
+      "report": "reports/operations-reference-adversarial.json",
+      "status": "GREEN",
+      "checks": 17,
+      "source_stable": true
+    },
+    "authority_recovery": {
+      "report": "reports/operations-reference-authority-recovery.json",
+      "status": "GREEN",
+      "checks": 41,
+      "source_stable": true
+    },
+    "restore": {
+      "report": "reports/operations-reference-restore.json",
+      "status": "GREEN",
+      "checks": 6,
+      "source_stable": true
+    },
+    "authority_recovery_restored": {
+      "report": "reports/operations-reference-authority-recovery-restored.json",
+      "status": "GREEN",
+      "checks": 21,
+      "source_stable": true
+    }
+  },
+  "artifacts": {
+    "reports/operations-reference-policy.json": "sha256:6e3cc540615eaaf01b4812af45a7abf97450e124a19d248bd83f8a18f740e43d",
+    "reports/operations-reference-services.json": "sha256:4975017de61bd38515d56abd8d82d1d441238dcd992198ce29a58d2347f612e7",
+    "reports/operations-reference-connected.json": "sha256:d446b11d03e60a780c8ca191dadcd6774756d0ec077efec9c3e8706c47c1e8b7",
+    "reports/operations-reference-adversarial.json": "sha256:72c9ed54454e3962efaceccb1a9370108b733d206e3117e64e928da51de80d85",
+    "reports/operations-reference-authority-recovery.json": "sha256:522d5d8c4d928f3d748986c9d21b3d75d461526074116d24b4400297926f6d64",
+    "reports/operations-reference-restore.json": "sha256:3ecfa5abf969eb11988b9d3b8b3cc4b1d3c3b68eaae9e402be96db6b3cd16297",
+    "reports/operations-reference-authority-recovery-restored.json": "sha256:500c0c89538a153ee820df7e330eaa835ff49163b384aa16488328de49bc69d4",
+    "reports/operations-reference-bootstrap.json": "sha256:cb7b552eb5ede361c7f4b8ead14ac19cae3b9c69553eedf8d02fbe509f114ba6",
+    "reports/operations-reference-build-manifest.json": "sha256:44f27895efc51571e0f1b239c35076b8df2cc1f24d927c822de551563599bb7b"
+  },
+  "source_manifest_sha256": "b9fd09fed6097aa11e014144d1ac3f81485359ca51f8b24a71126e5f23ea0fc6",
+  "scope": "Same host; independently fetched and patched canonical sources, distinct virtual environment, keys, state, networks, ports and volumes; documented combined pipeline includes real process recovery and retained-state full stack restart.",
+  "limits": [
+    "Not a different host or independent human installer",
+    "No statistical held-out product-value claim",
+    "No backup/disk-loss recovery claim",
+    "No hardware or production deployment claim",
+    "No universal distributed atomicity or safety claim"
+  ]
+}

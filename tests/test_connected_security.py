@@ -89,8 +89,26 @@ class UnitPassport:
         self.issues = 0
         self.fail_mutations = False
         self.now = lambda: 0
+        self.operations = {}
     def current(self, agent, require_valid=True): return copy.deepcopy(self.state)
-    def issue(self, agent, scopes, ttl, current, reason):
+    def operation(self, agent, operation_id, expected_request=None):
+        value = self.operations.get(operation_id)
+        if value and (value['agent_id'] != agent or expected_request is not None and value['request'] != expected_request):
+            raise Denied('AUTHORITY_OPERATION_BINDING_MISMATCH')
+        return copy.deepcopy(value)
+    def _record_operation(self, request, current):
+        if not request['operation_id']: return
+        subject = self.state['subject']; old = current['subject']
+        self.operations[request['operation_id']] = {
+            'operation_id': request['operation_id'], 'agent_id': request['agent_id'], 'request': request,
+            'agent_revision': self.state['revision'], 'previous_active_passport_id': old['passport_id'] if old else '',
+            'active_passport_id': subject['passport_id'] if subject else '', 'authority': copy.deepcopy(self.state),
+            'result': {'action': request['action'], 'completed_ts': self.now()}}
+    def issue(self, agent, scopes, ttl, current, reason, operation_id=None):
+        from earned_authority.passport_client import issue_operation_request
+        request = issue_operation_request(agent, scopes, ttl, current, reason, operation_id)
+        previous = self.operation(agent, operation_id, request) if operation_id else None
+        if previous: return previous['authority']
         if self.fail_mutations: raise Denied('AUTHORITY_UNCONFIRMED')
         if current['revision'] != self.state['revision']: raise Denied('REVISION_CONFLICT')
         self.issues += 1
@@ -101,11 +119,17 @@ class UnitPassport:
             'scope_set': [{**s, 'scope_id': 'scope-' + str(i), 'granted_ts': self.now(),
                            'expires_ts': self.now() + s['scope_ttl_seconds'] * 1000}
                           for i, s in enumerate(scopes)]}}
+        self._record_operation(request, current)
         return copy.deepcopy(self.state)
-    def revoke(self, current, reason):
+    def revoke(self, current, reason, operation_id=None):
+        from earned_authority.passport_client import revoke_operation_request
+        request = revoke_operation_request(current, reason, operation_id)
+        previous = self.operation(request['agent_id'], operation_id, request) if operation_id else None
+        if previous: return previous
         if self.fail_mutations: raise Denied('AUTHORITY_UNCONFIRMED')
         if current['revision'] != self.state['revision']: raise Denied('REVISION_CONFLICT')
         self.state = {'subject': None, 'revision': self.state['revision'] + 1, 'status': 'REVOKED'}
+        self._record_operation(request, current)
         return self.state['revision']
 
 
@@ -153,6 +177,15 @@ class ConnectedDeadlineAndWithdrawalBoundary(unittest.TestCase):
         issued = self.passport.issues
         with self.assertRaises(Denied): self.rt.grant(q['qualification_id'], ttl_ms=999)
         self.assertEqual(issued, self.passport.issues)
+
+    def test_unaffected_scope_keeps_exact_absolute_expiry_on_replacement(self):
+        read = self.qualification('read-health')
+        before = self.rt.grant(read['qualification_id'], action='read', resource='urn:dataset/health', ttl_ms=10000)
+        expiry = before['grants']['read-health']['expires_at_ms']
+        self.rt.clock.advance(125)
+        release = self.qualification()
+        after = self.rt.grant(release['qualification_id'], ttl_ms=10000)
+        self.assertEqual(expiry, after['grants']['read-health']['expires_at_ms'])
 
     def test_delayed_old_withdrawal_does_not_revoke_requalified_grant(self):
         q = self.qualification()

@@ -14,7 +14,7 @@ From the delivered kit directory, choose a new workspace and a unique container 
 python3 deploy/reference/bootstrap.py --workspace /absolute/path/to/reference-workspace --instance ea-reference --port-offset 1000 --validate
 ```
 
-The workspace must be new or an unchanged reconstruction made by this installer. It never resets an existing user checkout. Failed partial source downloads are retained; choose another workspace after inspecting the recorded error. The installer applies complete patches once, checks their hashes and applicability, generates the exact Passport protobuf SDK, creates private local configuration, freezes policy files, builds the services, and starts only containers with the chosen prefix. `--validate` runs policy, interface, connected lifecycle, adversarial and full stop/restore checks. Omit `--validate` and supply `--start` to start without executing behavioral validation. With neither flag, it builds and prepares without starting.
+The workspace must be new or an unchanged reconstruction made by this installer. It never resets an existing user checkout. Failed partial source downloads are retained; choose another workspace after inspecting the recorded error. The installer applies complete patches once, checks their hashes and applicability, generates the exact Passport protobuf SDK, creates private local configuration, freezes policy files, builds the services, and starts only containers with the chosen prefix. `--validate` runs policy, interface, connected lifecycle, adversarial, authority-operation recovery and full stop/restore checks, then reads back the historical operation and ledger receipts after restart. Omit `--validate` and supply `--start` to start without executing behavioral validation. With neither flag, it builds and prepares without starting.
 
 The executable kit remains where it was delivered; the selected workspace holds only source, dependencies, keys, logs and durable process state. Keep both locations available. Container image tags are shared build outputs; existing running containers retain their image identity. Stop unrelated build jobs before rebuilding the same tags.
 
@@ -29,10 +29,21 @@ EA_WORKSPACE=/absolute/path/to/reference-workspace /absolute/path/to/reference-w
 EA_WORKSPACE=/absolute/path/to/reference-workspace /absolute/path/to/reference-workspace/work/ledger-venv/bin/python deploy/reference/validate_policy.py --report reports/reference-policy.json
 EA_WORKSPACE=/absolute/path/to/reference-workspace /absolute/path/to/reference-workspace/work/ledger-venv/bin/python deploy/reference/reference.py validate-connected --report reports/reference-connected.json
 EA_WORKSPACE=/absolute/path/to/reference-workspace /absolute/path/to/reference-workspace/work/ledger-venv/bin/python deploy/reference/reference.py validate-adversarial --report reports/reference-adversarial.json
+EA_WORKSPACE=/absolute/path/to/reference-workspace /absolute/path/to/reference-workspace/work/ledger-venv/bin/python deploy/reference/reference.py validate-authority-recovery --report reports/authority-recovery.json
 EA_WORKSPACE=/absolute/path/to/reference-workspace /absolute/path/to/reference-workspace/work/ledger-venv/bin/python deploy/reference/validate_restore.py --prior-report reports/reference-connected.json --report reports/reference-restore.json
 ```
 
 The last command stops and restores that entire owned stack, preserving its named volumes and private keys. It checks the earlier agent identity, current signed authority and revision, registry mutation count, and every earlier canonical ledger receipt. This is process/container restart recovery. It does not simulate loss of a disk, backup restoration, or a different administrator installing on another machine.
+
+The authority recovery runner creates separate coordinator subprocesses and exits them at the durable-intent, remote-commit, local-event and acknowledged-withdrawal boundaries. It also uses a separate forwarding proxy to drop a real successful canonical reply, and a real read-only SQLite connection to reject a local write after remote commit. The tests distinguish a historical committed operation from current authority: a later replacement must remain unchanged when the earlier event is recovered. No proxy creates credentials or substitutes for canonical Passport.
+
+After the full stack restart, verify the earlier operation history without issuing new authority:
+
+```sh
+/absolute/path/to/reference-workspace/work/ledger-venv/bin/python tools/validate_authority_recovery.py --config /absolute/path/to/reference-workspace/work/reference-runtime/reference.env --ledger-config /absolute/path/to/reference-workspace/work/ledger-runtime/local.env --state-dir /absolute/path/to/reference-workspace/work/reference-runtime/connected-validation --verify-existing-report reports/authority-recovery.json --report reports/authority-recovery-restored.json
+```
+
+`build.py --passport-only` rebuilds the configured canonical Passport binary and regenerates its exact Python SDK together. Its manifest records the consumed source, protobuf and SDK hashes. Stop the owned Passport process before a protocol cutover, wait for the source to be stable, build, restore, and rerun the connected checks. A new complete source patch changes the installer reconstruction identity; use a new clean workspace rather than modifying an earlier validated checkout in place.
 
 `reference.py stop` gracefully stops the host Passport process and the owned containers. `reference.py restore` restarts them using the same state and keys. Never remove the named Ledger or Foundation volumes when evidence must be retained. The installer does not remove volumes. Runtime handles are recorded in `work/reference-runtime/passport-process.json`; logs and secret configuration stay under the selected workspace. A stop verifies the recorded process command before sending SIGTERM and does not force-kill a mismatching PID.
 

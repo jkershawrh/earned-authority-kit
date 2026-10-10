@@ -1,7 +1,7 @@
 diff --git a/README.md b/README.md
 --- a/README.md
 +++ b/README.md
-@@ -186,3 +186,89 @@
+@@ -186,3 +186,137 @@
  ## License
  
  Apache 2.0
@@ -91,6 +91,54 @@ diff --git a/README.md b/README.md
 +ledger/outbox interfaces remain separate; durable mode passes neither a fake
 +ledger nor a claim of completed lifecycle ledger delivery. Health endpoints
 +are `/healthz` and `/readyz`; SIGTERM stops the service gracefully.
++
++### Recoverable authority operations (reference protocol)
++
++`ApplyPassportOperation` is an additive gRPC API for coordinator mutations. Supply
++an operation ID, agent ID, explicit expected active passport ID (empty means no
++active credential), expected agent revision, and exactly one complete issue or
++revoke body. Both `ApplyPassportOperation` and read-only `GetPassportOperation`
++require the configured bearer mutation credential. Legacy Issue/Revoke APIs remain
++available, but do not create an operation receipt and cannot provide this recovery
++contract. Renew/List remain unimplemented.
++
++An operation ID is globally unique in one durable store. Exact normalized request
++replay returns the original signed receipt before checking current CAS, current
++registry status or expiry; it does not sign again, create another credential, or
++advance the revision. Reuse for another agent or request returns `AlreadyExists`.
++New requests still require both CAS fields and the normal policy/identity checks.
++The full request binds requested TTLs (before effective bounds), ordered scopes,
++context maps, actor, reason, operation/agent IDs and expected authority tuple.
++
++Receipt version `are.passport.operation.v1` signs the complete request and its
++SHA-256, committed revision, previous and resulting active IDs, action/status/time,
++and canonical passport payloads/signatures for the result and predecessor. Request
++hashing uses compact sorted-key Go JSON with integer numbers, ordered arrays and
++Go's HTML/U+2028/U+2029 escaping. `internal/service/testdata/operations-v1.json`
++provides public interoperability vectors. Receipts prove a past committed
++transition; their as-issued authority must never substitute for a fresh current
++read. A later replacement, suspension, expiry or empty aggregate does not erase
++that historical proof. Unknown lookup returns `NotFound`; empty current authority
++alone is not proof that a particular revoke succeeded.
++
++The receipt and authority transition are saved in one atomic version-2 state
++snapshot. Signer or pre-commit storage failure publishes neither. An uncertain
++post-rename commit makes the service unavailable until restart; restart validates
++the persisted snapshot and exposes the receipt if the operation committed. No
++background audit call is needed to make the receipt durable. Coordinator recovery
++must still persist and correlate its own signed operation intent and reconcile
++receipt-to-event delivery; this service alone is not a transaction across a
++coordinator database and remote ledger.
++
++Version-1 state without an operation map is loaded and fully validated without
++rewriting it. Its records, revocations and generations are preserved. The next
++successful mutation atomically writes version 2 with the new receipt map; no
++receipts are fabricated for old transitions. Downgrading a v2 file to a legacy
++binary is unsupported. Back up keys and state together before a coordinated
++upgrade; do not discard generations or retained receipts. Receipt retention is
++currently unbounded in this single-file reference store. Compaction, archival,
++key rotation, hostile-admin rollback resistance and multi-host HA require an
++explicit follow-on design.
 diff --git a/cmd/agent-passport/main.go b/cmd/agent-passport/main.go
 --- a/cmd/agent-passport/main.go
 +++ b/cmd/agent-passport/main.go
@@ -305,7 +353,7 @@ new file mode 100644
 +func MutationTokenInterceptor(token string) grpc.UnaryServerInterceptor {
 +	return func(ctx context.Context, req any, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (any, error) {
 +		method := info.FullMethod
-+		mutation := strings.HasSuffix(method, "/IssuePassport") || strings.HasSuffix(method, "/RevokePassport") || strings.HasSuffix(method, "/RenewPassport")
++		mutation := strings.HasSuffix(method, "/ApplyPassportOperation") || strings.HasSuffix(method, "/GetPassportOperation") || strings.HasSuffix(method, "/IssuePassport") || strings.HasSuffix(method, "/RevokePassport") || strings.HasSuffix(method, "/RenewPassport")
 +		if token != "" && mutation {
 +			values := metadata.ValueFromIncomingContext(ctx, "authorization")
 +			if len(values) != 1 || subtle.ConstantTimeCompare([]byte(values[0]), []byte("Bearer "+token)) != 1 {
@@ -325,6 +373,174 @@ new file mode 100644
 +	data := string(service.CanonicalPayload(p))
 +	_ = grpc.SetHeader(ctx, metadata.Pairs(CanonicalPayloadHeader, data))
 +	_ = grpc.SetTrailer(ctx, metadata.Pairs(CanonicalPayloadHeader, data))
++}
+diff --git a/internal/grpc/operations.go b/internal/grpc/operations.go
+new file mode 100644
+--- /dev/null
++++ b/internal/grpc/operations.go
+@@ -0,0 +1,83 @@
++package grpc
++
++import (
++	"context"
++	"github.com/srex-dev/agent-passport/internal/service"
++	pb "github.com/srex-dev/agent-passport/proto"
++	"google.golang.org/grpc/codes"
++	"google.golang.org/grpc/status"
++)
++
++func operationReceiptToProto(r service.OperationReceipt) *pb.PassportOperationReceipt {
++	return &pb.PassportOperationReceipt{CanonicalPayload: r.CanonicalPayload, Signature: r.Signature, CredentialId: r.CredentialID, PublicKeyPem: r.PublicKeyPEM}
++}
++func (s *Server) ApplyPassportOperation(ctx context.Context, req *pb.ApplyPassportOperationRequest) (*pb.ApplyPassportOperationResponse, error) {
++	if req == nil || len(req.ProtoReflect().GetUnknown()) != 0 {
++		return nil, status.Error(codes.InvalidArgument, "invalid operation request")
++	}
++	expected, err := expectedActive(ctx)
++	if err != nil {
++		return nil, err
++	}
++	expectedRev, err := expectedRevision(ctx)
++	if err != nil {
++		return nil, err
++	}
++	if expected != nil {
++		value := *expected
++		if value == "none" {
++			value = ""
++		}
++		if value != req.ExpectedActivePassportId {
++			return nil, status.Error(codes.InvalidArgument, "conflicting expected active passport")
++		}
++	}
++	if expectedRev != nil && *expectedRev != req.ExpectedAgentRevision {
++		return nil, status.Error(codes.InvalidArgument, "conflicting expected revision")
++	}
++	request := service.OperationRequest{OperationID: req.OperationId, AgentID: req.AgentId, ExpectedActivePassportID: req.ExpectedActivePassportId, ExpectedAgentRevision: req.ExpectedAgentRevision}
++	switch mutation := req.Mutation.(type) {
++	case *pb.ApplyPassportOperationRequest_Issue:
++		v := mutation.Issue
++		if v == nil || len(v.ProtoReflect().GetUnknown()) != 0 {
++			return nil, status.Error(codes.InvalidArgument, "invalid issue operation")
++		}
++		scopes := make([]service.OperationScope, len(v.RequestedScopes))
++		for i, scope := range v.RequestedScopes {
++			if scope == nil || len(scope.ProtoReflect().GetUnknown()) != 0 {
++				return nil, status.Error(codes.InvalidArgument, "invalid scope operation")
++			}
++			cc := scope.ContextConstraints
++			if cc == nil {
++				cc = map[string]string{}
++			}
++			scopes[i] = service.OperationScope{ActionClass: scope.ActionClass, ResourcePattern: scope.ResourcePattern, ContextConstraints: cc, ScopeTTLSeconds: scope.ScopeTtlSeconds}
++		}
++		request.Action = "ISSUE"
++		request.Issue = &service.OperationIssue{AgentID: v.AgentId, PassportType: v.PassportType, RequestedScopes: scopes, TTLSeconds: v.TtlSeconds, IssuedBy: v.IssuedBy, ForceReissue: v.ForceReissue, Reason: v.Reason}
++	case *pb.ApplyPassportOperationRequest_Revoke:
++		v := mutation.Revoke
++		if v == nil || len(v.ProtoReflect().GetUnknown()) != 0 {
++			return nil, status.Error(codes.InvalidArgument, "invalid revoke operation")
++		}
++		request.Action = "REVOKE"
++		request.Revoke = &service.OperationRevoke{PassportID: v.PassportId, Reason: v.Reason, RevokedBy: v.RevokedBy}
++	default:
++		return nil, status.Error(codes.InvalidArgument, "one mutation required")
++	}
++	receipt, err := s.svc.ApplyOperation(ctx, request)
++	if err != nil {
++		return nil, mapErr(err)
++	}
++	return &pb.ApplyPassportOperationResponse{Receipt: operationReceiptToProto(receipt)}, nil
++}
++func (s *Server) GetPassportOperation(ctx context.Context, req *pb.GetPassportOperationRequest) (*pb.GetPassportOperationResponse, error) {
++	if req == nil || len(req.ProtoReflect().GetUnknown()) != 0 {
++		return nil, status.Error(codes.InvalidArgument, "invalid operation lookup")
++	}
++	receipt, err := s.svc.GetOperation(req.AgentId, req.OperationId)
++	if err != nil {
++		return nil, mapErr(err)
++	}
++	return &pb.GetPassportOperationResponse{Receipt: operationReceiptToProto(receipt)}, nil
++}
+diff --git a/internal/grpc/operations_transport_test.go b/internal/grpc/operations_transport_test.go
+new file mode 100644
+--- /dev/null
++++ b/internal/grpc/operations_transport_test.go
+@@ -0,0 +1,75 @@
++package grpc
++
++import (
++	"bytes"
++	"context"
++	"crypto/ed25519"
++	"crypto/x509"
++	"encoding/json"
++	"encoding/pem"
++	"github.com/srex-dev/agent-passport/internal/service"
++	pb "github.com/srex-dev/agent-passport/proto"
++	"google.golang.org/grpc/codes"
++	"google.golang.org/grpc/metadata"
++	"google.golang.org/grpc/status"
++	"testing"
++)
++
++func operationContext() context.Context {
++	return metadata.NewOutgoingContext(context.Background(), metadata.Pairs("authorization", "Bearer test-secret"))
++}
++func TestOperationTransportSignedLookupAndAuthentication(t *testing.T) {
++	client := transportClient(t)
++	request := &pb.ApplyPassportOperationRequest{OperationId: "operation1", AgentId: "agent", Mutation: &pb.ApplyPassportOperationRequest_Issue{Issue: issueRequest()}}
++	if _, err := client.ApplyPassportOperation(context.Background(), request); status.Code(err) != codes.Unauthenticated {
++		t.Fatal("unprotected mutation", err)
++	}
++	result, err := client.ApplyPassportOperation(operationContext(), request)
++	if err != nil {
++		t.Fatal(err)
++	}
++	receipt := result.Receipt
++	block, _ := pem.Decode([]byte(receipt.PublicKeyPem))
++	key, err := x509.ParsePKIXPublicKey(block.Bytes)
++	if err != nil {
++		t.Fatal(err)
++	}
++	if !ed25519.Verify(key.(ed25519.PublicKey), receipt.CanonicalPayload, receipt.Signature) {
++		t.Fatal("invalid receipt signature")
++	}
++	var payload service.OperationPayload
++	if err = json.Unmarshal(receipt.CanonicalPayload, &payload); err != nil {
++		t.Fatal(err)
++	}
++	if payload.AgentRevision != 1 || payload.Request.Issue.RequestedScopes[0].ScopeTTLSeconds != 60 {
++		t.Fatal("request/result missing binding")
++	}
++	lookup := &pb.GetPassportOperationRequest{AgentId: "agent", OperationId: "operation1"}
++	if _, err = client.GetPassportOperation(context.Background(), lookup); status.Code(err) != codes.Unauthenticated {
++		t.Fatal("unauthenticated operation lookup", err)
++	}
++	found, err := client.GetPassportOperation(operationContext(), lookup)
++	if err != nil || !bytes.Equal(found.Receipt.CanonicalPayload, receipt.CanonicalPayload) {
++		t.Fatal("lookup failed", err)
++	}
++	retry, err := client.ApplyPassportOperation(operationContext(), request)
++	if err != nil || !bytes.Equal(retry.Receipt.CanonicalPayload, receipt.CanonicalPayload) {
++		t.Fatal("retry failed", err)
++	}
++	request.GetIssue().Reason = "different"
++	if _, err = client.ApplyPassportOperation(operationContext(), request); status.Code(err) != codes.AlreadyExists {
++		t.Fatal("operation reused with altered request", err)
++	}
++}
++func TestOperationTransportRejectsAmbiguousBodyAndCASMetadata(t *testing.T) {
++	client := transportClient(t)
++	request := &pb.ApplyPassportOperationRequest{OperationId: "operation1", AgentId: "agent", Mutation: &pb.ApplyPassportOperationRequest_Issue{Issue: issueRequest()}}
++	request.GetIssue().AgentId = "other"
++	if _, err := client.ApplyPassportOperation(operationContext(), request); status.Code(err) != codes.InvalidArgument {
++		t.Fatal("cross-agent nested body", err)
++	}
++	request.GetIssue().AgentId = "agent"
++	if _, err := client.ApplyPassportOperation(mutationContext("none", "1"), request); status.Code(err) != codes.InvalidArgument {
++		t.Fatal("contradictory explicit/metadata CAS", err)
++	}
 +}
 diff --git a/internal/grpc/server.go b/internal/grpc/server.go
 --- a/internal/grpc/server.go
@@ -474,7 +690,16 @@ diff --git a/internal/grpc/server.go b/internal/grpc/server.go
  	result = "success"
  	var revokedTS int64
  	if p.RevokedTS != nil {
-@@ -204,6 +239,9 @@
+@@ -180,6 +215,8 @@
+ 		return status.Error(codes.InvalidArgument, err.Error())
+ 	case errors.Is(err, service.ErrNotFound):
+ 		return status.Error(codes.NotFound, err.Error())
++	case errors.Is(err, service.ErrOperationConflict):
++		return status.Error(codes.AlreadyExists, err.Error())
+ 	case errors.Is(err, service.ErrAlreadyExists):
+ 		return status.Error(codes.AlreadyExists, err.Error())
+ 	case errors.Is(err, service.ErrFailedPrecondition):
+@@ -204,6 +241,9 @@
  
  func scopeFromProto(sr *passportv1.ScopeRequest, passportTTL int64, now time.Time) domain.Scope {
  	ttl := sr.ScopeTtlSeconds
@@ -1470,11 +1695,700 @@ new file mode 100644
 +		t.Fatal("expiry boundary accepted", valid, status, reason, err)
 +	}
 +}
+diff --git a/internal/service/operation_vector_test.go b/internal/service/operation_vector_test.go
+new file mode 100644
+--- /dev/null
++++ b/internal/service/operation_vector_test.go
+@@ -0,0 +1,59 @@
++package service
++
++import (
++	"bytes"
++	"crypto/ed25519"
++	"crypto/x509"
++	"encoding/base64"
++	"encoding/json"
++	"encoding/pem"
++	"os"
++	"testing"
++)
++
++func TestOperationCanonicalInteroperabilityVectors(t *testing.T) {
++	raw, err := os.ReadFile("testdata/operations-v1.json")
++	if err != nil {
++		t.Fatal(err)
++	}
++	var fixture struct {
++		Cases []struct {
++			Request          OperationRequest `json:"request"`
++			CanonicalRequest string           `json:"request_canonical_utf8"`
++			Payload          string           `json:"canonical_payload_base64"`
++			Signature        string           `json:"signature_base64"`
++			PublicKey        string           `json:"public_key_pem"`
++		} `json:"cases"`
++	}
++	if err = json.Unmarshal(raw, &fixture); err != nil {
++		t.Fatal(err)
++	}
++	for _, v := range fixture.Cases {
++		t.Run(v.Request.Action, func(t *testing.T) {
++			if string(CanonicalOperationRequest(v.Request)) != v.CanonicalRequest {
++				t.Fatal("request encoding drift")
++			}
++			payload, _ := base64.StdEncoding.DecodeString(v.Payload)
++			signature, _ := base64.StdEncoding.DecodeString(v.Signature)
++			var p OperationPayload
++			if err = json.Unmarshal(payload, &p); err != nil {
++				t.Fatal(err)
++			}
++			encoded, _ := json.Marshal(p)
++			if !bytes.Equal(encoded, payload) {
++				t.Fatal("receipt encoding drift")
++			}
++			if p.RequestDigest != operationDigest(v.Request) {
++				t.Fatal("request digest mismatch")
++			}
++			block, _ := pem.Decode([]byte(v.PublicKey))
++			key, err := x509.ParsePKIXPublicKey(block.Bytes)
++			if err != nil {
++				t.Fatal(err)
++			}
++			if !ed25519.Verify(key.(ed25519.PublicKey), payload, signature) {
++				t.Fatal("receipt signature mismatch")
++			}
++		})
++	}
++}
+diff --git a/internal/service/operations.go b/internal/service/operations.go
+new file mode 100644
+--- /dev/null
++++ b/internal/service/operations.go
+@@ -0,0 +1,281 @@
++package service
++
++import (
++	"bytes"
++	"context"
++	"crypto/sha256"
++	"encoding/json"
++	"fmt"
++	"github.com/google/uuid"
++	"github.com/srex-dev/agent-passport/internal/domain"
++	"io"
++	"regexp"
++	"time"
++)
++
++type OperationScope struct {
++	ActionClass        string            `json:"action_class"`
++	ResourcePattern    string            `json:"resource_pattern"`
++	ContextConstraints map[string]string `json:"context_constraints"`
++	ScopeTTLSeconds    int64             `json:"scope_ttl_seconds"`
++}
++type OperationIssue struct {
++	AgentID         string           `json:"agent_id"`
++	PassportType    string           `json:"passport_type"`
++	RequestedScopes []OperationScope `json:"requested_scopes"`
++	TTLSeconds      int64            `json:"ttl_seconds"`
++	IssuedBy        string           `json:"issued_by"`
++	ForceReissue    bool             `json:"force_reissue"`
++	Reason          string           `json:"reason"`
++}
++type OperationRevoke struct {
++	PassportID string `json:"passport_id"`
++	Reason     string `json:"reason"`
++	RevokedBy  string `json:"revoked_by"`
++}
++type OperationRequest struct {
++	OperationID              string           `json:"operation_id"`
++	AgentID                  string           `json:"agent_id"`
++	Action                   string           `json:"action"`
++	ExpectedActivePassportID string           `json:"expected_active_passport_id"`
++	ExpectedAgentRevision    uint64           `json:"expected_agent_revision"`
++	Issue                    *OperationIssue  `json:"issue"`
++	Revoke                   *OperationRevoke `json:"revoke"`
++}
++type OperationResult struct {
++	Action                    string `json:"action"`
++	PassportID                string `json:"passport_id"`
++	Status                    string `json:"status"`
++	CompletedTS               int64  `json:"completed_ts"`
++	PassportPayload           []byte `json:"passport_payload_base64"`
++	PassportSignature         []byte `json:"passport_signature_base64"`
++	PreviousPassportPayload   []byte `json:"previous_passport_payload_base64"`
++	PreviousPassportSignature []byte `json:"previous_passport_signature_base64"`
++}
++type OperationPayload struct {
++	CanonicalVersion         string           `json:"canonical_version"`
++	CredentialID             string           `json:"credential_id"`
++	PublicKeyPEM             string           `json:"public_key_pem"`
++	OperationID              string           `json:"operation_id"`
++	AgentID                  string           `json:"agent_id"`
++	Request                  OperationRequest `json:"request"`
++	RequestDigest            string           `json:"request_digest"`
++	AgentRevision            uint64           `json:"agent_revision"`
++	PreviousActivePassportID string           `json:"previous_active_passport_id"`
++	ActivePassportID         string           `json:"active_passport_id"`
++	Result                   OperationResult  `json:"result"`
++}
++type OperationReceipt struct {
++	CanonicalPayload []byte `json:"canonical_payload"`
++	Signature        []byte `json:"signature"`
++	CredentialID     string `json:"credential_id"`
++	PublicKeyPEM     string `json:"public_key_pem"`
++}
++
++func (r OperationReceipt) Payload() OperationPayload {
++	var p OperationPayload
++	_ = json.Unmarshal(r.CanonicalPayload, &p)
++	return p
++}
++
++var operationIDPattern = regexp.MustCompile(`^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$`)
++
++// CanonicalOperationRequest uses sorted JSON keys, integer values, ordered scope
++// arrays and Go JSON escaping. No timestamps or generated scope IDs enter it.
++func CanonicalOperationRequest(r OperationRequest) []byte {
++	raw, _ := json.Marshal(r)
++	d := json.NewDecoder(bytes.NewReader(raw))
++	d.UseNumber()
++	var object any
++	_ = d.Decode(&object)
++	result, _ := json.Marshal(object)
++	return result
++}
++func operationDigest(r OperationRequest) string {
++	return fmt.Sprintf("sha256:%x", sha256.Sum256(CanonicalOperationRequest(r)))
++}
++func cloneReceipt(r OperationReceipt) OperationReceipt {
++	r.CanonicalPayload = append([]byte(nil), r.CanonicalPayload...)
++	r.Signature = append([]byte(nil), r.Signature...)
++	return r
++}
++func normalizedOperation(r OperationRequest) (OperationRequest, error) {
++	raw, err := json.Marshal(r)
++	if err != nil {
++		return r, ErrInvalidArgument
++	}
++	var out OperationRequest
++	if err = json.Unmarshal(raw, &out); err != nil {
++		return out, ErrInvalidArgument
++	}
++	if !operationIDPattern.MatchString(out.OperationID) || out.AgentID == "" || out.ExpectedActivePassportID == "none" {
++		return out, ErrInvalidArgument
++	}
++	switch out.Action {
++	case "ISSUE":
++		if out.Issue == nil || out.Revoke != nil || out.Issue.AgentID != out.AgentID {
++			return out, ErrInvalidArgument
++		}
++		if out.Issue.PassportType != "STANDARD" && out.Issue.PassportType != "PROVISIONAL" {
++			return out, ErrInvalidArgument
++		}
++		for i := range out.Issue.RequestedScopes {
++			scope := &out.Issue.RequestedScopes[i]
++			if scope.ActionClass == "" || scope.ResourcePattern == "" || scope.ScopeTTLSeconds < 0 {
++				return out, ErrInvalidArgument
++			}
++			if scope.ContextConstraints == nil {
++				scope.ContextConstraints = map[string]string{}
++			}
++		}
++	case "REVOKE":
++		if out.Revoke == nil || out.Issue != nil || out.Revoke.PassportID == "" || out.Revoke.PassportID != out.ExpectedActivePassportID || out.Revoke.Reason == "" || out.Revoke.RevokedBy == "" {
++			return out, ErrInvalidArgument
++		}
++	default:
++		return out, ErrInvalidArgument
++	}
++	return out, nil
++}
++
++func (s *Service) ApplyOperation(ctx context.Context, request OperationRequest) (OperationReceipt, error) {
++	request, err := normalizedOperation(request)
++	if err != nil {
++		return OperationReceipt{}, err
++	}
++	unlock, err := acquireFence(ctx, s.fencePath)
++	if err != nil {
++		return OperationReceipt{}, fmt.Errorf("%w: fence: %v", ErrUnavailable, err)
++	}
++	defer unlock()
++	s.mu.Lock()
++	defer s.mu.Unlock()
++	if err = s.checkMutable(); err != nil {
++		return OperationReceipt{}, err
++	}
++	if existing, ok := s.operations[request.OperationID]; ok {
++		if !bytes.Equal(CanonicalOperationRequest(existing.Payload().Request), CanonicalOperationRequest(request)) {
++			return OperationReceipt{}, ErrOperationConflict
++		}
++		return cloneReceipt(existing), nil
++	}
++	if err = s.checkCAS(request.AgentID, &request.ExpectedActivePassportID, &request.ExpectedAgentRevision); err != nil {
++		return OperationReceipt{}, err
++	}
++	if request.Action == "ISSUE" {
++		in := request.Issue
++		now := s.now().UTC().Truncate(time.Millisecond)
++		scopes := make([]domain.Scope, len(in.RequestedScopes))
++		for i, scope := range in.RequestedScopes {
++			ttl := scope.ScopeTTLSeconds
++			if ttl == 0 || ttl > in.TTLSeconds {
++				ttl = in.TTLSeconds
++			}
++			// Bounds are validated before conversion to time.Duration to prevent overflow.
++			if ttl < 1 || ttl > 2592000 {
++				return OperationReceipt{}, ErrInvalidArgument
++			}
++			scopes[i] = domain.Scope{ScopeID: uuid.NewString(), ActionClass: scope.ActionClass, ResourcePattern: scope.ResourcePattern, ContextConstraints: scope.ContextConstraints, GrantedTS: now, ExpiresTS: now.Add(time.Duration(ttl) * time.Second)}
++		}
++		input := IssueInput{AgentID: in.AgentID, PassportType: domain.PassportType(in.PassportType), Scopes: scopes, TTLSeconds: in.TTLSeconds, IssuedBy: in.IssuedBy, ForceReissue: in.ForceReissue, Reason: in.Reason, ExpectedActivePassportID: &request.ExpectedActivePassportID, ExpectedAgentRevision: &request.ExpectedAgentRevision}
++		if err = s.validateIssueInput(input); err != nil {
++			return OperationReceipt{}, err
++		}
++		if _, err = s.issueLocked(ctx, input, &request); err != nil {
++			return OperationReceipt{}, err
++		}
++	} else {
++		p, ok := s.passports[request.Revoke.PassportID]
++		if !ok || p.AgentID != request.AgentID || p.Status != domain.StatusActive || s.activeByAgent[request.AgentID] != p.PassportID {
++			return OperationReceipt{}, ErrFailedPrecondition
++		}
++		if _, _, err = s.revokeLocked(ctx, p.PassportID, request.Revoke.Reason, request.Revoke.RevokedBy, &request.ExpectedActivePassportID, &request.ExpectedAgentRevision, &request); err != nil {
++			return OperationReceipt{}, err
++		}
++	}
++	return cloneReceipt(s.operations[request.OperationID]), nil
++}
++
++func (s *Service) GetOperation(agentID, operationID string) (OperationReceipt, error) {
++	if agentID == "" || !operationIDPattern.MatchString(operationID) {
++		return OperationReceipt{}, ErrInvalidArgument
++	}
++	s.mu.RLock()
++	defer s.mu.RUnlock()
++	if s.poisoned {
++		return OperationReceipt{}, ErrUnavailable
++	}
++	receipt, ok := s.operations[operationID]
++	if !ok || receipt.Payload().AgentID != agentID {
++		return OperationReceipt{}, ErrNotFound
++	}
++	return cloneReceipt(receipt), nil
++}
++
++func (s *Service) makeOperationReceipt(request OperationRequest, p domain.Passport, revision uint64, previousID, activeID string, now time.Time) (OperationReceipt, error) {
++	result := OperationResult{Action: request.Action, PassportID: p.PassportID, Status: string(p.Status), CompletedTS: now.UnixMilli(), PassportPayload: CanonicalPayload(p), PassportSignature: append([]byte(nil), p.Signature...), PreviousPassportPayload: []byte{}, PreviousPassportSignature: []byte{}}
++	if previousID != "" {
++		old := s.passports[previousID]
++		result.PreviousPassportPayload = CanonicalPayload(old)
++		result.PreviousPassportSignature = append([]byte(nil), old.Signature...)
++	}
++	var credentialID, publicKey string
++	var err error
++	if identity, ok := s.credentials.(SigningIdentity); ok {
++		credentialID, publicKey, err = identity.Identity()
++	} else {
++		credentialID, publicKey, _, err = s.credentials.Sign(nil)
++	}
++	if err != nil {
++		return OperationReceipt{}, ErrUnavailable
++	}
++	payload := OperationPayload{CanonicalVersion: "are.passport.operation.v1", CredentialID: credentialID, PublicKeyPEM: publicKey, OperationID: request.OperationID, AgentID: request.AgentID, Request: request, RequestDigest: operationDigest(request), AgentRevision: revision, PreviousActivePassportID: previousID, ActivePassportID: activeID, Result: result}
++	raw, _ := json.Marshal(payload)
++	id, key, signature, err := s.credentials.Sign(raw)
++	if err != nil || id != credentialID || key != publicKey {
++		return OperationReceipt{}, ErrUnavailable
++	}
++	return OperationReceipt{CanonicalPayload: raw, Signature: signature, CredentialID: id, PublicKeyPEM: key}, nil
++}
++
++func (s *Service) validateStoredOperation(id string, r OperationReceipt, state State) error {
++	var payload OperationPayload
++	d := json.NewDecoder(bytes.NewReader(r.CanonicalPayload))
++	d.DisallowUnknownFields()
++	if err := d.Decode(&payload); err != nil {
++		return fmt.Errorf("invalid operation payload: %w", err)
++	}
++	var extra any
++	if err := d.Decode(&extra); err != io.EOF {
++		return fmt.Errorf("invalid operation payload trailer")
++	}
++	canonical, _ := json.Marshal(payload)
++	valid, err := s.credentials.Verify(r.PublicKeyPEM, r.CanonicalPayload, r.Signature)
++	if err != nil || !valid || !bytes.Equal(canonical, r.CanonicalPayload) || payload.CredentialID != r.CredentialID || payload.PublicKeyPEM != r.PublicKeyPEM {
++		return fmt.Errorf("invalid persisted operation signature")
++	}
++	request, err := normalizedOperation(payload.Request)
++	if err != nil || payload.CanonicalVersion != "are.passport.operation.v1" || id != payload.OperationID || id != request.OperationID || payload.AgentID != request.AgentID || payload.RequestDigest != operationDigest(request) || payload.AgentRevision != request.ExpectedAgentRevision+1 || payload.AgentRevision == 0 || payload.AgentRevision > state.Revisions[payload.AgentID] || payload.PreviousActivePassportID != request.ExpectedActivePassportID {
++		return fmt.Errorf("invalid persisted operation binding")
++	}
++	p, ok := state.Passports[payload.Result.PassportID]
++	if !ok || p.AgentID != payload.AgentID || !bytes.Equal(CanonicalPayload(p), payload.Result.PassportPayload) || !bytes.Equal(p.Signature, payload.Result.PassportSignature) || payload.Result.Action != request.Action || payload.Result.CompletedTS <= 0 {
++		return fmt.Errorf("invalid operation result binding")
++	}
++	if request.Action == "ISSUE" {
++		if payload.Result.Status != "ACTIVE" || payload.ActivePassportID != p.PassportID || p.Revision != payload.AgentRevision {
++			return fmt.Errorf("invalid issue operation result")
++		}
++	} else if payload.Result.Status != "REVOKED" || payload.ActivePassportID != "" || p.PassportID != request.Revoke.PassportID || p.Revision >= payload.AgentRevision {
++		return fmt.Errorf("invalid revoke operation result")
++	}
++	if payload.PreviousActivePassportID != "" {
++		old, ok := state.Passports[payload.PreviousActivePassportID]
++		if !ok || old.AgentID != payload.AgentID || !bytes.Equal(CanonicalPayload(old), payload.Result.PreviousPassportPayload) || !bytes.Equal(old.Signature, payload.Result.PreviousPassportSignature) {
++			return fmt.Errorf("invalid previous operation artifact")
++		}
++	} else if len(payload.Result.PreviousPassportPayload) != 0 || len(payload.Result.PreviousPassportSignature) != 0 {
++		return fmt.Errorf("unexpected previous operation artifact")
++	}
++	return nil
++}
+diff --git a/internal/service/operations_test.go b/internal/service/operations_test.go
+new file mode 100644
+--- /dev/null
++++ b/internal/service/operations_test.go
+@@ -0,0 +1,334 @@
++package service
++
++import (
++	"bytes"
++	"context"
++	"encoding/json"
++	"errors"
++	"github.com/srex-dev/agent-passport/internal/domain"
++	"os"
++	"path/filepath"
++	"sync"
++	"testing"
++	"time"
++)
++
++func issueOperation(id, expected string, revision uint64) OperationRequest {
++	return OperationRequest{OperationID: id, AgentID: "agent", Action: "ISSUE", ExpectedActivePassportID: expected, ExpectedAgentRevision: revision,
++		Issue: &OperationIssue{AgentID: "agent", PassportType: "STANDARD", TTLSeconds: 300, IssuedBy: "authority", Reason: "qualified <>& 世界", ForceReissue: expected != "", RequestedScopes: []OperationScope{{ActionClass: "WRITE", ResourcePattern: "model/*", ContextConstraints: map[string]string{"site": "A"}, ScopeTTLSeconds: 60}}}}
++}
++func applyOperation(t *testing.T, s *Service, r OperationRequest) OperationReceipt {
++	t.Helper()
++	got, err := s.ApplyOperation(context.Background(), r)
++	if err != nil {
++		t.Fatal(err)
++	}
++	return got
++}
++func TestOperationRetrySurvivesRestartAndReplacement(t *testing.T) {
++	store := newTestStateStore()
++	s := testPersistent(t, store, "")
++	request := issueOperation("op1", "", 0)
++	first := applyOperation(t, s, request)
++	p := first.Payload()
++	if p.AgentRevision != 1 || p.Request.OperationID != "op1" {
++		t.Fatalf("receipt %+v", p)
++	}
++	applyOperation(t, s, issueOperation("op2", p.ActivePassportID, 1))
++	s = testPersistent(t, store, "")
++	s.registry = registryMock{status: AgentSuspended}
++	s.now = func() time.Time { return time.Now().Add(48 * time.Hour) }
++	retry := applyOperation(t, s, request)
++	if !bytes.Equal(first.CanonicalPayload, retry.CanonicalPayload) || !bytes.Equal(first.Signature, retry.Signature) {
++		t.Fatal("retry changed receipt")
++	}
++	found, err := s.GetOperation("agent", "op1")
++	if err != nil || !bytes.Equal(found.CanonicalPayload, first.CanonicalPayload) {
++		t.Fatal("historical lookup missing", err)
++	}
++	_, revision, _ := s.GetAgentPassportRevision("agent")
++	if revision != 2 {
++		t.Fatal("replay advanced revision", revision)
++	}
++}
++func TestOperationIDRejectsDifferentSubjectAndBody(t *testing.T) {
++	s := testPersistent(t, newTestStateStore(), "")
++	original := issueOperation("same", "", 0)
++	applyOperation(t, s, original)
++	for _, mutate := range []func(*OperationRequest){func(r *OperationRequest) { r.AgentID = "other"; r.Issue.AgentID = "other" }, func(r *OperationRequest) { r.Issue.Reason = "different" }, func(r *OperationRequest) { r.Issue.RequestedScopes[0].ContextConstraints["site"] = "B" }, func(r *OperationRequest) { r.ExpectedAgentRevision = 1 }} {
++		changed := issueOperation("same", "", 0)
++		mutate(&changed)
++		if _, err := s.ApplyOperation(context.Background(), changed); err == nil {
++			t.Fatal("conflicting operation accepted")
++		}
++	}
++	if _, err := s.GetOperation("other", "same"); !errors.Is(err, ErrNotFound) {
++		t.Fatal("cross agent lookup exposed receipt", err)
++	}
++}
++func TestOperationRevokeReceiptNotInferredFromEmptyCurrent(t *testing.T) {
++	store := newTestStateStore()
++	s := testPersistent(t, store, "")
++	first := applyOperation(t, s, issueOperation("issue", "", 0)).Payload()
++	request := OperationRequest{OperationID: "revoke", AgentID: "agent", Action: "REVOKE", ExpectedActivePassportID: first.ActivePassportID, ExpectedAgentRevision: 1, Revoke: &OperationRevoke{PassportID: first.ActivePassportID, Reason: "drift", RevokedBy: "authority"}}
++	receipt := applyOperation(t, s, request)
++	s = testPersistent(t, store, "")
++	if receipt.Payload().AgentRevision != 2 || receipt.Payload().ActivePassportID != "" || receipt.Payload().Result.Status != "REVOKED" {
++		t.Fatal("wrong revoke receipt")
++	}
++	if _, err := s.GetOperation("agent", "never-applied"); !errors.Is(err, ErrNotFound) {
++		t.Fatal("empty state fabricated receipt", err)
++	}
++	applyOperation(t, s, issueOperation("later", "", 2))
++	retry := applyOperation(t, s, request)
++	if !bytes.Equal(receipt.CanonicalPayload, retry.CanonicalPayload) {
++		t.Fatal("historical revoke lost")
++	}
++}
++func TestConcurrentSameOperationHasOneTransition(t *testing.T) {
++	s := testPersistent(t, newTestStateStore(), "")
++	request := issueOperation("same", "", 0)
++	var wg sync.WaitGroup
++	receipts := make(chan OperationReceipt, 12)
++	errs := make(chan error, 12)
++	for i := 0; i < 12; i++ {
++		wg.Add(1)
++		go func() {
++			defer wg.Done()
++			r, e := s.ApplyOperation(context.Background(), request)
++			receipts <- r
++			errs <- e
++		}()
++	}
++	wg.Wait()
++	close(receipts)
++	close(errs)
++	for err := range errs {
++		if err != nil {
++			t.Fatal(err)
++		}
++	}
++	var payload []byte
++	for r := range receipts {
++		if payload == nil {
++			payload = r.CanonicalPayload
++		}
++		if !bytes.Equal(payload, r.CanonicalPayload) {
++			t.Fatal("different results")
++		}
++	}
++	_, rev, _ := s.GetAgentPassportRevision("agent")
++	if rev != 1 {
++		t.Fatal("duplicate transition", rev)
++	}
++}
++func TestOperationPersistenceFailureRollsBackReceiptAndAuthority(t *testing.T) {
++	store := newTestStateStore()
++	s := testPersistent(t, store, "")
++	first := applyOperation(t, s, issueOperation("first", "", 0)).Payload()
++	store.err = errors.New("disk full")
++	if _, err := s.ApplyOperation(context.Background(), issueOperation("failed", first.ActivePassportID, 1)); !errors.Is(err, ErrUnavailable) {
++		t.Fatal(err)
++	}
++	if _, err := s.GetOperation("agent", "failed"); !errors.Is(err, ErrNotFound) {
++		t.Fatal("failed mutation recorded", err)
++	}
++	current, rev, err := s.GetAgentPassportRevision("agent")
++	if err != nil || rev != 1 || current.PassportID != first.ActivePassportID || current.Status != domain.StatusActive {
++		t.Fatal("failed replacement changed current", err)
++	}
++}
++func TestOperationMigratesV1WithoutChangingPriorAuthority(t *testing.T) {
++	store := newTestStateStore()
++	s := testPersistent(t, store, "")
++	prior, err := s.IssuePassport(persistentIssue("none", 0))
++	if err != nil {
++		t.Fatal(err)
++	}
++	store.state.Version = 1
++	store.state.Operations = nil
++	s = testPersistent(t, store, "")
++	current, _, _ := s.GetAgentPassportRevision("agent")
++	if !bytes.Equal(CanonicalPayload(prior), CanonicalPayload(current)) {
++		t.Fatal("migration changed old payload")
++	}
++	applyOperation(t, s, issueOperation("migrated", prior.PassportID, 1))
++	if store.state.Version != 2 || len(store.state.Operations) != 1 {
++		t.Fatal("snapshot not upgraded atomically")
++	}
++}
++
++type receiptFailCredentials struct{ credentialMock }
++
++func (c receiptFailCredentials) Sign(payload []byte) (string, string, []byte, error) {
++	if bytes.Contains(payload, []byte(`"canonical_version":"are.passport.operation.v1"`)) {
++		return "", "", nil, errors.New("receipt signer unavailable")
++	}
++	return c.credentialMock.Sign(payload)
++}
++func TestOperationReceiptSignerFailureIsAtomic(t *testing.T) {
++	for _, action := range []string{"ISSUE", "REVOKE"} {
++		t.Run(action, func(t *testing.T) {
++			store := newTestStateStore()
++			s := testPersistent(t, store, "")
++			first := applyOperation(t, s, issueOperation("first", "", 0)).Payload()
++			s.credentials = receiptFailCredentials{}
++			request := issueOperation("failed", first.ActivePassportID, 1)
++			if action == "REVOKE" {
++				request.Action = "REVOKE"
++				request.Issue = nil
++				request.Revoke = &OperationRevoke{PassportID: first.ActivePassportID, Reason: "drift", RevokedBy: "authority"}
++			}
++			if _, err := s.ApplyOperation(context.Background(), request); !errors.Is(err, ErrUnavailable) {
++				t.Fatal(err)
++			}
++			current, rev, err := s.GetAgentPassportRevision("agent")
++			if err != nil || current.PassportID != first.ActivePassportID || current.Status != domain.StatusActive || rev != 1 {
++				t.Fatal("receipt failure changed authority", err)
++			}
++			if _, err := s.GetOperation("agent", "failed"); !errors.Is(err, ErrNotFound) {
++				t.Fatal("receipt failure recorded operation", err)
++			}
++		})
++	}
++}
++
++type operationUnknownStore struct {
++	testStateStore
++	fail bool
++}
++
++func (s *operationUnknownStore) Save(state State) error {
++	s.state = state
++	if s.fail {
++		return ErrCommitUnknown
++	}
++	return nil
++}
++func TestOperationUncertainCommitRecoversReceiptOnRestart(t *testing.T) {
++	store := &operationUnknownStore{testStateStore: *newTestStateStore(), fail: true}
++	s := testPersistent(t, store, "")
++	request := issueOperation("uncertain", "", 0)
++	if _, err := s.ApplyOperation(context.Background(), request); !errors.Is(err, ErrUnavailable) {
++		t.Fatal(err)
++	}
++	if _, err := s.GetOperation("agent", "uncertain"); !errors.Is(err, ErrUnavailable) {
++		t.Fatal("unknown commit served")
++	}
++	store.fail = false
++	s = testPersistent(t, store, "")
++	found, err := s.GetOperation("agent", "uncertain")
++	if err != nil {
++		t.Fatal(err)
++	}
++	replay := applyOperation(t, s, request)
++	if !bytes.Equal(found.CanonicalPayload, replay.CanonicalPayload) {
++		t.Fatal("lost-response recovery changed result")
++	}
++	_, rev, _ := s.GetAgentPassportRevision("agent")
++	if rev != 1 {
++		t.Fatal("recovery repeated mutation")
++	}
++}
++func TestOperationCorruptionRejectedAndReturnedBytesDoNotAlias(t *testing.T) {
++	store := newTestStateStore()
++	s := testPersistent(t, store, "")
++	receipt := applyOperation(t, s, issueOperation("first", "", 0))
++	original := append([]byte(nil), receipt.CanonicalPayload...)
++	receipt.CanonicalPayload[0] = '!'
++	receipt.Signature[0] = '!'
++	actual, err := s.GetOperation("agent", "first")
++	if err != nil || !bytes.Equal(original, actual.CanonicalPayload) {
++		t.Fatal("returned bytes alias state")
++	}
++	changed := store.state.Operations["first"]
++	changed.Signature = append([]byte(nil), changed.Signature...)
++	changed.Signature[0] = '!'
++	store.state.Operations["first"] = changed
++	if _, err := NewPersistent(registryMock{status: AgentActive}, credentialMock{}, nil, nil, nil, store, ""); err == nil {
++		t.Fatal("tampered durable receipt accepted")
++	}
++}
++func TestOperationDiskV1MigrationPreservesRevocationsAndGenerations(t *testing.T) {
++	store := newTestStateStore()
++	s := testPersistent(t, store, "")
++	old, err := s.IssuePassport(persistentIssue("none", 0))
++	if err != nil {
++		t.Fatal(err)
++	}
++	if _, _, err = s.RevokePassportConditional(context.Background(), old.PassportID, "drift", "operator", expectedID(old.PassportID), expectedRev(1)); err != nil {
++		t.Fatal(err)
++	}
++	active, err := s.IssuePassport(persistentIssue("none", 2))
++	if err != nil {
++		t.Fatal(err)
++	}
++	// Actual prior format has no operations field at all.
++	legacy := struct {
++		Version   int                        `json:"version"`
++		Passports map[string]domain.Passport `json:"passports"`
++		Active    map[string]string          `json:"active_by_agent"`
++		Revisions map[string]uint64          `json:"revisions"`
++	}{1, store.state.Passports, store.state.ActiveByAgent, store.state.Revisions}
++	raw, _ := json.Marshal(legacy)
++	path := filepath.Join(t.TempDir(), "state.json")
++	if err = os.WriteFile(path, raw, 0600); err != nil {
++		t.Fatal(err)
++	}
++	file, err := OpenFileStore(path)
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer file.Close()
++	s = testPersistent(t, file, "")
++	unchanged, _ := os.ReadFile(path)
++	if !bytes.Equal(raw, unchanged) {
++		t.Fatal("startup rewrote old state")
++	}
++	revoked, _, _ := s.GetPassportRevision(old.PassportID)
++	if revoked.Status != domain.StatusRevoked || revoked.RevocationReason != "drift" {
++		t.Fatal("migration lost revocation")
++	}
++	applyOperation(t, s, issueOperation("upgrade", active.PassportID, 3))
++	state, err := file.Load()
++	if err != nil || state.Version != 2 || state.Revisions["agent"] != 4 || len(state.Operations) != 1 {
++		t.Fatal("migration lost state", err)
++	}
++	if _, err := s.GetOperation("agent", "historical-unrecorded"); !errors.Is(err, ErrNotFound) {
++		t.Fatal("migration fabricated operation", err)
++	}
++}
++
++func TestOperationRequestAllFieldsAreBound(t *testing.T) {
++	s := testPersistent(t, newTestStateStore(), "")
++	applyOperation(t, s, issueOperation("bound", "", 0))
++	cases := map[string]func(*OperationRequest){
++		"passport_type":  func(r *OperationRequest) { r.Issue.PassportType = "PROVISIONAL" },
++		"actor":          func(r *OperationRequest) { r.Issue.IssuedBy = "other" },
++		"passport_ttl":   func(r *OperationRequest) { r.Issue.TTLSeconds = 301 },
++		"scope_ttl":      func(r *OperationRequest) { r.Issue.RequestedScopes[0].ScopeTTLSeconds = 61 },
++		"scope_action":   func(r *OperationRequest) { r.Issue.RequestedScopes[0].ActionClass = "READ" },
++		"scope_resource": func(r *OperationRequest) { r.Issue.RequestedScopes[0].ResourcePattern = "other/*" },
++		"scope_context":  func(r *OperationRequest) { r.Issue.RequestedScopes[0].ContextConstraints["site"] = "B" },
++		"scope_count": func(r *OperationRequest) {
++			r.Issue.RequestedScopes = append(r.Issue.RequestedScopes, r.Issue.RequestedScopes[0])
++		},
++		"force_reissue":     func(r *OperationRequest) { r.Issue.ForceReissue = true },
++		"expected_active":   func(r *OperationRequest) { r.ExpectedActivePassportID = "different" },
++		"expected_revision": func(r *OperationRequest) { r.ExpectedAgentRevision = 2 },
++		"reason":            func(r *OperationRequest) { r.Issue.Reason = "other" },
++	}
++	for name, mutate := range cases {
++		t.Run(name, func(t *testing.T) {
++			r := issueOperation("bound", "", 0)
++			mutate(&r)
++			if _, err := s.ApplyOperation(context.Background(), r); !errors.Is(err, ErrOperationConflict) {
++				t.Fatalf("changed request did not conflict: %v", err)
++			}
++		})
++	}
++	_, revision, _ := s.GetAgentPassportRevision("agent")
++	if revision != 1 {
++		t.Fatal("conflicts advanced revision")
++	}
++}
 diff --git a/internal/service/persistence.go b/internal/service/persistence.go
 new file mode 100644
 --- /dev/null
 +++ b/internal/service/persistence.go
-@@ -0,0 +1,90 @@
+@@ -0,0 +1,109 @@
 +package service
 +
 +import (
@@ -1486,10 +2400,11 @@ new file mode 100644
 +// State is one atomically replaced single-writer snapshot. It is not a
 +// distributed database and does not provide anti-rollback against its owner.
 +type State struct {
-+	Version       int                        `json:"version"`
-+	Passports     map[string]domain.Passport `json:"passports"`
-+	ActiveByAgent map[string]string          `json:"active_by_agent"`
-+	Revisions     map[string]uint64          `json:"revisions"`
++	Operations    map[string]OperationReceipt `json:"operations"`
++	Version       int                         `json:"version"`
++	Passports     map[string]domain.Passport  `json:"passports"`
++	ActiveByAgent map[string]string           `json:"active_by_agent"`
++	Revisions     map[string]uint64           `json:"revisions"`
 +}
 +type StateStore interface {
 +	Load() (State, error)
@@ -1512,8 +2427,16 @@ new file mode 100644
 +	if err != nil {
 +		return nil, err
 +	}
-+	if state.Version != 1 || state.Passports == nil || state.ActiveByAgent == nil || state.Revisions == nil {
++	if (state.Version != 1 && state.Version != 2) || state.Passports == nil || state.ActiveByAgent == nil || state.Revisions == nil {
 +		return nil, fmt.Errorf("invalid persisted state")
++	}
++	if state.Version == 1 {
++		if len(state.Operations) != 0 {
++			return nil, fmt.Errorf("v1 state contains unsupported operations")
++		}
++		state.Operations = map[string]OperationReceipt{}
++	} else if state.Operations == nil {
++		return nil, fmt.Errorf("v2 operation index missing")
 +	}
 +	for id, p := range state.Passports {
 +		if id != p.PassportID || p.AgentID == "" || p.Revision == 0 || state.Revisions[p.AgentID] < p.Revision {
@@ -1533,13 +2456,22 @@ new file mode 100644
 +			return nil, fmt.Errorf("invalid active passport index")
 +		}
 +	}
++	for id, receipt := range state.Operations {
++		if err := s.validateStoredOperation(id, receipt, state); err != nil {
++			return nil, err
++		}
++	}
++	s.operations = state.Operations
 +	s.passports = state.Passports
 +	s.activeByAgent = state.ActiveByAgent
 +	s.revisions = state.Revisions
 +	return s, nil
 +}
 +func (s *Service) snapshot() State {
-+	state := State{Version: 1, Passports: make(map[string]domain.Passport, len(s.passports)), ActiveByAgent: make(map[string]string, len(s.activeByAgent)), Revisions: make(map[string]uint64, len(s.revisions))}
++	state := State{Version: 2, Operations: make(map[string]OperationReceipt, len(s.operations)), Passports: make(map[string]domain.Passport, len(s.passports)), ActiveByAgent: make(map[string]string, len(s.activeByAgent)), Revisions: make(map[string]uint64, len(s.revisions))}
++	for k, v := range s.operations {
++		state.Operations[k] = cloneReceipt(v)
++	}
 +	for k, v := range s.passports {
 +		state.Passports[k] = clonePassport(v)
 +	}
@@ -1560,6 +2492,7 @@ new file mode 100644
 +			return fmt.Errorf("%w: persistence: %v", ErrUnavailable, err)
 +		}
 +	}
++	s.operations = next.Operations
 +	s.passports = next.Passports
 +	s.activeByAgent = next.ActiveByAgent
 +	s.revisions = next.Revisions
@@ -1796,7 +2729,17 @@ diff --git a/internal/service/service.go b/internal/service/service.go
  	"errors"
  	"fmt"
  	"sync"
-@@ -51,6 +52,11 @@
+@@ -22,7 +23,8 @@
+ 	// ErrFailedPrecondition indicates state transition is not allowed.
+ 	ErrFailedPrecondition = errors.New("failed precondition")
+ 	// ErrUnavailable indicates a required dependency is unavailable.
+-	ErrUnavailable = errors.New("unavailable")
++	ErrUnavailable       = errors.New("unavailable")
++	ErrOperationConflict = errors.New("operation ID conflicts with recorded request")
+ )
+ 
+ // AgentStatus is the status returned by Agent Registry dependency.
+@@ -51,6 +53,11 @@
  	Verify(publicKey string, payload, signature []byte) (bool, error)
  }
  
@@ -1808,7 +2751,7 @@ diff --git a/internal/service/service.go b/internal/service/service.go
  // LedgerClient represents non-blocking write calls.
  type LedgerClient interface {
  	WritePassportLifecycle(agentID, passportID, eventType, reason string) error
-@@ -63,20 +69,28 @@
+@@ -63,20 +70,29 @@
  
  // IssueInput carries IssuePassport request parameters.
  type IssueInput struct {
@@ -1838,6 +2781,7 @@ diff --git a/internal/service/service.go b/internal/service/service.go
  type Service struct {
  	mu                           sync.RWMutex
 +	revisions                    map[string]uint64
++	operations                   map[string]OperationReceipt
 +	store                        StateStore
 +	requireCAS                   bool
 +	fencePath                    string
@@ -1846,16 +2790,17 @@ diff --git a/internal/service/service.go b/internal/service/service.go
  	passports                    map[string]domain.Passport
  	activeByAgent                map[string]string
  	registry                     AgentRegistryClient
-@@ -95,6 +109,8 @@
+@@ -95,6 +111,9 @@
  	}
  	return &Service{
  		passports:     make(map[string]domain.Passport),
 +		revisions:     make(map[string]uint64),
++		operations:    make(map[string]OperationReceipt),
 +		now:           time.Now,
  		activeByAgent: make(map[string]string),
  		registry:      registry,
  		policyBundles: bundles,
-@@ -109,185 +125,297 @@
+@@ -109,185 +128,340 @@
  	}
  }
  
@@ -1863,13 +2808,8 @@ diff --git a/internal/service/service.go b/internal/service/service.go
 +// IssuePassport is the compatibility entry point. Durable mode requires CAS.
  func (s *Service) IssuePassport(input IssueInput) (domain.Passport, error) {
 -	if input.AgentID == "" || input.IssuedBy == "" || input.Reason == "" || len(input.Scopes) == 0 {
-+	return s.IssuePassportContext(context.Background(), input)
-+}
-+
-+func (s *Service) IssuePassportContext(ctx context.Context, input IssueInput) (domain.Passport, error) {
-+	if input.AgentID == "" || input.IssuedBy == "" || input.Reason == "" || len(input.Scopes) == 0 || (input.PassportType != domain.TypeStandard && input.PassportType != domain.TypeProvisional) {
- 		return domain.Passport{}, ErrInvalidArgument
- 	}
+-		return domain.Passport{}, ErrInvalidArgument
+-	}
 -	if input.TTLSeconds < 300 {
 -		return domain.Passport{}, fmt.Errorf("%w: ttl too low", ErrInvalidArgument)
 -	}
@@ -1899,16 +2839,12 @@ diff --git a/internal/service/service.go b/internal/service/service.go
 -		}
 -	}
 -
-+	if input.TTLSeconds < 300 || input.TTLSeconds > 2592000 || (input.PassportType == domain.TypeProvisional && input.TTLSeconds > 86400) {
-+		return domain.Passport{}, ErrInvalidArgument
-+	}
-+	for _, scope := range input.Scopes {
-+		if scope.ActionClass == "" || scope.ResourcePattern == "" || !scope.ExpiresTS.After(scope.GrantedTS) {
-+			return domain.Passport{}, ErrInvalidArgument
-+		}
-+		if input.PassportType == domain.TypeProvisional && !s.provisionalAllowedActionType[scope.ActionClass] {
-+			return domain.Passport{}, ErrInvalidArgument
-+		}
++	return s.IssuePassportContext(context.Background(), input)
++}
++
++func (s *Service) IssuePassportContext(ctx context.Context, input IssueInput) (domain.Passport, error) {
++	if err := s.validateIssueInput(input); err != nil {
++		return domain.Passport{}, err
 +	}
 +	unlock, err := acquireFence(ctx, s.fencePath)
 +	if err != nil {
@@ -1936,6 +2872,29 @@ diff --git a/internal/service/service.go b/internal/service/service.go
 -	expires := now.Add(time.Duration(input.TTLSeconds) * time.Second)
 -	payload := canonicalPayload(input.AgentID, input.PassportType, input.Scopes, now, expires)
 -	credentialID, publicKey, signature, err := s.credentials.Sign(payload)
++	return s.issueLocked(ctx, input, nil)
++}
++
++func (s *Service) validateIssueInput(input IssueInput) error {
++	if input.AgentID == "" || input.IssuedBy == "" || input.Reason == "" || len(input.Scopes) == 0 || (input.PassportType != domain.TypeStandard && input.PassportType != domain.TypeProvisional) {
++		return ErrInvalidArgument
++	}
++	if input.TTLSeconds < 300 || input.TTLSeconds > 2592000 || (input.PassportType == domain.TypeProvisional && input.TTLSeconds > 86400) {
++		return ErrInvalidArgument
++	}
++	for _, scope := range input.Scopes {
++		if scope.ActionClass == "" || scope.ResourcePattern == "" || !scope.ExpiresTS.After(scope.GrantedTS) {
++			return ErrInvalidArgument
++		}
++		if input.PassportType == domain.TypeProvisional && !s.provisionalAllowedActionType[scope.ActionClass] {
++			return ErrInvalidArgument
++		}
++	}
++	return nil
++}
++
++// Caller holds external fence then service mutex, including receipt persistence.
++func (s *Service) issueLocked(ctx context.Context, input IssueInput, operation *OperationRequest) (domain.Passport, error) {
 +	if err := s.checkMutable(); err != nil {
 +		return domain.Passport{}, err
 +	}
@@ -2005,6 +2964,14 @@ diff --git a/internal/service/service.go b/internal/service/service.go
 +	}
 +	for i := range passport.ScopeSet {
 +		scope := &passport.ScopeSet[i]
++		if operation != nil {
++			ttl := operation.Issue.RequestedScopes[i].ScopeTTLSeconds
++			if ttl == 0 || ttl > input.TTLSeconds {
++				ttl = input.TTLSeconds
++			}
++			scope.GrantedTS = now
++			scope.ExpiresTS = now.Add(time.Duration(ttl) * time.Second)
++		}
 +		scope.GrantedTS = scope.GrantedTS.UTC().Truncate(time.Millisecond)
 +		scope.ExpiresTS = scope.ExpiresTS.UTC().Truncate(time.Millisecond)
 +		if scope.ExpiresTS.After(passport.ExpiresTS) {
@@ -2043,6 +3010,16 @@ diff --git a/internal/service/service.go b/internal/service/service.go
 +	next.Passports[passport.PassportID] = clonePassport(passport)
 +	next.ActiveByAgent[input.AgentID] = passport.PassportID
 +	next.Revisions[input.AgentID] = passport.Revision
++	if operation != nil {
++		receipt, err := s.makeOperationReceipt(*operation, passport, passport.Revision, currentID, passport.PassportID, now)
++		if err != nil {
++			return domain.Passport{}, err
++		}
++		next.Operations[operation.OperationID] = receipt
++	}
++	if err := ctx.Err(); err != nil {
++		return domain.Passport{}, fmt.Errorf("%w: %v", ErrUnavailable, err)
++	}
 +	if err := s.commit(next); err != nil {
 +		return domain.Passport{}, err
 +	}
@@ -2200,6 +3177,9 @@ diff --git a/internal/service/service.go b/internal/service/service.go
 -	p, ok := s.passports[passportID]
 -	if !ok {
 -		return domain.Passport{}, ErrNotFound
++	return s.revokeLocked(ctx, passportID, reason, revokedBy, expected, expectedRevision, nil)
++}
++func (s *Service) revokeLocked(ctx context.Context, passportID, reason, revokedBy string, expected *string, expectedRevision *uint64, operation *OperationRequest) (domain.Passport, uint64, error) {
 +	if err := s.checkMutable(); err != nil {
 +		return domain.Passport{}, 0, err
 +	}
@@ -2236,6 +3216,16 @@ diff --git a/internal/service/service.go b/internal/service/service.go
 +	next.Revisions[p.AgentID]++
 +	if next.Revisions[p.AgentID] == 0 {
 +		return domain.Passport{}, 0, ErrFailedPrecondition
++	}
++	if operation != nil {
++		receipt, err := s.makeOperationReceipt(*operation, p, next.Revisions[p.AgentID], s.activeByAgent[p.AgentID], "", now)
++		if err != nil {
++			return domain.Passport{}, 0, err
++		}
++		next.Operations[operation.OperationID] = receipt
++	}
++	if err := ctx.Err(); err != nil {
++		return domain.Passport{}, 0, fmt.Errorf("%w: %v", ErrUnavailable, err)
 +	}
 +	if err := s.commit(next); err != nil {
 +		return domain.Passport{}, 0, err
@@ -2383,3 +3373,1208 @@ new file mode 100644
 +  "purpose": "Public deterministic interoperability test vector; never use this issuer as deployment trust.",
 +  "signature_base64": "bJcLHVUdd+qzMbzbNqUTFGYlyc8o6USOmDdJh/nL1P8Q0duioRfPlrFBEwKAQIUiIFl8HAeMWYiI7OtD6JmjAw=="
 +}
+diff --git a/internal/service/testdata/operations-v1.json b/internal/service/testdata/operations-v1.json
+new file mode 100644
+--- /dev/null
++++ b/internal/service/testdata/operations-v1.json
+@@ -0,0 +1,98 @@
++{
++  "cases": [
++    {
++      "agent_id": "agent-É\u003c\u0026\u003e",
++      "canonical_payload_base64": "eyJjYW5vbmljYWxfdmVyc2lvbiI6ImFyZS5wYXNzcG9ydC5vcGVyYXRpb24udjEiLCJjcmVkZW50aWFsX2lkIjoiZWQyNTUxOTpjYmI4NmM5ZDMyYWQ4YTg4MWI5MGQzMDFkYTQ5ZjBlNDNmNjFiOWVlZWM3MDk1YzE1ZjE5YTNiMWMzYTVmZWMwIiwicHVibGljX2tleV9wZW0iOiItLS0tLUJFR0lOIFBVQkxJQyBLRVktLS0tLVxuTUNvd0JRWURLMlZ3QXlFQUN6TTRhbnNSdlRyek8relBoUm92SHFhdncwT3hrdWpKeWZDdW9wdk1Fb0E9XG4tLS0tLUVORCBQVUJMSUMgS0VZLS0tLS1cbiIsIm9wZXJhdGlvbl9pZCI6Im9wLXRlc3QtaXNzdWUiLCJhZ2VudF9pZCI6ImFnZW50LcOJXHUwMDNjXHUwMDI2XHUwMDNlIiwicmVxdWVzdCI6eyJvcGVyYXRpb25faWQiOiJvcC10ZXN0LWlzc3VlIiwiYWdlbnRfaWQiOiJhZ2VudC3DiVx1MDAzY1x1MDAyNlx1MDAzZSIsImFjdGlvbiI6IklTU1VFIiwiZXhwZWN0ZWRfYWN0aXZlX3Bhc3Nwb3J0X2lkIjoiIiwiZXhwZWN0ZWRfYWdlbnRfcmV2aXNpb24iOjAsImlzc3VlIjp7ImFnZW50X2lkIjoiYWdlbnQtw4lcdTAwM2NcdTAwMjZcdTAwM2UiLCJwYXNzcG9ydF90eXBlIjoiU1RBTkRBUkQiLCJyZXF1ZXN0ZWRfc2NvcGVzIjpbeyJhY3Rpb25fY2xhc3MiOiJtb2RlbC5wcm9tb3RlIiwicmVzb3VyY2VfcGF0dGVybiI6Im1vZGVsL86xXHUwMDNjXHUwMDI2XHUwMDNlKiIsImNvbnRleHRfY29uc3RyYWludHMiOnsiYVx1MDAzY1x1MDAyNlx1MDAzZSI6InZhbHVlXHUwMDNjXHUwMDI2XHUwMDNlXHUyMDI4XHUyMDI5Iiwic2l0ZSI6IsOp5bel5aC0IiwiemV0YSI6Imxhc3QifSwic2NvcGVfdHRsX3NlY29uZHMiOjYwfV0sInR0bF9zZWNvbmRzIjozMDAsImlzc3VlZF9ieSI6ImVhcm5lZC1hdXRob3JpdHktY29vcmRpbmF0b3IiLCJmb3JjZV9yZWlzc3VlIjpmYWxzZSwicmVhc29uIjoicXVhbGlmaWVkXG5saW5lXHRcdTAwM2NcdTAwMjZcdTAwM2VcdTIwMjjntYIifSwicmV2b2tlIjpudWxsfSwicmVxdWVzdF9kaWdlc3QiOiJzaGEyNTY6ZTA3MTgxMDFkMmU3OGRmM2UyMmU2MDM4ZjAyYjkxZGZiN2Y4NWZiZjkwYmI5YjljODRkYmJkNzIxMWI0M2I1NCIsImFnZW50X3JldmlzaW9uIjoxLCJwcmV2aW91c19hY3RpdmVfcGFzc3BvcnRfaWQiOiIiLCJhY3RpdmVfcGFzc3BvcnRfaWQiOiIwMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwMDEiLCJyZXN1bHQiOnsiYWN0aW9uIjoiSVNTVUUiLCJwYXNzcG9ydF9pZCI6IjAwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDAwMDAwMSIsInN0YXR1cyI6IkFDVElWRSIsImNvbXBsZXRlZF90cyI6MTc5MTU0NzIwMDEyMywicGFzc3BvcnRfcGF5bG9hZF9iYXNlNjQiOiJleUpqY21Wa1pXNTBhV0ZzWDJsa0lqb2laV1F5TlRVeE9UcGpZbUk0Tm1NNVpETXlZV1E0WVRnNE1XSTVNR1F6TURGa1lUUTVaakJsTkRObU5qRmlPV1ZsWldNM01EazFZekUxWmpFNVlUTmlNV016WVRWbVpXTXdJaXdpY0hWaWJHbGpYMnRsZVY5d1pXMGlPaUl0TFMwdExVSkZSMGxPSUZCVlFreEpReUJMUlZrdExTMHRMVnh1VFVOdmQwSlJXVVJMTWxaM1FYbEZRVU42VFRSaGJuTlNkbFJ5ZWs4cmVsQm9VbTkyU0hGaGRuY3dUM2hyZFdwS2VXWkRkVzl3ZGsxRmIwRTlYRzR0TFMwdExVVk9SQ0JRVlVKTVNVTWdTMFZaTFMwdExTMWNiaUlzSW1OaGJtOXVhV05oYkY5MlpYSnphVzl1SWpvaVlYSmxMbkJoYzNOd2IzSjBMbll5SWl3aWNHRnpjM0J2Y25SZmFXUWlPaUl3TURBd01EQXdNQzB3TURBd0xUUXdNREF0T0RBd01DMHdNREF3TURBd01EQXdNREVpTENKaFoyVnVkRjlwWkNJNkltRm5aVzUwTGNPSlhIVXdNRE5qWEhVd01ESTJYSFV3TURObElpd2lhWE56ZFdGdVkyVmZjbVYyYVhOcGIyNGlPakVzSW5CaGMzTndiM0owWDNSNWNHVWlPaUpUVkVGT1JFRlNSQ0lzSW5OamIzQmxYM05sZENJNlczc2ljMk52Y0dWZmFXUWlPaUp6WTI5d1pTMHhJaXdpWVdOMGFXOXVYMk5zWVhOeklqb2liVzlrWld3dWNISnZiVzkwWlNJc0luSmxjMjkxY21ObFgzQmhkSFJsY200aU9pSnRiMlJsYkMvT3NWeDFNREF6WTF4MU1EQXlObHgxTURBelpTb2lMQ0pqYjI1MFpYaDBYMk52Ym5OMGNtRnBiblJ6SWpwN0ltRmNkVEF3TTJOY2RUQXdNalpjZFRBd00yVWlPaUoyWVd4MVpWeDFNREF6WTF4MU1EQXlObHgxTURBelpWeDFNakF5T0Z4MU1qQXlPU0lzSW5OcGRHVWlPaUxEcWVXM3BlV2d0Q0lzSW5wbGRHRWlPaUpzWVhOMEluMHNJbWR5WVc1MFpXUmZkSE1pT2pFM09URTFORGN5TURBeE1qTXNJbVY0Y0dseVpYTmZkSE1pT2pFM09URTFORGN5TmpBeE1qTXNJbWx6WDJWelkyRnNZWFJwYjI0aU9tWmhiSE5sZlYwc0ltbHpjM1ZsWkY5aWVTSTZJbVZoY201bFpDMWhkWFJvYjNKcGRIa3RZMjl2Y21ScGJtRjBiM0lpTENKeVpXRnpiMjRpT2lKeGRXRnNhV1pwWldSY2JteHBibVZjZEZ4MU1EQXpZMXgxTURBeU5seDFNREF6WlZ4MU1qQXlPT2UxZ2lJc0ltbHpjM1ZsWkY5MGN5STZNVGM1TVRVME56SXdNREV5TXl3aVpYaHdhWEpsYzE5MGN5STZNVGM1TVRVME56VXdNREV5TXl3aWNHOXNhV041WDJsa1gyRjBYMmx6YzNWaGJtTmxJam9pY0c5c2FXTjVYSFV3TUROalhIVXdNREkyWEhVd01ETmxJaXdpY0c5c2FXTjVYM1psY2w5aGRGOXBjM04xWVc1alpTSTZJbll4TGNPcEluMD0iLCJwYXNzcG9ydF9zaWduYXR1cmVfYmFzZTY0Ijoid1hiM0d2SXlnTUl2RUNnOEtjN3RmY0h3QUZhdDNMODVncW5HQkt2QUhqTVFWdU0vNmxMclF3TzNCYmRtdmttS2RnRW1WbW5CZVh3SXBhTjNpSkhiQlE9PSIsInByZXZpb3VzX3Bhc3Nwb3J0X3BheWxvYWRfYmFzZTY0IjoiIiwicHJldmlvdXNfcGFzc3BvcnRfc2lnbmF0dXJlX2Jhc2U2NCI6IiJ9fQ==",
++      "credential_id": "ed25519:cbb86c9d32ad8a881b90d301da49f0e43f61b9eeec7095c15f19a3b1c3a5fec0",
++      "operation_id": "op-test-issue",
++      "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEACzM4ansRvTrzO+zPhRovHqavw0OxkujJyfCuopvMEoA=\n-----END PUBLIC KEY-----\n",
++      "request": {
++        "operation_id": "op-test-issue",
++        "agent_id": "agent-É\u003c\u0026\u003e",
++        "action": "ISSUE",
++        "expected_active_passport_id": "",
++        "expected_agent_revision": 0,
++        "issue": {
++          "agent_id": "agent-É\u003c\u0026\u003e",
++          "passport_type": "STANDARD",
++          "requested_scopes": [
++            {
++              "action_class": "model.promote",
++              "resource_pattern": "model/α\u003c\u0026\u003e*",
++              "context_constraints": {
++                "a\u003c\u0026\u003e": "value\u003c\u0026\u003e\u2028\u2029",
++                "site": "é工場",
++                "zeta": "last"
++              },
++              "scope_ttl_seconds": 60
++            }
++          ],
++          "ttl_seconds": 300,
++          "issued_by": "earned-authority-coordinator",
++          "force_reissue": false,
++          "reason": "qualified\nline\t\u003c\u0026\u003e\u2028終"
++        },
++        "revoke": null
++      },
++      "request_canonical_utf8": "{\"action\":\"ISSUE\",\"agent_id\":\"agent-É\\u003c\\u0026\\u003e\",\"expected_active_passport_id\":\"\",\"expected_agent_revision\":0,\"issue\":{\"agent_id\":\"agent-É\\u003c\\u0026\\u003e\",\"force_reissue\":false,\"issued_by\":\"earned-authority-coordinator\",\"passport_type\":\"STANDARD\",\"reason\":\"qualified\\nline\\t\\u003c\\u0026\\u003e\\u2028終\",\"requested_scopes\":[{\"action_class\":\"model.promote\",\"context_constraints\":{\"a\\u003c\\u0026\\u003e\":\"value\\u003c\\u0026\\u003e\\u2028\\u2029\",\"site\":\"é工場\",\"zeta\":\"last\"},\"resource_pattern\":\"model/α\\u003c\\u0026\\u003e*\",\"scope_ttl_seconds\":60}],\"ttl_seconds\":300},\"operation_id\":\"op-test-issue\",\"revoke\":null}",
++      "signature_base64": "NDRylwG3v+iguqK4cUe8hfS7c6hbJlmFuy8o1uO241YGLxAkpnqvzGYHfDAAMF3JMXDYJA5YU/tA0yqwga9NCA=="
++    },
++    {
++      "agent_id": "agent-É\u003c\u0026\u003e",
++      "canonical_payload_base64": "eyJjYW5vbmljYWxfdmVyc2lvbiI6ImFyZS5wYXNzcG9ydC5vcGVyYXRpb24udjEiLCJjcmVkZW50aWFsX2lkIjoiZWQyNTUxOTpjYmI4NmM5ZDMyYWQ4YTg4MWI5MGQzMDFkYTQ5ZjBlNDNmNjFiOWVlZWM3MDk1YzE1ZjE5YTNiMWMzYTVmZWMwIiwicHVibGljX2tleV9wZW0iOiItLS0tLUJFR0lOIFBVQkxJQyBLRVktLS0tLVxuTUNvd0JRWURLMlZ3QXlFQUN6TTRhbnNSdlRyek8relBoUm92SHFhdncwT3hrdWpKeWZDdW9wdk1Fb0E9XG4tLS0tLUVORCBQVUJMSUMgS0VZLS0tLS1cbiIsIm9wZXJhdGlvbl9pZCI6Im9wLXRlc3QtcmV2b2tlIiwiYWdlbnRfaWQiOiJhZ2VudC3DiVx1MDAzY1x1MDAyNlx1MDAzZSIsInJlcXVlc3QiOnsib3BlcmF0aW9uX2lkIjoib3AtdGVzdC1yZXZva2UiLCJhZ2VudF9pZCI6ImFnZW50LcOJXHUwMDNjXHUwMDI2XHUwMDNlIiwiYWN0aW9uIjoiUkVWT0tFIiwiZXhwZWN0ZWRfYWN0aXZlX3Bhc3Nwb3J0X2lkIjoiMDAwMDAwMDAtMDAwMC00MDAwLTgwMDAtMDAwMDAwMDAwMDAxIiwiZXhwZWN0ZWRfYWdlbnRfcmV2aXNpb24iOjEsImlzc3VlIjpudWxsLCJyZXZva2UiOnsicGFzc3BvcnRfaWQiOiIwMDAwMDAwMC0wMDAwLTQwMDAtODAwMC0wMDAwMDAwMDAwMDEiLCJyZWFzb24iOiJkcmlmdFx1MDAzY1x1MDAyNlx1MDAzZSIsInJldm9rZWRfYnkiOiJlYXJuZWQtYXV0aG9yaXR5LWNvb3JkaW5hdG9yIn19LCJyZXF1ZXN0X2RpZ2VzdCI6InNoYTI1NjphNTcxNDdjNjZmYjQ0ZDc5ZmNkYjZkM2NiNWMzYzYwMzM1NGRiNDcwNzEyNzU1M2U3ZDk1ZWI0NWE4NzljYzhhIiwiYWdlbnRfcmV2aXNpb24iOjIsInByZXZpb3VzX2FjdGl2ZV9wYXNzcG9ydF9pZCI6IjAwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDAwMDAwMSIsImFjdGl2ZV9wYXNzcG9ydF9pZCI6IiIsInJlc3VsdCI6eyJhY3Rpb24iOiJSRVZPS0UiLCJwYXNzcG9ydF9pZCI6IjAwMDAwMDAwLTAwMDAtNDAwMC04MDAwLTAwMDAwMDAwMDAwMSIsInN0YXR1cyI6IlJFVk9LRUQiLCJjb21wbGV0ZWRfdHMiOjE3OTE1NDcyMDExMjMsInBhc3Nwb3J0X3BheWxvYWRfYmFzZTY0IjoiZXlKamNtVmtaVzUwYVdGc1gybGtJam9pWldReU5UVXhPVHBqWW1JNE5tTTVaRE15WVdRNFlUZzRNV0k1TUdRek1ERmtZVFE1WmpCbE5ETm1OakZpT1dWbFpXTTNNRGsxWXpFMVpqRTVZVE5pTVdNellUVm1aV013SWl3aWNIVmliR2xqWDJ0bGVWOXdaVzBpT2lJdExTMHRMVUpGUjBsT0lGQlZRa3hKUXlCTFJWa3RMUzB0TFZ4dVRVTnZkMEpSV1VSTE1sWjNRWGxGUVVONlRUUmhibk5TZGxSeWVrOHJlbEJvVW05MlNIRmhkbmN3VDNocmRXcEtlV1pEZFc5d2RrMUZiMEU5WEc0dExTMHRMVVZPUkNCUVZVSk1TVU1nUzBWWkxTMHRMUzFjYmlJc0ltTmhibTl1YVdOaGJGOTJaWEp6YVc5dUlqb2lZWEpsTG5CaGMzTndiM0owTG5ZeUlpd2ljR0Z6YzNCdmNuUmZhV1FpT2lJd01EQXdNREF3TUMwd01EQXdMVFF3TURBdE9EQXdNQzB3TURBd01EQXdNREF3TURFaUxDSmhaMlZ1ZEY5cFpDSTZJbUZuWlc1MExjT0pYSFV3TUROalhIVXdNREkyWEhVd01ETmxJaXdpYVhOemRXRnVZMlZmY21WMmFYTnBiMjRpT2pFc0luQmhjM053YjNKMFgzUjVjR1VpT2lKVFZFRk9SRUZTUkNJc0luTmpiM0JsWDNObGRDSTZXM3NpYzJOdmNHVmZhV1FpT2lKelkyOXdaUzB4SWl3aVlXTjBhVzl1WDJOc1lYTnpJam9pYlc5a1pXd3VjSEp2Ylc5MFpTSXNJbkpsYzI5MWNtTmxYM0JoZEhSbGNtNGlPaUp0YjJSbGJDL09zVngxTURBelkxeDFNREF5Tmx4MU1EQXpaU29pTENKamIyNTBaWGgwWDJOdmJuTjBjbUZwYm5SeklqcDdJbUZjZFRBd00yTmNkVEF3TWpaY2RUQXdNMlVpT2lKMllXeDFaVngxTURBelkxeDFNREF5Tmx4MU1EQXpaVngxTWpBeU9GeDFNakF5T1NJc0luTnBkR1VpT2lMRHFlVzNwZVdndENJc0lucGxkR0VpT2lKc1lYTjBJbjBzSW1keVlXNTBaV1JmZEhNaU9qRTNPVEUxTkRjeU1EQXhNak1zSW1WNGNHbHlaWE5mZEhNaU9qRTNPVEUxTkRjeU5qQXhNak1zSW1selgyVnpZMkZzWVhScGIyNGlPbVpoYkhObGZWMHNJbWx6YzNWbFpGOWllU0k2SW1WaGNtNWxaQzFoZFhSb2IzSnBkSGt0WTI5dmNtUnBibUYwYjNJaUxDSnlaV0Z6YjI0aU9pSnhkV0ZzYVdacFpXUmNibXhwYm1WY2RGeDFNREF6WTF4MU1EQXlObHgxTURBelpWeDFNakF5T09lMWdpSXNJbWx6YzNWbFpGOTBjeUk2TVRjNU1UVTBOekl3TURFeU15d2laWGh3YVhKbGMxOTBjeUk2TVRjNU1UVTBOelV3TURFeU15d2ljRzlzYVdONVgybGtYMkYwWDJsemMzVmhibU5sSWpvaWNHOXNhV041WEhVd01ETmpYSFV3TURJMlhIVXdNRE5sSWl3aWNHOXNhV041WDNabGNsOWhkRjlwYzNOMVlXNWpaU0k2SW5ZeExjT3BJbjA9IiwicGFzc3BvcnRfc2lnbmF0dXJlX2Jhc2U2NCI6IndYYjNHdkl5Z01JdkVDZzhLYzd0ZmNId0FGYXQzTDg1Z3FuR0JLdkFIak1RVnVNLzZsTHJRd08zQmJkbXZrbUtkZ0VtVm1uQmVYd0lwYU4zaUpIYkJRPT0iLCJwcmV2aW91c19wYXNzcG9ydF9wYXlsb2FkX2Jhc2U2NCI6ImV5SmpjbVZrWlc1MGFXRnNYMmxrSWpvaVpXUXlOVFV4T1RwalltSTRObU01WkRNeVlXUTRZVGc0TVdJNU1HUXpNREZrWVRRNVpqQmxORE5tTmpGaU9XVmxaV00zTURrMVl6RTFaakU1WVROaU1XTXpZVFZtWldNd0lpd2ljSFZpYkdsalgydGxlVjl3WlcwaU9pSXRMUzB0TFVKRlIwbE9JRkJWUWt4SlF5QkxSVmt0TFMwdExWeHVUVU52ZDBKUldVUkxNbFozUVhsRlFVTjZUVFJoYm5OU2RsUnllazhyZWxCb1VtOTJTSEZoZG5jd1QzaHJkV3BLZVdaRGRXOXdkazFGYjBFOVhHNHRMUzB0TFVWT1JDQlFWVUpNU1VNZ1MwVlpMUzB0TFMxY2JpSXNJbU5oYm05dWFXTmhiRjkyWlhKemFXOXVJam9pWVhKbExuQmhjM053YjNKMExuWXlJaXdpY0dGemMzQnZjblJmYVdRaU9pSXdNREF3TURBd01DMHdNREF3TFRRd01EQXRPREF3TUMwd01EQXdNREF3TURBd01ERWlMQ0poWjJWdWRGOXBaQ0k2SW1GblpXNTBMY09KWEhVd01ETmpYSFV3TURJMlhIVXdNRE5sSWl3aWFYTnpkV0Z1WTJWZmNtVjJhWE5wYjI0aU9qRXNJbkJoYzNOd2IzSjBYM1I1Y0dVaU9pSlRWRUZPUkVGU1JDSXNJbk5qYjNCbFgzTmxkQ0k2VzNzaWMyTnZjR1ZmYVdRaU9pSnpZMjl3WlMweElpd2lZV04wYVc5dVgyTnNZWE56SWpvaWJXOWtaV3d1Y0hKdmJXOTBaU0lzSW5KbGMyOTFjbU5sWDNCaGRIUmxjbTRpT2lKdGIyUmxiQy9Pc1Z4MU1EQXpZMXgxTURBeU5seDFNREF6WlNvaUxDSmpiMjUwWlhoMFgyTnZibk4wY21GcGJuUnpJanA3SW1GY2RUQXdNMk5jZFRBd01qWmNkVEF3TTJVaU9pSjJZV3gxWlZ4MU1EQXpZMXgxTURBeU5seDFNREF6WlZ4MU1qQXlPRngxTWpBeU9TSXNJbk5wZEdVaU9pTERxZVczcGVXZ3RDSXNJbnBsZEdFaU9pSnNZWE4wSW4wc0ltZHlZVzUwWldSZmRITWlPakUzT1RFMU5EY3lNREF4TWpNc0ltVjRjR2x5WlhOZmRITWlPakUzT1RFMU5EY3lOakF4TWpNc0ltbHpYMlZ6WTJGc1lYUnBiMjRpT21aaGJITmxmVjBzSW1semMzVmxaRjlpZVNJNkltVmhjbTVsWkMxaGRYUm9iM0pwZEhrdFkyOXZjbVJwYm1GMGIzSWlMQ0p5WldGemIyNGlPaUp4ZFdGc2FXWnBaV1JjYm14cGJtVmNkRngxTURBelkxeDFNREF5Tmx4MU1EQXpaVngxTWpBeU9PZTFnaUlzSW1semMzVmxaRjkwY3lJNk1UYzVNVFUwTnpJd01ERXlNeXdpWlhod2FYSmxjMTkwY3lJNk1UYzVNVFUwTnpVd01ERXlNeXdpY0c5c2FXTjVYMmxrWDJGMFgybHpjM1ZoYm1ObElqb2ljRzlzYVdONVhIVXdNRE5qWEhVd01ESTJYSFV3TURObElpd2ljRzlzYVdONVgzWmxjbDloZEY5cGMzTjFZVzVqWlNJNkluWXhMY09wSW4wPSIsInByZXZpb3VzX3Bhc3Nwb3J0X3NpZ25hdHVyZV9iYXNlNjQiOiJ3WGIzR3ZJeWdNSXZFQ2c4S2M3dGZjSHdBRmF0M0w4NWdxbkdCS3ZBSGpNUVZ1TS82bExyUXdPM0JiZG12a21LZGdFbVZtbkJlWHdJcGFOM2lKSGJCUT09In19",
++      "credential_id": "ed25519:cbb86c9d32ad8a881b90d301da49f0e43f61b9eeec7095c15f19a3b1c3a5fec0",
++      "operation_id": "op-test-revoke",
++      "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEACzM4ansRvTrzO+zPhRovHqavw0OxkujJyfCuopvMEoA=\n-----END PUBLIC KEY-----\n",
++      "request": {
++        "operation_id": "op-test-revoke",
++        "agent_id": "agent-É\u003c\u0026\u003e",
++        "action": "REVOKE",
++        "expected_active_passport_id": "00000000-0000-4000-8000-000000000001",
++        "expected_agent_revision": 1,
++        "issue": null,
++        "revoke": {
++          "passport_id": "00000000-0000-4000-8000-000000000001",
++          "reason": "drift\u003c\u0026\u003e",
++          "revoked_by": "earned-authority-coordinator"
++        }
++      },
++      "request_canonical_utf8": "{\"action\":\"REVOKE\",\"agent_id\":\"agent-É\\u003c\\u0026\\u003e\",\"expected_active_passport_id\":\"00000000-0000-4000-8000-000000000001\",\"expected_agent_revision\":1,\"issue\":null,\"operation_id\":\"op-test-revoke\",\"revoke\":{\"passport_id\":\"00000000-0000-4000-8000-000000000001\",\"reason\":\"drift\\u003c\\u0026\\u003e\",\"revoked_by\":\"earned-authority-coordinator\"}}",
++      "signature_base64": "1KOfwcV35/4Ru08eO1O+xDLSO7p5GMQzyW7IZroVKeB5kHkJQ3Rsqs+EJJjL1zlEMLfA8B3OhwFPV1SoEGM2Ag=="
++    }
++  ],
++  "domain_passport": {
++    "Revision": 1,
++    "PassportID": "00000000-0000-4000-8000-000000000001",
++    "AgentID": "agent-É\u003c\u0026\u003e",
++    "PassportType": "STANDARD",
++    "ScopeSet": [
++      {
++        "ScopeID": "scope-1",
++        "ActionClass": "model.promote",
++        "ResourcePattern": "model/α\u003c\u0026\u003e*",
++        "ContextConstraints": {
++          "a\u003c\u0026\u003e": "value\u003c\u0026\u003e\u2028\u2029",
++          "site": "é工場",
++          "zeta": "last"
++        },
++        "IsEscalation": false,
++        "GrantedTS": "2026-10-09T12:00:00.123Z",
++        "ExpiresTS": "2026-10-09T12:01:00.123Z"
++      }
++    ],
++    "Status": "ACTIVE",
++    "IssuedBy": "earned-authority-coordinator",
++    "CredentialID": "ed25519:cbb86c9d32ad8a881b90d301da49f0e43f61b9eeec7095c15f19a3b1c3a5fec0",
++    "PublicKeyPEM": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEACzM4ansRvTrzO+zPhRovHqavw0OxkujJyfCuopvMEoA=\n-----END PUBLIC KEY-----\n",
++    "Signature": "wXb3GvIygMIvECg8Kc7tfcHwAFat3L85gqnGBKvAHjMQVuM/6lLrQwO3BbdmvkmKdgEmVmnBeXwIpaN3iJHbBQ==",
++    "Reason": "qualified\nline\t\u003c\u0026\u003e\u2028終",
++    "IssuedTS": "2026-10-09T12:00:00.123Z",
++    "ExpiresTS": "2026-10-09T12:05:00.123Z",
++    "RevokedTS": null,
++    "RevocationReason": "",
++    "SupersededBy": "",
++    "PolicyIDAtIssuance": "policy\u003c\u0026\u003e",
++    "PolicyVerAtIssuance": "v1-é"
++  },
++  "purpose": "Public deterministic operation interoperability fixtures, never deployment trust."
++}
+diff --git a/proto/passport_issuance.pb.go b/proto/passport_issuance.pb.go
+--- a/proto/passport_issuance.pb.go
++++ b/proto/passport_issuance.pb.go
+@@ -1,7 +1,7 @@
+ // Code generated by protoc-gen-go. DO NOT EDIT.
+ // versions:
+-// 	protoc-gen-go v1.36.5
+-// 	protoc        v7.34.0
++// 	protoc-gen-go v1.36.12
++// 	protoc        v5.29.6
+ // source: passport_issuance.proto
+ 
+ package passportv1
+@@ -1185,263 +1185,478 @@
+ 	return ""
+ }
+ 
++// Explicit recoverable authority mutation. Expected fields are signed request
++// inputs, not transport metadata. Empty expected ID means no active credential.
++type ApplyPassportOperationRequest struct {
++	state                    protoimpl.MessageState `protogen:"open.v1"`
++	OperationId              string                 `protobuf:"bytes,1,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
++	AgentId                  string                 `protobuf:"bytes,2,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
++	ExpectedActivePassportId string                 `protobuf:"bytes,3,opt,name=expected_active_passport_id,json=expectedActivePassportId,proto3" json:"expected_active_passport_id,omitempty"`
++	ExpectedAgentRevision    uint64                 `protobuf:"varint,4,opt,name=expected_agent_revision,json=expectedAgentRevision,proto3" json:"expected_agent_revision,omitempty"`
++	// Types that are valid to be assigned to Mutation:
++	//
++	//	*ApplyPassportOperationRequest_Issue
++	//	*ApplyPassportOperationRequest_Revoke
++	Mutation      isApplyPassportOperationRequest_Mutation `protobuf_oneof:"mutation"`
++	unknownFields protoimpl.UnknownFields
++	sizeCache     protoimpl.SizeCache
++}
++
++func (x *ApplyPassportOperationRequest) Reset() {
++	*x = ApplyPassportOperationRequest{}
++	mi := &file_passport_issuance_proto_msgTypes[17]
++	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
++	ms.StoreMessageInfo(mi)
++}
++
++func (x *ApplyPassportOperationRequest) String() string {
++	return protoimpl.X.MessageStringOf(x)
++}
++
++func (*ApplyPassportOperationRequest) ProtoMessage() {}
++
++func (x *ApplyPassportOperationRequest) ProtoReflect() protoreflect.Message {
++	mi := &file_passport_issuance_proto_msgTypes[17]
++	if x != nil {
++		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
++		if ms.LoadMessageInfo() == nil {
++			ms.StoreMessageInfo(mi)
++		}
++		return ms
++	}
++	return mi.MessageOf(x)
++}
++
++// Deprecated: Use ApplyPassportOperationRequest.ProtoReflect.Descriptor instead.
++func (*ApplyPassportOperationRequest) Descriptor() ([]byte, []int) {
++	return file_passport_issuance_proto_rawDescGZIP(), []int{17}
++}
++
++func (x *ApplyPassportOperationRequest) GetOperationId() string {
++	if x != nil {
++		return x.OperationId
++	}
++	return ""
++}
++
++func (x *ApplyPassportOperationRequest) GetAgentId() string {
++	if x != nil {
++		return x.AgentId
++	}
++	return ""
++}
++
++func (x *ApplyPassportOperationRequest) GetExpectedActivePassportId() string {
++	if x != nil {
++		return x.ExpectedActivePassportId
++	}
++	return ""
++}
++
++func (x *ApplyPassportOperationRequest) GetExpectedAgentRevision() uint64 {
++	if x != nil {
++		return x.ExpectedAgentRevision
++	}
++	return 0
++}
++
++func (x *ApplyPassportOperationRequest) GetMutation() isApplyPassportOperationRequest_Mutation {
++	if x != nil {
++		return x.Mutation
++	}
++	return nil
++}
++
++func (x *ApplyPassportOperationRequest) GetIssue() *IssuePassportRequest {
++	if x != nil {
++		if x, ok := x.Mutation.(*ApplyPassportOperationRequest_Issue); ok {
++			return x.Issue
++		}
++	}
++	return nil
++}
++
++func (x *ApplyPassportOperationRequest) GetRevoke() *RevokePassportRequest {
++	if x != nil {
++		if x, ok := x.Mutation.(*ApplyPassportOperationRequest_Revoke); ok {
++			return x.Revoke
++		}
++	}
++	return nil
++}
++
++type isApplyPassportOperationRequest_Mutation interface {
++	isApplyPassportOperationRequest_Mutation()
++}
++
++type ApplyPassportOperationRequest_Issue struct {
++	Issue *IssuePassportRequest `protobuf:"bytes,5,opt,name=issue,proto3,oneof"`
++}
++
++type ApplyPassportOperationRequest_Revoke struct {
++	Revoke *RevokePassportRequest `protobuf:"bytes,6,opt,name=revoke,proto3,oneof"`
++}
++
++func (*ApplyPassportOperationRequest_Issue) isApplyPassportOperationRequest_Mutation() {}
++
++func (*ApplyPassportOperationRequest_Revoke) isApplyPassportOperationRequest_Mutation() {}
++
++type PassportOperationReceipt struct {
++	state            protoimpl.MessageState `protogen:"open.v1"`
++	CanonicalPayload []byte                 `protobuf:"bytes,1,opt,name=canonical_payload,json=canonicalPayload,proto3" json:"canonical_payload,omitempty"`
++	Signature        []byte                 `protobuf:"bytes,2,opt,name=signature,proto3" json:"signature,omitempty"`
++	CredentialId     string                 `protobuf:"bytes,3,opt,name=credential_id,json=credentialId,proto3" json:"credential_id,omitempty"`
++	PublicKeyPem     string                 `protobuf:"bytes,4,opt,name=public_key_pem,json=publicKeyPem,proto3" json:"public_key_pem,omitempty"`
++	unknownFields    protoimpl.UnknownFields
++	sizeCache        protoimpl.SizeCache
++}
++
++func (x *PassportOperationReceipt) Reset() {
++	*x = PassportOperationReceipt{}
++	mi := &file_passport_issuance_proto_msgTypes[18]
++	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
++	ms.StoreMessageInfo(mi)
++}
++
++func (x *PassportOperationReceipt) String() string {
++	return protoimpl.X.MessageStringOf(x)
++}
++
++func (*PassportOperationReceipt) ProtoMessage() {}
++
++func (x *PassportOperationReceipt) ProtoReflect() protoreflect.Message {
++	mi := &file_passport_issuance_proto_msgTypes[18]
++	if x != nil {
++		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
++		if ms.LoadMessageInfo() == nil {
++			ms.StoreMessageInfo(mi)
++		}
++		return ms
++	}
++	return mi.MessageOf(x)
++}
++
++// Deprecated: Use PassportOperationReceipt.ProtoReflect.Descriptor instead.
++func (*PassportOperationReceipt) Descriptor() ([]byte, []int) {
++	return file_passport_issuance_proto_rawDescGZIP(), []int{18}
++}
++
++func (x *PassportOperationReceipt) GetCanonicalPayload() []byte {
++	if x != nil {
++		return x.CanonicalPayload
++	}
++	return nil
++}
++
++func (x *PassportOperationReceipt) GetSignature() []byte {
++	if x != nil {
++		return x.Signature
++	}
++	return nil
++}
++
++func (x *PassportOperationReceipt) GetCredentialId() string {
++	if x != nil {
++		return x.CredentialId
++	}
++	return ""
++}
++
++func (x *PassportOperationReceipt) GetPublicKeyPem() string {
++	if x != nil {
++		return x.PublicKeyPem
++	}
++	return ""
++}
++
++type ApplyPassportOperationResponse struct {
++	state         protoimpl.MessageState    `protogen:"open.v1"`
++	Receipt       *PassportOperationReceipt `protobuf:"bytes,1,opt,name=receipt,proto3" json:"receipt,omitempty"`
++	unknownFields protoimpl.UnknownFields
++	sizeCache     protoimpl.SizeCache
++}
++
++func (x *ApplyPassportOperationResponse) Reset() {
++	*x = ApplyPassportOperationResponse{}
++	mi := &file_passport_issuance_proto_msgTypes[19]
++	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
++	ms.StoreMessageInfo(mi)
++}
++
++func (x *ApplyPassportOperationResponse) String() string {
++	return protoimpl.X.MessageStringOf(x)
++}
++
++func (*ApplyPassportOperationResponse) ProtoMessage() {}
++
++func (x *ApplyPassportOperationResponse) ProtoReflect() protoreflect.Message {
++	mi := &file_passport_issuance_proto_msgTypes[19]
++	if x != nil {
++		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
++		if ms.LoadMessageInfo() == nil {
++			ms.StoreMessageInfo(mi)
++		}
++		return ms
++	}
++	return mi.MessageOf(x)
++}
++
++// Deprecated: Use ApplyPassportOperationResponse.ProtoReflect.Descriptor instead.
++func (*ApplyPassportOperationResponse) Descriptor() ([]byte, []int) {
++	return file_passport_issuance_proto_rawDescGZIP(), []int{19}
++}
++
++func (x *ApplyPassportOperationResponse) GetReceipt() *PassportOperationReceipt {
++	if x != nil {
++		return x.Receipt
++	}
++	return nil
++}
++
++type GetPassportOperationRequest struct {
++	state         protoimpl.MessageState `protogen:"open.v1"`
++	AgentId       string                 `protobuf:"bytes,1,opt,name=agent_id,json=agentId,proto3" json:"agent_id,omitempty"`
++	OperationId   string                 `protobuf:"bytes,2,opt,name=operation_id,json=operationId,proto3" json:"operation_id,omitempty"`
++	unknownFields protoimpl.UnknownFields
++	sizeCache     protoimpl.SizeCache
++}
++
++func (x *GetPassportOperationRequest) Reset() {
++	*x = GetPassportOperationRequest{}
++	mi := &file_passport_issuance_proto_msgTypes[20]
++	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
++	ms.StoreMessageInfo(mi)
++}
++
++func (x *GetPassportOperationRequest) String() string {
++	return protoimpl.X.MessageStringOf(x)
++}
++
++func (*GetPassportOperationRequest) ProtoMessage() {}
++
++func (x *GetPassportOperationRequest) ProtoReflect() protoreflect.Message {
++	mi := &file_passport_issuance_proto_msgTypes[20]
++	if x != nil {
++		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
++		if ms.LoadMessageInfo() == nil {
++			ms.StoreMessageInfo(mi)
++		}
++		return ms
++	}
++	return mi.MessageOf(x)
++}
++
++// Deprecated: Use GetPassportOperationRequest.ProtoReflect.Descriptor instead.
++func (*GetPassportOperationRequest) Descriptor() ([]byte, []int) {
++	return file_passport_issuance_proto_rawDescGZIP(), []int{20}
++}
++
++func (x *GetPassportOperationRequest) GetAgentId() string {
++	if x != nil {
++		return x.AgentId
++	}
++	return ""
++}
++
++func (x *GetPassportOperationRequest) GetOperationId() string {
++	if x != nil {
++		return x.OperationId
++	}
++	return ""
++}
++
++type GetPassportOperationResponse struct {
++	state         protoimpl.MessageState    `protogen:"open.v1"`
++	Receipt       *PassportOperationReceipt `protobuf:"bytes,1,opt,name=receipt,proto3" json:"receipt,omitempty"`
++	unknownFields protoimpl.UnknownFields
++	sizeCache     protoimpl.SizeCache
++}
++
++func (x *GetPassportOperationResponse) Reset() {
++	*x = GetPassportOperationResponse{}
++	mi := &file_passport_issuance_proto_msgTypes[21]
++	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
++	ms.StoreMessageInfo(mi)
++}
++
++func (x *GetPassportOperationResponse) String() string {
++	return protoimpl.X.MessageStringOf(x)
++}
++
++func (*GetPassportOperationResponse) ProtoMessage() {}
++
++func (x *GetPassportOperationResponse) ProtoReflect() protoreflect.Message {
++	mi := &file_passport_issuance_proto_msgTypes[21]
++	if x != nil {
++		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
++		if ms.LoadMessageInfo() == nil {
++			ms.StoreMessageInfo(mi)
++		}
++		return ms
++	}
++	return mi.MessageOf(x)
++}
++
++// Deprecated: Use GetPassportOperationResponse.ProtoReflect.Descriptor instead.
++func (*GetPassportOperationResponse) Descriptor() ([]byte, []int) {
++	return file_passport_issuance_proto_rawDescGZIP(), []int{21}
++}
++
++func (x *GetPassportOperationResponse) GetReceipt() *PassportOperationReceipt {
++	if x != nil {
++		return x.Receipt
++	}
++	return nil
++}
++
+ var File_passport_issuance_proto protoreflect.FileDescriptor
+ 
+-var file_passport_issuance_proto_rawDesc = string([]byte{
+-	0x0a, 0x17, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x5f, 0x69, 0x73, 0x73, 0x75, 0x61,
+-	0x6e, 0x63, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0f, 0x61, 0x72, 0x65, 0x2e, 0x70,
+-	0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x76, 0x31, 0x22, 0x9b, 0x02, 0x0a, 0x14, 0x49,
+-	0x73, 0x73, 0x75, 0x65, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x71, 0x75,
+-	0x65, 0x73, 0x74, 0x12, 0x19, 0x0a, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18,
+-	0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x67, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x23,
+-	0x0a, 0x0d, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x5f, 0x74, 0x79, 0x70, 0x65, 0x18,
+-	0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x54,
+-	0x79, 0x70, 0x65, 0x12, 0x48, 0x0a, 0x10, 0x72, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x65, 0x64,
+-	0x5f, 0x73, 0x63, 0x6f, 0x70, 0x65, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1d, 0x2e,
+-	0x61, 0x72, 0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e,
+-	0x53, 0x63, 0x6f, 0x70, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x52, 0x0f, 0x72, 0x65,
+-	0x71, 0x75, 0x65, 0x73, 0x74, 0x65, 0x64, 0x53, 0x63, 0x6f, 0x70, 0x65, 0x73, 0x12, 0x1f, 0x0a,
+-	0x0b, 0x74, 0x74, 0x6c, 0x5f, 0x73, 0x65, 0x63, 0x6f, 0x6e, 0x64, 0x73, 0x18, 0x04, 0x20, 0x01,
+-	0x28, 0x03, 0x52, 0x0a, 0x74, 0x74, 0x6c, 0x53, 0x65, 0x63, 0x6f, 0x6e, 0x64, 0x73, 0x12, 0x1b,
+-	0x0a, 0x09, 0x69, 0x73, 0x73, 0x75, 0x65, 0x64, 0x5f, 0x62, 0x79, 0x18, 0x05, 0x20, 0x01, 0x28,
+-	0x09, 0x52, 0x08, 0x69, 0x73, 0x73, 0x75, 0x65, 0x64, 0x42, 0x79, 0x12, 0x23, 0x0a, 0x0d, 0x66,
+-	0x6f, 0x72, 0x63, 0x65, 0x5f, 0x72, 0x65, 0x69, 0x73, 0x73, 0x75, 0x65, 0x18, 0x06, 0x20, 0x01,
+-	0x28, 0x08, 0x52, 0x0c, 0x66, 0x6f, 0x72, 0x63, 0x65, 0x52, 0x65, 0x69, 0x73, 0x73, 0x75, 0x65,
+-	0x12, 0x16, 0x0a, 0x06, 0x72, 0x65, 0x61, 0x73, 0x6f, 0x6e, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09,
+-	0x52, 0x06, 0x72, 0x65, 0x61, 0x73, 0x6f, 0x6e, 0x22, 0x4e, 0x0a, 0x15, 0x49, 0x73, 0x73, 0x75,
+-	0x65, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+-	0x65, 0x12, 0x35, 0x0a, 0x08, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x18, 0x01, 0x20,
+-	0x01, 0x28, 0x0b, 0x32, 0x19, 0x2e, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f,
+-	0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x08,
+-	0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x22, 0x35, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x50,
+-	0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1f,
+-	0x0a, 0x0b, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20,
+-	0x01, 0x28, 0x09, 0x52, 0x0a, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x49, 0x64, 0x22,
+-	0x4c, 0x0a, 0x13, 0x47, 0x65, 0x74, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65,
+-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x35, 0x0a, 0x08, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f,
+-	0x72, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x19, 0x2e, 0x61, 0x72, 0x65, 0x2e, 0x70,
+-	0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x50, 0x61, 0x73, 0x73, 0x70,
+-	0x6f, 0x72, 0x74, 0x52, 0x08, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x22, 0x34, 0x0a,
+-	0x17, 0x47, 0x65, 0x74, 0x41, 0x67, 0x65, 0x6e, 0x74, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72,
+-	0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x19, 0x0a, 0x08, 0x61, 0x67, 0x65, 0x6e,
+-	0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x67, 0x65, 0x6e,
+-	0x74, 0x49, 0x64, 0x22, 0x51, 0x0a, 0x18, 0x47, 0x65, 0x74, 0x41, 0x67, 0x65, 0x6e, 0x74, 0x50,
+-	0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
+-	0x35, 0x0a, 0x08, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x18, 0x01, 0x20, 0x01, 0x28,
+-	0x0b, 0x32, 0x19, 0x2e, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74,
+-	0x2e, 0x76, 0x31, 0x2e, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x08, 0x70, 0x61,
+-	0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x22, 0x70, 0x0a, 0x15, 0x56, 0x65, 0x72, 0x69, 0x66, 0x79,
+-	0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+-	0x1f, 0x0a, 0x0b, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01,
+-	0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x49, 0x64,
+-	0x12, 0x1c, 0x0a, 0x09, 0x73, 0x69, 0x67, 0x6e, 0x61, 0x74, 0x75, 0x72, 0x65, 0x18, 0x02, 0x20,
+-	0x01, 0x28, 0x0c, 0x52, 0x09, 0x73, 0x69, 0x67, 0x6e, 0x61, 0x74, 0x75, 0x72, 0x65, 0x12, 0x18,
+-	0x0a, 0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0c, 0x52,
+-	0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x22, 0xf2, 0x01, 0x0a, 0x16, 0x56, 0x65, 0x72,
+-	0x69, 0x66, 0x79, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f,
+-	0x6e, 0x73, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01,
+-	0x28, 0x08, 0x52, 0x05, 0x76, 0x61, 0x6c, 0x69, 0x64, 0x12, 0x1f, 0x0a, 0x0b, 0x70, 0x61, 0x73,
+-	0x73, 0x70, 0x6f, 0x72, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a,
+-	0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x49, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74,
+-	0x61, 0x74, 0x75, 0x73, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74,
+-	0x75, 0x73, 0x12, 0x1d, 0x0a, 0x0a, 0x65, 0x78, 0x70, 0x69, 0x72, 0x65, 0x73, 0x5f, 0x74, 0x73,
+-	0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09, 0x65, 0x78, 0x70, 0x69, 0x72, 0x65, 0x73, 0x54,
+-	0x73, 0x12, 0x25, 0x0a, 0x0e, 0x66, 0x61, 0x69, 0x6c, 0x75, 0x72, 0x65, 0x5f, 0x72, 0x65, 0x61,
+-	0x73, 0x6f, 0x6e, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x66, 0x61, 0x69, 0x6c, 0x75,
+-	0x72, 0x65, 0x52, 0x65, 0x61, 0x73, 0x6f, 0x6e, 0x12, 0x43, 0x0a, 0x0d, 0x61, 0x63, 0x74, 0x69,
+-	0x76, 0x65, 0x5f, 0x73, 0x63, 0x6f, 0x70, 0x65, 0x73, 0x18, 0x06, 0x20, 0x03, 0x28, 0x0b, 0x32,
+-	0x1e, 0x2e, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x76,
+-	0x31, 0x2e, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x53, 0x63, 0x6f, 0x70, 0x65, 0x52,
+-	0x0c, 0x61, 0x63, 0x74, 0x69, 0x76, 0x65, 0x53, 0x63, 0x6f, 0x70, 0x65, 0x73, 0x22, 0xd7, 0x01,
+-	0x0a, 0x14, 0x52, 0x65, 0x6e, 0x65, 0x77, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52,
+-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1f, 0x0a, 0x0b, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f,
+-	0x72, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x70, 0x61, 0x73,
+-	0x73, 0x70, 0x6f, 0x72, 0x74, 0x49, 0x64, 0x12, 0x1f, 0x0a, 0x0b, 0x74, 0x74, 0x6c, 0x5f, 0x73,
+-	0x65, 0x63, 0x6f, 0x6e, 0x64, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0a, 0x74, 0x74,
+-	0x6c, 0x53, 0x65, 0x63, 0x6f, 0x6e, 0x64, 0x73, 0x12, 0x1d, 0x0a, 0x0a, 0x72, 0x65, 0x6e, 0x65,
+-	0x77, 0x65, 0x64, 0x5f, 0x62, 0x79, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x72, 0x65,
+-	0x6e, 0x65, 0x77, 0x65, 0x64, 0x42, 0x79, 0x12, 0x16, 0x0a, 0x06, 0x72, 0x65, 0x61, 0x73, 0x6f,
+-	0x6e, 0x18, 0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x72, 0x65, 0x61, 0x73, 0x6f, 0x6e, 0x12,
+-	0x46, 0x0a, 0x0f, 0x6f, 0x76, 0x65, 0x72, 0x72, 0x69, 0x64, 0x65, 0x5f, 0x73, 0x63, 0x6f, 0x70,
+-	0x65, 0x73, 0x18, 0x05, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1d, 0x2e, 0x61, 0x72, 0x65, 0x2e, 0x70,
+-	0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x53, 0x63, 0x6f, 0x70, 0x65,
+-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x52, 0x0e, 0x6f, 0x76, 0x65, 0x72, 0x72, 0x69, 0x64,
+-	0x65, 0x53, 0x63, 0x6f, 0x70, 0x65, 0x73, 0x22, 0x7d, 0x0a, 0x15, 0x52, 0x65, 0x6e, 0x65, 0x77,
+-	0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+-	0x12, 0x3c, 0x0a, 0x0c, 0x6e, 0x65, 0x77, 0x5f, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74,
+-	0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x19, 0x2e, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x61, 0x73,
+-	0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72,
+-	0x74, 0x52, 0x0b, 0x6e, 0x65, 0x77, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x12, 0x26,
+-	0x0a, 0x0f, 0x6f, 0x6c, 0x64, 0x5f, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x5f, 0x69,
+-	0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0d, 0x6f, 0x6c, 0x64, 0x50, 0x61, 0x73, 0x73,
+-	0x70, 0x6f, 0x72, 0x74, 0x49, 0x64, 0x22, 0x6f, 0x0a, 0x15, 0x52, 0x65, 0x76, 0x6f, 0x6b, 0x65,
+-	0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12,
+-	0x1f, 0x0a, 0x0b, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01,
+-	0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x49, 0x64,
+-	0x12, 0x16, 0x0a, 0x06, 0x72, 0x65, 0x61, 0x73, 0x6f, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
+-	0x52, 0x06, 0x72, 0x65, 0x61, 0x73, 0x6f, 0x6e, 0x12, 0x1d, 0x0a, 0x0a, 0x72, 0x65, 0x76, 0x6f,
+-	0x6b, 0x65, 0x64, 0x5f, 0x62, 0x79, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x72, 0x65,
+-	0x76, 0x6f, 0x6b, 0x65, 0x64, 0x42, 0x79, 0x22, 0x70, 0x0a, 0x16, 0x52, 0x65, 0x76, 0x6f, 0x6b,
+-	0x65, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+-	0x65, 0x12, 0x1f, 0x0a, 0x0b, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x5f, 0x69, 0x64,
+-	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74,
+-	0x49, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01,
+-	0x28, 0x09, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x1d, 0x0a, 0x0a, 0x72, 0x65,
+-	0x76, 0x6f, 0x6b, 0x65, 0x64, 0x5f, 0x74, 0x73, 0x18, 0x03, 0x20, 0x01, 0x28, 0x03, 0x52, 0x09,
+-	0x72, 0x65, 0x76, 0x6f, 0x6b, 0x65, 0x64, 0x54, 0x73, 0x22, 0x99, 0x01, 0x0a, 0x14, 0x4c, 0x69,
+-	0x73, 0x74, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65,
+-	0x73, 0x74, 0x12, 0x19, 0x0a, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01,
+-	0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x67, 0x65, 0x6e, 0x74, 0x49, 0x64, 0x12, 0x16, 0x0a,
+-	0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x73,
+-	0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x12, 0x0a, 0x04, 0x74, 0x79, 0x70, 0x65, 0x18, 0x03, 0x20,
+-	0x01, 0x28, 0x09, 0x52, 0x04, 0x74, 0x79, 0x70, 0x65, 0x12, 0x1b, 0x0a, 0x09, 0x70, 0x61, 0x67,
+-	0x65, 0x5f, 0x73, 0x69, 0x7a, 0x65, 0x18, 0x04, 0x20, 0x01, 0x28, 0x05, 0x52, 0x08, 0x70, 0x61,
+-	0x67, 0x65, 0x53, 0x69, 0x7a, 0x65, 0x12, 0x1d, 0x0a, 0x0a, 0x70, 0x61, 0x67, 0x65, 0x5f, 0x74,
+-	0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x05, 0x20, 0x01, 0x28, 0x09, 0x52, 0x09, 0x70, 0x61, 0x67, 0x65,
+-	0x54, 0x6f, 0x6b, 0x65, 0x6e, 0x22, 0x99, 0x01, 0x0a, 0x15, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x61,
+-	0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
+-	0x37, 0x0a, 0x09, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x73, 0x18, 0x01, 0x20, 0x03,
+-	0x28, 0x0b, 0x32, 0x19, 0x2e, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72,
+-	0x74, 0x2e, 0x76, 0x31, 0x2e, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x09, 0x70,
+-	0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x73, 0x12, 0x26, 0x0a, 0x0f, 0x6e, 0x65, 0x78, 0x74,
+-	0x5f, 0x70, 0x61, 0x67, 0x65, 0x5f, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28,
+-	0x09, 0x52, 0x0d, 0x6e, 0x65, 0x78, 0x74, 0x50, 0x61, 0x67, 0x65, 0x54, 0x6f, 0x6b, 0x65, 0x6e,
+-	0x12, 0x1f, 0x0a, 0x0b, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x5f, 0x63, 0x6f, 0x75, 0x6e, 0x74, 0x18,
+-	0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0a, 0x74, 0x6f, 0x74, 0x61, 0x6c, 0x43, 0x6f, 0x75, 0x6e,
+-	0x74, 0x22, 0xb7, 0x02, 0x0a, 0x0c, 0x53, 0x63, 0x6f, 0x70, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65,
+-	0x73, 0x74, 0x12, 0x21, 0x0a, 0x0c, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x63, 0x6c, 0x61,
+-	0x73, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e,
+-	0x43, 0x6c, 0x61, 0x73, 0x73, 0x12, 0x29, 0x0a, 0x10, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63,
+-	0x65, 0x5f, 0x70, 0x61, 0x74, 0x74, 0x65, 0x72, 0x6e, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
+-	0x0f, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x50, 0x61, 0x74, 0x74, 0x65, 0x72, 0x6e,
+-	0x12, 0x66, 0x0a, 0x13, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74, 0x5f, 0x63, 0x6f, 0x6e, 0x73,
+-	0x74, 0x72, 0x61, 0x69, 0x6e, 0x74, 0x73, 0x18, 0x03, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x35, 0x2e,
+-	0x61, 0x72, 0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e,
+-	0x53, 0x63, 0x6f, 0x70, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x2e, 0x43, 0x6f, 0x6e,
+-	0x74, 0x65, 0x78, 0x74, 0x43, 0x6f, 0x6e, 0x73, 0x74, 0x72, 0x61, 0x69, 0x6e, 0x74, 0x73, 0x45,
+-	0x6e, 0x74, 0x72, 0x79, 0x52, 0x12, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74, 0x43, 0x6f, 0x6e,
+-	0x73, 0x74, 0x72, 0x61, 0x69, 0x6e, 0x74, 0x73, 0x12, 0x2a, 0x0a, 0x11, 0x73, 0x63, 0x6f, 0x70,
+-	0x65, 0x5f, 0x74, 0x74, 0x6c, 0x5f, 0x73, 0x65, 0x63, 0x6f, 0x6e, 0x64, 0x73, 0x18, 0x04, 0x20,
+-	0x01, 0x28, 0x03, 0x52, 0x0f, 0x73, 0x63, 0x6f, 0x70, 0x65, 0x54, 0x74, 0x6c, 0x53, 0x65, 0x63,
+-	0x6f, 0x6e, 0x64, 0x73, 0x1a, 0x45, 0x0a, 0x17, 0x43, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74, 0x43,
+-	0x6f, 0x6e, 0x73, 0x74, 0x72, 0x61, 0x69, 0x6e, 0x74, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12,
+-	0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65,
+-	0x79, 0x12, 0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
+-	0x52, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0x8b, 0x03, 0x0a, 0x0d,
+-	0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x53, 0x63, 0x6f, 0x70, 0x65, 0x12, 0x19, 0x0a,
+-	0x08, 0x73, 0x63, 0x6f, 0x70, 0x65, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
+-	0x07, 0x73, 0x63, 0x6f, 0x70, 0x65, 0x49, 0x64, 0x12, 0x21, 0x0a, 0x0c, 0x61, 0x63, 0x74, 0x69,
+-	0x6f, 0x6e, 0x5f, 0x63, 0x6c, 0x61, 0x73, 0x73, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b,
+-	0x61, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x43, 0x6c, 0x61, 0x73, 0x73, 0x12, 0x29, 0x0a, 0x10, 0x72,
+-	0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x5f, 0x70, 0x61, 0x74, 0x74, 0x65, 0x72, 0x6e, 0x18,
+-	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0f, 0x72, 0x65, 0x73, 0x6f, 0x75, 0x72, 0x63, 0x65, 0x50,
+-	0x61, 0x74, 0x74, 0x65, 0x72, 0x6e, 0x12, 0x67, 0x0a, 0x13, 0x63, 0x6f, 0x6e, 0x74, 0x65, 0x78,
+-	0x74, 0x5f, 0x63, 0x6f, 0x6e, 0x73, 0x74, 0x72, 0x61, 0x69, 0x6e, 0x74, 0x73, 0x18, 0x04, 0x20,
+-	0x03, 0x28, 0x0b, 0x32, 0x36, 0x2e, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f,
+-	0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x53, 0x63,
+-	0x6f, 0x70, 0x65, 0x2e, 0x43, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74, 0x43, 0x6f, 0x6e, 0x73, 0x74,
+-	0x72, 0x61, 0x69, 0x6e, 0x74, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x12, 0x63, 0x6f, 0x6e,
+-	0x74, 0x65, 0x78, 0x74, 0x43, 0x6f, 0x6e, 0x73, 0x74, 0x72, 0x61, 0x69, 0x6e, 0x74, 0x73, 0x12,
+-	0x1d, 0x0a, 0x0a, 0x67, 0x72, 0x61, 0x6e, 0x74, 0x65, 0x64, 0x5f, 0x74, 0x73, 0x18, 0x05, 0x20,
+-	0x01, 0x28, 0x03, 0x52, 0x09, 0x67, 0x72, 0x61, 0x6e, 0x74, 0x65, 0x64, 0x54, 0x73, 0x12, 0x1d,
+-	0x0a, 0x0a, 0x65, 0x78, 0x70, 0x69, 0x72, 0x65, 0x73, 0x5f, 0x74, 0x73, 0x18, 0x06, 0x20, 0x01,
+-	0x28, 0x03, 0x52, 0x09, 0x65, 0x78, 0x70, 0x69, 0x72, 0x65, 0x73, 0x54, 0x73, 0x12, 0x23, 0x0a,
+-	0x0d, 0x69, 0x73, 0x5f, 0x65, 0x73, 0x63, 0x61, 0x6c, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x07,
+-	0x20, 0x01, 0x28, 0x08, 0x52, 0x0c, 0x69, 0x73, 0x45, 0x73, 0x63, 0x61, 0x6c, 0x61, 0x74, 0x69,
+-	0x6f, 0x6e, 0x1a, 0x45, 0x0a, 0x17, 0x43, 0x6f, 0x6e, 0x74, 0x65, 0x78, 0x74, 0x43, 0x6f, 0x6e,
+-	0x73, 0x74, 0x72, 0x61, 0x69, 0x6e, 0x74, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a,
+-	0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12,
+-	0x14, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05,
+-	0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0xdb, 0x04, 0x0a, 0x08, 0x50, 0x61,
+-	0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x12, 0x1f, 0x0a, 0x0b, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f,
+-	0x72, 0x74, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0a, 0x70, 0x61, 0x73,
+-	0x73, 0x70, 0x6f, 0x72, 0x74, 0x49, 0x64, 0x12, 0x19, 0x0a, 0x08, 0x61, 0x67, 0x65, 0x6e, 0x74,
+-	0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x61, 0x67, 0x65, 0x6e, 0x74,
+-	0x49, 0x64, 0x12, 0x23, 0x0a, 0x0d, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x5f, 0x74,
+-	0x79, 0x70, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x70, 0x61, 0x73, 0x73, 0x70,
+-	0x6f, 0x72, 0x74, 0x54, 0x79, 0x70, 0x65, 0x12, 0x3b, 0x0a, 0x09, 0x73, 0x63, 0x6f, 0x70, 0x65,
+-	0x5f, 0x73, 0x65, 0x74, 0x18, 0x04, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x1e, 0x2e, 0x61, 0x72, 0x65,
+-	0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x50, 0x61, 0x73,
+-	0x73, 0x70, 0x6f, 0x72, 0x74, 0x53, 0x63, 0x6f, 0x70, 0x65, 0x52, 0x08, 0x73, 0x63, 0x6f, 0x70,
+-	0x65, 0x53, 0x65, 0x74, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x05,
+-	0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x1b, 0x0a, 0x09,
+-	0x69, 0x73, 0x73, 0x75, 0x65, 0x64, 0x5f, 0x62, 0x79, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52,
+-	0x08, 0x69, 0x73, 0x73, 0x75, 0x65, 0x64, 0x42, 0x79, 0x12, 0x23, 0x0a, 0x0d, 0x63, 0x72, 0x65,
+-	0x64, 0x65, 0x6e, 0x74, 0x69, 0x61, 0x6c, 0x5f, 0x69, 0x64, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09,
+-	0x52, 0x0c, 0x63, 0x72, 0x65, 0x64, 0x65, 0x6e, 0x74, 0x69, 0x61, 0x6c, 0x49, 0x64, 0x12, 0x24,
+-	0x0a, 0x0e, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x63, 0x5f, 0x6b, 0x65, 0x79, 0x5f, 0x70, 0x65, 0x6d,
+-	0x18, 0x08, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0c, 0x70, 0x75, 0x62, 0x6c, 0x69, 0x63, 0x4b, 0x65,
+-	0x79, 0x50, 0x65, 0x6d, 0x12, 0x1c, 0x0a, 0x09, 0x73, 0x69, 0x67, 0x6e, 0x61, 0x74, 0x75, 0x72,
+-	0x65, 0x18, 0x09, 0x20, 0x01, 0x28, 0x0c, 0x52, 0x09, 0x73, 0x69, 0x67, 0x6e, 0x61, 0x74, 0x75,
+-	0x72, 0x65, 0x12, 0x1b, 0x0a, 0x09, 0x69, 0x73, 0x73, 0x75, 0x65, 0x64, 0x5f, 0x74, 0x73, 0x18,
+-	0x0a, 0x20, 0x01, 0x28, 0x03, 0x52, 0x08, 0x69, 0x73, 0x73, 0x75, 0x65, 0x64, 0x54, 0x73, 0x12,
+-	0x1d, 0x0a, 0x0a, 0x65, 0x78, 0x70, 0x69, 0x72, 0x65, 0x73, 0x5f, 0x74, 0x73, 0x18, 0x0b, 0x20,
+-	0x01, 0x28, 0x03, 0x52, 0x09, 0x65, 0x78, 0x70, 0x69, 0x72, 0x65, 0x73, 0x54, 0x73, 0x12, 0x1d,
+-	0x0a, 0x0a, 0x72, 0x65, 0x76, 0x6f, 0x6b, 0x65, 0x64, 0x5f, 0x74, 0x73, 0x18, 0x0c, 0x20, 0x01,
+-	0x28, 0x03, 0x52, 0x09, 0x72, 0x65, 0x76, 0x6f, 0x6b, 0x65, 0x64, 0x54, 0x73, 0x12, 0x2b, 0x0a,
+-	0x11, 0x72, 0x65, 0x76, 0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x5f, 0x72, 0x65, 0x61, 0x73,
+-	0x6f, 0x6e, 0x18, 0x0d, 0x20, 0x01, 0x28, 0x09, 0x52, 0x10, 0x72, 0x65, 0x76, 0x6f, 0x63, 0x61,
+-	0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x61, 0x73, 0x6f, 0x6e, 0x12, 0x23, 0x0a, 0x0d, 0x73, 0x75,
+-	0x70, 0x65, 0x72, 0x73, 0x65, 0x64, 0x65, 0x64, 0x5f, 0x62, 0x79, 0x18, 0x0e, 0x20, 0x01, 0x28,
+-	0x09, 0x52, 0x0c, 0x73, 0x75, 0x70, 0x65, 0x72, 0x73, 0x65, 0x64, 0x65, 0x64, 0x42, 0x79, 0x12,
+-	0x31, 0x0a, 0x15, 0x70, 0x6f, 0x6c, 0x69, 0x63, 0x79, 0x5f, 0x69, 0x64, 0x5f, 0x61, 0x74, 0x5f,
+-	0x69, 0x73, 0x73, 0x75, 0x61, 0x6e, 0x63, 0x65, 0x18, 0x0f, 0x20, 0x01, 0x28, 0x09, 0x52, 0x12,
+-	0x70, 0x6f, 0x6c, 0x69, 0x63, 0x79, 0x49, 0x64, 0x41, 0x74, 0x49, 0x73, 0x73, 0x75, 0x61, 0x6e,
+-	0x63, 0x65, 0x12, 0x33, 0x0a, 0x16, 0x70, 0x6f, 0x6c, 0x69, 0x63, 0x79, 0x5f, 0x76, 0x65, 0x72,
+-	0x5f, 0x61, 0x74, 0x5f, 0x69, 0x73, 0x73, 0x75, 0x61, 0x6e, 0x63, 0x65, 0x18, 0x10, 0x20, 0x01,
+-	0x28, 0x09, 0x52, 0x13, 0x70, 0x6f, 0x6c, 0x69, 0x63, 0x79, 0x56, 0x65, 0x72, 0x41, 0x74, 0x49,
+-	0x73, 0x73, 0x75, 0x61, 0x6e, 0x63, 0x65, 0x32, 0xc2, 0x05, 0x0a, 0x17, 0x50, 0x61, 0x73, 0x73,
+-	0x70, 0x6f, 0x72, 0x74, 0x49, 0x73, 0x73, 0x75, 0x61, 0x6e, 0x63, 0x65, 0x53, 0x65, 0x72, 0x76,
+-	0x69, 0x63, 0x65, 0x12, 0x5e, 0x0a, 0x0d, 0x49, 0x73, 0x73, 0x75, 0x65, 0x50, 0x61, 0x73, 0x73,
+-	0x70, 0x6f, 0x72, 0x74, 0x12, 0x25, 0x2e, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70,
+-	0x6f, 0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x49, 0x73, 0x73, 0x75, 0x65, 0x50, 0x61, 0x73, 0x73,
+-	0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x26, 0x2e, 0x61, 0x72,
+-	0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x49, 0x73,
+-	0x73, 0x75, 0x65, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f,
+-	0x6e, 0x73, 0x65, 0x12, 0x58, 0x0a, 0x0b, 0x47, 0x65, 0x74, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f,
+-	0x72, 0x74, 0x12, 0x23, 0x2e, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72,
+-	0x74, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74,
+-	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x24, 0x2e, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x61,
+-	0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x50, 0x61, 0x73,
+-	0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x67, 0x0a,
+-	0x10, 0x47, 0x65, 0x74, 0x41, 0x67, 0x65, 0x6e, 0x74, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72,
+-	0x74, 0x12, 0x28, 0x2e, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74,
+-	0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x41, 0x67, 0x65, 0x6e, 0x74, 0x50, 0x61, 0x73, 0x73,
+-	0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x29, 0x2e, 0x61, 0x72,
+-	0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65,
+-	0x74, 0x41, 0x67, 0x65, 0x6e, 0x74, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65,
+-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x61, 0x0a, 0x0e, 0x56, 0x65, 0x72, 0x69, 0x66, 0x79,
+-	0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x12, 0x26, 0x2e, 0x61, 0x72, 0x65, 0x2e, 0x70,
+-	0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x56, 0x65, 0x72, 0x69, 0x66,
+-	0x79, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+-	0x1a, 0x27, 0x2e, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e,
+-	0x76, 0x31, 0x2e, 0x56, 0x65, 0x72, 0x69, 0x66, 0x79, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72,
+-	0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x5e, 0x0a, 0x0d, 0x52, 0x65, 0x6e,
+-	0x65, 0x77, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x12, 0x25, 0x2e, 0x61, 0x72, 0x65,
+-	0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x6e,
+-	0x65, 0x77, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+-	0x74, 0x1a, 0x26, 0x2e, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74,
+-	0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x6e, 0x65, 0x77, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72,
+-	0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x61, 0x0a, 0x0e, 0x52, 0x65, 0x76,
+-	0x6f, 0x6b, 0x65, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x12, 0x26, 0x2e, 0x61, 0x72,
+-	0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65,
+-	0x76, 0x6f, 0x6b, 0x65, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x71, 0x75,
+-	0x65, 0x73, 0x74, 0x1a, 0x27, 0x2e, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f,
+-	0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x52, 0x65, 0x76, 0x6f, 0x6b, 0x65, 0x50, 0x61, 0x73, 0x73,
+-	0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x5e, 0x0a, 0x0d,
+-	0x4c, 0x69, 0x73, 0x74, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x73, 0x12, 0x25, 0x2e,
+-	0x61, 0x72, 0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e,
+-	0x4c, 0x69, 0x73, 0x74, 0x50, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x73, 0x52, 0x65, 0x71,
+-	0x75, 0x65, 0x73, 0x74, 0x1a, 0x26, 0x2e, 0x61, 0x72, 0x65, 0x2e, 0x70, 0x61, 0x73, 0x73, 0x70,
+-	0x6f, 0x72, 0x74, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x61, 0x73, 0x73, 0x70,
+-	0x6f, 0x72, 0x74, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x51, 0x5a, 0x4f,
+-	0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x73, 0x72, 0x65, 0x78, 0x2d,
+-	0x64, 0x65, 0x76, 0x2f, 0x61, 0x72, 0x65, 0x2d, 0x66, 0x6f, 0x75, 0x6e, 0x64, 0x61, 0x74, 0x69,
+-	0x6f, 0x6e, 0x2f, 0x73, 0x30, 0x2f, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x2d, 0x69,
+-	0x73, 0x73, 0x75, 0x61, 0x6e, 0x63, 0x65, 0x2d, 0x65, 0x6e, 0x67, 0x69, 0x6e, 0x65, 0x2f, 0x70,
+-	0x72, 0x6f, 0x74, 0x6f, 0x3b, 0x70, 0x61, 0x73, 0x73, 0x70, 0x6f, 0x72, 0x74, 0x76, 0x31, 0x62,
+-	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+-})
++const file_passport_issuance_proto_rawDesc = "" +
++	"\n" +
++	"\x17passport_issuance.proto\x12\x0fare.passport.v1\"\x9b\x02\n" +
++	"\x14IssuePassportRequest\x12\x19\n" +
++	"\bagent_id\x18\x01 \x01(\tR\aagentId\x12#\n" +
++	"\rpassport_type\x18\x02 \x01(\tR\fpassportType\x12H\n" +
++	"\x10requested_scopes\x18\x03 \x03(\v2\x1d.are.passport.v1.ScopeRequestR\x0frequestedScopes\x12\x1f\n" +
++	"\vttl_seconds\x18\x04 \x01(\x03R\n" +
++	"ttlSeconds\x12\x1b\n" +
++	"\tissued_by\x18\x05 \x01(\tR\bissuedBy\x12#\n" +
++	"\rforce_reissue\x18\x06 \x01(\bR\fforceReissue\x12\x16\n" +
++	"\x06reason\x18\a \x01(\tR\x06reason\"N\n" +
++	"\x15IssuePassportResponse\x125\n" +
++	"\bpassport\x18\x01 \x01(\v2\x19.are.passport.v1.PassportR\bpassport\"5\n" +
++	"\x12GetPassportRequest\x12\x1f\n" +
++	"\vpassport_id\x18\x01 \x01(\tR\n" +
++	"passportId\"L\n" +
++	"\x13GetPassportResponse\x125\n" +
++	"\bpassport\x18\x01 \x01(\v2\x19.are.passport.v1.PassportR\bpassport\"4\n" +
++	"\x17GetAgentPassportRequest\x12\x19\n" +
++	"\bagent_id\x18\x01 \x01(\tR\aagentId\"Q\n" +
++	"\x18GetAgentPassportResponse\x125\n" +
++	"\bpassport\x18\x01 \x01(\v2\x19.are.passport.v1.PassportR\bpassport\"p\n" +
++	"\x15VerifyPassportRequest\x12\x1f\n" +
++	"\vpassport_id\x18\x01 \x01(\tR\n" +
++	"passportId\x12\x1c\n" +
++	"\tsignature\x18\x02 \x01(\fR\tsignature\x12\x18\n" +
++	"\apayload\x18\x03 \x01(\fR\apayload\"\xf2\x01\n" +
++	"\x16VerifyPassportResponse\x12\x14\n" +
++	"\x05valid\x18\x01 \x01(\bR\x05valid\x12\x1f\n" +
++	"\vpassport_id\x18\x02 \x01(\tR\n" +
++	"passportId\x12\x16\n" +
++	"\x06status\x18\x03 \x01(\tR\x06status\x12\x1d\n" +
++	"\n" +
++	"expires_ts\x18\x04 \x01(\x03R\texpiresTs\x12%\n" +
++	"\x0efailure_reason\x18\x05 \x01(\tR\rfailureReason\x12C\n" +
++	"\ractive_scopes\x18\x06 \x03(\v2\x1e.are.passport.v1.PassportScopeR\factiveScopes\"\xd7\x01\n" +
++	"\x14RenewPassportRequest\x12\x1f\n" +
++	"\vpassport_id\x18\x01 \x01(\tR\n" +
++	"passportId\x12\x1f\n" +
++	"\vttl_seconds\x18\x02 \x01(\x03R\n" +
++	"ttlSeconds\x12\x1d\n" +
++	"\n" +
++	"renewed_by\x18\x03 \x01(\tR\trenewedBy\x12\x16\n" +
++	"\x06reason\x18\x04 \x01(\tR\x06reason\x12F\n" +
++	"\x0foverride_scopes\x18\x05 \x03(\v2\x1d.are.passport.v1.ScopeRequestR\x0eoverrideScopes\"}\n" +
++	"\x15RenewPassportResponse\x12<\n" +
++	"\fnew_passport\x18\x01 \x01(\v2\x19.are.passport.v1.PassportR\vnewPassport\x12&\n" +
++	"\x0fold_passport_id\x18\x02 \x01(\tR\roldPassportId\"o\n" +
++	"\x15RevokePassportRequest\x12\x1f\n" +
++	"\vpassport_id\x18\x01 \x01(\tR\n" +
++	"passportId\x12\x16\n" +
++	"\x06reason\x18\x02 \x01(\tR\x06reason\x12\x1d\n" +
++	"\n" +
++	"revoked_by\x18\x03 \x01(\tR\trevokedBy\"p\n" +
++	"\x16RevokePassportResponse\x12\x1f\n" +
++	"\vpassport_id\x18\x01 \x01(\tR\n" +
++	"passportId\x12\x16\n" +
++	"\x06status\x18\x02 \x01(\tR\x06status\x12\x1d\n" +
++	"\n" +
++	"revoked_ts\x18\x03 \x01(\x03R\trevokedTs\"\x99\x01\n" +
++	"\x14ListPassportsRequest\x12\x19\n" +
++	"\bagent_id\x18\x01 \x01(\tR\aagentId\x12\x16\n" +
++	"\x06status\x18\x02 \x01(\tR\x06status\x12\x12\n" +
++	"\x04type\x18\x03 \x01(\tR\x04type\x12\x1b\n" +
++	"\tpage_size\x18\x04 \x01(\x05R\bpageSize\x12\x1d\n" +
++	"\n" +
++	"page_token\x18\x05 \x01(\tR\tpageToken\"\x99\x01\n" +
++	"\x15ListPassportsResponse\x127\n" +
++	"\tpassports\x18\x01 \x03(\v2\x19.are.passport.v1.PassportR\tpassports\x12&\n" +
++	"\x0fnext_page_token\x18\x02 \x01(\tR\rnextPageToken\x12\x1f\n" +
++	"\vtotal_count\x18\x03 \x01(\x05R\n" +
++	"totalCount\"\xb7\x02\n" +
++	"\fScopeRequest\x12!\n" +
++	"\faction_class\x18\x01 \x01(\tR\vactionClass\x12)\n" +
++	"\x10resource_pattern\x18\x02 \x01(\tR\x0fresourcePattern\x12f\n" +
++	"\x13context_constraints\x18\x03 \x03(\v25.are.passport.v1.ScopeRequest.ContextConstraintsEntryR\x12contextConstraints\x12*\n" +
++	"\x11scope_ttl_seconds\x18\x04 \x01(\x03R\x0fscopeTtlSeconds\x1aE\n" +
++	"\x17ContextConstraintsEntry\x12\x10\n" +
++	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
++	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\x8b\x03\n" +
++	"\rPassportScope\x12\x19\n" +
++	"\bscope_id\x18\x01 \x01(\tR\ascopeId\x12!\n" +
++	"\faction_class\x18\x02 \x01(\tR\vactionClass\x12)\n" +
++	"\x10resource_pattern\x18\x03 \x01(\tR\x0fresourcePattern\x12g\n" +
++	"\x13context_constraints\x18\x04 \x03(\v26.are.passport.v1.PassportScope.ContextConstraintsEntryR\x12contextConstraints\x12\x1d\n" +
++	"\n" +
++	"granted_ts\x18\x05 \x01(\x03R\tgrantedTs\x12\x1d\n" +
++	"\n" +
++	"expires_ts\x18\x06 \x01(\x03R\texpiresTs\x12#\n" +
++	"\ris_escalation\x18\a \x01(\bR\fisEscalation\x1aE\n" +
++	"\x17ContextConstraintsEntry\x12\x10\n" +
++	"\x03key\x18\x01 \x01(\tR\x03key\x12\x14\n" +
++	"\x05value\x18\x02 \x01(\tR\x05value:\x028\x01\"\xdb\x04\n" +
++	"\bPassport\x12\x1f\n" +
++	"\vpassport_id\x18\x01 \x01(\tR\n" +
++	"passportId\x12\x19\n" +
++	"\bagent_id\x18\x02 \x01(\tR\aagentId\x12#\n" +
++	"\rpassport_type\x18\x03 \x01(\tR\fpassportType\x12;\n" +
++	"\tscope_set\x18\x04 \x03(\v2\x1e.are.passport.v1.PassportScopeR\bscopeSet\x12\x16\n" +
++	"\x06status\x18\x05 \x01(\tR\x06status\x12\x1b\n" +
++	"\tissued_by\x18\x06 \x01(\tR\bissuedBy\x12#\n" +
++	"\rcredential_id\x18\a \x01(\tR\fcredentialId\x12$\n" +
++	"\x0epublic_key_pem\x18\b \x01(\tR\fpublicKeyPem\x12\x1c\n" +
++	"\tsignature\x18\t \x01(\fR\tsignature\x12\x1b\n" +
++	"\tissued_ts\x18\n" +
++	" \x01(\x03R\bissuedTs\x12\x1d\n" +
++	"\n" +
++	"expires_ts\x18\v \x01(\x03R\texpiresTs\x12\x1d\n" +
++	"\n" +
++	"revoked_ts\x18\f \x01(\x03R\trevokedTs\x12+\n" +
++	"\x11revocation_reason\x18\r \x01(\tR\x10revocationReason\x12#\n" +
++	"\rsuperseded_by\x18\x0e \x01(\tR\fsupersededBy\x121\n" +
++	"\x15policy_id_at_issuance\x18\x0f \x01(\tR\x12policyIdAtIssuance\x123\n" +
++	"\x16policy_ver_at_issuance\x18\x10 \x01(\tR\x13policyVerAtIssuance\"\xe1\x02\n" +
++	"\x1dApplyPassportOperationRequest\x12!\n" +
++	"\foperation_id\x18\x01 \x01(\tR\voperationId\x12\x19\n" +
++	"\bagent_id\x18\x02 \x01(\tR\aagentId\x12=\n" +
++	"\x1bexpected_active_passport_id\x18\x03 \x01(\tR\x18expectedActivePassportId\x126\n" +
++	"\x17expected_agent_revision\x18\x04 \x01(\x04R\x15expectedAgentRevision\x12=\n" +
++	"\x05issue\x18\x05 \x01(\v2%.are.passport.v1.IssuePassportRequestH\x00R\x05issue\x12@\n" +
++	"\x06revoke\x18\x06 \x01(\v2&.are.passport.v1.RevokePassportRequestH\x00R\x06revokeB\n" +
++	"\n" +
++	"\bmutation\"\xb0\x01\n" +
++	"\x18PassportOperationReceipt\x12+\n" +
++	"\x11canonical_payload\x18\x01 \x01(\fR\x10canonicalPayload\x12\x1c\n" +
++	"\tsignature\x18\x02 \x01(\fR\tsignature\x12#\n" +
++	"\rcredential_id\x18\x03 \x01(\tR\fcredentialId\x12$\n" +
++	"\x0epublic_key_pem\x18\x04 \x01(\tR\fpublicKeyPem\"e\n" +
++	"\x1eApplyPassportOperationResponse\x12C\n" +
++	"\areceipt\x18\x01 \x01(\v2).are.passport.v1.PassportOperationReceiptR\areceipt\"[\n" +
++	"\x1bGetPassportOperationRequest\x12\x19\n" +
++	"\bagent_id\x18\x01 \x01(\tR\aagentId\x12!\n" +
++	"\foperation_id\x18\x02 \x01(\tR\voperationId\"c\n" +
++	"\x1cGetPassportOperationResponse\x12C\n" +
++	"\areceipt\x18\x01 \x01(\v2).are.passport.v1.PassportOperationReceiptR\areceipt2\xb2\a\n" +
++	"\x17PassportIssuanceService\x12y\n" +
++	"\x16ApplyPassportOperation\x12..are.passport.v1.ApplyPassportOperationRequest\x1a/.are.passport.v1.ApplyPassportOperationResponse\x12s\n" +
++	"\x14GetPassportOperation\x12,.are.passport.v1.GetPassportOperationRequest\x1a-.are.passport.v1.GetPassportOperationResponse\x12^\n" +
++	"\rIssuePassport\x12%.are.passport.v1.IssuePassportRequest\x1a&.are.passport.v1.IssuePassportResponse\x12X\n" +
++	"\vGetPassport\x12#.are.passport.v1.GetPassportRequest\x1a$.are.passport.v1.GetPassportResponse\x12g\n" +
++	"\x10GetAgentPassport\x12(.are.passport.v1.GetAgentPassportRequest\x1a).are.passport.v1.GetAgentPassportResponse\x12a\n" +
++	"\x0eVerifyPassport\x12&.are.passport.v1.VerifyPassportRequest\x1a'.are.passport.v1.VerifyPassportResponse\x12^\n" +
++	"\rRenewPassport\x12%.are.passport.v1.RenewPassportRequest\x1a&.are.passport.v1.RenewPassportResponse\x12a\n" +
++	"\x0eRevokePassport\x12&.are.passport.v1.RevokePassportRequest\x1a'.are.passport.v1.RevokePassportResponse\x12^\n" +
++	"\rListPassports\x12%.are.passport.v1.ListPassportsRequest\x1a&.are.passport.v1.ListPassportsResponseB5Z3github.com/srex-dev/agent-passport/proto;passportv1b\x06proto3"
+ 
+ var (
+ 	file_passport_issuance_proto_rawDescOnce sync.Once
+@@ -1455,27 +1670,32 @@
+ 	return file_passport_issuance_proto_rawDescData
+ }
+ 
+-var file_passport_issuance_proto_msgTypes = make([]protoimpl.MessageInfo, 19)
++var file_passport_issuance_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
+ var file_passport_issuance_proto_goTypes = []any{
+-	(*IssuePassportRequest)(nil),     // 0: are.passport.v1.IssuePassportRequest
+-	(*IssuePassportResponse)(nil),    // 1: are.passport.v1.IssuePassportResponse
+-	(*GetPassportRequest)(nil),       // 2: are.passport.v1.GetPassportRequest
+-	(*GetPassportResponse)(nil),      // 3: are.passport.v1.GetPassportResponse
+-	(*GetAgentPassportRequest)(nil),  // 4: are.passport.v1.GetAgentPassportRequest
+-	(*GetAgentPassportResponse)(nil), // 5: are.passport.v1.GetAgentPassportResponse
+-	(*VerifyPassportRequest)(nil),    // 6: are.passport.v1.VerifyPassportRequest
+-	(*VerifyPassportResponse)(nil),   // 7: are.passport.v1.VerifyPassportResponse
+-	(*RenewPassportRequest)(nil),     // 8: are.passport.v1.RenewPassportRequest
+-	(*RenewPassportResponse)(nil),    // 9: are.passport.v1.RenewPassportResponse
+-	(*RevokePassportRequest)(nil),    // 10: are.passport.v1.RevokePassportRequest
+-	(*RevokePassportResponse)(nil),   // 11: are.passport.v1.RevokePassportResponse
+-	(*ListPassportsRequest)(nil),     // 12: are.passport.v1.ListPassportsRequest
+-	(*ListPassportsResponse)(nil),    // 13: are.passport.v1.ListPassportsResponse
+-	(*ScopeRequest)(nil),             // 14: are.passport.v1.ScopeRequest
+-	(*PassportScope)(nil),            // 15: are.passport.v1.PassportScope
+-	(*Passport)(nil),                 // 16: are.passport.v1.Passport
+-	nil,                              // 17: are.passport.v1.ScopeRequest.ContextConstraintsEntry
+-	nil,                              // 18: are.passport.v1.PassportScope.ContextConstraintsEntry
++	(*IssuePassportRequest)(nil),           // 0: are.passport.v1.IssuePassportRequest
++	(*IssuePassportResponse)(nil),          // 1: are.passport.v1.IssuePassportResponse
++	(*GetPassportRequest)(nil),             // 2: are.passport.v1.GetPassportRequest
++	(*GetPassportResponse)(nil),            // 3: are.passport.v1.GetPassportResponse
++	(*GetAgentPassportRequest)(nil),        // 4: are.passport.v1.GetAgentPassportRequest
++	(*GetAgentPassportResponse)(nil),       // 5: are.passport.v1.GetAgentPassportResponse
++	(*VerifyPassportRequest)(nil),          // 6: are.passport.v1.VerifyPassportRequest
++	(*VerifyPassportResponse)(nil),         // 7: are.passport.v1.VerifyPassportResponse
++	(*RenewPassportRequest)(nil),           // 8: are.passport.v1.RenewPassportRequest
++	(*RenewPassportResponse)(nil),          // 9: are.passport.v1.RenewPassportResponse
++	(*RevokePassportRequest)(nil),          // 10: are.passport.v1.RevokePassportRequest
++	(*RevokePassportResponse)(nil),         // 11: are.passport.v1.RevokePassportResponse
++	(*ListPassportsRequest)(nil),           // 12: are.passport.v1.ListPassportsRequest
++	(*ListPassportsResponse)(nil),          // 13: are.passport.v1.ListPassportsResponse
++	(*ScopeRequest)(nil),                   // 14: are.passport.v1.ScopeRequest
++	(*PassportScope)(nil),                  // 15: are.passport.v1.PassportScope
++	(*Passport)(nil),                       // 16: are.passport.v1.Passport
++	(*ApplyPassportOperationRequest)(nil),  // 17: are.passport.v1.ApplyPassportOperationRequest
++	(*PassportOperationReceipt)(nil),       // 18: are.passport.v1.PassportOperationReceipt
++	(*ApplyPassportOperationResponse)(nil), // 19: are.passport.v1.ApplyPassportOperationResponse
++	(*GetPassportOperationRequest)(nil),    // 20: are.passport.v1.GetPassportOperationRequest
++	(*GetPassportOperationResponse)(nil),   // 21: are.passport.v1.GetPassportOperationResponse
++	nil,                                    // 22: are.passport.v1.ScopeRequest.ContextConstraintsEntry
++	nil,                                    // 23: are.passport.v1.PassportScope.ContextConstraintsEntry
+ }
+ var file_passport_issuance_proto_depIdxs = []int32{
+ 	14, // 0: are.passport.v1.IssuePassportRequest.requested_scopes:type_name -> are.passport.v1.ScopeRequest
+@@ -1486,34 +1706,46 @@
+ 	14, // 5: are.passport.v1.RenewPassportRequest.override_scopes:type_name -> are.passport.v1.ScopeRequest
+ 	16, // 6: are.passport.v1.RenewPassportResponse.new_passport:type_name -> are.passport.v1.Passport
+ 	16, // 7: are.passport.v1.ListPassportsResponse.passports:type_name -> are.passport.v1.Passport
+-	17, // 8: are.passport.v1.ScopeRequest.context_constraints:type_name -> are.passport.v1.ScopeRequest.ContextConstraintsEntry
+-	18, // 9: are.passport.v1.PassportScope.context_constraints:type_name -> are.passport.v1.PassportScope.ContextConstraintsEntry
++	22, // 8: are.passport.v1.ScopeRequest.context_constraints:type_name -> are.passport.v1.ScopeRequest.ContextConstraintsEntry
++	23, // 9: are.passport.v1.PassportScope.context_constraints:type_name -> are.passport.v1.PassportScope.ContextConstraintsEntry
+ 	15, // 10: are.passport.v1.Passport.scope_set:type_name -> are.passport.v1.PassportScope
+-	0,  // 11: are.passport.v1.PassportIssuanceService.IssuePassport:input_type -> are.passport.v1.IssuePassportRequest
+-	2,  // 12: are.passport.v1.PassportIssuanceService.GetPassport:input_type -> are.passport.v1.GetPassportRequest
+-	4,  // 13: are.passport.v1.PassportIssuanceService.GetAgentPassport:input_type -> are.passport.v1.GetAgentPassportRequest
+-	6,  // 14: are.passport.v1.PassportIssuanceService.VerifyPassport:input_type -> are.passport.v1.VerifyPassportRequest
+-	8,  // 15: are.passport.v1.PassportIssuanceService.RenewPassport:input_type -> are.passport.v1.RenewPassportRequest
+-	10, // 16: are.passport.v1.PassportIssuanceService.RevokePassport:input_type -> are.passport.v1.RevokePassportRequest
+-	12, // 17: are.passport.v1.PassportIssuanceService.ListPassports:input_type -> are.passport.v1.ListPassportsRequest
+-	1,  // 18: are.passport.v1.PassportIssuanceService.IssuePassport:output_type -> are.passport.v1.IssuePassportResponse
+-	3,  // 19: are.passport.v1.PassportIssuanceService.GetPassport:output_type -> are.passport.v1.GetPassportResponse
+-	5,  // 20: are.passport.v1.PassportIssuanceService.GetAgentPassport:output_type -> are.passport.v1.GetAgentPassportResponse
+-	7,  // 21: are.passport.v1.PassportIssuanceService.VerifyPassport:output_type -> are.passport.v1.VerifyPassportResponse
+-	9,  // 22: are.passport.v1.PassportIssuanceService.RenewPassport:output_type -> are.passport.v1.RenewPassportResponse
+-	11, // 23: are.passport.v1.PassportIssuanceService.RevokePassport:output_type -> are.passport.v1.RevokePassportResponse
+-	13, // 24: are.passport.v1.PassportIssuanceService.ListPassports:output_type -> are.passport.v1.ListPassportsResponse
+-	18, // [18:25] is the sub-list for method output_type
+-	11, // [11:18] is the sub-list for method input_type
+-	11, // [11:11] is the sub-list for extension type_name
+-	11, // [11:11] is the sub-list for extension extendee
+-	0,  // [0:11] is the sub-list for field type_name
++	0,  // 11: are.passport.v1.ApplyPassportOperationRequest.issue:type_name -> are.passport.v1.IssuePassportRequest
++	10, // 12: are.passport.v1.ApplyPassportOperationRequest.revoke:type_name -> are.passport.v1.RevokePassportRequest
++	18, // 13: are.passport.v1.ApplyPassportOperationResponse.receipt:type_name -> are.passport.v1.PassportOperationReceipt
++	18, // 14: are.passport.v1.GetPassportOperationResponse.receipt:type_name -> are.passport.v1.PassportOperationReceipt
++	17, // 15: are.passport.v1.PassportIssuanceService.ApplyPassportOperation:input_type -> are.passport.v1.ApplyPassportOperationRequest
++	20, // 16: are.passport.v1.PassportIssuanceService.GetPassportOperation:input_type -> are.passport.v1.GetPassportOperationRequest
++	0,  // 17: are.passport.v1.PassportIssuanceService.IssuePassport:input_type -> are.passport.v1.IssuePassportRequest
++	2,  // 18: are.passport.v1.PassportIssuanceService.GetPassport:input_type -> are.passport.v1.GetPassportRequest
++	4,  // 19: are.passport.v1.PassportIssuanceService.GetAgentPassport:input_type -> are.passport.v1.GetAgentPassportRequest
++	6,  // 20: are.passport.v1.PassportIssuanceService.VerifyPassport:input_type -> are.passport.v1.VerifyPassportRequest
++	8,  // 21: are.passport.v1.PassportIssuanceService.RenewPassport:input_type -> are.passport.v1.RenewPassportRequest
++	10, // 22: are.passport.v1.PassportIssuanceService.RevokePassport:input_type -> are.passport.v1.RevokePassportRequest
++	12, // 23: are.passport.v1.PassportIssuanceService.ListPassports:input_type -> are.passport.v1.ListPassportsRequest
++	19, // 24: are.passport.v1.PassportIssuanceService.ApplyPassportOperation:output_type -> are.passport.v1.ApplyPassportOperationResponse
++	21, // 25: are.passport.v1.PassportIssuanceService.GetPassportOperation:output_type -> are.passport.v1.GetPassportOperationResponse
++	1,  // 26: are.passport.v1.PassportIssuanceService.IssuePassport:output_type -> are.passport.v1.IssuePassportResponse
++	3,  // 27: are.passport.v1.PassportIssuanceService.GetPassport:output_type -> are.passport.v1.GetPassportResponse
++	5,  // 28: are.passport.v1.PassportIssuanceService.GetAgentPassport:output_type -> are.passport.v1.GetAgentPassportResponse
++	7,  // 29: are.passport.v1.PassportIssuanceService.VerifyPassport:output_type -> are.passport.v1.VerifyPassportResponse
++	9,  // 30: are.passport.v1.PassportIssuanceService.RenewPassport:output_type -> are.passport.v1.RenewPassportResponse
++	11, // 31: are.passport.v1.PassportIssuanceService.RevokePassport:output_type -> are.passport.v1.RevokePassportResponse
++	13, // 32: are.passport.v1.PassportIssuanceService.ListPassports:output_type -> are.passport.v1.ListPassportsResponse
++	24, // [24:33] is the sub-list for method output_type
++	15, // [15:24] is the sub-list for method input_type
++	15, // [15:15] is the sub-list for extension type_name
++	15, // [15:15] is the sub-list for extension extendee
++	0,  // [0:15] is the sub-list for field type_name
+ }
+ 
+ func init() { file_passport_issuance_proto_init() }
+ func file_passport_issuance_proto_init() {
+ 	if File_passport_issuance_proto != nil {
+ 		return
++	}
++	file_passport_issuance_proto_msgTypes[17].OneofWrappers = []any{
++		(*ApplyPassportOperationRequest_Issue)(nil),
++		(*ApplyPassportOperationRequest_Revoke)(nil),
+ 	}
+ 	type x struct{}
+ 	out := protoimpl.TypeBuilder{
+@@ -1521,7 +1753,7 @@
+ 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
+ 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_passport_issuance_proto_rawDesc), len(file_passport_issuance_proto_rawDesc)),
+ 			NumEnums:      0,
+-			NumMessages:   19,
++			NumMessages:   24,
+ 			NumExtensions: 0,
+ 			NumServices:   1,
+ 		},
+diff --git a/proto/passport_issuance.proto b/proto/passport_issuance.proto
+--- a/proto/passport_issuance.proto
++++ b/proto/passport_issuance.proto
+@@ -4,6 +4,8 @@
+ option go_package = "github.com/srex-dev/agent-passport/proto;passportv1";
+ 
+ service PassportIssuanceService {
++  rpc ApplyPassportOperation(ApplyPassportOperationRequest) returns (ApplyPassportOperationResponse);
++  rpc GetPassportOperation(GetPassportOperationRequest) returns (GetPassportOperationResponse);
+   rpc IssuePassport(IssuePassportRequest) returns (IssuePassportResponse);
+   rpc GetPassport(GetPassportRequest) returns (GetPassportResponse);
+   rpc GetAgentPassport(GetAgentPassportRequest) returns (GetAgentPassportResponse);
+@@ -36,3 +38,25 @@
+   string policy_id_at_issuance = 15;
+   string policy_ver_at_issuance = 16;
+ }
++
++// Explicit recoverable authority mutation. Expected fields are signed request
++// inputs, not transport metadata. Empty expected ID means no active credential.
++message ApplyPassportOperationRequest {
++  string operation_id = 1;
++  string agent_id = 2;
++  string expected_active_passport_id = 3;
++  uint64 expected_agent_revision = 4;
++  oneof mutation {
++    IssuePassportRequest issue = 5;
++    RevokePassportRequest revoke = 6;
++  }
++}
++message PassportOperationReceipt {
++  bytes canonical_payload = 1;
++  bytes signature = 2;
++  string credential_id = 3;
++  string public_key_pem = 4;
++}
++message ApplyPassportOperationResponse { PassportOperationReceipt receipt = 1; }
++message GetPassportOperationRequest { string agent_id = 1; string operation_id = 2; }
++message GetPassportOperationResponse { PassportOperationReceipt receipt = 1; }
+diff --git a/proto/passport_issuance_grpc.pb.go b/proto/passport_issuance_grpc.pb.go
+--- a/proto/passport_issuance_grpc.pb.go
++++ b/proto/passport_issuance_grpc.pb.go
+@@ -1,7 +1,7 @@
+ // Code generated by protoc-gen-go-grpc. DO NOT EDIT.
+ // versions:
+-// - protoc-gen-go-grpc v1.5.1
+-// - protoc             v7.34.0
++// - protoc-gen-go-grpc v1.6.2
++// - protoc             v5.29.6
+ // source: passport_issuance.proto
+ 
+ package passportv1
+@@ -19,19 +19,23 @@
+ const _ = grpc.SupportPackageIsVersion9
+ 
+ const (
+-	PassportIssuanceService_IssuePassport_FullMethodName    = "/are.passport.v1.PassportIssuanceService/IssuePassport"
+-	PassportIssuanceService_GetPassport_FullMethodName      = "/are.passport.v1.PassportIssuanceService/GetPassport"
+-	PassportIssuanceService_GetAgentPassport_FullMethodName = "/are.passport.v1.PassportIssuanceService/GetAgentPassport"
+-	PassportIssuanceService_VerifyPassport_FullMethodName   = "/are.passport.v1.PassportIssuanceService/VerifyPassport"
+-	PassportIssuanceService_RenewPassport_FullMethodName    = "/are.passport.v1.PassportIssuanceService/RenewPassport"
+-	PassportIssuanceService_RevokePassport_FullMethodName   = "/are.passport.v1.PassportIssuanceService/RevokePassport"
+-	PassportIssuanceService_ListPassports_FullMethodName    = "/are.passport.v1.PassportIssuanceService/ListPassports"
++	PassportIssuanceService_ApplyPassportOperation_FullMethodName = "/are.passport.v1.PassportIssuanceService/ApplyPassportOperation"
++	PassportIssuanceService_GetPassportOperation_FullMethodName   = "/are.passport.v1.PassportIssuanceService/GetPassportOperation"
++	PassportIssuanceService_IssuePassport_FullMethodName          = "/are.passport.v1.PassportIssuanceService/IssuePassport"
++	PassportIssuanceService_GetPassport_FullMethodName            = "/are.passport.v1.PassportIssuanceService/GetPassport"
++	PassportIssuanceService_GetAgentPassport_FullMethodName       = "/are.passport.v1.PassportIssuanceService/GetAgentPassport"
++	PassportIssuanceService_VerifyPassport_FullMethodName         = "/are.passport.v1.PassportIssuanceService/VerifyPassport"
++	PassportIssuanceService_RenewPassport_FullMethodName          = "/are.passport.v1.PassportIssuanceService/RenewPassport"
++	PassportIssuanceService_RevokePassport_FullMethodName         = "/are.passport.v1.PassportIssuanceService/RevokePassport"
++	PassportIssuanceService_ListPassports_FullMethodName          = "/are.passport.v1.PassportIssuanceService/ListPassports"
+ )
+ 
+ // PassportIssuanceServiceClient is the client API for PassportIssuanceService service.
+ //
+ // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+ type PassportIssuanceServiceClient interface {
++	ApplyPassportOperation(ctx context.Context, in *ApplyPassportOperationRequest, opts ...grpc.CallOption) (*ApplyPassportOperationResponse, error)
++	GetPassportOperation(ctx context.Context, in *GetPassportOperationRequest, opts ...grpc.CallOption) (*GetPassportOperationResponse, error)
+ 	IssuePassport(ctx context.Context, in *IssuePassportRequest, opts ...grpc.CallOption) (*IssuePassportResponse, error)
+ 	GetPassport(ctx context.Context, in *GetPassportRequest, opts ...grpc.CallOption) (*GetPassportResponse, error)
+ 	GetAgentPassport(ctx context.Context, in *GetAgentPassportRequest, opts ...grpc.CallOption) (*GetAgentPassportResponse, error)
+@@ -49,6 +53,26 @@
+ 	return &passportIssuanceServiceClient{cc}
+ }
+ 
++func (c *passportIssuanceServiceClient) ApplyPassportOperation(ctx context.Context, in *ApplyPassportOperationRequest, opts ...grpc.CallOption) (*ApplyPassportOperationResponse, error) {
++	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
++	out := new(ApplyPassportOperationResponse)
++	err := c.cc.Invoke(ctx, PassportIssuanceService_ApplyPassportOperation_FullMethodName, in, out, cOpts...)
++	if err != nil {
++		return nil, err
++	}
++	return out, nil
++}
++
++func (c *passportIssuanceServiceClient) GetPassportOperation(ctx context.Context, in *GetPassportOperationRequest, opts ...grpc.CallOption) (*GetPassportOperationResponse, error) {
++	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
++	out := new(GetPassportOperationResponse)
++	err := c.cc.Invoke(ctx, PassportIssuanceService_GetPassportOperation_FullMethodName, in, out, cOpts...)
++	if err != nil {
++		return nil, err
++	}
++	return out, nil
++}
++
+ func (c *passportIssuanceServiceClient) IssuePassport(ctx context.Context, in *IssuePassportRequest, opts ...grpc.CallOption) (*IssuePassportResponse, error) {
+ 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+ 	out := new(IssuePassportResponse)
+@@ -123,6 +147,8 @@
+ // All implementations must embed UnimplementedPassportIssuanceServiceServer
+ // for forward compatibility.
+ type PassportIssuanceServiceServer interface {
++	ApplyPassportOperation(context.Context, *ApplyPassportOperationRequest) (*ApplyPassportOperationResponse, error)
++	GetPassportOperation(context.Context, *GetPassportOperationRequest) (*GetPassportOperationResponse, error)
+ 	IssuePassport(context.Context, *IssuePassportRequest) (*IssuePassportResponse, error)
+ 	GetPassport(context.Context, *GetPassportRequest) (*GetPassportResponse, error)
+ 	GetAgentPassport(context.Context, *GetAgentPassportRequest) (*GetAgentPassportResponse, error)
+@@ -140,26 +166,32 @@
+ // pointer dereference when methods are called.
+ type UnimplementedPassportIssuanceServiceServer struct{}
+ 
++func (UnimplementedPassportIssuanceServiceServer) ApplyPassportOperation(context.Context, *ApplyPassportOperationRequest) (*ApplyPassportOperationResponse, error) {
++	return nil, status.Error(codes.Unimplemented, "method ApplyPassportOperation not implemented")
++}
++func (UnimplementedPassportIssuanceServiceServer) GetPassportOperation(context.Context, *GetPassportOperationRequest) (*GetPassportOperationResponse, error) {
++	return nil, status.Error(codes.Unimplemented, "method GetPassportOperation not implemented")
++}
+ func (UnimplementedPassportIssuanceServiceServer) IssuePassport(context.Context, *IssuePassportRequest) (*IssuePassportResponse, error) {
+-	return nil, status.Errorf(codes.Unimplemented, "method IssuePassport not implemented")
++	return nil, status.Error(codes.Unimplemented, "method IssuePassport not implemented")
+ }
+ func (UnimplementedPassportIssuanceServiceServer) GetPassport(context.Context, *GetPassportRequest) (*GetPassportResponse, error) {
+-	return nil, status.Errorf(codes.Unimplemented, "method GetPassport not implemented")
++	return nil, status.Error(codes.Unimplemented, "method GetPassport not implemented")
+ }
+ func (UnimplementedPassportIssuanceServiceServer) GetAgentPassport(context.Context, *GetAgentPassportRequest) (*GetAgentPassportResponse, error) {
+-	return nil, status.Errorf(codes.Unimplemented, "method GetAgentPassport not implemented")
++	return nil, status.Error(codes.Unimplemented, "method GetAgentPassport not implemented")
+ }
+ func (UnimplementedPassportIssuanceServiceServer) VerifyPassport(context.Context, *VerifyPassportRequest) (*VerifyPassportResponse, error) {
+-	return nil, status.Errorf(codes.Unimplemented, "method VerifyPassport not implemented")
++	return nil, status.Error(codes.Unimplemented, "method VerifyPassport not implemented")
+ }
+ func (UnimplementedPassportIssuanceServiceServer) RenewPassport(context.Context, *RenewPassportRequest) (*RenewPassportResponse, error) {
+-	return nil, status.Errorf(codes.Unimplemented, "method RenewPassport not implemented")
++	return nil, status.Error(codes.Unimplemented, "method RenewPassport not implemented")
+ }
+ func (UnimplementedPassportIssuanceServiceServer) RevokePassport(context.Context, *RevokePassportRequest) (*RevokePassportResponse, error) {
+-	return nil, status.Errorf(codes.Unimplemented, "method RevokePassport not implemented")
++	return nil, status.Error(codes.Unimplemented, "method RevokePassport not implemented")
+ }
+ func (UnimplementedPassportIssuanceServiceServer) ListPassports(context.Context, *ListPassportsRequest) (*ListPassportsResponse, error) {
+-	return nil, status.Errorf(codes.Unimplemented, "method ListPassports not implemented")
++	return nil, status.Error(codes.Unimplemented, "method ListPassports not implemented")
+ }
+ func (UnimplementedPassportIssuanceServiceServer) mustEmbedUnimplementedPassportIssuanceServiceServer() {
+ }
+@@ -173,7 +205,7 @@
+ }
+ 
+ func RegisterPassportIssuanceServiceServer(s grpc.ServiceRegistrar, srv PassportIssuanceServiceServer) {
+-	// If the following call pancis, it indicates UnimplementedPassportIssuanceServiceServer was
++	// If the following call panics, it indicates UnimplementedPassportIssuanceServiceServer was
+ 	// embedded by pointer and is nil.  This will cause panics if an
+ 	// unimplemented method is ever invoked, so we test this at initialization
+ 	// time to prevent it from happening at runtime later due to I/O.
+@@ -181,6 +213,42 @@
+ 		t.testEmbeddedByValue()
+ 	}
+ 	s.RegisterService(&PassportIssuanceService_ServiceDesc, srv)
++}
++
++func _PassportIssuanceService_ApplyPassportOperation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
++	in := new(ApplyPassportOperationRequest)
++	if err := dec(in); err != nil {
++		return nil, err
++	}
++	if interceptor == nil {
++		return srv.(PassportIssuanceServiceServer).ApplyPassportOperation(ctx, in)
++	}
++	info := &grpc.UnaryServerInfo{
++		Server:     srv,
++		FullMethod: PassportIssuanceService_ApplyPassportOperation_FullMethodName,
++	}
++	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
++		return srv.(PassportIssuanceServiceServer).ApplyPassportOperation(ctx, req.(*ApplyPassportOperationRequest))
++	}
++	return interceptor(ctx, in, info, handler)
++}
++
++func _PassportIssuanceService_GetPassportOperation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
++	in := new(GetPassportOperationRequest)
++	if err := dec(in); err != nil {
++		return nil, err
++	}
++	if interceptor == nil {
++		return srv.(PassportIssuanceServiceServer).GetPassportOperation(ctx, in)
++	}
++	info := &grpc.UnaryServerInfo{
++		Server:     srv,
++		FullMethod: PassportIssuanceService_GetPassportOperation_FullMethodName,
++	}
++	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
++		return srv.(PassportIssuanceServiceServer).GetPassportOperation(ctx, req.(*GetPassportOperationRequest))
++	}
++	return interceptor(ctx, in, info, handler)
+ }
+ 
+ func _PassportIssuanceService_IssuePassport_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+@@ -317,6 +385,14 @@
+ 	HandlerType: (*PassportIssuanceServiceServer)(nil),
+ 	Methods: []grpc.MethodDesc{
+ 		{
++			MethodName: "ApplyPassportOperation",
++			Handler:    _PassportIssuanceService_ApplyPassportOperation_Handler,
++		},
++		{
++			MethodName: "GetPassportOperation",
++			Handler:    _PassportIssuanceService_GetPassportOperation_Handler,
++		},
++		{
+ 			MethodName: "IssuePassport",
+ 			Handler:    _PassportIssuanceService_IssuePassport_Handler,
+ 		},

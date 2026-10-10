@@ -1,0 +1,14 @@
+{
+  "active_agent_count": 6,
+  "environment": "OFFLINE_STORED_STATE_COMPATIBILITY",
+  "legacy_state_version": 1,
+  "load_success": true,
+  "original_key_unchanged": true,
+  "original_state_unchanged": true,
+  "passport_count": 24,
+  "revoked_count": 18,
+  "runtime_restarted": false,
+  "scope": "Verified signatures and unchanged active/revoked records from retained original reference state; no mutation or live dependency call.",
+  "startup_did_not_rewrite_copy": true,
+  "state_sha256": "33df0a35adc40133400c4e169f52be0766a8b79f385364d17f0f555fc5d0763a"
+}

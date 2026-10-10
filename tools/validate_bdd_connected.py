@@ -1,0 +1,576 @@
+#!/usr/bin/env python3
+"""Explicit BDD bindings against the real owned local service stack.
+
+No report is a pass before execution. Each case gets a new coordinator database,
+canonical identity and qualified context. Faults are named in the case evidence.
+Real Passport, Foundation/OPA, Cascade/GCL and Ledger clients are never replaced
+with fabricated successful services. Local clock/observer/reconciliation faults
+exercise the local enforcement boundary; they do not prove remote fault behavior.
+"""
+import argparse
+import copy
+import hashlib
+import json
+import re
+import sys
+import threading
+import traceback
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timezone
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+from validate_connected import build_runtime
+from deploy.ledger.validate import client_from_config, read_config
+from earned_authority.contracts import canonical_digest
+from earned_authority.passport_client import PassportClient
+from earned_authority.runtime import ControlledClock, Denied, ident
+
+
+# These cases remain unbound until the exact requirement has an observable API.
+UNBOUND = {
+    2: 'No public persisted self-report input distinct from independent outcomes. Caller attestation is rejected, but that is not the entire specified setup.',
+    14: 'Malformed provider response requires a transport negative-control; a fabricated canonical service cannot be claimed as live evidence.',
+    22: 'The current Foundation check response omits receipt_created; do not fabricate the explicitly required false field.',
+    26: 'Requires an actually changed deterministic procedure artifact, not a model-context change or manually reassigned version string.',
+    33: 'The exposed boolean local-fault flags do not establish actual durable-store offline or writer authentication failure. Exact real failure and reason mapping remain unbound.',
+    35: 'Requires an owned stored-payload tamper with canonical receipt verification, qualification exclusion and hold, plus reliable restoration.',
+    36: 'Canonical verification rejects binding/freshness mismatches, but exact attempt/skill/expiry reason mapping and no-authority assertions are not yet bound.',
+    37: 'Requires an actual intact canonical entry carrying an untrusted independent-outcome signer and qualification admission control.',
+}
+PARTIAL = {
+    9: 'Actual Foundation/OPA denies the requested resource at the requested time; a time-window-specific policy rule is not exercised.',
+    15: 'Canonical current-status unavailability fails closed despite a previously observed active snapshot. There is no executable stale grant cache in this adapter, so the literal cached-status premise is not exercised.',
+    16: 'Qualification and grant exist before the live attempt; records are linked by qualification/grant IDs, not retroactively assigned the later attempt ID required literally by this scenario.',
+    17: 'The actual registry write completes and its independent postcondition fails. A separate procedure success assertion is not a public input, so the literal self-report-versus-observation premise is not fully bound.',
+    21: 'Real response loss and observation interruption are bound; unavailable reconciliation uses a local injected control, not a real inaccessible durable store or an explicit UNKNOWN response envelope.',
+    25: 'The public reevaluate API receives explicit UNKNOWN/STALE policy signals. Actual missing/stale evidence detection while a second grant stays fresh is not established by these calls.',
+    31: 'The current public aggregate has one resource grant per skill. Stale changed-resource rejection is exercised, but adding a second read-health resource while retaining the first is not represented.',
+}
+CASES = {
+    3: ['changed-skill', 'changed-environment'],
+    10: ['wrong-action', 'wrong-resource', 'wrong-context', 'changed-revision'],
+    14: ['missing-expiry', 'invalid-expiry'],
+    17: ['wrong-version', 'unhealthy'],
+    21: ['lost-response', 'observer-interruption', 'reconciliation-unavailable'],
+    25: ['missing-result', 'old-result'],
+    33: ['local-store-down', 'unauthenticated'],
+    34: ['before-intent-send', 'after-commit', 'audit-unavailable'],
+    36: ['other-attempt', 'old-skill', 'expired-proof'],
+}
+
+
+def feature_requirements():
+    result = {}
+    for path in sorted((ROOT / 'features').glob('*.feature')):
+        current = None
+        background = []
+        for line_number, line in enumerate(path.read_text().splitlines(), 1):
+            match = re.search(r'@BDD-(\d{3})', line)
+            if match:
+                current = int(match.group(1))
+                result[current] = {'feature': str(path.relative_to(ROOT)), 'line': line_number,
+                                   'background': list(background), 'steps': []}
+            elif current and re.match(r'\s*(Given|When|Then|And|But)\s', line):
+                result[current]['steps'].append(line.strip())
+            elif current is None and re.match(r'\s*(Given|When|Then|And|But)\s', line):
+                background.append(line.strip())
+    return result
+
+
+def public(value):
+    """Preserve evidence fields without publishing raw transferable signatures."""
+    if isinstance(value,dict):
+        return {key:({'redacted_digest':canonical_digest({'value':item})} if key in
+                     {'signature','writer_signature','attestation_report','public_key_pem'} else public(item))
+                for key,item in value.items()}
+    if isinstance(value,(list,tuple)):return [public(item) for item in value]
+    return value
+
+
+class Case:
+    def __init__(self, args, number, label, run_id):
+        self.args, self.number, self.label = args, number, label
+        self.path = args.state_dir / (run_id + '-' + f'{number:03}' + '-' + label + '.sqlite')
+        self.rt = build_runtime(args, self.path)
+        try:
+            registration = self.rt.policy.request('/v1/identity/agents', {
+                'agent_type': 'earned-authority.bdd', 'owner_id': 'reference-operator'})['agent']
+        except Exception:
+            self.rt.passport.close();self.rt.ledger.close();self.rt.close()
+            raise
+        self.agent = registration['agent_id']
+        self.context = {'environment': run_id + '-' + f'{number:03}' + '-' + label,
+                        'model_version': 'model-v2', 'desired_replicas': 1, 'max_replicas': 2}
+        self.assertions, self.faults, self.receipts = [], [], []
+        self.q = None
+        self.eq('real canonical agent is active',registration['status'],'ACTIVE')
+        self.eq('no initial canonical authority before policy-approved grant',self.authority()['grants'],{})
+
+    def check(self, name, condition, **evidence):
+        self.assertions.append({'assertion': name, 'passed': bool(condition), 'evidence': public(evidence)})
+        if not condition:
+            raise AssertionError(name)
+
+    def eq(self, name, actual, expected):
+        self.check(name, actual == expected, actual=actual, expected=expected)
+
+    def shadow(self, skill='release-model', **changes):
+        args = dict(skill=skill, context=self.context, attempt_id=ident('bdd-shadow'))
+        args.update(changes)
+        return self.rt.shadow(**args)
+
+    def qualify(self, skill='release-model', samples=3):
+        for _ in range(samples): self.shadow(skill)
+        q = self.rt.qualify(skill=skill, context=self.context)
+        self.eq('fresh qualification is eligible: ' + skill, q['disposition'], 'ELIGIBLE')
+        if skill == 'release-model': self.q = q
+        return q
+
+    def ready(self, second=False, **grant_args):
+        q = self.qualify()
+        a = self.rt.grant(q['qualification_id'], agent=self.agent, **grant_args)
+        if second:
+            read = self.qualify('read-health')
+            a = self.rt.grant(read['qualification_id'], agent=self.agent, action='read', resource='urn:dataset/health')
+        return a
+
+    def admit(self, **changes):
+        args = dict(agent=self.agent, version=self.rt.procedure_revision, context=self.context,
+                    resource='model/champion', target=self.context['model_version'], attempt_id=ident('bdd-attempt'))
+        args.update(changes)
+        return self.rt.admit(**args)
+
+    def state(self):
+        return {'registry': self.rt.read('model/champion'), 'mutations': self.rt.mutation_count}
+
+    def assert_final_registry(self):
+        """Check actual effects, independently of returned controller outcomes."""
+        committed={16,17,18,19,20,21,23,24,27,30,32,34}
+        expected_version='model-v2' if self.number in committed else 'model-v1'
+        expected_healthy=True
+        if self.number in {23,24,27}:expected_version='wrong-model'
+        if self.number==17:
+            if self.label=='wrong-version':expected_version='model-v1'
+            else:expected_healthy=False
+        self.eq('exact actual registry postcondition from independent reader',self.rt.read('model/champion'),
+                {'version':expected_version,'healthy':expected_healthy})
+        self.eq('exact registry mutation count for scenario',self.rt.mutation_count,1 if self.number in committed else 0)
+
+    def deny(self, name, action, reason=None):
+        before = self.state()
+        try: action()
+        except Denied as exc:
+            self.check(name, reason is None or exc.reason == reason, reason=exc.reason, expected_reason=reason)
+        else: self.check(name, False, reason='no denial')
+        self.eq(name + ': independent registry unchanged', self.state(), before)
+
+    def authority(self):
+        return self.rt.authority(self.agent)
+
+    def read_other(self):
+        before = self.rt.mutation_count
+        result = self.rt.commit(self.admit(skill='read-health', action='read', resource='urn:dataset/health'))
+        self.eq('unaffected read remains authorized', result['outcome']['outcome'], 'PASS')
+        self.eq('read does not mutate registry', self.rt.mutation_count, before)
+        return result
+
+    def events(self, kind=None, aid=None):
+        return [r for r in self.rt.events() if (kind is None or r['event']['event_type'] == kind)
+                and (aid is None or r['event']['attempt_id'] == aid)]
+
+    def verify_events(self):
+        self.rt.flush_outbox()
+        rows = self.rt.events()
+        self.check('all local events authenticated', self.rt._verify_local_events() is None)
+        for row in rows:
+            valid = row['delivery'] == 'RECORDED' and row['receipt'] is not None and self.rt.ledger.verify(row['receipt'], row['event'])
+            self.check('canonical receipt verifies: ' + row['event_id'], valid)
+            self.receipts.append({'event_id': row['event_id'], 'event_type': row['event']['event_type'],
+                                  'attempt_id': row['event']['attempt_id'], 'entry_id': row['receipt']['entry_id'],
+                                  'entry_hash': row['receipt']['entry_hash'], 'verified': valid})
+
+    def reopen(self):
+        self.rt.passport.close(); self.rt.ledger.close(); self.rt.close()
+        self.rt = build_runtime(self.args, self.path)
+
+    def refuse_ledger(self):
+        config = dict(read_config(self.args.ledger_config)); config['LEDGER_GRPC_PORT'] = '1'
+        good = self.rt.ledger; self.rt.ledger = client_from_config(config)
+        self.faults.append('Actual canonical SDK connection refused on unused loopback port 1; no fake server.')
+        return good
+
+    def restore_ledger(self, good):
+        self.rt.ledger.close(); self.rt.ledger = good
+
+    def clock_at(self, timestamp):
+        previous = self.rt.clock; self.rt.clock = ControlledClock(timestamp)
+        self.faults.append('Local coordinator clock fixed at ' + str(timestamp) + '; canonical services retain real wall time.')
+        return previous
+
+    def exact_revision_four(self):
+        while self.authority()['revision'] < 4:
+            self.rt.grant(self.q['qualification_id'], agent=self.agent)
+        self.eq('starting canonical authority revision', self.authority()['revision'], 4)
+
+    def run(self):
+        n, rt = self.number, self.rt
+        if n == 1:
+            before = self.state(); observations = [self.shadow() for _ in range(3)]
+            q = rt.qualify(context=self.context)
+            self.eq('qualification disposition', q['disposition'], 'ELIGIBLE')
+            self.eq('exact procedure digest', q['skill_digest'], canonical_digest({'skill': 'release-model', 'version': rt.procedure_revision}))
+            self.eq('exact context digest', q['context_digest'], canonical_digest({'environment': self.context}))
+            self.eq('distinct independent outcome references', q['outcome_refs'], [
+                {k: o[k] for k in ('attempt_id', 'observation_id', 'evidence_digest')} for o in observations])
+            self.check('all observations independently signed and fresh', all(rt._verified(o, {'checker'}) and o['independent'] and
+                       o['outcome'] == 'PASS' and 0 <= rt.clock.now_ms-o['observed_at_ms'] < rt.evidence_window_ms for o in observations))
+            self.eq('checker revision bound',q['evaluator_digest'],observations[0]['evaluator_digest'])
+            self.eq('qualification policy revision bound',q['policy_digest'],canonical_digest({'required_passes':3,'window_ms':rt.evidence_window_ms,'version':1}))
+            self.eq('qualification creates no authority', self.authority()['grants'], {})
+            self.eq('shadow creates no live mutation', self.state(), before)
+        elif n == 3:
+            q = self.qualify(); original = copy.deepcopy(q)
+            version, context = rt.procedure_revision, self.context
+            if self.label == 'changed-skill': version = canonical_digest({'changed-procedure': True}); reason = 'SKILL_REVISION_MISMATCH'
+            else: context = {**context, 'environment': 'different-environment'}; reason = 'QUALIFICATION_CONTEXT_MISMATCH'
+            self.deny('qualification cannot transfer binding', lambda: rt.eligibility(q['qualification_id'], version, context), reason)
+            self.eq('original qualification unchanged', rt.qualification(q['qualification_id']), original)
+        elif n in (4, 5, 6, 7):
+            old_clock = None
+            if n == 4:
+                self.shadow(); self.shadow(); unknown = self.shadow(observer_available=False)
+                self.faults.append('Independent shadow observer availability injection; actual shadow state persisted.')
+                expected, reason, passes, failures = 'HOLD', 'EVIDENCE_UNCONFIRMED', 2, 0
+            elif n == 5:
+                observed = [self.shadow() for _ in range(3)]
+                old_clock = self.clock_at(max(o['observed_at_ms'] for o in observed) + rt.evidence_window_ms)
+                expected, reason, passes, failures = 'HOLD', 'STALE_EVIDENCE', 0, 0
+            elif n == 6:
+                aid = ident('same-shadow'); copies = [self.shadow(attempt_id=aid) for _ in range(3)]
+                self.eq('duplicate shadow deliveries return same observation', copies, [copies[0]]*3)
+                expected, reason, passes, failures = 'HOLD', 'INSUFFICIENT_EVIDENCE', 1, 0
+            else:
+                for _ in range(3): self.shadow()
+                self.shadow(actual='wrong-model')
+                expected, reason, passes, failures = 'INELIGIBLE', 'KNOWN_FAILURE', 3, 1
+            try:
+                q = rt.qualify(context=self.context)
+                for key, value in [('disposition',expected),('reason',reason),('passes',passes),('failures',failures)]: self.eq(key, q[key], value)
+                self.eq('no authority from ineligible evidence', self.authority()['grants'], {})
+                if n == 4: self.eq('unknown reason retained', unknown['reason'], 'OBSERVATION_UNAVAILABLE')
+                if n == 5: self.check('historical observations remain PASS', all(o['outcome']=='PASS' for o in rt.observations()))
+                if n == 6: self.eq('one distinct observed attempt', len(rt.observations()), 1)
+                if n == 7: self.eq('all four observations retained', len(q['outcome_refs']), 4)
+            finally:
+                if old_clock: rt.clock = old_clock
+        elif n == 8:
+            self.qualify(); before = rt.clock.now_ms
+            a = rt.grant(self.q['qualification_id'], agent=self.agent, ttl_ms=300000); g = a['grants']['release-model']
+            cmd = self.admit()
+            self.eq('grant actor bound', a['agent_id'], self.agent)
+            self.eq('grant exact scope', (g['version'],g['context'],g['action'],g['resource']), (rt.procedure_revision,self.context,'release','model/champion'))
+            self.eq('grant exact qualification ID',g['qualification_id'],self.q['qualification_id'])
+            self.eq('qualified evidence digest bound', g['qualification_digest'], canonical_digest(self.q))
+            self.eq('live policy revision bound', g['policy_digest'], rt.policy.policy_digest)
+            for key in ('skill_digest','context_digest','qualification_digest','policy_digest','grant_id'):
+                self.eq('command binds '+key, cmd[key], g[key])
+            self.eq('command current authority revision', cmd['authority_revision'], a['revision'])
+            self.check('bounded validity from signed issuance', 0 < g['expires_at_ms']-a['issued_at_ms'] <= 300000
+                       and g['expires_at_ms'] <= self.q['expires_at_ms'], request_started_at_ms=before,
+                       issued_at_ms=a['issued_at_ms'], grant_expires_at_ms=g['expires_at_ms'],
+                       qualification_expires_at_ms=self.q['expires_at_ms'])
+            self.check('independent evidence refs resolve', all(any(o['evidence_digest']==ref['evidence_digest'] and rt._verified(o,{'checker'})
+                       for o in rt.observations()) for ref in self.q['outcome_refs']))
+        elif n == 9:
+            q = self.qualify()
+            self.deny('real policy denies otherwise eligible grant', lambda:rt.grant(q['qualification_id'],agent=self.agent,resource='model/experimental'),'POLICY_DENIED')
+            self.eq('no active grant', self.authority()['grants'], {})
+            self.eq('qualification remains eligible', rt.eligibility(q['qualification_id'],rt.procedure_revision,self.context),q)
+        elif n == 10:
+            self.ready()
+            changes = {'wrong-action':{'action':'delete'},'wrong-resource':{'resource':'model/other'},
+                       'wrong-context':{'context':{**self.context,'environment':'elsewhere'}},'changed-revision':{'version':'different-procedure'}}[self.label]
+            self.deny('out-of-scope next mutation denied',lambda:rt.commit(self.admit(**changes)))
+        elif n in (11,12):
+            a = self.ready(scope_ttl_ms=60000 if n==12 else None); cmd = self.admit()
+            t = a['expires_at_ms'] if n==11 else a['grants']['release-model']['expires_at_ms']
+            if n == 12: self.check('scope expires before passport', t<a['expires_at_ms'])
+            clock = self.clock_at(t)
+            try: self.deny('exact local enforcement expiry equality',lambda:rt.commit(cmd),'EXPIRED_PASSPORT' if n==11 else 'EXPIRED_SCOPE')
+            finally: rt.clock = clock
+        elif n in (13,29):
+            self.ready()
+            if n == 29:self.exact_revision_four()
+            command = self.admit(); old = command['authority_revision']
+            acknowledged = rt.revoke(self.agent,'release-model')
+            self.check('canonical revocation acknowledged', acknowledged['revision']>old and not acknowledged['grants'])
+            if n == 29:self.eq('revocation advances exact current revision',acknowledged['revision'],5)
+            self.deny('prior admitted command refused at actual mutation fence',lambda:rt.commit(command),'REVOKED_AUTHORITY')
+        elif n == 15:
+            self.ready(); known = self.authority(); original = rt.passport
+            config = read_config(self.args.config)
+            refused = PassportClient('127.0.0.1:1',original.token,original.public_key,
+                sdk_path=config.get('PASSPORT_SDK_DIR',str(ROOT.parents[1]/'work/passport-python-sdk')),timeout_seconds=1)
+            rt.passport = refused; self.faults.append('Actual Passport current-status SDK connection refused on unused loopback port 1; previously observed active snapshot retained only as test evidence.')
+            try:
+                self.check('previous observed grant was active',known['status']=='ACTIVE')
+                self.deny('unavailable canonical current authority fails closed',lambda:rt.commit(self.admit()),'AUTHORITY_UNCONFIRMED')
+            finally:refused.close();rt.passport=original
+        elif n == 16:
+            self.ready();cmd=self.admit();result=rt.commit(cmd)
+            self.eq('one committed mutation',rt.mutation_count,1)
+            self.eq('independent actual registry postcondition',rt.read('model/champion'),{'version':'model-v2','healthy':True})
+            self.eq('observed outcome PASS',result['outcome']['outcome'],'PASS')
+            self.eq('outcome attempt correlation',result['outcome']['attempt_id'],cmd['attempt_id'])
+            self.eq('outcome exact skill binding',result['outcome']['skill_digest'],cmd['skill_digest'])
+            self.eq('execution exact authority revision',result['authority_revision'],cmd['authority_revision'])
+            self.eq('one authenticated durable intent',len(self.events('INTENT',cmd['attempt_id'])),1)
+            self.eq('one durable commit',len(self.events('COMMITTED',cmd['attempt_id'])),1)
+        elif n == 17:
+            self.ready();result=rt.commit(self.admit(),actual='model-v1' if self.label=='wrong-version' else None,healthy=self.label!='unhealthy')
+            self.faults.append('Actual disposable registry writer receives wrong-version or unhealthy-state fault; independent reader observes persisted result.')
+            self.eq('wrong actual postcondition is FAIL',result['outcome']['outcome'],'FAIL')
+            self.eq('failed postcondition reason',result['outcome']['reason'],'POSTCONDITION_NOT_MET')
+            self.eq('observation equals independently read state',result['outcome']['readback'],rt.read('model/champion'))
+        elif n == 18:
+            self.ready();before=copy.deepcopy(self.q);cmd=self.admit();result=rt.commit(cmd,observer_available=False)
+            self.faults.append('Independent live observer availability injection after actual durable commit.')
+            self.eq('mutation completed',result['state'],'COMMITTED');self.eq('one actual mutation',rt.mutation_count,1)
+            self.eq('unavailable readback outcome',result['outcome']['outcome'],'UNKNOWN')
+            self.eq('unavailable reason',result['outcome']['reason'],'OBSERVATION_UNAVAILABLE')
+            q=rt.qualification(self.q['qualification_id'])
+            self.eq('unknown adds no pass or failure',(q['passes'],q['failures']),(before['passes'],before['failures']))
+            self.eq('unknown holds qualification',q['disposition'],'HOLD')
+            self.deny('held authority denies next mutation',lambda:rt.commit(self.admit()))
+        elif n in (19,20):
+            self.ready();cmd=self.admit();original=rt.commit(cmd);before=self.state()
+            if n == 19:
+                returned=rt.commit(cmd)
+                self.eq('retry returns exact durable attempt result',returned,original)
+                self.eq('retry never repeats mutation',self.state(),before)
+                self.eq('one intent retains logical attempt',len(self.events('INTENT',cmd['attempt_id'])),1)
+            else:self.deny('changed payload cannot reuse attempt ID',lambda:self.admit(attempt_id=cmd['attempt_id'],target='changed-model'),'IDEMPOTENCY_CONFLICT')
+        elif n == 21:
+            self.ready();cmd=self.admit()
+            if self.label=='lost-response':
+                try:rt.commit(cmd,lose_response=True)
+                except TimeoutError:pass
+                else:self.check('response loss fault occurred',False)
+                self.faults.append('Transport response-loss hook throws only after actual durable commit/result.')
+            elif self.label=='observer-interruption':
+                original_read=rt.read
+                def interrupted(_):raise RuntimeError('injected observer interruption after durable commit')
+                rt.read=interrupted
+                try:
+                    try:rt.commit(cmd)
+                    except RuntimeError:pass
+                    else:self.check('observer interruption occurred',False)
+                finally:rt.read=original_read
+                self.faults.append('Local observer exception after durable commit; restart uses new connections.')
+                self.eq('durable incomplete result has no invented outcome',rt.attempts(cmd['attempt_id'])['outcome'],None)
+            else:
+                rt.commit(cmd);rt.reconciliation_available=False
+                self.faults.append('Local reconciliation-unavailable control; no claim of actual disk failure.')
+                try:self.deny('unavailable reconciliation never blindly reexecutes',lambda:rt.commit(cmd),'RECONCILIATION_UNAVAILABLE')
+                finally:rt.reconciliation_available=True
+            count=rt.mutation_count;self.reopen();rt=self.rt
+            recovered=rt.commit(cmd)
+            self.eq('restart recovery returns original attempt',recovered['attempt_id'],cmd['attempt_id'])
+            self.eq('reconciled actual postcondition is PASS',recovered['outcome']['outcome'],'PASS')
+            self.eq('recovery never repeats mutation',rt.mutation_count,count)
+        elif n == 23:
+            self.ready(second=True);cmd=self.admit();good=self.refuse_ledger()
+            try:
+                result=rt.commit(cmd,actual='wrong-model');current=self.authority();q=rt.qualification(self.q['qualification_id'])
+                self.eq('known actual failure',result['outcome']['outcome'],'FAIL')
+                self.eq('canonical Cascade deactivated',q['canonical_demotion']['deactivated'],True)
+                self.eq('affected qualification ineligible',q['disposition'],'INELIGIBLE')
+                self.check('affected grant revoked', 'release-model' not in current['grants'])
+                self.check('revocation revision advances',current['revision']>cmd['authority_revision'])
+                rows=self.events('REVOKED',cmd['attempt_id'])
+                self.check('revocation is durably pending for exact failed attempt',bool(rows) and all(r['delivery']=='PENDING' and r['receipt'] is None for r in rows))
+                self.check('revocation evidence names current revision',any(r['event']['authority_revision']==current['revision'] for r in rows))
+                self.deny('next release denied before mutation',lambda:rt.commit(self.admit()))
+            finally:self.restore_ledger(good)
+        elif n == 24:
+            prior=self.ready(second=True);read=prior['grants']['read-health'];old=self.admit()
+            rt.commit(self.admit(),actual='wrong-model');current=self.authority()
+            preserved=current['grants']['read-health']
+            for key in ('grant_id','qualification_id','qualification_digest','policy_digest','skill_digest','context_digest','action','resource','expires_at_ms'):
+                self.eq('unaffected grant keeps '+key,preserved[key],read[key])
+            self.check('passport replaced monotonically',current['passport_id']!=prior['passport_id'] and current['revision']>prior['revision'])
+            self.read_other();self.deny('old revision cannot revive failed release',lambda:rt.commit(old),'REVOKED_AUTHORITY')
+        elif n == 25:
+            self.ready(second=True);state='UNKNOWN' if self.label=='missing-result' else 'STALE'
+            before=[o for o in rt.observations() if o['outcome']=='FAIL'];rt.reevaluate(self.agent,'release-model',state=state)
+            self.faults.append('Explicit public lifecycle reevaluation signal '+state+'; underlying detector behavior is not certified.')
+            q=rt.qualification(self.q['qualification_id']);self.eq('qualification held',q['disposition'],'HOLD')
+            self.eq('hold reason',q['reason'],'EVIDENCE_UNCONFIRMED' if state=='UNKNOWN' else 'STALE_EVIDENCE')
+            self.eq('hold never invents failed evidence',[o for o in rt.observations() if o['outcome']=='FAIL'],before)
+            self.deny('affected release denied',lambda:rt.commit(self.admit()));self.read_other()
+        elif n == 27:
+            self.ready(second=True);rt.commit(self.admit(),actual='wrong-model');before=self.authority()
+            self.deny('manual activation cannot bypass evidence or policy',lambda:rt.reactivate(self.agent,'release-model'),'QUALIFICATION_AND_POLICY_REQUIRED')
+            self.eq('withdrawn authority remains ineffective',self.authority(),before)
+        elif n == 28:
+            self.ready();self.exact_revision_four();before=self.authority();barrier=threading.Barrier(2);observed=[]
+            def replace(index):
+                revision=self.authority()['revision'];observed.append(revision)
+                barrier.wait(10)
+                try:return rt.grant(self.q['qualification_id'],agent=self.agent,expected_revision=revision,
+                                    scope_ttl_ms=240000+index*10000)
+                except Denied as exc:return exc
+            with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(replace,range(2)))
+            self.eq('both independent callers observed revision four',sorted(observed),[4,4])
+            winners=[r for r in results if isinstance(r,dict)];losers=[r for r in results if isinstance(r,Denied)]
+            self.eq('one replacement winner',len(winners),1);self.eq('one replacement conflict',len(losers),1)
+            self.eq('losing update conflicts',losers[0].reason,'REVISION_CONFLICT')
+            current=self.authority();self.eq('one effective next revision',current['revision'],5)
+            self.eq('acknowledged winner is current passport',current['passport_id'],winners[0]['passport_id'])
+            self.eq('every acknowledged grant represented',current['grants'],winners[0]['grants'])
+            self.check('predecessor not current',current['passport_id']!=before['passport_id'])
+        elif n == 30:
+            self.ready();self.exact_revision_four();cmd=self.admit();result=rt.commit(cmd);before=self.state()
+            revoked=rt.revoke(self.agent,'release-model');self.eq('revocation follows revision four',revoked['revision'],5)
+            self.eq('committed result preserved',rt.attempts(cmd['attempt_id']),result)
+            self.eq('independent outcome established',result['outcome']['outcome'],'PASS')
+            self.eq('revocation does not undo committed state',self.state(),before)
+            self.deny('next old-revision mutation denied',lambda:rt.admit(agent=self.agent,version=rt.procedure_revision,context=self.context,
+                      resource='model/champion',target='model-v2',expected_revision=4),'REVOKED_AUTHORITY')
+            events=rt.events();commits=[i for i,r in enumerate(events) if r['event']['event_type']=='COMMITTED'];revokes=[i for i,r in enumerate(events) if r['event']['event_type']=='REVOKED']
+            self.check('durable event order preserves prior commit',bool(commits) and bool(revokes) and max(commits)<max(revokes))
+        elif n == 31:
+            self.ready(second=True);self.exact_revision_four();stale=self.authority();readq=stale['grants']['read-health']['qualification_id']
+            rt.revoke(self.agent,'release-model');self.eq('selective revoke revision',self.authority()['revision'],5)
+            self.deny('stale changed-resource update cannot restore old aggregate',lambda:rt.grant(readq,agent=self.agent,action='read',resource='urn:dataset/health-extra',expected_revision=4),'REVISION_CONFLICT')
+            current=self.authority();self.check('release remains revoked','release-model' not in current['grants']);self.read_other()
+            self.eq('unaffected original read resource preserved',current['grants']['read-health']['resource'],stale['grants']['read-health']['resource'])
+        elif n == 32:
+            self.ready();cmd=self.admit();barrier=threading.Barrier(2)
+            def execute(_):barrier.wait(10);return rt.commit(cmd)
+            with ThreadPoolExecutor(max_workers=2) as pool:results=list(pool.map(execute,range(2)))
+            self.eq('concurrent duplicate exact results',results[0],results[1]);self.eq('one registry mutation',rt.mutation_count,1)
+            self.eq('one observed logical attempt',len([o for o in rt.observations() if o['attempt_id']==cmd['attempt_id']]),1)
+            self.eq('one durable intent',len(self.events('INTENT',cmd['attempt_id'])),1)
+            q=rt.qualify(context=self.context)
+            self.eq('one attempt contributes once to qualification',len([r for r in q['outcome_refs'] if r['attempt_id']==cmd['attempt_id']]),1)
+        elif n == 34:
+            self.ready();cmd=self.admit();good=None
+            try:
+                if self.label=='before-intent-send':good=self.refuse_ledger();result=rt.commit(cmd)
+                elif self.label=='after-commit':
+                    def before_delivery():
+                        nonlocal good
+                        good=self.refuse_ledger()
+                    result=rt.commit(cmd,before_delivery=before_delivery)
+                else:
+                    result=rt.commit(cmd);good=self.refuse_ledger();current=self.authority();q=rt.qualification(self.q['qualification_id'])
+                    checked=rt.audit_evidence(cmd['attempt_id'])
+                    self.check('unavailable remote audit is unknown integrity',isinstance(checked,dict) and checked['integrity']=='UNKNOWN')
+                    self.eq('audit outage preserves current grant',self.authority(),current)
+                    self.eq('audit outage preserves known qualification',rt.qualification(self.q['qualification_id']),q)
+                self.eq('completed mutation remains committed',result['state'],'COMMITTED')
+                self.eq('known independent outcome remains PASS',result['outcome']['outcome'],'PASS')
+                if self.label!='audit-unavailable':
+                    self.eq('remote delivery pending',result['delivery'],'PENDING');self.eq('no fabricated receipt',result['receipt'],None)
+                    self.check('durable exact outcome queued',any(r['event'].get('outcome')==result['outcome'] and r['delivery']=='PENDING' for r in self.events('OUTCOME_OBSERVED',cmd['attempt_id'])))
+                self.eq('remote outage does not hold qualification',rt.qualification(self.q['qualification_id'])['disposition'],'ELIGIBLE')
+                self.check('remote outage does not revoke grant','release-model' in self.authority()['grants'])
+            finally:
+                if good:self.restore_ledger(good)
+            count=rt.mutation_count;observation=copy.deepcopy(result['outcome']);self.reopen();rt=self.rt
+            recovered=rt.commit(cmd)
+            self.eq('retry preserves exact independent outcome',recovered['outcome'],observation)
+            self.eq('retry does not repeat mutation',rt.mutation_count,count)
+            self.eq('recovered delivery recorded',recovered['delivery'],'RECORDED')
+            rows=self.events(aid=cmd['attempt_id'])
+            for row in rows:self.eq('duplicate delivery preserves canonical receipt',rt.ledger.append(row['event'],row['event_id']),row['receipt'])
+            self.eq('one outcome for the logical attempt',len([o for o in rt.observations() if o['attempt_id']==cmd['attempt_id']]),1)
+        else:
+            raise NotImplementedError('unbound scenario')
+
+    def close(self):
+        self.rt.passport.close();self.rt.ledger.close();self.rt.close()
+
+
+def source_hashes():
+    paths=[Path(__file__),ROOT/'tools/validate_connected.py',ROOT/'features/bindings.json']
+    paths+=sorted((ROOT/'earned_authority').glob('*.py'))+sorted((ROOT/'features').glob('*.feature'))
+    return {str(p.relative_to(ROOT)):'sha256:'+hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+
+
+def run(args):
+    run_id=ident('service-bdd');requirements=feature_requirements();before=source_hashes()
+    report={'run_id':run_id,'started_at':datetime.now(timezone.utc).isoformat(),'execution_state':'PREPARED' if args.prepare_only else 'RUNNING',
+            'environment':'REAL_LOCAL_SERVICES_WITH_EXPLICIT_LOCAL_FAULT_CONTROLS','acceptance_color':'AMBER','cases':[],
+            'scope':'Named BDD assertions on actual local canonical services and fenced SQLite registry; no cross-host, product-value or hardware claim.',
+            'source_hashes_before':before,'EDD':'evaluation-driven development; no preregistered value result','CUT':'unconfirmed',
+            'fixture_parameter_mapping':{'agent-a':'fresh canonical identity per case','skill-v1':'actual controller procedure_revision content digest',
+                'demo-a':'fresh isolated context per case','registry-a/model-a':'model/champion',
+                'qual-policy-v1':'demo3 canonical adapter profile; three fresh independent outcomes',
+                'auth-policy-v1':'actual loaded Foundation/OPA policy revision'},
+            'exit_codes':{'0':'prepared inventory or all selected scenarios fully green','1':'observed failed assertion or runtime operation',
+                          '2':'blocked, partial, unbound, or sources changed; acceptance incomplete'}}
+    path=args.report or ROOT/'reports'/(run_id+'.json')
+    if path.exists():raise ValueError('preserve prior evidence: choose a new report filename')
+    path.parent.mkdir(parents=True,exist_ok=True);args.state_dir.mkdir(parents=True,exist_ok=True)
+    def save():path.write_text(json.dumps(report,indent=2)+'\n')
+    selected=set(args.scenario or range(1,38));require_ids=set(range(1,38))
+    if not selected<=require_ids:raise ValueError('only BDD-001 through BDD-037 are current scope')
+    for number in sorted(selected):
+        for label in CASES.get(number,['default']):
+            row={'scenario_id':f'BDD-{number:03}','case':label,'requirements':requirements[number],
+                 'execution_state':'NOT_RUN','acceptance_color':'AMBER','complete_scenario_candidate':number not in UNBOUND and number not in PARTIAL,
+                 'limitation':UNBOUND.get(number,PARTIAL.get(number)),'assertions':[],'faults':[],'receipts':[]}
+            report['cases'].append(row)
+    save()
+    for row in report['cases']:
+        number=int(row['scenario_id'][4:]);label=row['case']
+        if args.prepare_only or number in UNBOUND:continue
+        case=None
+        try:
+            case=Case(args,number,label,run_id);row['state_before']=case.state()
+            row['authority_before']=public(case.authority())
+            report['canonical_source_revisions']=case.rt.qualifier.source_revisions
+            case.run();case.assert_final_registry();case.verify_events();row.update(execution_state='PASSED',acceptance_color='AMBER' if number in PARTIAL else 'GREEN',
+                state_after=case.state(),authority_after=public(case.authority()),authority_after_digest=canonical_digest(case.authority()),
+                assertions=case.assertions,faults=case.faults,receipts=case.receipts)
+        except Exception as exc:
+            if case is None and not isinstance(exc,AssertionError):
+                row.update(execution_state='BLOCKED',acceptance_color='AMBER',error=type(exc).__name__+': '+str(exc))
+                report['blocked_reason']='Real service setup unavailable; no dependent scenario assertion executed.'
+                save();break
+            row.update(execution_state='FAILED',acceptance_color='RED',error=type(exc).__name__+': '+str(exc),traceback=traceback.format_exc())
+            if case:row.update(assertions=case.assertions,faults=case.faults,receipts=case.receipts)
+        finally:
+            if case:case.close()
+        save();print(json.dumps({'scenario_id':row['scenario_id'],'case':label,'state':row['execution_state'],'color':row['acceptance_color']}),flush=True)
+    report['source_hashes']=source_hashes();report['source_unchanged_during_run']=before==report['source_hashes']
+    report['finished_at']=datetime.now(timezone.utc).isoformat()
+    statuses={row['execution_state'] for row in report['cases']}
+    report['execution_state']='PREPARED' if args.prepare_only else ('FAILED' if 'FAILED' in statuses else 'BLOCKED' if 'BLOCKED' in statuses else 'COMPLETED_WITH_GAPS')
+    report['acceptance_color']='RED' if 'FAILED' in statuses else 'AMBER'
+    if not report['source_unchanged_during_run']:report.update(execution_state='SOURCE_CHANGED',acceptance_color='AMBER')
+    by_id={sid:[r for r in report['cases'] if r['scenario_id']==sid] for sid in sorted({r['scenario_id'] for r in report['cases']})}
+    report['scenario_acceptance']={sid:('GREEN' if all(r['execution_state']=='PASSED' and r['complete_scenario_candidate'] for r in rows)
+                                  and report['source_unchanged_during_run'] else 'RED' if any(r['execution_state']=='FAILED' for r in rows) else 'AMBER') for sid,rows in by_id.items()}
+    report['counts']={'scenario_ids':len(by_id),'cases':len(report['cases']),'passed_cases':sum(r['execution_state']=='PASSED' for r in report['cases']),
+                      'failed_cases':sum(r['execution_state']=='FAILED' for r in report['cases']),
+                      'blocked_cases':sum(r['execution_state']=='BLOCKED' for r in report['cases']),
+                      'unrun_cases':sum(r['execution_state']=='NOT_RUN' for r in report['cases']),
+                      'complete_green_scenarios':sum(s=='GREEN' for s in report['scenario_acceptance'].values())}
+    save();print(json.dumps({'report':str(path),'counts':report['counts'],'acceptance_color':report['acceptance_color']}))
+    if 'FAILED' in statuses:return 1
+    if args.prepare_only:return 0
+    return 0 if all(color=='GREEN' for color in report['scenario_acceptance'].values()) else 2
+
+
+if __name__=='__main__':
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--config',required=True,type=Path);parser.add_argument('--ledger-config',required=True,type=Path)
+    parser.add_argument('--state-dir',required=True,type=Path);parser.add_argument('--report',type=Path)
+    parser.add_argument('--scenario',type=int,action='append',help='One integer scenario ID; repeat to select several. Default all 37.')
+    parser.add_argument('--prepare-only',action='store_true',help='Inventory bindings and gaps without calling services.')
+    raise SystemExit(run(parser.parse_args()))

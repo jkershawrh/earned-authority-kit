@@ -1,0 +1,18 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ AuthorityJournalTests.test_precondition_refusal_without_cas_advance_cannot_cancel_unknown_dispatch _
+
+self = <test_authority_journal.AuthorityJournalTests testMethod=test_precondition_refusal_without_cas_advance_cannot_cancel_unknown_dispatch>
+
+    def test_precondition_refusal_without_cas_advance_cannot_cancel_unknown_dispatch(self):
+        self.passport.reject_without_revision=True
+        with self.assertRaises(Denied):self.grant()
+>       self.assertEqual('DISPATCHED',self.rt.authority_operations()[0]['state'])
+E       AssertionError: 'DISPATCHED' != 'CANCELLED'
+E       - DISPATCHED
+E       + CANCELLED
+
+tests/test_authority_journal.py:190: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_authority_journal.py::AuthorityJournalTests::test_precondition_refusal_without_cas_advance_cannot_cancel_unknown_dispatch
+1 failed, 16 deselected in 0.13s

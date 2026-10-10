@@ -100,10 +100,6 @@ def main():
     run([python, HERE / "prepare.py"], env=env)
     run([python, HERE / "prepare_policy.py"], env=env)
     run([python, KIT / "deploy/ledger/prepare.py", "--source", workspace / "work/ledger-track", "--runtime", workspace / "work/ledger-runtime", "--instance", args.instance, "--port-offset", str(args.port_offset)])
-    sdk = workspace / "work/passport-python-sdk"
-    sdk.mkdir(exist_ok=True)
-    proto = workspace / "work/passport-track/proto"
-    run([python, "-m", "grpc_tools.protoc", "-I", proto, "--python_out=" + str(sdk), "--grpc_python_out=" + str(sdk), proto / "passport_issuance.proto"], log=logdir / "sdk.log")
     run([python, HERE / "build.py"], env=env)
     arch = subprocess.check_output(["podman", "info", "--format", "{{.Host.Arch}}"], text=True).strip()
     rust = {"arm64": "sha256:4c632e493dfa97f0fe014c3910d1690c149bba85ed8678d47d3563ec6f258ead",
@@ -126,7 +122,11 @@ def main():
         run([python, HERE / "reference.py", "validate-services", "--report", workspace / "work/reference-runtime/services.json"], env=env)
         run([python, HERE / "reference.py", "validate-connected", "--report", workspace / "work/reference-runtime/connected.json"], env=env)
         run([python, HERE / "reference.py", "validate-adversarial", "--report", workspace / "work/reference-runtime/adversarial.json"], env=env)
+        run([python, HERE / "reference.py", "validate-authority-recovery", "--report", workspace / "work/reference-runtime/authority-recovery.json"], env=env)
         run([python, HERE / "validate_restore.py", "--prior-report", workspace / "work/reference-runtime/connected.json", "--report", workspace / "work/reference-runtime/restore.json"], env=env)
+        run([python, KIT / "tools/validate_authority_recovery.py", "--config", workspace / "work/reference-runtime/reference.env",
+             "--ledger-config", workspace / "work/ledger-runtime/local.env", "--state-dir", workspace / "work/reference-runtime/connected-validation",
+             "--verify-existing-report", workspace / "work/reference-runtime/authority-recovery.json", "--report", workspace / "work/reference-runtime/authority-recovery-restored.json"], env=env)
     print(json.dumps({"stage": "reference_built", "workspace": str(workspace), "started": args.start or args.validate, "validated": args.validate}))
 
 
