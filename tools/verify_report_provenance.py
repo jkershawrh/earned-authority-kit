@@ -23,7 +23,7 @@ def run_case(name, mutate, expected='AMBER', row='DEP-BUILD'):
     with tempfile.TemporaryDirectory(prefix='report-proof-') as directory:
         target = Path(directory).resolve()/'kit'
         shutil.copytree(ROOT,target,ignore=shutil.ignore_patterns('__pycache__','.pytest_cache'))
-        aggregate_path = target/'reports/evidence-reference-combined.json'
+        aggregate_path = target/'reports/boundary-reference-combined.json'
         aggregate = json.loads(aggregate_path.read_text())
         child_path = target/aggregate['components']['connected']['report']
         child = json.loads(child_path.read_text())
@@ -59,7 +59,7 @@ run_case('short_all_green_check_set_does_not_pass',change_and_rebind(lambda c:c.
 run_case('duplicate_check_does_not_pass',change_and_rebind(lambda c:c['checks'].__setitem__(-1,copy.deepcopy(c['checks'][0]))))
 run_case('wrong_named_check_does_not_pass',change_and_rebind(lambda c:c['checks'][0].update(check='unrelated_green_check')))
 def arbitrary_bdd(t,*args):
-    p=t/'reports/service-bdd-live-004.json';d=json.loads(p.read_text());d['scenario_acceptance']={f'UNRELATED-{i}':'GREEN' for i in range(37)};p.write_text(json.dumps(d))
+    p=t/'reports/service-bdd-live-006.json';d=json.loads(p.read_text());d['scenario_acceptance']={f'UNRELATED-{i}':'GREEN' for i in range(37)};p.write_text(json.dumps(d))
 run_case('37_arbitrary_green_ids_do_not_complete_BDD',arbitrary_bdd,row='BDD-CORE')
 def changed_foundation_log(t,*args):
     report=json.loads((t/'evidence/foundation-policy-only-results.json').read_text())
@@ -75,7 +75,7 @@ module.ROOT = ROOT
 report={'status':'PASS','scope':'READINESS_REPORT_PROVENANCE_NEGATIVE_CONTROLS','checks':checks,
         'finished_at_ms':time.time_ns()//1000000,
         'source_hashes':{name:digest(ROOT/name) for name in ('tools/report.py','tools/verify_report_provenance.py')},
-        'artifacts':{name:digest(ROOT/name) for name in ('reports/evidence-reference-combined.json','reports/service-bdd-live-004.json')},
+        'artifacts':{name:digest(ROOT/name) for name in ('reports/boundary-reference-combined.json','reports/service-bdd-live-006.json')},
         'limitations':['Isolated altered evidence copies; original execution records unchanged','Does not execute the underlying services']}
 (ROOT/'reports/report-provenance-checks.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps({'status':'PASS','checks':len(checks)}))

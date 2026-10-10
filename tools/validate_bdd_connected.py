@@ -10,11 +10,14 @@ exercise the local enforcement boundary; they do not prove remote fault behavior
 import argparse
 import base64
 import copy
+import gc
 import hashlib
 import importlib
 import importlib.util
 import json
 import re
+import sqlite3
+import stat
 import sys
 import threading
 import traceback
@@ -22,6 +25,8 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
+from cryptography.hazmat.primitives import serialization
+from cryptography.exceptions import InvalidSignature
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
@@ -33,15 +38,11 @@ from earned_authority.runtime import ControlledClock, Denied, ident, encoded
 
 
 # These cases remain unbound until the exact requirement has an observable API.
-UNBOUND = {
-    33: 'The exposed boolean local-fault flags do not establish actual durable-store offline or writer authentication failure. Exact real failure and reason mapping remain unbound.',
-}
+UNBOUND = {}
 PARTIAL = {
     9: 'Actual Foundation/OPA denies the requested resource at the requested time; a time-window-specific policy rule is not exercised.',
     15: 'Canonical current-status unavailability fails closed despite a previously observed active snapshot. There is no executable stale grant cache in this adapter, so the literal cached-status premise is not exercised.',
     16: 'Qualification and grant exist before the live attempt; records are linked by qualification/grant IDs, not retroactively assigned the later attempt ID required literally by this scenario.',
-    21: 'Real response loss and observation interruption are bound; unavailable reconciliation uses a local injected control, not a real inaccessible durable store or an explicit UNKNOWN response envelope.',
-    25: 'Actual bound-reference missing/stale detection holds qualification with the required reason and preserves the unrelated grant. The execution boundary denies the withdrawn grant as REVOKED_AUTHORITY; it does not return the literal scenario hold reason.',
     31: 'The current public aggregate has one resource grant per skill. Stale changed-resource rejection is exercised, but adding a second read-health resource while retaining the first is not represented.',
 }
 
@@ -107,7 +108,7 @@ CASES = {
     10: ['wrong-action', 'wrong-resource', 'wrong-context', 'changed-revision'],
     14: ['missing-expiry', 'invalid-expiry'],
     17: ['wrong-version', 'unhealthy'],
-    21: ['lost-response', 'observer-interruption', 'reconciliation-unavailable'],
+    21: ['lost-response', 'observer-interruption', 'reconciliation-unavailable', 'postcommit-store-readonly'],
     25: ['missing-result', 'old-result'],
     33: ['local-store-down', 'unauthenticated'],
     34: ['before-intent-send', 'after-commit', 'audit-unavailable'],
@@ -199,6 +200,59 @@ class Case:
 
     def state(self):
         return {'registry': self.rt.read('model/champion'), 'mutations': self.rt.mutation_count}
+
+    def independent_connection(self):
+        """Keep a real reader open before a case-local filesystem access fault."""
+        return sqlite3.connect(self.path.resolve().as_uri()+'?mode=ro',uri=True,timeout=2)
+
+    def sqlite_modes(self):
+        # sqlite3 connection contexts end transactions but can leave cycle-held
+        # connections. Release those closed-scope handles before a real OS fault.
+        gc.collect()
+        return {str(path):stat.S_IMODE(path.stat().st_mode) for path in
+                (self.path,Path(str(self.path)+'-wal'),Path(str(self.path)+'-shm')) if path.exists()}
+
+    def restore_sqlite_modes(self, modes):
+        # SQLite can create WAL/SHM during the fault with the main file's 0444
+        # mode. Restore only this case's files, including those new sidecars.
+        for path in (self.path,Path(str(self.path)+'-wal'),Path(str(self.path)+'-shm')):
+            if path.exists():path.chmod(modes.get(str(path),modes[str(self.path)]))
+        gc.collect()
+
+    def connection_state(self, connection):
+        row=connection.execute('SELECT version,healthy FROM registry WHERE resource=?',('model/champion',)).fetchone()
+        return {'registry':{'version':row[0],'healthy':bool(row[1])} if row else {'version':'model-v1','healthy':True},
+                'mutations':connection.execute("SELECT value FROM meta WHERE name='mutation_count'").fetchone()[0]}
+
+    def assert_unknown_retry(self, result, command, committed=None, reason='RECONCILIATION_UNAVAILABLE'):
+        self.eq('unavailable reconciliation returns explicit unknown state',result['state'],'UNKNOWN')
+        self.eq('uncertainty has exact reason',result['reason'],reason)
+        self.eq('unknown response remains bound to original attempt',result['attempt_id'],command['attempt_id'])
+        self.eq('unknown response retains original request digest',result['request_digest'],command['request_digest'])
+        self.eq('unknown response retains exact authenticated command digest',result['command_digest'],canonical_digest(command))
+        self.eq('unknown response claims only established commitment',result['committed'],committed)
+        self.eq('unknown response does not fabricate outcome, delivery or receipt',
+                (result['outcome'],result['delivery'],result['receipt']),(None,'UNKNOWN',None))
+        self.eq('unpersisted response explicitly requires reconciliation',(result['persisted'],result['next_action']),(False,'RECONCILE'))
+        self.eq('unknown response explicitly forbids replay',result['reexecution_permitted'],False)
+
+    def assert_sqlite_fault(self, write=False):
+        """Prove the filesystem fault reaches SQLite, without faking a DB error."""
+        connection=None
+        try:
+            connection=sqlite3.connect(self.path,timeout=2)
+            if write:
+                connection.execute('BEGIN IMMEDIATE')
+                connection.execute("UPDATE meta SET value=value WHERE name='mutation_count'")
+            else:connection.execute('SELECT id FROM attempts LIMIT 1').fetchone()
+        except sqlite3.Error as exc:
+            code=getattr(exc,'sqlite_errorcode',None)
+            self.check('actual SQLite rejects '+('write' if write else 'read')+' during filesystem fault',
+                isinstance(code,int) and (code & 255)==(sqlite3.SQLITE_READONLY if write else sqlite3.SQLITE_CANTOPEN),
+                sqlite_errorcode=code,sqlite_errorname=getattr(exc,'sqlite_errorname',None),message=str(exc))
+        else:self.check('filesystem fault must cause actual SQLite error',False)
+        finally:
+            if connection:connection.rollback();connection.close()
 
     def assert_final_registry(self):
         """Check actual effects, independently of returned controller outcomes."""
@@ -515,11 +569,13 @@ class Case:
             else:self.deny('changed payload cannot reuse attempt ID',lambda:self.admit(attempt_id=cmd['attempt_id'],target='changed-model'),'IDEMPOTENCY_CONFLICT')
         elif n == 21:
             self.ready();cmd=self.admit()
+            durable_before_retry=None
             if self.label=='lost-response':
                 try:rt.commit(cmd,lose_response=True)
                 except TimeoutError:pass
                 else:self.check('response loss fault occurred',False)
                 self.faults.append('Transport response-loss hook throws only after actual durable commit/result.')
+                durable_before_retry=copy.deepcopy(rt.attempts(cmd['attempt_id']))
             elif self.label=='observer-interruption':
                 original_read=rt.read
                 def interrupted(_):raise RuntimeError('injected observer interruption after durable commit')
@@ -531,16 +587,51 @@ class Case:
                 finally:rt.read=original_read
                 self.faults.append('Local observer exception after durable commit; restart uses new connections.')
                 self.eq('durable incomplete result has no invented outcome',rt.attempts(cmd['attempt_id'])['outcome'],None)
+            elif self.label=='reconciliation-unavailable':
+                try:rt.commit(cmd,lose_response=True)
+                except TimeoutError:pass
+                else:self.check('response loss precedes reconciliation outage',False)
+                durable_before_retry=copy.deepcopy(rt.attempts(cmd['attempt_id']))
+                modes=self.sqlite_modes();reader=self.independent_connection();before=self.connection_state(reader)
+                self.faults.append('After actual committed response loss, collect closed-scope SQLite connection cycles, then chmod only this case SQLite file to 000. New SQLite reads actually fail; a separate already-open read-only connection measures registry and mutation count. Restore exact case-file modes and collect afterward. No availability flag is used; garbage collection is test setup, not a production recovery guarantee.')
+                try:
+                    self.path.chmod(0);self.assert_sqlite_fault()
+                    self.assert_unknown_retry(rt.retry(cmd),cmd)
+                    self.eq('unavailable retry cannot replay through a new store',self.connection_state(reader),before)
+                finally:reader.close();self.restore_sqlite_modes(modes)
+                self.eq('unknown response does not replace confirmed durable result',rt.attempts(cmd['attempt_id']),durable_before_retry)
             else:
-                rt.commit(cmd);rt.reconciliation_available=False
-                self.faults.append('Local reconciliation-unavailable control; no claim of actual disk failure.')
-                try:self.deny('unavailable reconciliation never blindly reexecutes',lambda:rt.commit(cmd),'RECONCILIATION_UNAVAILABLE')
-                finally:rt.reconciliation_available=True
+                modes=None;original_read=rt.read;calls=[]
+                def read_then_disable_writes(resource):
+                    nonlocal modes
+                    readback=original_read(resource)
+                    calls.append(readback)
+                    self.eq('postcommit fault starts after independently confirmed mutation',
+                            {'registry':readback,'mutations':rt.mutation_count},
+                            {'registry':{'version':'model-v2','healthy':True},'mutations':1})
+                    modes=self.sqlite_modes();self.path.chmod(0o444);self.assert_sqlite_fault(write=True)
+                    return readback
+                self.faults.append('After actual durable registry commit, the actual independent reader observes state, then collect closed-scope SQLite connection cycles and make only this case SQLite file read-only. Outcome persistence encounters a real SQLITE_READONLY. Restore original case-file modes, including newly created WAL/SHM, and collect afterward; garbage collection is test setup, not a production recovery guarantee. No invented outcome or boolean fault flag is used.')
+                rt.read=read_then_disable_writes
+                try:
+                    result=rt.commit(cmd)
+                    self.eq('observer reached exactly once before persistence failure',len(calls),1)
+                    self.assert_unknown_retry(result,cmd,committed=True)
+                finally:
+                    rt.read=original_read
+                    if modes:self.restore_sqlite_modes(modes)
+                self.eq('actual durable commit survives failed outcome persistence',rt.attempts(cmd['attempt_id'])['state'],'COMMITTED')
+                self.eq('persistence uncertainty cannot fabricate durable outcome',rt.attempts(cmd['attempt_id'])['outcome'],None)
+                self.eq('failed persistence adds no independent observation',[o for o in rt.observations() if o['attempt_id']==cmd['attempt_id']],[])
             count=rt.mutation_count;self.reopen();rt=self.rt
-            recovered=rt.commit(cmd)
+            recovered=rt.retry(cmd)
             self.eq('restart recovery returns original attempt',recovered['attempt_id'],cmd['attempt_id'])
             self.eq('reconciled actual postcondition is PASS',recovered['outcome']['outcome'],'PASS')
             self.eq('recovery never repeats mutation',rt.mutation_count,count)
+            if durable_before_retry is not None:self.eq('retry returns exact original durable result',recovered,durable_before_retry)
+            self.eq('one logical intent after uncertainty and restart',len(self.events('INTENT',cmd['attempt_id'])),1)
+            self.eq('one logical commit after uncertainty and restart',len(self.events('COMMITTED',cmd['attempt_id'])),1)
+            self.eq('one independent observation for reconciled attempt',len([o for o in rt.observations() if o['attempt_id']==cmd['attempt_id']]),1)
         elif n == 22:
             self.ready();aid=ident('check-only-attempt')
             response=rt.policy.check(self.agent,'release','model/champion')
@@ -584,11 +675,13 @@ class Case:
                 rt.grant(self.q['qualification_id'],agent=self.agent)
                 readq=self.qualify('read-health')
                 prior=rt.grant(readq['qualification_id'],agent=self.agent,action='read',resource='urn:dataset/health')
+                old_command=self.admit()
                 self.check('release evidence expires before unrelated evidence',self.q['expires_at_ms']<readq['expires_at_ms'])
                 restored_clock=self.clock_at(self.q['expires_at_ms'])
                 reason='STALE_EVIDENCE'
             else:
                 prior=self.ready(second=True);reason='EVIDENCE_UNCONFIRMED'
+                old_command=self.admit()
                 removed=self.q['outcome_refs'][0]['attempt_id']
                 with rt._tx() as db:db.execute('DELETE FROM observations WHERE attempt_id=?',(removed,))
                 self.faults.append('Actual case-local SQLite observation row removed while its original signed event and canonical receipt remain.')
@@ -603,7 +696,9 @@ class Case:
                 current=self.authority()
                 for field in ('grant_id','qualification_id','qualification_digest'):
                     self.eq('detector preserves unrelated '+field,current['grants']['read-health'][field],prior['grants']['read-health'][field])
-                self.deny('affected release denied after evidence hold',lambda:rt.commit(self.admit()),'REVOKED_AUTHORITY');self.read_other()
+                self.deny('new matching release reports exact evidence hold',lambda:rt.commit(self.admit()),reason)
+                self.deny('already admitted command remains generically revoked',lambda:rt.commit(old_command),'REVOKED_AUTHORITY')
+                self.read_other()
             finally:
                 if restored_clock:rt.clock=restored_clock
         elif n == 26:
@@ -676,6 +771,45 @@ class Case:
             self.eq('one durable intent',len(self.events('INTENT',cmd['attempt_id'])),1)
             q=rt.qualify(context=self.context)
             self.eq('one attempt contributes once to qualification',len([r for r in q['outcome_refs'] if r['attempt_id']==cmd['attempt_id']]),1)
+        elif n == 33:
+            prior=self.ready();cmd=self.admit();aid=cmd['attempt_id'];before=self.state()
+            requested=copy.deepcopy(rt.attempts(aid))
+            self.eq('attempt is admitted but not committed',requested['state'],'REQUESTED')
+            self.eq('no durable local intent before fault',self.events('INTENT',aid),[])
+            if self.label=='local-store-down':
+                modes=self.sqlite_modes()
+                self.faults.append('After admission, collect closed-scope SQLite connection cycles and chmod only this case SQLite file to 0444. An actual SQL write probe must fail SQLITE_READONLY before the mutation boundary is exercised. Restore original case-file modes, including newly created WAL/SHM, and collect afterward; garbage collection is test setup, not a production recovery guarantee. No durability flag is used.')
+                try:
+                    self.path.chmod(0o444);self.assert_sqlite_fault(write=True)
+                    self.deny('actual local intent write failure blocks registry mutation',lambda:rt.commit(cmd),'LOCAL_DURABILITY_UNAVAILABLE')
+                finally:self.restore_sqlite_modes(modes)
+            else:
+                trusted=rt.keys['writer'];wrong=Ed25519PrivateKey.generate()
+                trusted_bytes=trusted.public_key().public_bytes(serialization.Encoding.Raw,serialization.PublicFormat.Raw)
+                wrong_bytes=wrong.public_key().public_bytes(serialization.Encoding.Raw,serialization.PublicFormat.Raw)
+                self.check('replacement writer key differs from configured trust',trusted_bytes!=wrong_bytes,
+                    trusted_public_key_digest=canonical_digest({'key':trusted_bytes.hex()}),
+                    wrong_public_key_digest=canonical_digest({'key':wrong_bytes.hex()}))
+                self.eq('runtime verification trust is pinned to original writer',
+                        rt._trusted_local_signers['writer'].public_bytes(serialization.Encoding.Raw,serialization.PublicFormat.Raw).hex(),trusted_bytes.hex())
+                challenge=encoded({'attempt_id':aid,'purpose':'verify wrong writer fault'})
+                signature=wrong.sign(challenge)
+                self.eq('injected writer produces a valid signature under its own key',wrong.public_key().verify(signature,challenge),None)
+                try:trusted.public_key().verify(signature,challenge)
+                except InvalidSignature:self.check('wrong writer signature is rejected by pinned trust',True)
+                else:self.check('wrong writer signature is rejected by pinned trust',False)
+                self.faults.append('Active local signing private key replaced by a newly generated Ed25519 key. Pinned writer verification trust is unchanged; actual signed intent must fail authentication inside the write transaction. No writer-authenticated flag is used.')
+                rt.keys['writer']=wrong
+                try:self.deny('actual unauthorized intent signer blocks registry mutation',lambda:rt.commit(cmd),'LOCAL_INTENT_UNAUTHENTICATED')
+                finally:rt.keys['writer']=trusted
+                self.eq('fault did not replace pinned verification trust',
+                        rt._trusted_local_signers['writer'].public_bytes(serialization.Encoding.Raw,serialization.PublicFormat.Raw).hex(),trusted_bytes.hex())
+            self.eq('failed intent has no durable outbox record',self.events('INTENT',aid),[])
+            self.eq('failed intent has no execution record',self.events('COMMITTED',aid),[])
+            self.eq('failed intent has no independent outcome', [o for o in rt.observations() if o['attempt_id']==aid],[])
+            self.eq('failed intent leaves original admitted attempt unchanged',rt.attempts(aid),requested)
+            self.eq('failed intent cannot change canonical permission',self.authority(),prior)
+            self.eq('independent registry state and count are unchanged',self.state(),before)
         elif n == 34:
             self.ready();cmd=self.admit();good=None
             try:
@@ -726,7 +860,7 @@ class Case:
             self.eq('tampered evidence is excluded from pass count',q['passes'],2)
             self.check('tampered observation is excluded from new qualification references',all(ref['attempt_id']!=observation['attempt_id'] for ref in q['outcome_refs']))
             self.eq('remaining evidence cannot qualify a replacement',q['disposition'],'HOLD')
-            self.deny('held affected grant cannot mutate',lambda:rt.commit(self.admit()),'REVOKED_AUTHORITY')
+            self.deny('held affected grant cannot mutate without confirmed evidence',lambda:rt.commit(self.admit()),'EVIDENCE_UNCONFIRMED')
             self.eq('unrelated qualification preserved',self.authority()['grants']['read-health']['qualification_id'],prior['grants']['read-health']['qualification_id'])
             self.read_other()
         elif n == 36:

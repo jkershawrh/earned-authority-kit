@@ -1,0 +1,11 @@
+# Unknown reconciliation response — unpublished draft
+
+`unknown-reconciliation-result.schema.json` describes the transient uncertainty branch of `Runtime.retry(command)`. Successful reconciliation returns the ordinary durable attempt result. This separate response is not one of the five authenticated runtime wire-record kinds and must not enter an exported proof bundle.
+
+`state: UNKNOWN` means the retry cannot complete reconciliation. `committed: null` means it could not establish commitment; it does not establish that the operation did not happen. `committed: true` preserves a commit already established before a later failure. Neither form contains an independent outcome. The required null `outcome` differs from a persisted, signed independent observation whose outcome is UNKNOWN: that observation may describe a known COMMITTED attempt with unavailable or unattributable readback.
+
+The response identifies the exact attempt, signed command digest and original request digest. Consumers must compare these identifiers with their requested command. Schema validity alone does not authenticate the response, establish permission, create a receipt, or prove a state transition. A missing durable attempt yields `ATTEMPT_UNCONFIRMED`, not a new admission. Unavailable storage yields `RECONCILIATION_UNAVAILABLE`. Both forms prescribe reconciliation and explicitly forbid reexecution; they do not overwrite the stored attempt or create lifecycle evidence.
+
+`export_runtime` continues to export actual durable REQUESTED/COMMITTED records. When storage recovers, an existing signed local COMMITTED event and independent observation can be exported under their original bindings. A transient UNKNOWN response cannot substitute for either record, even if its content digest is recomputed.
+
+This is a new standalone schema within unpublished `0.1.0-draft.1`. No stable external protocol, compatibility guarantee, transport authentication or automatic version negotiation is asserted. Existing wire consumers do not accept this response as an attempt proof. The producer tests use actual SQLite and filesystem failures inside an explicit local Runtime fixture; they do not establish connected-service acceptance by themselves.

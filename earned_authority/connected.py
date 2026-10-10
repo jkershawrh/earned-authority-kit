@@ -339,10 +339,35 @@ class ConnectedRuntime(AuthorityJournal,Runtime):
             if result['state']=='CANCELLED':raise Denied(result['last_error'])
             return self.authority(agent)
 
+    def _held_reason(self,db,intent,authority):
+        """Diagnose only the exact acknowledged hold at the current revision.
+
+        The authenticated journal already contains its target and canonical
+        receipt; no second hold database or inferred historical permission.
+        """
+        for operation in reversed(self._read_authority_operations(db,intent['agent'])):
+            if operation['state']!='APPLIED' or operation['kind']!='REVOKE' or operation['skill']!=intent['skill']:
+                continue
+            receipt=operation['receipt']
+            if receipt['agent_revision']!=authority['revision'] or (receipt['active_passport_id'] or None)!=authority['passport_id']:
+                return None
+            if operation['reason'] not in ('EVIDENCE_UNCONFIRMED','STALE_EVIDENCE'):return None
+            prior=self._normalize(operation['prior_authority'],intent['agent'])['grants'].get(intent['skill'])
+            if not prior or prior['grant_id']!=operation['target_grant_id'] or prior['qualification_id']!=operation['target_qualification_id']:
+                return None
+            if any(prior[k]!=intent[k] for k in ('skill','version','context','action','resource')):return None
+            q=self.qualification(operation['target_qualification_id'])
+            if q['disposition']=='HOLD' and q['reason']==operation['reason'] and all(q[k]==prior[k] for k in ('skill','version','context')):
+                return q['reason']
+            return None
+        return None
+
     def _check(self,db,intent,expected_revision=None):
         self._assert_authority_ready(db,intent['agent'])
         a=self.authority(intent['agent']);g=a['grants'].get(intent['skill'])
-        if not g or a['status']!='ACTIVE': raise Denied('REVOKED_AUTHORITY')
+        if not g or a['status']!='ACTIVE':
+            reason=self._held_reason(db,intent,a) if expected_revision is None else None
+            raise Denied(reason or 'REVOKED_AUTHORITY')
         if expected_revision is not None and a['revision']!=expected_revision: raise Denied('REVOKED_AUTHORITY')
         if a['expires_at_ms']<=self.clock.now_ms: raise Denied('EXPIRED_PASSPORT')
         if g['expires_at_ms']<=self.clock.now_ms: raise Denied('EXPIRED_SCOPE')
@@ -371,17 +396,8 @@ class ConnectedRuntime(AuthorityJournal,Runtime):
                 try: yield
                 finally: fcntl.flock(handle,fcntl.LOCK_UN)
 
-    def commit(self,command,actual=None,healthy=True,observer_available=True,lose_response=False,before_delivery=None):
-        if not self.local_durability_available: raise Denied('LOCAL_DURABILITY_UNAVAILABLE')
-        if not self.local_writer_authenticated: raise Denied('LOCAL_INTENT_UNAUTHENTICATED')
-        with self._commit_fence():
-            self._commit_local(command,actual,healthy,observer_available)
+    def _after_commit(self):
         self.drain_withdrawals()
-        if before_delivery: before_delivery()
-        self.flush_outbox()
-        result=self.attempts(command['attempt_id'])
-        if lose_response: raise TimeoutError('response lost after durable commit')
-        return result
 
     def apply_outcome(self,attempt_id):
         with self._tx() as db:

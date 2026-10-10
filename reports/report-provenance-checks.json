@@ -69,14 +69,14 @@
       "passed": true
     }
   ],
-  "finished_at_ms": 1791603388407,
+  "finished_at_ms": 1791604316556,
   "source_hashes": {
-    "tools/report.py": "sha256:e0465dbb22c025cc7d01df906919504813508ad71ae077a0f693df530d0a9629",
-    "tools/verify_report_provenance.py": "sha256:cca85ec6fc160dbfcef7847afd2ac4e0df11854dfba721515319fd84ece7523d"
+    "tools/report.py": "sha256:ac37d70a87c3e921575a6815624c804812fe8941b056a08aed4ca077253dce51",
+    "tools/verify_report_provenance.py": "sha256:970a46407bba7b0ae62bbee8558fa799a4b744b36e3f05d0789516ca9fdfc09c"
   },
   "artifacts": {
-    "reports/evidence-reference-combined.json": "sha256:e99162a0f6cb91b154beb63164cb80bcc9d9c1c9b87b47a23ee52cbeca779080",
-    "reports/service-bdd-live-004.json": "sha256:cdd56dfc339525d03a711d300f77480abc829bb5f6bd776a92d22ce9be8f51cf"
+    "reports/boundary-reference-combined.json": "sha256:b5d23d9f837c7e04667ea2ce53dd5b855637c4b83970129127087944acd33f06",
+    "reports/service-bdd-live-006.json": "sha256:e62183d5f27970dfd26a961ffa0531559f2946b2fcc3eb6be423baa879d1b370"
   },
   "limitations": [
     "Isolated altered evidence copies; original execution records unchanged",

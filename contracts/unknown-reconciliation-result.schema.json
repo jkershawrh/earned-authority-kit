@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:earned-authority:unknown-reconciliation-result:0.1.0-draft.1",
+  "title": "Transient unknown reconciliation result",
+  "description": "An unpersisted retry response; never a durable attempt, independent outcome, authority or receipt proof. Shape validation does not authenticate this response.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "state": {"const": "UNKNOWN"},
+    "reason": {"enum": ["RECONCILIATION_UNAVAILABLE", "ATTEMPT_UNCONFIRMED"]},
+    "attempt_id": {"type": "string", "minLength": 1},
+    "request_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$", "minLength": 71, "maxLength": 71},
+    "command_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$", "minLength": 71, "maxLength": 71},
+    "committed": {
+      "enum": [null, true],
+      "description": "null means commitment could not be established; true preserves an already established commit despite later uncertainty. false is not inferred from unavailable or missing records."
+    },
+    "outcome": {"type": "null"},
+    "delivery": {"const": "UNKNOWN"},
+    "receipt": {"type": "null"},
+    "persisted": {"const": false},
+    "next_action": {"const": "RECONCILE"},
+    "reexecution_permitted": {"const": false}
+  },
+  "required": ["state", "reason", "attempt_id", "request_digest", "command_digest", "committed", "outcome", "delivery", "receipt", "persisted", "next_action", "reexecution_permitted"],
+  "allOf": [
+    {
+      "if": {"properties": {"reason": {"const": "ATTEMPT_UNCONFIRMED"}}},
+      "then": {"properties": {"committed": {"type": "null"}}}
+    }
+  ]
+}

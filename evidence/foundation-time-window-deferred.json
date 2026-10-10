@@ -1,0 +1,15 @@
+{
+  "recorded_at": "2026-10-10T03:44:26.757862+00:00",
+  "scenario": "BDD-009",
+  "acceptance_color": "AMBER",
+  "implementation": "NOT_IMPLEMENTED",
+  "reason": "A policy-owned maintenance calendar is a product policy choice; no calendar introduced merely to satisfy a scenario.",
+  "proposal": "docs/TIME_WINDOW_PROPOSAL.md",
+  "foundation_source_matches_pre_increment_baseline": true,
+  "source_files": 252,
+  "baseline": "evidence/foundation-time-window-baseline.json",
+  "complete_patch_unchanged_sha256": "afc03ba6e79d77a95548043f865832aa0b499d81303c87689f8c5612ac9bf1a1",
+  "live_services_changed": false,
+  "tests_executed_for_time_window": false,
+  "note": "Two temporary test drafts were removed before any canonical implementation or test run."
+}

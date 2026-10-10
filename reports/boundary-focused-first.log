@@ -1,0 +1,38 @@
+......................F.........................                         [100%]
+=================================== FAILURES ===================================
+_______ test_sqlite_readonly_retry_cannot_manufacture_commit_or_receipt ________
+
+prepared = (<earned_authority.runtime.Runtime object at 0x107f8f200>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x107f8d850>
+
+    def test_sqlite_readonly_retry_cannot_manufacture_commit_or_receipt(prepared, monkeypatch):
+        runtime, _, command = prepared
+        before = durable_snapshot(runtime)
+        with monkeypatch.context() as patch:
+            patch.setattr(runtime, "_db", lambda: sqlite3.connect(Path(runtime.path).as_uri() + "?mode=ro", uri=True))
+>           response = runtime.retry(command)
+                       ^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <earned_authority.runtime.Runtime object at 0x107f8f200>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def retry(self,command):
+        """Reconcile an authenticated durable attempt before considering execution.
+    
+        A missing or inaccessible record never creates a new attempt. A known
+        REQUESTED record may proceed through the normal fenced transaction,
+        which rechecks state so a concurrent commit cannot be replayed.
+        """
+        if not self._verified(command,{'authority'}):raise Denied('BINDING_MISMATCH')
+        try:
+>           with self._db(read_only=True) as db:
+                 ^^^^^^^^^^^^^^^^^^^^^^^^
+E           TypeError: test_sqlite_readonly_retry_cannot_manufacture_commit_or_receipt.<locals>.<lambda>() got an unexpected keyword argument 'read_only'
+
+earned_authority/runtime.py:559: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_reconciliation_wire.py::test_sqlite_readonly_retry_cannot_manufacture_commit_or_receipt
+1 failed, 47 passed in 1.89s

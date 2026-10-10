@@ -1,0 +1,21 @@
+{
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "completed_at": "2026-10-10T03:48:02.357648+00:00",
+  "images": [
+    {
+      "container": "ea-boundary-foundation-bff",
+      "image_tag": "localhost/earned-authority-foundation-bff:reference",
+      "running_image_id": "285e5d571288082d2fd41a30f0c1ecff6cd2ec559b136d854a9a2b37c8d2fe25",
+      "expected_image_id": "285e5d571288082d2fd41a30f0c1ecff6cd2ec559b136d854a9a2b37c8d2fe25",
+      "matched": true
+    },
+    {
+      "container": "ea-boundary-foundation-gateway",
+      "image_tag": "localhost/earned-authority-foundation-gateway:reference",
+      "running_image_id": "0553bf4fe0436c79e064eb4ef3b6cbcac4836835504aa08492c86d909addfd79",
+      "expected_image_id": "0553bf4fe0436c79e064eb4ef3b6cbcac4836835504aa08492c86d909addfd79",
+      "matched": true
+    }
+  ]
+}

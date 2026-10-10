@@ -1,0 +1,333 @@
+{
+  "status": "PASS",
+  "scope": "EXECUTION_AND_RECONCILIATION_COMPONENT_CHECKS_EXTRACTED_FROM_FULL_RUN",
+  "tests_run": 48,
+  "cases": [
+    {
+      "test": "tests/test_execution_boundary.py::test_readonly_transaction_refuses_before_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_replacement_writer_private_key_cannot_replace_verification_trust",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_exact_persisted_intent_is_authenticated_before_registry_write[invalid-signature]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_exact_persisted_intent_is_authenticated_before_registry_write[different-valid-event]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_unavailable_retry_lookup_preserves_actual_commit_and_never_reexecutes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_missing_attempt_cannot_be_created_by_retry",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_commit_acknowledgement_failure_returns_unknown_not_false_denial",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_observer_storage_failure_after_commit_retains_known_commit",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_outbox_write_failure_cannot_report_a_committed_attempt_as_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_retry_with_different_authenticated_payload_remains_a_conflict",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_postcommit_outcome_signature_failure_is_uncertainty_not_execution_denial",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_new_matching_request_gets_precise_hold_but_old_command_remains_revoked[missing]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_new_matching_request_gets_precise_hold_but_old_command_remains_revoked[stale]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_hold_diagnosis_cannot_be_borrowed_by_a_different_request[changes0]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_hold_diagnosis_cannot_be_borrowed_by_a_different_request[changes1]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_hold_diagnosis_cannot_be_borrowed_by_a_different_request[changes2]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_hold_diagnosis_cannot_be_borrowed_by_a_different_request[changes3]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_manual_revoke_reason_is_not_a_qualification_hold",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_later_authority_change_does_not_reuse_old_hold_diagnosis",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_valid_replacement_grant_takes_precedence_over_historical_hold",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_tampered_revoke_journal_cannot_supply_a_hold_diagnosis",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_obstructed_durable_lookup_produces_unknown_without_writes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_sqlite_readonly_retry_cannot_manufacture_commit_or_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_missing_database_lookup_does_not_create_replacement_database",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_missing_durable_attempt_is_unknown_and_never_readmitted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_postcommit_storage_failure_preserves_known_commit_without_claiming_outcome",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_execution_uncertainty_does_not_erase_existing_commit",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_unknown_outcome_is_a_durable_commit_not_unknown_execution",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_unknown_cannot_be_exported_as_durable_attempt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_rehashed_unknown_cannot_replace_authenticated_attempt_proof",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[state-COMMITTED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[reason-POSTCONDITION_MET]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[committed-False]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[outcome-PASS]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[outcome-value4]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[delivery-RECORDED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[receipt-value6]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[persisted-True]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[next_action-EXECUTE]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[attempt_id-]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[request_digest-wrong]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[command_digest-sha256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[authority-value12]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[signature-invented]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[mutation_receipt_ref-local-event:invented]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[proof_store-value15]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[reexecution_permitted-True]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_missing_attempt_must_not_claim_confirmed_commit",
+      "outcome": "PASS"
+    }
+  ],
+  "verification_report": "reports/component-verification.json",
+  "artifacts": {
+    "reports/execution-boundary-red.log": "sha256:75ec113da6dc707ec33d20c01343c46e8539485c3667b791448d834b29e7b9b6",
+    "reports/execution-boundary-first-green.log": "sha256:3f1505414e6d9dc89b69a0c26354fcc138986d24518eddf8ebb6a66120fda8b1",
+    "reports/execution-postcommit-auth-red.log": "sha256:df91789445c49c766bf83d88081f671a383a1dcbc12b4d4476f7b69a0c09a517",
+    "reports/hold-diagnostics-red.log": "sha256:5fbd4d1ba28fdca67d6a6b7f3a1ee704609d95893ba3544bc680a9d681a83d64",
+    "reports/boundary-focused-first.log": "sha256:f5d4b23d5e66c6d365b1ef3b0aa1704d9dccaede0baf57613e7aeb4d0d00ec37",
+    "evidence/reconciliation-wire-results.json": "sha256:6fbf80678d3d82b4f7ae68c6f8f300958793afcf3b4db0b1178b57f7a1bc9260",
+    "evidence/reconciliation-wire-missing-database-red.log": "sha256:c7ce821363d1a0037c504557d78545e82fb6730e849a0cb42b53291a1eb249ff",
+    "reports/component-verification.json": "sha256:0fda5463065c30e116715d092e7f40f69803acaf5ded881c396889e56bd93ec6"
+  },
+  "limits": [
+    "Actual SQLite and cryptographic faults with explicitly local unit service seams.",
+    "Live services are separately recorded; named fault schedules do not cover every storage failure.",
+    "Uncertain responses are unpersisted and never proof of a new outcome.",
+    "The focused first run retains a test fixture function-argument mismatch; final current execution is in the full component report."
+  ],
+  "source_hashes": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+    "earned_authority/connected.py": "sha256:20c6caed79299b5b8d2707878c8e7775e516c8aebed4e2076c0bef1defce95e3",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:f36a19824929002701f8c55b1b9bdc76943377dd5167a02ba9c7302c5899551a",
+    "earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "tests/test_authority_journal.py": "sha256:212c83084dabcda38979b1e5a651f7ff2f683319761de084ea68dabf7be3b30c",
+    "tests/test_connected_binding.py": "sha256:e60d9378ade1725c7dd858529b2f3b2696181c583d85d8edc064e408288f4ce5",
+    "tests/test_connected_evidence.py": "sha256:b558926ae3fbb2b55a64fd57956a10d2e7e4fd33d2ce4ef360eed1477e1ad21a",
+    "tests/test_connected_security.py": "sha256:26bed459d5180330404f2937aa2045cc843be058ff048f4870b55b9eef170a77",
+    "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
+    "tests/test_evidence_admission.py": "sha256:47c59f09d7a8cf3236e9e46f0581b7c1fb9c5e809329316e280252da613c31f9",
+    "tests/test_evidence_boundary.py": "sha256:403f53cb0b9a6fbd00a94688bbde80b43a720e73028255e4cfa4b0bd8cf4a5e0",
+    "tests/test_evidence_wire.py": "sha256:df555f550c4d5e1ef4303ef573ae30eda53fc513625ab617787634249bf3c245",
+    "tests/test_execution_boundary.py": "sha256:1811ef8b07274fc78b561e66923bf0850e6b6ff916e1bd40135b464cb916ba11",
+    "tests/test_hold_diagnostics.py": "sha256:b4709f4388a917e7c091a030ba36a3fe5c40df21b07a5e5eb2d554ef8e2af4b1",
+    "tests/test_ledger_client.py": "sha256:6a05dce90f5dfa0627c188000ad12951dbbb96e7df7f7f149cd4e640438765f2",
+    "tests/test_lifecycle_bdd.py": "sha256:a376b2d47c059aea4ae5ffc79ef007eb9eff7eed1964702ec643a564c4866cdc",
+    "tests/test_passport_client.py": "sha256:d86ff13cf90f3fdae60f68de7ab85af51d1ca55777245c72478d531a361153b7",
+    "tests/test_passport_operations.py": "sha256:7e158bc68d3e548f6f0756e758ff904ead8acbf2f5a2a9f79b4d7db777f6cf80",
+    "tests/test_qualification_client.py": "sha256:fa875d69b98440ce13545e17517f986cc4c045cbecf214c316cbe34bde9392b1",
+    "tests/test_reconciliation_wire.py": "sha256:b9cb6efee8f9afae333a327b76e6651c7dce06f5064d9768de48ba8996d69d6d",
+    "tests/test_rubric.py": "sha256:845e476cc97af2be8c4f913a60b1cae6ae76f0a0c81a217f4b581c5712a213db",
+    "tests/test_runtime_security.py": "sha256:76ea516ef8d41bdd974a084ba8ea6a83071745bd09e1a51783668d0b9d60b025",
+    "tests/test_wire_contracts.py": "sha256:69b1d2a86b3decb724d832de0caf601d67ab89a227b075df936e86afcadbe280",
+    "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
+    "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
+    "contracts/fixtures/attempt.json": "sha256:d6a7e3571ab9b4698f01175b21e128fa45a01acadc69f507ffc6c1bcb58e9041",
+    "contracts/fixtures/authority.json": "sha256:d36365cb845dc72a1c52550cff017282a5f69d5b00a9472bf173bd2e5626979a",
+    "contracts/fixtures/lifecycle-event.json": "sha256:075e93e0e71ec0ff30ed8929ed989795b60ab1b7161c9d11b716e265050a7057",
+    "contracts/fixtures/outcome.json": "sha256:bd8bfaba9be520fe2c9c6cb8d5eb5fde843c1b553424923640dafed181142f16",
+    "contracts/fixtures/passport-canonical-v2.json": "sha256:40b5c68eb6333ed1fdd6a4db28bc5013253ac17f20e0f1efa85c2d23699dff66",
+    "contracts/fixtures/passport-operations-v1.json": "sha256:7fb91f569080ac5da3b289ca9f62e5a8342e2bbb620e5020db5d1617fa2c2aff",
+    "contracts/fixtures/qualification-client-cases.json": "sha256:5d201b632a3a1a323136fdcad0905f258492988fb7a79e1051eb0675f114742e",
+    "contracts/fixtures/qualification.json": "sha256:c0b8c64ec3860f9a7aa785892bef5aef4e188962275880b069ab6df3114f93bb",
+    "contracts/fixtures/runtime-wire-records.json": "sha256:cbe6c1b5bed7c50ae739983fea588a45986ce3b2a12abb7f1f771e7906e4537d",
+    "contracts/lifecycle-event.schema.json": "sha256:ff4390844db2d78aede88d4413b78e1fc79f3c58857020ab92e63f892a04bc57",
+    "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
+    "contracts/qualification.schema.json": "sha256:2a4a4f6921a3f839b6b4a554f0c8fa019600d14411d5cfd8355f119aa28449b3",
+    "contracts/unknown-reconciliation-result.schema.json": "sha256:6193e4fcadc9a2ee7f89b043306aaf088124a272adc9227f5453e56881faf8e6",
+    "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
+    "features/concurrency.feature": "sha256:a593d6b2ee5ceb79260f97e0dbfd768843c2c7f4fcd5b6705e11797f023f0e27",
+    "features/execution_and_evidence.feature": "sha256:5c03e38759cae3c8d84536efdd463c91492183e72ce0d3941a9b8ae7b8a23ded",
+    "features/future_robot_simulation.feature": "sha256:916435ba5489e20024f589161dc3a4e3a5df5c23f211a211a9baab8a6ea33771",
+    "features/ledger_integrity.feature": "sha256:6f3039c21f36f2b0d052b168d30547d3a5ec76ca39b2046f653a59b3a4e442a6",
+    "features/qualification.feature": "sha256:8545997b35e1600c7f2e63e4e743ca5f3563aa4ef295cb6b395fda614a286629",
+    "features/withdrawal_and_requalification.feature": "sha256:417a22c6940ab6b0fb70e2c0e44d27646da5c18d9ac10e242b7f8a27bc7fa8da",
+    "requirements-dev.txt": "sha256:1a4272ec830941ecba77716e4b18e0588ec0de3c63e368fe712c6ac0354091c3",
+    "deploy/reference/requirements.lock.txt": "sha256:ccc6272d5f11ef46daba25236ea4c0436a8569109851873f6f85b2a867ab2aa2",
+    "tools/verify.py": "sha256:f50c482fdc25ae553c3d1dc3753a5af7ad89828f299868e972b61a9fcb3bf1da"
+  },
+  "source_hashes_before": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+    "earned_authority/connected.py": "sha256:20c6caed79299b5b8d2707878c8e7775e516c8aebed4e2076c0bef1defce95e3",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:f36a19824929002701f8c55b1b9bdc76943377dd5167a02ba9c7302c5899551a",
+    "earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "tests/test_authority_journal.py": "sha256:212c83084dabcda38979b1e5a651f7ff2f683319761de084ea68dabf7be3b30c",
+    "tests/test_connected_binding.py": "sha256:e60d9378ade1725c7dd858529b2f3b2696181c583d85d8edc064e408288f4ce5",
+    "tests/test_connected_evidence.py": "sha256:b558926ae3fbb2b55a64fd57956a10d2e7e4fd33d2ce4ef360eed1477e1ad21a",
+    "tests/test_connected_security.py": "sha256:26bed459d5180330404f2937aa2045cc843be058ff048f4870b55b9eef170a77",
+    "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
+    "tests/test_evidence_admission.py": "sha256:47c59f09d7a8cf3236e9e46f0581b7c1fb9c5e809329316e280252da613c31f9",
+    "tests/test_evidence_boundary.py": "sha256:403f53cb0b9a6fbd00a94688bbde80b43a720e73028255e4cfa4b0bd8cf4a5e0",
+    "tests/test_evidence_wire.py": "sha256:df555f550c4d5e1ef4303ef573ae30eda53fc513625ab617787634249bf3c245",
+    "tests/test_execution_boundary.py": "sha256:1811ef8b07274fc78b561e66923bf0850e6b6ff916e1bd40135b464cb916ba11",
+    "tests/test_hold_diagnostics.py": "sha256:b4709f4388a917e7c091a030ba36a3fe5c40df21b07a5e5eb2d554ef8e2af4b1",
+    "tests/test_ledger_client.py": "sha256:6a05dce90f5dfa0627c188000ad12951dbbb96e7df7f7f149cd4e640438765f2",
+    "tests/test_lifecycle_bdd.py": "sha256:a376b2d47c059aea4ae5ffc79ef007eb9eff7eed1964702ec643a564c4866cdc",
+    "tests/test_passport_client.py": "sha256:d86ff13cf90f3fdae60f68de7ab85af51d1ca55777245c72478d531a361153b7",
+    "tests/test_passport_operations.py": "sha256:7e158bc68d3e548f6f0756e758ff904ead8acbf2f5a2a9f79b4d7db777f6cf80",
+    "tests/test_qualification_client.py": "sha256:fa875d69b98440ce13545e17517f986cc4c045cbecf214c316cbe34bde9392b1",
+    "tests/test_reconciliation_wire.py": "sha256:b9cb6efee8f9afae333a327b76e6651c7dce06f5064d9768de48ba8996d69d6d",
+    "tests/test_rubric.py": "sha256:845e476cc97af2be8c4f913a60b1cae6ae76f0a0c81a217f4b581c5712a213db",
+    "tests/test_runtime_security.py": "sha256:76ea516ef8d41bdd974a084ba8ea6a83071745bd09e1a51783668d0b9d60b025",
+    "tests/test_wire_contracts.py": "sha256:69b1d2a86b3decb724d832de0caf601d67ab89a227b075df936e86afcadbe280",
+    "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
+    "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
+    "contracts/fixtures/attempt.json": "sha256:d6a7e3571ab9b4698f01175b21e128fa45a01acadc69f507ffc6c1bcb58e9041",
+    "contracts/fixtures/authority.json": "sha256:d36365cb845dc72a1c52550cff017282a5f69d5b00a9472bf173bd2e5626979a",
+    "contracts/fixtures/lifecycle-event.json": "sha256:075e93e0e71ec0ff30ed8929ed989795b60ab1b7161c9d11b716e265050a7057",
+    "contracts/fixtures/outcome.json": "sha256:bd8bfaba9be520fe2c9c6cb8d5eb5fde843c1b553424923640dafed181142f16",
+    "contracts/fixtures/passport-canonical-v2.json": "sha256:40b5c68eb6333ed1fdd6a4db28bc5013253ac17f20e0f1efa85c2d23699dff66",
+    "contracts/fixtures/passport-operations-v1.json": "sha256:7fb91f569080ac5da3b289ca9f62e5a8342e2bbb620e5020db5d1617fa2c2aff",
+    "contracts/fixtures/qualification-client-cases.json": "sha256:5d201b632a3a1a323136fdcad0905f258492988fb7a79e1051eb0675f114742e",
+    "contracts/fixtures/qualification.json": "sha256:c0b8c64ec3860f9a7aa785892bef5aef4e188962275880b069ab6df3114f93bb",
+    "contracts/fixtures/runtime-wire-records.json": "sha256:cbe6c1b5bed7c50ae739983fea588a45986ce3b2a12abb7f1f771e7906e4537d",
+    "contracts/lifecycle-event.schema.json": "sha256:ff4390844db2d78aede88d4413b78e1fc79f3c58857020ab92e63f892a04bc57",
+    "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
+    "contracts/qualification.schema.json": "sha256:2a4a4f6921a3f839b6b4a554f0c8fa019600d14411d5cfd8355f119aa28449b3",
+    "contracts/unknown-reconciliation-result.schema.json": "sha256:6193e4fcadc9a2ee7f89b043306aaf088124a272adc9227f5453e56881faf8e6",
+    "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
+    "features/concurrency.feature": "sha256:a593d6b2ee5ceb79260f97e0dbfd768843c2c7f4fcd5b6705e11797f023f0e27",
+    "features/execution_and_evidence.feature": "sha256:5c03e38759cae3c8d84536efdd463c91492183e72ce0d3941a9b8ae7b8a23ded",
+    "features/future_robot_simulation.feature": "sha256:916435ba5489e20024f589161dc3a4e3a5df5c23f211a211a9baab8a6ea33771",
+    "features/ledger_integrity.feature": "sha256:6f3039c21f36f2b0d052b168d30547d3a5ec76ca39b2046f653a59b3a4e442a6",
+    "features/qualification.feature": "sha256:8545997b35e1600c7f2e63e4e743ca5f3563aa4ef295cb6b395fda614a286629",
+    "features/withdrawal_and_requalification.feature": "sha256:417a22c6940ab6b0fb70e2c0e44d27646da5c18d9ac10e242b7f8a27bc7fa8da",
+    "requirements-dev.txt": "sha256:1a4272ec830941ecba77716e4b18e0588ec0de3c63e368fe712c6ac0354091c3",
+    "deploy/reference/requirements.lock.txt": "sha256:ccc6272d5f11ef46daba25236ea4c0436a8569109851873f6f85b2a867ab2aa2",
+    "tools/verify.py": "sha256:f50c482fdc25ae553c3d1dc3753a5af7ad89828f299868e972b61a9fcb3bf1da"
+  },
+  "source_unchanged_during_run": true,
+  "started_at_ms": 1791603961118,
+  "finished_at_ms": 1791603970921
+}

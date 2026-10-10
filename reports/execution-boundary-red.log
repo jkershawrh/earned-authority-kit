@@ -1,0 +1,243 @@
+FFFFFFFFFF                                                               [100%]
+=================================== FAILURES ===================================
+______________ test_readonly_transaction_refuses_before_mutation _______________
+
+rt = <earned_authority.runtime.Runtime object at 0x107555130>
+
+    def test_readonly_transaction_refuses_before_mutation(rt):
+        command=rt.admit();original=rt._db
+        rt._db=lambda:sqlite3.connect('file:'+rt.path+'?mode=ro',uri=True)
+        try:
+>           with pytest.raises(Denied,match='^LOCAL_DURABILITY_UNAVAILABLE$'):rt.commit(command)
+                                                                              ^^^^^^^^^^^^^^^^^^
+
+tests/test_execution_boundary.py:28: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/runtime.py:472: in commit
+    self._commit_local(command,actual,healthy,observer_available)
+earned_authority/runtime.py:488: in _commit_local
+    self._event(db,'INTENT',command['agent'],command['attempt_id'],command=command)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <earned_authority.runtime.Runtime object at 0x107555130>
+db = <sqlite3.Connection object at 0x1075813f0>, kind = 'INTENT'
+agent = 'agent-a', attempt_id = 'attempt-b05484f3aa1a4f28b3bc222da672cfde'
+fields = {'command': {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'attempt-b05484f3aa1a4f28b3bc222da672cfde', 'authority_revision': 1, ...}}
+event = {'agent_id': 'agent-a', 'attempt_id': 'attempt-b05484f3aa1a4f28b3bc222da672cfde', 'command': {'action': 'release', 'ag...f28b3bc222da672cfde', 'authority_revision': 1, ...}, 'correlation_id': 'attempt-b05484f3aa1a4f28b3bc222da672cfde', ...}
+signature = '70n1IHGqceGWiUn/k7EyPbX5yyh+WGnkqGQ9GTnHNap/2BBKzPLHrplfu/QfUIazK21Ea7tqOdc2TecWhEkxCQ=='
+
+    def _event(self, db, kind, agent='agent-a', attempt_id='', **fields):
+        event={'event_id':ident('event'),'event_type':kind,'agent_id':agent,
+               'attempt_id':attempt_id,'correlation_id':fields.pop('correlation_id',attempt_id or ident('flow')),
+               'occurred_at_ms':self.clock.now_ms,**fields}
+        signature=base64.b64encode(self.keys['writer'].sign(encoded(event))).decode()
+>       db.execute('INSERT INTO events VALUES (?,?,?,?,?,NULL)',(event['event_id'],attempt_id,json.dumps(event),signature,'PENDING'))
+E       sqlite3.OperationalError: attempt to write a readonly database
+
+earned_authority/runtime.py:199: OperationalError
+____ test_replacement_writer_private_key_cannot_replace_verification_trust _____
+
+rt = <earned_authority.runtime.Runtime object at 0x107532ba0>
+
+    def test_replacement_writer_private_key_cannot_replace_verification_trust(rt):
+        command=rt.admit();key=rt.keys['writer'];rt.keys['writer']=Ed25519PrivateKey.generate()
+        try:
+            with pytest.raises(Denied,match='^LOCAL_INTENT_UNAUTHENTICATED$'):rt.commit(command)
+        finally:rt.keys['writer']=key
+>       assert_unchanged(rt)
+
+tests/test_execution_boundary.py:39: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+rt = <earned_authority.runtime.Runtime object at 0x107532ba0>
+
+    def assert_unchanged(rt):
+>       assert rt.mutation_count==0 and rt.read()['version']=='model-v1'
+E       assert (1 == 0)
+E        +  where 1 = <earned_authority.runtime.Runtime object at 0x107532ba0>.mutation_count
+
+tests/test_execution_boundary.py:20: AssertionError
+_ test_exact_persisted_intent_is_authenticated_before_registry_write[invalid-signature] _
+
+rt = <earned_authority.runtime.Runtime object at 0x107596ea0>
+fault = 'invalid-signature'
+
+    @pytest.mark.parametrize('fault',['invalid-signature','different-valid-event'])
+    def test_exact_persisted_intent_is_authenticated_before_registry_write(rt,fault):
+        command=rt.admit()
+        with rt._db() as db:
+            if fault=='invalid-signature':body="UPDATE events SET signature='AAAA' WHERE id=NEW.id;"
+            else:body="UPDATE events SET body=(SELECT body FROM events WHERE id!=NEW.id ORDER BY rowid LIMIT 1),signature=(SELECT signature FROM events WHERE id!=NEW.id ORDER BY rowid LIMIT 1) WHERE id=NEW.id;"
+            db.executescript("CREATE TRIGGER corrupt_intent AFTER INSERT ON events WHEN json_extract(NEW.body,'$.event_type')='INTENT' BEGIN "+body+" END;")
+        with pytest.raises(Denied,match='^LOCAL_INTENT_UNAUTHENTICATED$'):rt.commit(command)
+>       assert_unchanged(rt)
+
+tests/test_execution_boundary.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+rt = <earned_authority.runtime.Runtime object at 0x107596ea0>
+
+    def assert_unchanged(rt):
+>       assert rt.mutation_count==0 and rt.read()['version']=='model-v1'
+E       assert (1 == 0)
+E        +  where 1 = <earned_authority.runtime.Runtime object at 0x107596ea0>.mutation_count
+
+tests/test_execution_boundary.py:20: AssertionError
+_ test_exact_persisted_intent_is_authenticated_before_registry_write[different-valid-event] _
+
+rt = <earned_authority.runtime.Runtime object at 0x107597800>
+fault = 'different-valid-event'
+
+    @pytest.mark.parametrize('fault',['invalid-signature','different-valid-event'])
+    def test_exact_persisted_intent_is_authenticated_before_registry_write(rt,fault):
+        command=rt.admit()
+        with rt._db() as db:
+            if fault=='invalid-signature':body="UPDATE events SET signature='AAAA' WHERE id=NEW.id;"
+            else:body="UPDATE events SET body=(SELECT body FROM events WHERE id!=NEW.id ORDER BY rowid LIMIT 1),signature=(SELECT signature FROM events WHERE id!=NEW.id ORDER BY rowid LIMIT 1) WHERE id=NEW.id;"
+            db.executescript("CREATE TRIGGER corrupt_intent AFTER INSERT ON events WHEN json_extract(NEW.body,'$.event_type')='INTENT' BEGIN "+body+" END;")
+>       with pytest.raises(Denied,match='^LOCAL_INTENT_UNAUTHENTICATED$'):rt.commit(command)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_execution_boundary.py:49: Failed
+__ test_unavailable_retry_lookup_preserves_actual_commit_and_never_reexecutes __
+
+rt = <earned_authority.runtime.Runtime object at 0x107596600>
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-78/test_unavailable_retry_lookup_0')
+
+    def test_unavailable_retry_lookup_preserves_actual_commit_and_never_reexecutes(rt,tmp_path):
+        command=rt.admit();actual=rt.commit(command);events=rt.events();original=rt._db
+        rt._db=lambda:sqlite3.connect('file:'+str(tmp_path/'missing'/'registry.sqlite')+'?mode=rw',uri=True)
+>       try:unknown=rt.retry(command)
+                    ^^^^^^^^
+E       AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_execution_boundary.py:65: AttributeError
+_______________ test_missing_attempt_cannot_be_created_by_retry ________________
+
+rt = <earned_authority.runtime.Runtime object at 0x10768d370>
+
+    def test_missing_attempt_cannot_be_created_by_retry(rt):
+        command=rt.admit()
+        with rt._db() as db:db.execute('DELETE FROM attempts WHERE id=?',(command['attempt_id'],))
+>       assert_unknown(rt.retry(command),command,reason='ATTEMPT_UNCONFIRMED')
+                       ^^^^^^^^
+E       AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_execution_boundary.py:75: AttributeError
+_____ test_commit_acknowledgement_failure_returns_unknown_not_false_denial _____
+
+rt = <earned_authority.runtime.Runtime object at 0x10768c650>
+
+    def test_commit_acknowledgement_failure_returns_unknown_not_false_denial(rt):
+        command=rt.admit();original=rt._db
+        class LostCommitAck(sqlite3.Connection):
+            def commit(self):
+                super().commit()
+                raise sqlite3.OperationalError('local commit acknowledgement unavailable')
+        rt._db=lambda:sqlite3.connect(rt.path,factory=LostCommitAck)
+        try:unknown=rt.commit(command)
+        finally:rt._db=original
+>       assert_unknown(unknown,command)
+
+tests/test_execution_boundary.py:89: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+result = {'attempt_id': 'attempt-08075fde958e400fa1b1776ea6dce7ad', 'authority_revision': 1, 'command': {'action': 'release', '..., 'attempt_id': 'attempt-08075fde958e400fa1b1776ea6dce7ad', 'authority_revision': 1, ...}, 'delivery': 'RECORDED', ...}
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'attempt-08075fde958e400fa1b1776ea6dce7ad', 'authority_revision': 1, ...}
+committed = None, reason = 'RECONCILIATION_UNAVAILABLE'
+
+    def assert_unknown(result,command,committed=None,reason='RECONCILIATION_UNAVAILABLE'):
+>       assert result['state']=='UNKNOWN' and result['reason']==reason
+E       AssertionError: assert ('COMMITTED' == 'UNKNOWN'
+E         
+E         - UNKNOWN
+E         + COMMITTED)
+
+tests/test_execution_boundary.py:54: AssertionError
+_______ test_observer_storage_failure_after_commit_retains_known_commit ________
+
+rt = <earned_authority.runtime.Runtime object at 0x107597830>
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-78/test_observer_storage_failure_0')
+
+    def test_observer_storage_failure_after_commit_retains_known_commit(rt,tmp_path):
+        command=rt.admit();original=rt.read
+        def inaccessible(resource):
+            return sqlite3.connect('file:'+str(tmp_path/'absent.sqlite')+'?mode=ro',uri=True)
+        rt.read=inaccessible
+>       try:unknown=rt.commit(command)
+                    ^^^^^^^^^^^^^^^^^^
+
+tests/test_execution_boundary.py:100: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/runtime.py:472: in commit
+    self._commit_local(command,actual,healthy,observer_available)
+earned_authority/runtime.py:502: in _commit_local
+    readback=self.read(command['resource']) if observer_available and self.observer_available else None
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+resource = 'registry-a/model-a'
+
+    def inaccessible(resource):
+>       return sqlite3.connect('file:'+str(tmp_path/'absent.sqlite')+'?mode=ro',uri=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       sqlite3.OperationalError: unable to open database file
+
+tests/test_execution_boundary.py:98: OperationalError
+____ test_outbox_write_failure_cannot_report_a_committed_attempt_as_denied _____
+
+rt = <earned_authority.runtime.Runtime object at 0x10768ea50>
+
+    def test_outbox_write_failure_cannot_report_a_committed_attempt_as_denied(rt):
+        command=rt.admit();original=rt._db
+        def readonly_delivery():rt._db=lambda:sqlite3.connect('file:'+rt.path+'?mode=ro',uri=True)
+>       try:unknown=rt.commit(command,before_delivery=readonly_delivery)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_execution_boundary.py:111: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/runtime.py:474: in commit
+    self.flush_outbox()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <earned_authority.runtime.Runtime object at 0x10768ea50>
+
+    def flush_outbox(self):
+        self._verify_local_events()
+        for row in self.events():
+            if row['delivery']=='RECORDED': continue
+            try:
+                receipt=self.ledger.append(row['event'],row['event_id'])
+                if not self.ledger.verify(receipt,row['event']): continue
+            except (ConnectionError,TimeoutError,Denied,LedgerError):
+                continue
+            with self._tx() as db:
+>               db.execute("UPDATE events SET delivery='RECORDED',receipt=? WHERE id=?",(json.dumps(receipt),row['event_id']))
+E               sqlite3.OperationalError: attempt to write a readonly database
+
+earned_authority/runtime.py:600: OperationalError
+______ test_retry_with_different_authenticated_payload_remains_a_conflict ______
+
+rt = <earned_authority.runtime.Runtime object at 0x10768caa0>
+
+    def test_retry_with_different_authenticated_payload_remains_a_conflict(rt):
+        command=rt.admit();rt.commit(command)
+        other=copy.deepcopy(command);other['target']='another-version';other=rt._seal(other,'authority')
+>       with pytest.raises(Denied,match='^IDEMPOTENCY_CONFLICT$'):rt.retry(other)
+                                                                  ^^^^^^^^
+E       AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_execution_boundary.py:121: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_execution_boundary.py::test_readonly_transaction_refuses_before_mutation
+FAILED tests/test_execution_boundary.py::test_replacement_writer_private_key_cannot_replace_verification_trust
+FAILED tests/test_execution_boundary.py::test_exact_persisted_intent_is_authenticated_before_registry_write[invalid-signature]
+FAILED tests/test_execution_boundary.py::test_exact_persisted_intent_is_authenticated_before_registry_write[different-valid-event]
+FAILED tests/test_execution_boundary.py::test_unavailable_retry_lookup_preserves_actual_commit_and_never_reexecutes
+FAILED tests/test_execution_boundary.py::test_missing_attempt_cannot_be_created_by_retry
+FAILED tests/test_execution_boundary.py::test_commit_acknowledgement_failure_returns_unknown_not_false_denial
+FAILED tests/test_execution_boundary.py::test_observer_storage_failure_after_commit_retains_known_commit
+FAILED tests/test_execution_boundary.py::test_outbox_write_failure_cannot_report_a_committed_attempt_as_denied
+FAILED tests/test_execution_boundary.py::test_retry_with_different_authenticated_payload_remains_a_conflict
+10 failed in 0.35s

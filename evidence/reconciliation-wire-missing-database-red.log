@@ -1,0 +1,31 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_missing_database_lookup_does_not_create_replacement_database _______
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10bdc5df0>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+
+    def test_missing_database_lookup_does_not_create_replacement_database(prepared):
+        runtime, _, command = prepared
+        before = durable_snapshot(runtime)
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-missing")
+        directory.rename(saved)
+        directory.mkdir()
+        try:
+            response = runtime.retry(command)
+            created = list(directory.iterdir())
+        finally:
+            shutil.rmtree(directory)
+            saved.rename(directory)
+        assert_unknown(response, command)
+>       assert created == [], "a reconciliation read must not create a replacement database"
+E       AssertionError: a reconciliation read must not create a replacement database
+E       assert [PosixPath('/...tate.sqlite')] == []
+E         
+E         Left contains one more item: PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-85/test_missing_database_lookup_d0/store/state.sqlite')
+E         Use -v to get more diff
+
+tests/test_reconciliation_wire.py:110: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_reconciliation_wire.py::test_missing_database_lookup_does_not_create_replacement_database
+1 failed, 26 deselected in 0.10s

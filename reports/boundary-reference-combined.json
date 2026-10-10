@@ -1,0 +1,181 @@
+{
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "environment": "REAL_LOCAL_SERVICES",
+  "command_exit_code": 0,
+  "command": [
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/ledger-venv/bin/python",
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/run-boundary-validation.py"
+  ],
+  "preparation_command": [
+    "python3",
+    "deploy/reference/bootstrap.py",
+    "--workspace",
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference",
+    "--instance",
+    "ea-boundary",
+    "--port-offset",
+    "4000"
+  ],
+  "lifecycle_commands": [
+    {
+      "stage": "start",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "start"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "policy",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/validate_policy.py",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/reference-runtime/policy.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "services",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "validate-services",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/reference-runtime/services.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "connected",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "validate-connected",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/reference-runtime/connected.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "adversarial",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "validate-adversarial",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/reference-runtime/adversarial.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "authority_recovery",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "validate-authority-recovery",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/reference-runtime/authority-recovery.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "restore",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/validate_restore.py",
+        "--prior-report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/reference-runtime/connected.json",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/reference-runtime/restore.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "authority_recovery_restored",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tools/validate_authority_recovery.py",
+        "--config",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/reference-runtime/reference.env",
+        "--ledger-config",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/ledger-runtime/local.env",
+        "--state-dir",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/reference-runtime/connected-validation",
+        "--verify-existing-report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/reference-runtime/authority-recovery.json",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/reference-runtime/authority-recovery-restored.json"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "completed_at": "2026-10-10T03:48:02.359038+00:00",
+  "components": {
+    "policy": {
+      "report": "reports/boundary-reference-policy.json",
+      "status": "GREEN",
+      "checks": 8,
+      "source_stable": true
+    },
+    "services": {
+      "report": "reports/boundary-reference-services.json",
+      "status": "GREEN",
+      "checks": 7,
+      "source_stable": true
+    },
+    "connected": {
+      "report": "reports/boundary-reference-connected.json",
+      "status": "GREEN",
+      "checks": 23,
+      "source_stable": true
+    },
+    "adversarial": {
+      "report": "reports/boundary-reference-adversarial.json",
+      "status": "GREEN",
+      "checks": 17,
+      "source_stable": true
+    },
+    "authority_recovery": {
+      "report": "reports/boundary-reference-authority-recovery.json",
+      "status": "GREEN",
+      "checks": 41,
+      "source_stable": true
+    },
+    "restore": {
+      "report": "reports/boundary-reference-restore.json",
+      "status": "GREEN",
+      "checks": 6,
+      "source_stable": true
+    },
+    "authority_recovery_restored": {
+      "report": "reports/boundary-reference-authority-recovery-restored.json",
+      "status": "GREEN",
+      "checks": 21,
+      "source_stable": true
+    }
+  },
+  "artifacts": {
+    "reports/boundary-reference-policy.json": "sha256:b6670d97a5dc0b3f32b2239a21f8e9e66d9d1070e3b149040f545cb01e88a544",
+    "reports/boundary-reference-services.json": "sha256:538ad4916a05a289354529c4c4c888585d1c744a2ddf4f46fcce21aa5172c525",
+    "reports/boundary-reference-connected.json": "sha256:bb8822ea072e2fd5da393dd2c3185d867ca72655f0240933e8f8887777b06b99",
+    "reports/boundary-reference-adversarial.json": "sha256:51c6222b05c0df701ff7b1765ed7c4379d17b950690d035abb306a99d22f279e",
+    "reports/boundary-reference-authority-recovery.json": "sha256:ddd390c51571bdd39cf17f0c1a7e5bdb6bc117c09d7cf9479aabf74f1ca73f3e",
+    "reports/boundary-reference-restore.json": "sha256:57e649fd561e63e989ba02c6b941a25cee581685ea325b72d2b074c807dade91",
+    "reports/boundary-reference-authority-recovery-restored.json": "sha256:e0eed7e272ee27fab0fc5cb529f960bd6a09a83ac189072cd99ea7c1eafc894a",
+    "reports/boundary-reference-bootstrap.json": "sha256:3001e2b7b5bd729b8f03219cbc8caed7fb4297e828293e204c213d67a6497da5",
+    "reports/boundary-reference-build-manifest.json": "sha256:15d03551c37eacbcd87494b9777f43dd5e751eb96e6f0aadb7ada799a0825a4b",
+    "reports/boundary-reference-images.json": "sha256:4f5ed43e7d9c1e5d087189c4967f8bdcecf1ab05650e64e0db7993375f302c75"
+  },
+  "source_manifest_sha256": "cdcd1a1a663984adfb984aaeaf6b3c17b67cf2317bd31164791f2726787c5232",
+  "scope": "Same host; independently fetched and patched canonical sources, distinct virtual environment, keys, state, networks, ports and volumes. Prepared with the documented bootstrap; executed the seven documented validation stages against frozen boundary runtime, then actual full stack restart and readback of existing operation and ledger evidence. Behavior-scenario acceptance is recorded separately.",
+  "limits": [
+    "Not a different host or independent human installer",
+    "No statistical held-out product-value claim",
+    "No backup/disk-loss recovery claim",
+    "No hardware or production deployment claim",
+    "No universal distributed atomicity or safety claim"
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "change": "Require an actual bool for shadow health input before execution.",
+  "artifacts": [
+    {
+      "kind": "baseline",
+      "directory": "reports/service-bdd-live-006-procedure-revisions/026-default/baseline/earned_authority",
+      "procedure_revision": "sha256:93dd5939baa06b42a7472b8ae8e5bf3dd96113df462cf0e1d000d1eff100cf3f",
+      "sources": {
+        "reports/service-bdd-live-006-procedure-revisions/026-default/baseline/earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/baseline/earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/baseline/earned_authority/connected.py": "sha256:20c6caed79299b5b8d2707878c8e7775e516c8aebed4e2076c0bef1defce95e3",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/baseline/earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/baseline/earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/baseline/earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/baseline/earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/baseline/earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/baseline/earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/baseline/earned_authority/runtime.py": "sha256:f36a19824929002701f8c55b1b9bdc76943377dd5167a02ba9c7302c5899551a",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/baseline/earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e"
+      }
+    },
+    {
+      "kind": "revised",
+      "directory": "reports/service-bdd-live-006-procedure-revisions/026-default/revised/earned_authority",
+      "procedure_revision": "sha256:a7871fbab61aab839ba3547aabbf0462f5daff6b3bd7992c06da873df9977fd3",
+      "sources": {
+        "reports/service-bdd-live-006-procedure-revisions/026-default/revised/earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/revised/earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/revised/earned_authority/connected.py": "sha256:ddbdbe6ca402ba307aebb2c503c23580e9188ee21d6af5e48a60e48bf82e8992",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/revised/earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/revised/earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/revised/earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/revised/earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/revised/earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/revised/earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/revised/earned_authority/runtime.py": "sha256:f36a19824929002701f8c55b1b9bdc76943377dd5167a02ba9c7302c5899551a",
+        "reports/service-bdd-live-006-procedure-revisions/026-default/revised/earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e"
+      }
+    }
+  ]
+}

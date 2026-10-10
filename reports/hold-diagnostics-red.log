@@ -1,0 +1,106 @@
+FF........                                                               [100%]
+=================================== FAILURES ===================================
+_ test_new_matching_request_gets_precise_hold_but_old_command_remains_revoked[missing] _
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10985fc80>
+cause = 'missing'
+
+    @pytest.mark.parametrize('cause',['missing','stale'])
+    def test_new_matching_request_gets_precise_hold_but_old_command_remains_revoked(rt,cause):
+        q,old,reason=hold(rt,cause)
+>       with pytest.raises(Denied,match='^'+reason+'$'):admit(rt)
+                                                        ^^^^^^^^^
+
+tests/test_hold_diagnostics.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_hold_diagnostics.py:10: in admit
+    return rt.admit(**{'version':rt.procedure_revision,'context':CONTEXT,'resource':'model/champion',**changes})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/runtime.py:480: in admit
+    a,g=self._check(db,intent,expected_revision)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <earned_authority.connected.ConnectedRuntime object at 0x10985fc80>
+db = <sqlite3.Connection object at 0x109846980>
+intent = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'attempt-10668f07456246f88c021c7e03a5fe68', 'context': {'model_version': 'model-v2'}, ...}
+expected_revision = None
+
+    def _check(self,db,intent,expected_revision=None):
+        self._assert_authority_ready(db,intent['agent'])
+        a=self.authority(intent['agent']);g=a['grants'].get(intent['skill'])
+>       if not g or a['status']!='ACTIVE': raise Denied('REVOKED_AUTHORITY')
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: REVOKED_AUTHORITY
+
+earned_authority/connected.py:345: Denied
+
+During handling of the above exception, another exception occurred:
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10985fc80>
+cause = 'missing'
+
+    @pytest.mark.parametrize('cause',['missing','stale'])
+    def test_new_matching_request_gets_precise_hold_but_old_command_remains_revoked(rt,cause):
+        q,old,reason=hold(rt,cause)
+>       with pytest.raises(Denied,match='^'+reason+'$'):admit(rt)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: 
+E       - REVOKED_AUTHORITY
+E       + EVIDENCE_UNCONFIRMED
+
+tests/test_hold_diagnostics.py:27: AssertionError
+_ test_new_matching_request_gets_precise_hold_but_old_command_remains_revoked[stale] _
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10988f650>
+cause = 'stale'
+
+    @pytest.mark.parametrize('cause',['missing','stale'])
+    def test_new_matching_request_gets_precise_hold_but_old_command_remains_revoked(rt,cause):
+        q,old,reason=hold(rt,cause)
+>       with pytest.raises(Denied,match='^'+reason+'$'):admit(rt)
+                                                        ^^^^^^^^^
+
+tests/test_hold_diagnostics.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_hold_diagnostics.py:10: in admit
+    return rt.admit(**{'version':rt.procedure_revision,'context':CONTEXT,'resource':'model/champion',**changes})
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/runtime.py:480: in admit
+    a,g=self._check(db,intent,expected_revision)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <earned_authority.connected.ConnectedRuntime object at 0x10988f650>
+db = <sqlite3.Connection object at 0x1098e07c0>
+intent = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'attempt-7cd6d69c26d144dc97a789d8a5f6c492', 'context': {'model_version': 'model-v2'}, ...}
+expected_revision = None
+
+    def _check(self,db,intent,expected_revision=None):
+        self._assert_authority_ready(db,intent['agent'])
+        a=self.authority(intent['agent']);g=a['grants'].get(intent['skill'])
+>       if not g or a['status']!='ACTIVE': raise Denied('REVOKED_AUTHORITY')
+                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: REVOKED_AUTHORITY
+
+earned_authority/connected.py:345: Denied
+
+During handling of the above exception, another exception occurred:
+
+rt = <earned_authority.connected.ConnectedRuntime object at 0x10988f650>
+cause = 'stale'
+
+    @pytest.mark.parametrize('cause',['missing','stale'])
+    def test_new_matching_request_gets_precise_hold_but_old_command_remains_revoked(rt,cause):
+        q,old,reason=hold(rt,cause)
+>       with pytest.raises(Denied,match='^'+reason+'$'):admit(rt)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: 
+E       - REVOKED_AUTHORITY
+E       + STALE_EVIDENCE
+
+tests/test_hold_diagnostics.py:27: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_hold_diagnostics.py::test_new_matching_request_gets_precise_hold_but_old_command_remains_revoked[missing]
+FAILED tests/test_hold_diagnostics.py::test_new_matching_request_gets_precise_hold_but_old_command_remains_revoked[stale]
+2 failed, 8 passed in 1.02s

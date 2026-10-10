@@ -1,0 +1,81 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_ test_postcommit_outcome_signature_failure_is_uncertainty_not_execution_denial _
+
+self = <earned_authority.runtime.Runtime object at 0x10ad6e6c0>
+db = <sqlite3.Connection object at 0x10b3014e0>, kind = 'OUTCOME_OBSERVED'
+agent = 'agent-a', attempt_id = 'attempt-6c099246852d43759e34216c3e7144f6'
+fields = {'outcome': {'attempt_id': 'attempt-6c099246852d43759e34216c3e7144f6', 'context': 'demo-a', 'context_digest': 'sha256:...fcb7791510c34c8a', 'evaluator_digest': 'sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15', ...}}
+event = {'agent_id': 'agent-a', 'attempt_id': 'attempt-6c099246852d43759e34216c3e7144f6', 'correlation_id': 'attempt-6c099246852d43759e34216c3e7144f6', 'event_id': 'event-e0428e05cc474b26a8476faacafbb303', ...}
+signature = 'gTio1DVBjMdWiZ0dxdwaXnURfU+0Kh9C61yvvwlTyI+DhccXWtlklz/rS2IJoQhNgYCs/uwNa19fxt9PahZMAA=='
+row = ('attempt-6c099246852d43759e34216c3e7144f6', '{"event_id": "event-e0428e05cc474b26a8476faacafbb303", "event_type": "OU...bZkZ9X5wBg==", "evidence_digest": "sha256:0e4d554c176c55f9b6cbfae7e19248fe9a9ac517a185827c3f07239b76b8aac1"}}', 'AAAA')
+
+    def _event(self, db, kind, agent='agent-a', attempt_id='', **fields):
+        event={'event_id':ident('event'),'event_type':kind,'agent_id':agent,
+               'attempt_id':attempt_id,'correlation_id':fields.pop('correlation_id',attempt_id or ident('flow')),
+               'occurred_at_ms':self.clock.now_ms,**fields}
+        try:signature=base64.b64encode(self.keys['writer'].sign(encoded(event))).decode()
+        except Exception as exc:raise Denied('LOCAL_INTENT_UNAUTHENTICATED') from exc
+        db.execute('INSERT INTO events VALUES (?,?,?,?,?,NULL)',(event['event_id'],attempt_id,json.dumps(event),signature,'PENDING'))
+        # Verify the bytes actually stored, including the row identity. A trigger
+        # substituting a different valid event must not authenticate this intent.
+        row=db.execute('SELECT attempt_id,body,signature FROM events WHERE id=?',(event['event_id'],)).fetchone()
+        try:
+            if row is None or row[0]!=attempt_id or json.loads(row[1])!=event or row[2]!=signature:
+>               raise ValueError('persisted event differs from intended event')
+E               ValueError: persisted event differs from intended event
+
+earned_authority/runtime.py:246: ValueError
+
+The above exception was the direct cause of the following exception:
+
+rt = <earned_authority.runtime.Runtime object at 0x10ad6e6c0>
+
+    def test_postcommit_outcome_signature_failure_is_uncertainty_not_execution_denial(rt):
+        command=rt.admit()
+        with rt._db() as db:
+            db.executescript("CREATE TRIGGER corrupt_outcome AFTER INSERT ON events WHEN json_extract(NEW.body,'$.event_type')='OUTCOME_OBSERVED' BEGIN UPDATE events SET signature='AAAA' WHERE id=NEW.id; END;")
+>       result=rt.commit(command)
+               ^^^^^^^^^^^^^^^^^^
+
+tests/test_execution_boundary.py:129: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+earned_authority/runtime.py:522: in commit
+    self._commit_local(command,actual,healthy,observer_available)
+earned_authority/runtime.py:585: in _commit_local
+    try:return self._observe_committed(command,result,observer_available)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/runtime.py:610: in _observe_committed
+    self._event(db,'OUTCOME_OBSERVED',command['agent'],command['attempt_id'],outcome=obs)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <earned_authority.runtime.Runtime object at 0x10ad6e6c0>
+db = <sqlite3.Connection object at 0x10b3014e0>, kind = 'OUTCOME_OBSERVED'
+agent = 'agent-a', attempt_id = 'attempt-6c099246852d43759e34216c3e7144f6'
+fields = {'outcome': {'attempt_id': 'attempt-6c099246852d43759e34216c3e7144f6', 'context': 'demo-a', 'context_digest': 'sha256:...fcb7791510c34c8a', 'evaluator_digest': 'sha256:20b13b21ac2a1777bc0ca9cee16ecc72544d09024a4c9870524651ef924cfa15', ...}}
+event = {'agent_id': 'agent-a', 'attempt_id': 'attempt-6c099246852d43759e34216c3e7144f6', 'correlation_id': 'attempt-6c099246852d43759e34216c3e7144f6', 'event_id': 'event-e0428e05cc474b26a8476faacafbb303', ...}
+signature = 'gTio1DVBjMdWiZ0dxdwaXnURfU+0Kh9C61yvvwlTyI+DhccXWtlklz/rS2IJoQhNgYCs/uwNa19fxt9PahZMAA=='
+row = ('attempt-6c099246852d43759e34216c3e7144f6', '{"event_id": "event-e0428e05cc474b26a8476faacafbb303", "event_type": "OU...bZkZ9X5wBg==", "evidence_digest": "sha256:0e4d554c176c55f9b6cbfae7e19248fe9a9ac517a185827c3f07239b76b8aac1"}}', 'AAAA')
+
+    def _event(self, db, kind, agent='agent-a', attempt_id='', **fields):
+        event={'event_id':ident('event'),'event_type':kind,'agent_id':agent,
+               'attempt_id':attempt_id,'correlation_id':fields.pop('correlation_id',attempt_id or ident('flow')),
+               'occurred_at_ms':self.clock.now_ms,**fields}
+        try:signature=base64.b64encode(self.keys['writer'].sign(encoded(event))).decode()
+        except Exception as exc:raise Denied('LOCAL_INTENT_UNAUTHENTICATED') from exc
+        db.execute('INSERT INTO events VALUES (?,?,?,?,?,NULL)',(event['event_id'],attempt_id,json.dumps(event),signature,'PENDING'))
+        # Verify the bytes actually stored, including the row identity. A trigger
+        # substituting a different valid event must not authenticate this intent.
+        row=db.execute('SELECT attempt_id,body,signature FROM events WHERE id=?',(event['event_id'],)).fetchone()
+        try:
+            if row is None or row[0]!=attempt_id or json.loads(row[1])!=event or row[2]!=signature:
+                raise ValueError('persisted event differs from intended event')
+            self._trusted_local_signers['writer'].verify(base64.b64decode(row[2],validate=True),encoded(event))
+>       except Exception as exc:raise Denied('LOCAL_INTENT_UNAUTHENTICATED') from exc
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: LOCAL_INTENT_UNAUTHENTICATED
+
+earned_authority/runtime.py:248: Denied
+=========================== short test summary info ============================
+FAILED tests/test_execution_boundary.py::test_postcommit_outcome_signature_failure_is_uncertainty_not_execution_denial
+1 failed in 0.11s

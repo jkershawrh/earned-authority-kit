@@ -1,0 +1,813 @@
+FFFFFFFFFFFFFFFFFFFFFFFF                                                 [100%]
+=================================== FAILURES ===================================
+________ test_obstructed_durable_lookup_produces_unknown_without_writes ________
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b20aae0>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+
+    def test_obstructed_durable_lookup_produces_unknown_without_writes(prepared):
+        runtime, _, command = prepared
+        before = durable_snapshot(runtime)
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:71: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b20aae0>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_______ test_sqlite_readonly_retry_cannot_manufacture_commit_or_receipt ________
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b22f410>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b22f920>
+
+    def test_sqlite_readonly_retry_cannot_manufacture_commit_or_receipt(prepared, monkeypatch):
+        runtime, _, command = prepared
+        before = durable_snapshot(runtime)
+        with monkeypatch.context() as patch:
+            patch.setattr(runtime, "_db", lambda: sqlite3.connect(Path(runtime.path).as_uri() + "?mode=ro", uri=True))
+>           response = runtime.retry(command)
+                       ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:89: AttributeError
+_________ test_missing_durable_attempt_is_unknown_and_never_readmitted _________
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b22f050>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+
+    def test_missing_durable_attempt_is_unknown_and_never_readmitted(prepared):
+        runtime, _, command = prepared
+        with runtime._tx() as db:
+            db.execute("DELETE FROM attempts WHERE id=?", (command["attempt_id"],))
+        before = durable_snapshot(runtime)
+>       response = runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E       AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:100: AttributeError
+__________ test_execution_uncertainty_does_not_erase_existing_commit ___________
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b22f8f0>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+
+    def test_execution_uncertainty_does_not_erase_existing_commit(prepared):
+        runtime, qualification, command = prepared
+        committed = runtime.commit(command)
+        before = durable_snapshot(runtime)
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:112: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b22f8f0>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+________ test_unknown_outcome_is_a_durable_commit_not_unknown_execution ________
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b22f560>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+
+    def test_unknown_outcome_is_a_durable_commit_not_unknown_execution(prepared):
+        runtime, qualification, command = prepared
+        result = runtime.commit(command, observer_available=False)
+        assert result["state"] == "COMMITTED"
+        assert result["outcome"]["outcome"] == "UNKNOWN"
+        assert result["outcome"]["reason"] == "OBSERVATION_UNAVAILABLE"
+        with pytest.raises(ValidationError):
+>           validate_unknown(result)
+
+tests/test_reconciliation_wire.py:133: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_reconciliation_wire.py:33: in validate_unknown
+    schema = json.loads((CONTRACTS / "unknown-reconciliation-result.schema.json").read_text())
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/Users/jkershaw/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/contracts/unknown-reconciliation-result.schema.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/contracts/unknown-reconciliation-result.schema.json'
+
+/Users/jkershaw/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/pathlib.py:1013: FileNotFoundError
+_________ test_transient_unknown_cannot_be_exported_as_durable_attempt _________
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b276120>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10b276b10>
+
+    def test_transient_unknown_cannot_be_exported_as_durable_attempt(prepared, monkeypatch):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:142: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b276120>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_______ test_rehashed_unknown_cannot_replace_authenticated_attempt_proof _______
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b2766f0>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+
+    def test_rehashed_unknown_cannot_replace_authenticated_attempt_proof(prepared):
+        runtime, _, command = prepared
+        runtime.commit(command)
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:154: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b2766f0>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_ test_transient_schema_rejects_fabricated_evidence_or_permission[state-COMMITTED] _
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b276ab0>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+field = 'state', value = 'COMMITTED'
+
+    @pytest.mark.parametrize("field,value", [
+        ("state", "COMMITTED"), ("reason", "POSTCONDITION_MET"), ("committed", False),
+        ("outcome", "PASS"), ("outcome", {"outcome": "UNKNOWN"}), ("delivery", "RECORDED"),
+        ("receipt", {"receipt_id": "invented"}), ("persisted", True), ("next_action", "EXECUTE"),
+        ("attempt_id", ""), ("request_digest", "wrong"), ("command_digest", "sha256:" + "A" * 64),
+        ("authority", {"status": "ACTIVE"}), ("signature", "invented"),
+        ("mutation_receipt_ref", "local-event:invented"), ("proof_store", {}),
+    ])
+    def test_transient_schema_rejects_fabricated_evidence_or_permission(prepared, field, value):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b276ab0>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_ test_transient_schema_rejects_fabricated_evidence_or_permission[reason-POSTCONDITION_MET] _
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b276420>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+field = 'reason', value = 'POSTCONDITION_MET'
+
+    @pytest.mark.parametrize("field,value", [
+        ("state", "COMMITTED"), ("reason", "POSTCONDITION_MET"), ("committed", False),
+        ("outcome", "PASS"), ("outcome", {"outcome": "UNKNOWN"}), ("delivery", "RECORDED"),
+        ("receipt", {"receipt_id": "invented"}), ("persisted", True), ("next_action", "EXECUTE"),
+        ("attempt_id", ""), ("request_digest", "wrong"), ("command_digest", "sha256:" + "A" * 64),
+        ("authority", {"status": "ACTIVE"}), ("signature", "invented"),
+        ("mutation_receipt_ref", "local-event:invented"), ("proof_store", {}),
+    ])
+    def test_transient_schema_rejects_fabricated_evidence_or_permission(prepared, field, value):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b276420>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_ test_transient_schema_rejects_fabricated_evidence_or_permission[committed-False] _
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b275490>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+field = 'committed', value = False
+
+    @pytest.mark.parametrize("field,value", [
+        ("state", "COMMITTED"), ("reason", "POSTCONDITION_MET"), ("committed", False),
+        ("outcome", "PASS"), ("outcome", {"outcome": "UNKNOWN"}), ("delivery", "RECORDED"),
+        ("receipt", {"receipt_id": "invented"}), ("persisted", True), ("next_action", "EXECUTE"),
+        ("attempt_id", ""), ("request_digest", "wrong"), ("command_digest", "sha256:" + "A" * 64),
+        ("authority", {"status": "ACTIVE"}), ("signature", "invented"),
+        ("mutation_receipt_ref", "local-event:invented"), ("proof_store", {}),
+    ])
+    def test_transient_schema_rejects_fabricated_evidence_or_permission(prepared, field, value):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b275490>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_ test_transient_schema_rejects_fabricated_evidence_or_permission[outcome-PASS] _
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b2b3860>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+field = 'outcome', value = 'PASS'
+
+    @pytest.mark.parametrize("field,value", [
+        ("state", "COMMITTED"), ("reason", "POSTCONDITION_MET"), ("committed", False),
+        ("outcome", "PASS"), ("outcome", {"outcome": "UNKNOWN"}), ("delivery", "RECORDED"),
+        ("receipt", {"receipt_id": "invented"}), ("persisted", True), ("next_action", "EXECUTE"),
+        ("attempt_id", ""), ("request_digest", "wrong"), ("command_digest", "sha256:" + "A" * 64),
+        ("authority", {"status": "ACTIVE"}), ("signature", "invented"),
+        ("mutation_receipt_ref", "local-event:invented"), ("proof_store", {}),
+    ])
+    def test_transient_schema_rejects_fabricated_evidence_or_permission(prepared, field, value):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b2b3860>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_ test_transient_schema_rejects_fabricated_evidence_or_permission[outcome-value4] _
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b276b40>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+field = 'outcome', value = {'outcome': 'UNKNOWN'}
+
+    @pytest.mark.parametrize("field,value", [
+        ("state", "COMMITTED"), ("reason", "POSTCONDITION_MET"), ("committed", False),
+        ("outcome", "PASS"), ("outcome", {"outcome": "UNKNOWN"}), ("delivery", "RECORDED"),
+        ("receipt", {"receipt_id": "invented"}), ("persisted", True), ("next_action", "EXECUTE"),
+        ("attempt_id", ""), ("request_digest", "wrong"), ("command_digest", "sha256:" + "A" * 64),
+        ("authority", {"status": "ACTIVE"}), ("signature", "invented"),
+        ("mutation_receipt_ref", "local-event:invented"), ("proof_store", {}),
+    ])
+    def test_transient_schema_rejects_fabricated_evidence_or_permission(prepared, field, value):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b276b40>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_ test_transient_schema_rejects_fabricated_evidence_or_permission[delivery-RECORDED] _
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10ad30650>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+field = 'delivery', value = 'RECORDED'
+
+    @pytest.mark.parametrize("field,value", [
+        ("state", "COMMITTED"), ("reason", "POSTCONDITION_MET"), ("committed", False),
+        ("outcome", "PASS"), ("outcome", {"outcome": "UNKNOWN"}), ("delivery", "RECORDED"),
+        ("receipt", {"receipt_id": "invented"}), ("persisted", True), ("next_action", "EXECUTE"),
+        ("attempt_id", ""), ("request_digest", "wrong"), ("command_digest", "sha256:" + "A" * 64),
+        ("authority", {"status": "ACTIVE"}), ("signature", "invented"),
+        ("mutation_receipt_ref", "local-event:invented"), ("proof_store", {}),
+    ])
+    def test_transient_schema_rejects_fabricated_evidence_or_permission(prepared, field, value):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10ad30650>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_ test_transient_schema_rejects_fabricated_evidence_or_permission[receipt-value6] _
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b274590>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+field = 'receipt', value = {'receipt_id': 'invented'}
+
+    @pytest.mark.parametrize("field,value", [
+        ("state", "COMMITTED"), ("reason", "POSTCONDITION_MET"), ("committed", False),
+        ("outcome", "PASS"), ("outcome", {"outcome": "UNKNOWN"}), ("delivery", "RECORDED"),
+        ("receipt", {"receipt_id": "invented"}), ("persisted", True), ("next_action", "EXECUTE"),
+        ("attempt_id", ""), ("request_digest", "wrong"), ("command_digest", "sha256:" + "A" * 64),
+        ("authority", {"status": "ACTIVE"}), ("signature", "invented"),
+        ("mutation_receipt_ref", "local-event:invented"), ("proof_store", {}),
+    ])
+    def test_transient_schema_rejects_fabricated_evidence_or_permission(prepared, field, value):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b274590>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_ test_transient_schema_rejects_fabricated_evidence_or_permission[persisted-True] _
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b275760>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+field = 'persisted', value = True
+
+    @pytest.mark.parametrize("field,value", [
+        ("state", "COMMITTED"), ("reason", "POSTCONDITION_MET"), ("committed", False),
+        ("outcome", "PASS"), ("outcome", {"outcome": "UNKNOWN"}), ("delivery", "RECORDED"),
+        ("receipt", {"receipt_id": "invented"}), ("persisted", True), ("next_action", "EXECUTE"),
+        ("attempt_id", ""), ("request_digest", "wrong"), ("command_digest", "sha256:" + "A" * 64),
+        ("authority", {"status": "ACTIVE"}), ("signature", "invented"),
+        ("mutation_receipt_ref", "local-event:invented"), ("proof_store", {}),
+    ])
+    def test_transient_schema_rejects_fabricated_evidence_or_permission(prepared, field, value):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b275760>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_ test_transient_schema_rejects_fabricated_evidence_or_permission[next_action-EXECUTE] _
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b277a40>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+field = 'next_action', value = 'EXECUTE'
+
+    @pytest.mark.parametrize("field,value", [
+        ("state", "COMMITTED"), ("reason", "POSTCONDITION_MET"), ("committed", False),
+        ("outcome", "PASS"), ("outcome", {"outcome": "UNKNOWN"}), ("delivery", "RECORDED"),
+        ("receipt", {"receipt_id": "invented"}), ("persisted", True), ("next_action", "EXECUTE"),
+        ("attempt_id", ""), ("request_digest", "wrong"), ("command_digest", "sha256:" + "A" * 64),
+        ("authority", {"status": "ACTIVE"}), ("signature", "invented"),
+        ("mutation_receipt_ref", "local-event:invented"), ("proof_store", {}),
+    ])
+    def test_transient_schema_rejects_fabricated_evidence_or_permission(prepared, field, value):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b277a40>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_ test_transient_schema_rejects_fabricated_evidence_or_permission[attempt_id-] _
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b276390>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+field = 'attempt_id', value = ''
+
+    @pytest.mark.parametrize("field,value", [
+        ("state", "COMMITTED"), ("reason", "POSTCONDITION_MET"), ("committed", False),
+        ("outcome", "PASS"), ("outcome", {"outcome": "UNKNOWN"}), ("delivery", "RECORDED"),
+        ("receipt", {"receipt_id": "invented"}), ("persisted", True), ("next_action", "EXECUTE"),
+        ("attempt_id", ""), ("request_digest", "wrong"), ("command_digest", "sha256:" + "A" * 64),
+        ("authority", {"status": "ACTIVE"}), ("signature", "invented"),
+        ("mutation_receipt_ref", "local-event:invented"), ("proof_store", {}),
+    ])
+    def test_transient_schema_rejects_fabricated_evidence_or_permission(prepared, field, value):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b276390>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_ test_transient_schema_rejects_fabricated_evidence_or_permission[request_digest-wrong] _
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b22c650>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+field = 'request_digest', value = 'wrong'
+
+    @pytest.mark.parametrize("field,value", [
+        ("state", "COMMITTED"), ("reason", "POSTCONDITION_MET"), ("committed", False),
+        ("outcome", "PASS"), ("outcome", {"outcome": "UNKNOWN"}), ("delivery", "RECORDED"),
+        ("receipt", {"receipt_id": "invented"}), ("persisted", True), ("next_action", "EXECUTE"),
+        ("attempt_id", ""), ("request_digest", "wrong"), ("command_digest", "sha256:" + "A" * 64),
+        ("authority", {"status": "ACTIVE"}), ("signature", "invented"),
+        ("mutation_receipt_ref", "local-event:invented"), ("proof_store", {}),
+    ])
+    def test_transient_schema_rejects_fabricated_evidence_or_permission(prepared, field, value):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b22c650>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_ test_transient_schema_rejects_fabricated_evidence_or_permission[command_digest-sha256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA] _
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b22f0e0>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+field = 'command_digest'
+value = 'sha256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA'
+
+    @pytest.mark.parametrize("field,value", [
+        ("state", "COMMITTED"), ("reason", "POSTCONDITION_MET"), ("committed", False),
+        ("outcome", "PASS"), ("outcome", {"outcome": "UNKNOWN"}), ("delivery", "RECORDED"),
+        ("receipt", {"receipt_id": "invented"}), ("persisted", True), ("next_action", "EXECUTE"),
+        ("attempt_id", ""), ("request_digest", "wrong"), ("command_digest", "sha256:" + "A" * 64),
+        ("authority", {"status": "ACTIVE"}), ("signature", "invented"),
+        ("mutation_receipt_ref", "local-event:invented"), ("proof_store", {}),
+    ])
+    def test_transient_schema_rejects_fabricated_evidence_or_permission(prepared, field, value):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b22f0e0>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_ test_transient_schema_rejects_fabricated_evidence_or_permission[authority-value12] _
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b2b0050>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+field = 'authority', value = {'status': 'ACTIVE'}
+
+    @pytest.mark.parametrize("field,value", [
+        ("state", "COMMITTED"), ("reason", "POSTCONDITION_MET"), ("committed", False),
+        ("outcome", "PASS"), ("outcome", {"outcome": "UNKNOWN"}), ("delivery", "RECORDED"),
+        ("receipt", {"receipt_id": "invented"}), ("persisted", True), ("next_action", "EXECUTE"),
+        ("attempt_id", ""), ("request_digest", "wrong"), ("command_digest", "sha256:" + "A" * 64),
+        ("authority", {"status": "ACTIVE"}), ("signature", "invented"),
+        ("mutation_receipt_ref", "local-event:invented"), ("proof_store", {}),
+    ])
+    def test_transient_schema_rejects_fabricated_evidence_or_permission(prepared, field, value):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b2b0050>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_ test_transient_schema_rejects_fabricated_evidence_or_permission[signature-invented] _
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b2b1c10>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+field = 'signature', value = 'invented'
+
+    @pytest.mark.parametrize("field,value", [
+        ("state", "COMMITTED"), ("reason", "POSTCONDITION_MET"), ("committed", False),
+        ("outcome", "PASS"), ("outcome", {"outcome": "UNKNOWN"}), ("delivery", "RECORDED"),
+        ("receipt", {"receipt_id": "invented"}), ("persisted", True), ("next_action", "EXECUTE"),
+        ("attempt_id", ""), ("request_digest", "wrong"), ("command_digest", "sha256:" + "A" * 64),
+        ("authority", {"status": "ACTIVE"}), ("signature", "invented"),
+        ("mutation_receipt_ref", "local-event:invented"), ("proof_store", {}),
+    ])
+    def test_transient_schema_rejects_fabricated_evidence_or_permission(prepared, field, value):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b2b1c10>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_ test_transient_schema_rejects_fabricated_evidence_or_permission[mutation_receipt_ref-local-event:invented] _
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b2b2360>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+field = 'mutation_receipt_ref', value = 'local-event:invented'
+
+    @pytest.mark.parametrize("field,value", [
+        ("state", "COMMITTED"), ("reason", "POSTCONDITION_MET"), ("committed", False),
+        ("outcome", "PASS"), ("outcome", {"outcome": "UNKNOWN"}), ("delivery", "RECORDED"),
+        ("receipt", {"receipt_id": "invented"}), ("persisted", True), ("next_action", "EXECUTE"),
+        ("attempt_id", ""), ("request_digest", "wrong"), ("command_digest", "sha256:" + "A" * 64),
+        ("authority", {"status": "ACTIVE"}), ("signature", "invented"),
+        ("mutation_receipt_ref", "local-event:invented"), ("proof_store", {}),
+    ])
+    def test_transient_schema_rejects_fabricated_evidence_or_permission(prepared, field, value):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b2b2360>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_ test_transient_schema_rejects_fabricated_evidence_or_permission[proof_store-value15] _
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b2b0d40>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+field = 'proof_store', value = {}
+
+    @pytest.mark.parametrize("field,value", [
+        ("state", "COMMITTED"), ("reason", "POSTCONDITION_MET"), ("committed", False),
+        ("outcome", "PASS"), ("outcome", {"outcome": "UNKNOWN"}), ("delivery", "RECORDED"),
+        ("receipt", {"receipt_id": "invented"}), ("persisted", True), ("next_action", "EXECUTE"),
+        ("attempt_id", ""), ("request_digest", "wrong"), ("command_digest", "sha256:" + "A" * 64),
+        ("authority", {"status": "ACTIVE"}), ("signature", "invented"),
+        ("mutation_receipt_ref", "local-event:invented"), ("proof_store", {}),
+    ])
+    def test_transient_schema_rejects_fabricated_evidence_or_permission(prepared, field, value):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:176: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b2b0d40>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+_____________ test_missing_attempt_must_not_claim_confirmed_commit _____________
+
+prepared = (<earned_authority.runtime.Runtime object at 0x10b2b3b30>, {'context': 'demo-a', 'context_digest': 'sha256:be0c1b6c214...1000000, ...}, {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...})
+
+    def test_missing_attempt_must_not_claim_confirmed_commit(prepared):
+        runtime, _, command = prepared
+>       response = obstructed_retry(runtime, command)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_reconciliation_wire.py:186: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+runtime = <earned_authority.runtime.Runtime object at 0x10b2b3b30>
+command = {'action': 'release', 'agent': 'agent-a', 'attempt_id': 'retry-contract', 'authority_revision': 1, ...}
+
+    def obstructed_retry(runtime, command):
+        """The actual database directory becomes an ordinary file during lookup."""
+        directory = Path(runtime.path).parent
+        saved = directory.with_name(directory.name + "-unavailable")
+        directory.rename(saved)
+        directory.write_text("database directory temporarily inaccessible")
+        try:
+>           return runtime.retry(command)
+                   ^^^^^^^^^^^^^
+E           AttributeError: 'Runtime' object has no attribute 'retry'
+
+tests/test_reconciliation_wire.py:51: AttributeError
+=========================== short test summary info ============================
+FAILED tests/test_reconciliation_wire.py::test_obstructed_durable_lookup_produces_unknown_without_writes
+FAILED tests/test_reconciliation_wire.py::test_sqlite_readonly_retry_cannot_manufacture_commit_or_receipt
+FAILED tests/test_reconciliation_wire.py::test_missing_durable_attempt_is_unknown_and_never_readmitted
+FAILED tests/test_reconciliation_wire.py::test_execution_uncertainty_does_not_erase_existing_commit
+FAILED tests/test_reconciliation_wire.py::test_unknown_outcome_is_a_durable_commit_not_unknown_execution
+FAILED tests/test_reconciliation_wire.py::test_transient_unknown_cannot_be_exported_as_durable_attempt
+FAILED tests/test_reconciliation_wire.py::test_rehashed_unknown_cannot_replace_authenticated_attempt_proof
+FAILED tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[state-COMMITTED]
+FAILED tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[reason-POSTCONDITION_MET]
+FAILED tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[committed-False]
+FAILED tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[outcome-PASS]
+FAILED tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[outcome-value4]
+FAILED tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[delivery-RECORDED]
+FAILED tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[receipt-value6]
+FAILED tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[persisted-True]
+FAILED tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[next_action-EXECUTE]
+FAILED tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[attempt_id-]
+FAILED tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[request_digest-wrong]
+FAILED tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[command_digest-sha256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA]
+FAILED tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[authority-value12]
+FAILED tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[signature-invented]
+FAILED tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[mutation_receipt_ref-local-event:invented]
+FAILED tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[proof_store-value15]
+FAILED tests/test_reconciliation_wire.py::test_missing_attempt_must_not_claim_confirmed_commit
+24 failed in 0.49s

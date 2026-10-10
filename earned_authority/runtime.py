@@ -35,6 +35,13 @@ class Denied(RuntimeError):
         super().__init__(reason)
 
 
+class CommitUnconfirmed(RuntimeError):
+    """A transaction acknowledgement or post-commit observation is unavailable."""
+    def __init__(self, committed=None):
+        self.committed=committed
+        super().__init__('RECONCILIATION_UNAVAILABLE')
+
+
 class ControlledClock:
     def __init__(self, now_ms=1000000):
         self.now_ms = now_ms
@@ -156,10 +163,12 @@ class Runtime:
                     raw=key.private_bytes(serialization.Encoding.Raw,serialization.PrivateFormat.Raw,serialization.NoEncryption())
                     db.execute('INSERT INTO keys VALUES (?,?)', (name,raw))
             self.keys={name:Ed25519PrivateKey.from_private_bytes(raw) for name,raw in db.execute('SELECT name,material FROM keys')}
+        self._trusted_local_signers={name:key.public_key() for name,key in self.keys.items()}
         self.ledger = ledger or FixtureLedger(self.path+'.ledger',self.clock,self.keys['writer'])
 
-    def _db(self):
-        db = sqlite3.connect(self.path, timeout=20)
+    def _db(self, *, read_only=False):
+        target=Path(self.path).resolve().as_uri()+'?mode=ro' if read_only else self.path
+        db = sqlite3.connect(target, timeout=20, uri=read_only)
         db.execute('PRAGMA busy_timeout=20000')
         return db
 
@@ -168,6 +177,38 @@ class Runtime:
         with self.lock, self._db() as db:
             db.execute('BEGIN IMMEDIATE')
             yield db
+
+    @contextmanager
+    def _mutation_tx(self):
+        """Distinguish a rolled-back body failure from uncertain commit acknowledgement.
+
+        This boundary is only for the registry transaction. Authority journal
+        transactions retain their separate remote-commit recovery semantics.
+        """
+        with self.lock:
+            db=None
+            try:
+                try:
+                    db=self._db();db.execute('BEGIN IMMEDIATE')
+                except (sqlite3.Error,OSError) as exc:
+                    raise Denied('LOCAL_DURABILITY_UNAVAILABLE') from exc
+                try:
+                    yield db
+                except (sqlite3.Error,OSError) as exc:
+                    try:db.rollback()
+                    except (sqlite3.Error,OSError) as rollback_error:raise CommitUnconfirmed() from rollback_error
+                    raise Denied('LOCAL_DURABILITY_UNAVAILABLE') from exc
+                except BaseException:
+                    db.rollback()
+                    raise
+                else:
+                    try:db.commit()
+                    except (sqlite3.Error,OSError) as exc:
+                        try:db.rollback()
+                        except (sqlite3.Error,OSError):pass
+                        raise CommitUnconfirmed() from exc
+            finally:
+                if db is not None:db.close()
 
     def close(self):
         pass  # Connections are operation-scoped for restart and thread tests.
@@ -186,7 +227,7 @@ class Runtime:
             sig=base64.b64decode(body.pop('signature'),validate=True)
             signer=body['signer']
             if signer not in trusted: return False
-            self.keys[signer].public_key().verify(sig,encoded(body))
+            self._trusted_local_signers[signer].verify(sig,encoded(body))
             return True
         except Exception:
             return False
@@ -195,8 +236,17 @@ class Runtime:
         event={'event_id':ident('event'),'event_type':kind,'agent_id':agent,
                'attempt_id':attempt_id,'correlation_id':fields.pop('correlation_id',attempt_id or ident('flow')),
                'occurred_at_ms':self.clock.now_ms,**fields}
-        signature=base64.b64encode(self.keys['writer'].sign(encoded(event))).decode()
+        try:signature=base64.b64encode(self.keys['writer'].sign(encoded(event))).decode()
+        except Exception as exc:raise Denied('LOCAL_INTENT_UNAUTHENTICATED') from exc
         db.execute('INSERT INTO events VALUES (?,?,?,?,?,NULL)',(event['event_id'],attempt_id,json.dumps(event),signature,'PENDING'))
+        # Verify the bytes actually stored, including the row identity. A trigger
+        # substituting a different valid event must not authenticate this intent.
+        row=db.execute('SELECT attempt_id,body,signature FROM events WHERE id=?',(event['event_id'],)).fetchone()
+        try:
+            if row is None or row[0]!=attempt_id or json.loads(row[1])!=event or row[2]!=signature:
+                raise ValueError('persisted event differs from intended event')
+            self._trusted_local_signers['writer'].verify(base64.b64decode(row[2],validate=True),encoded(event))
+        except Exception as exc:raise Denied('LOCAL_INTENT_UNAUTHENTICATED') from exc
         return event
 
     def shadow(self, skill='release-model', version='skill-v1', context='demo-a', attempt_id=None,
@@ -468,16 +518,57 @@ class Runtime:
     def commit(self,command,actual=None,healthy=True,observer_available=True,lose_response=False,before_delivery=None):
         if not self.local_durability_available: raise Denied('LOCAL_DURABILITY_UNAVAILABLE')
         if not self.local_writer_authenticated: raise Denied('LOCAL_INTENT_UNAUTHENTICATED')
-        with self._commit_fence():
-            self._commit_local(command,actual,healthy,observer_available)
-        if before_delivery: before_delivery()
-        self.flush_outbox()
-        result=self.attempts(command['attempt_id'])
+        try:
+            with self._commit_fence():
+                self._commit_local(command,actual,healthy,observer_available)
+        except CommitUnconfirmed as exc:
+            return self._unknown_reconciliation(command,committed=exc.committed)
+        try:
+            self._after_commit()
+            if before_delivery: before_delivery()
+            self.flush_outbox()
+            result=self.attempts(command['attempt_id'])
+        except (sqlite3.Error,OSError):
+            return self._unknown_reconciliation(command,committed=True)
+        except Denied as exc:
+            if exc.reason in ('LOCAL_INTENT_UNAUTHENTICATED','OUTCOME_UNAUTHENTICATED'):
+                return self._unknown_reconciliation(command,committed=True)
+            raise
         if lose_response: raise TimeoutError('response lost after durable commit')
         return result
 
+    def _after_commit(self):
+        pass
+
+    def _unknown_reconciliation(self,command,committed=None,reason='RECONCILIATION_UNAVAILABLE'):
+        # A response describing unavailable knowledge, never a persisted outcome.
+        return {'state':'UNKNOWN','reason':reason,'attempt_id':command['attempt_id'],
+                'request_digest':command['request_digest'],'command_digest':canonical_digest(command),
+                'committed':committed,'outcome':None,'delivery':'UNKNOWN','receipt':None,
+                'persisted':False,'next_action':'RECONCILE','reexecution_permitted':False}
+
+    def retry(self,command):
+        """Reconcile an authenticated durable attempt before considering execution.
+
+        A missing or inaccessible record never creates a new attempt. A known
+        REQUESTED record may proceed through the normal fenced transaction,
+        which rechecks state so a concurrent commit cannot be replayed.
+        """
+        if not self._verified(command,{'authority'}):raise Denied('BINDING_MISMATCH')
+        try:
+            with self._db(read_only=True) as db:
+                row=db.execute('SELECT command,result FROM attempts WHERE id=?',(command['attempt_id'],)).fetchone()
+        except (sqlite3.Error,OSError):return self._unknown_reconciliation(command)
+        if row is None:return self._unknown_reconciliation(command,reason='ATTEMPT_UNCONFIRMED')
+        if json.loads(row[0])!=command:raise Denied('IDEMPOTENCY_CONFLICT')
+        try:return self.commit(command)
+        except Denied as exc:
+            if exc.reason in ('LOCAL_DURABILITY_UNAVAILABLE','RECONCILIATION_UNAVAILABLE'):
+                return self._unknown_reconciliation(command,committed=True if row[1] else None)
+            raise
+
     def _commit_local(self,command,actual,healthy,observer_available):
-        with self._tx() as db:
+        with self._mutation_tx() as db:
             row=db.execute('SELECT command,result FROM attempts WHERE id=?',(command['attempt_id'],)).fetchone()
             if not row or json.loads(row[0])!=command or not self._verified(command,{'authority'}): raise Denied('BINDING_MISMATCH')
             if row[1]:
@@ -496,6 +587,14 @@ class Runtime:
                         'command':command,'policy_decision_id':g['_policy_decision_id'],'outcome':None,'delivery':'PENDING','receipt':None,'lifecycle_applied':False}
                 db.execute('UPDATE attempts SET result=? WHERE id=?',(json.dumps(result),command['attempt_id']))
                 self._event(db,'COMMITTED',command['agent'],command['attempt_id'],authority_revision=a['revision'],policy_decision_id=g['_policy_decision_id'])
+        try:return self._observe_committed(command,result,observer_available)
+        except (sqlite3.Error,OSError) as exc:raise CommitUnconfirmed(committed=True) from exc
+        except Denied as exc:
+            if exc.reason in ('LOCAL_INTENT_UNAUTHENTICATED','OUTCOME_UNAUTHENTICATED'):
+                raise CommitUnconfirmed(committed=True) from exc
+            raise
+
+    def _observe_committed(self,command,result,observer_available):
         if result['outcome'] is not None:
             return self.apply_outcome(command['attempt_id'])
         # A crash here leaves a committed attempt requiring observation, never replay.
@@ -559,7 +658,7 @@ class Runtime:
         with self._db() as db:
             for raw,signature in db.execute('SELECT body,signature FROM events'):
                 try:
-                    self.keys['writer'].public_key().verify(base64.b64decode(signature,validate=True),encoded(json.loads(raw)))
+                    self._trusted_local_signers['writer'].verify(base64.b64decode(signature,validate=True),encoded(json.loads(raw)))
                 except Exception:
                     raise Denied('LOCAL_INTENT_UNAUTHENTICATED')
 

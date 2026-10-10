@@ -1,0 +1,75 @@
+{
+  "started_at": "2026-10-10T03:44:50.513386+00:00",
+  "finished_at": "2026-10-10T03:44:53.588930+00:00",
+  "status": "PASS",
+  "scope": "CDD against actual local Runtime producers and SQLite/filesystem faults. No live-service acceptance claim.",
+  "source_hashes_before": {
+    "earned_authority/runtime.py": "sha256:f36a19824929002701f8c55b1b9bdc76943377dd5167a02ba9c7302c5899551a",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "tests/test_reconciliation_wire.py": "sha256:b9cb6efee8f9afae333a327b76e6651c7dce06f5064d9768de48ba8996d69d6d",
+    "tests/test_wire_contracts.py": "sha256:69b1d2a86b3decb724d832de0caf601d67ab89a227b075df936e86afcadbe280",
+    "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
+    "contracts/unknown-reconciliation-result.schema.json": "sha256:6193e4fcadc9a2ee7f89b043306aaf088124a272adc9227f5453e56881faf8e6",
+    "contracts/unknown-reconciliation-result.md": "sha256:22cce6a26d5c3b62d7f3454c45b49d8049648bd6217b6d47acd9b11a1f406991"
+  },
+  "source_hashes": {
+    "earned_authority/runtime.py": "sha256:f36a19824929002701f8c55b1b9bdc76943377dd5167a02ba9c7302c5899551a",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "tests/test_reconciliation_wire.py": "sha256:b9cb6efee8f9afae333a327b76e6651c7dce06f5064d9768de48ba8996d69d6d",
+    "tests/test_wire_contracts.py": "sha256:69b1d2a86b3decb724d832de0caf601d67ab89a227b075df936e86afcadbe280",
+    "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
+    "contracts/unknown-reconciliation-result.schema.json": "sha256:6193e4fcadc9a2ee7f89b043306aaf088124a272adc9227f5453e56881faf8e6",
+    "contracts/unknown-reconciliation-result.md": "sha256:22cce6a26d5c3b62d7f3454c45b49d8049648bd6217b6d47acd9b11a1f406991"
+  },
+  "source_unchanged_during_run": true,
+  "runs": [
+    {
+      "modules": [
+        "tests/test_reconciliation_wire.py"
+      ],
+      "log": "evidence/reconciliation-wire-green.log",
+      "exit_code": 0,
+      "sha256": "sha256:27497c848a88e2045cad107394e3d651a2cd9735d0e7635e5c6d8f0dc2138bc3",
+      "summary": "27 passed in 0.55s"
+    },
+    {
+      "modules": [
+        "tests/test_reconciliation_wire.py",
+        "tests/test_wire_contracts.py",
+        "tests/test_contracts.py"
+      ],
+      "log": "evidence/reconciliation-wire-regression.log",
+      "exit_code": 0,
+      "sha256": "sha256:294ebd3cada1f97d2b48f8eadded19efcbb44a9c7a12be33b5b07b41d652632d",
+      "summary": "87 passed, 8 subtests passed in 2.18s"
+    }
+  ],
+  "red_baseline": {
+    "log": "evidence/reconciliation-wire-red.log",
+    "sha256": "sha256:7c25f84bd6e3ce521877fa758c14578317f3b28db1aff464af45b8003015253f",
+    "scope": "Initial 24 failures: retry API/schema absent before implementation. Later test additions not counted as baseline red."
+  },
+  "missing_database_regression": {
+    "red_log": "evidence/reconciliation-wire-missing-database-red.log",
+    "sha256": "sha256:c7ce821363d1a0037c504557d78545e82fb6730e849a0cb42b53291a1eb249ff",
+    "failure": "A missing store file was created by passive reconciliation lookup. Root changed retry to read-only lookup; included in current green run."
+  },
+  "contract": "contracts/unknown-reconciliation-result.schema.json",
+  "draft": "Unpublished 0.1.0-draft.1; separate transient response, not an authenticated runtime wire kind.",
+  "producer_cases": [
+    "Obstructed actual database path returns unpersisted UNKNOWN and leaves retained store untouched.",
+    "Missing actual store file is not recreated.",
+    "Read-only actual SQLite prevents new commit and receipt assertion.",
+    "Known commit followed by actual read-only persistence failure preserves committed=true without outcome or receipt claims.",
+    "Missing durable attempt is not readmitted.",
+    "Recovery uses the exact signed command and does not repeat a confirmed mutation.",
+    "Durable COMMITTED with independently observed UNKNOWN remains distinct.",
+    "Transient response cannot become exported or rehashed authenticated attempt proof."
+  ],
+  "pending": [
+    "Parent full-component run at final source freeze",
+    "Real-service BDD recovery acceptance"
+  ]
+}

@@ -1,0 +1,530 @@
+{
+  "run_id": "connected-23b960bbc4c540a1b27f165638382626",
+  "environment": "REAL_LOCAL_SERVICES",
+  "started_at": "2026-10-10T03:46:56.921977+00:00",
+  "checks": [
+    {
+      "check": "canonical_identity_is_active",
+      "passed": true,
+      "evidence": {
+        "agent_id": "agt-idem-efadb918571e4e51ade44d97e78bd476"
+      }
+    },
+    {
+      "check": "canonical_qualification_release-model_1",
+      "passed": true,
+      "evidence": {
+        "qualification_id": "qualification-364e6709180e4bc781aa832ada4b68ea",
+        "report": {
+          "disposition": "ELIGIBLE",
+          "reason": "CANONICAL_CHECKS_PASSED",
+          "eligible_for_authority_review": true,
+          "qualification_id": "qualification-364e6709180e4bc781aa832ada4b68ea",
+          "skill_digest": "sha256:003e16b2097cc177270cf964ce143f56650046641f3a802fa20f358859b70049",
+          "context_digest": "sha256:2f7452c0735233bda48fb35c9567b0460d6ae427206db12d57b4e1a1c7a17f1f",
+          "passes": 3,
+          "failures": 0,
+          "unknown": 0,
+          "policy_profile": "demo-three-pass",
+          "statistical_adequacy_claim": false,
+          "cascade": {
+            "implementation": "cascade_compression.cascade.promotion.PromotionEngine",
+            "source_revision": "3efd16e053ef2a8a95b1b1ba6c1d1acdd873a3cb",
+            "tier": "nano",
+            "active": true,
+            "deactivated": false,
+            "samples_tested": 3,
+            "false_negative_count": 0,
+            "events": [
+              {
+                "agent_name": "sha256:003e16b2097cc177270cf964ce143f56650046641f3a802fa20f358859b70049:sha256:2f7452c0735233bda48fb35c9567b0460d6ae427206db12d57b4e1a1c7a17f1f",
+                "event_type": "promotion",
+                "from_tier": "draft",
+                "to_tier": "candidate",
+                "timestamp": "2026-10-10T03:46:58.252346+00:00",
+                "evidence": {
+                  "samples_tested": 3,
+                  "accuracy": "1.0",
+                  "false_positive_rate": "0.0",
+                  "false_negative_rate": "0.0",
+                  "false_negative_count": 0,
+                  "human_approved": false,
+                  "human_approved_by": null,
+                  "human_approved_at": null,
+                  "batch_id": null
+                },
+                "reason": "meets candidate thresholds"
+              },
+              {
+                "agent_name": "sha256:003e16b2097cc177270cf964ce143f56650046641f3a802fa20f358859b70049:sha256:2f7452c0735233bda48fb35c9567b0460d6ae427206db12d57b4e1a1c7a17f1f",
+                "event_type": "promotion",
+                "from_tier": "candidate",
+                "to_tier": "nano",
+                "timestamp": "2026-10-10T03:46:58.252377+00:00",
+                "evidence": {
+                  "samples_tested": 3,
+                  "accuracy": "1.0",
+                  "false_positive_rate": "0.0",
+                  "false_negative_rate": "0.0",
+                  "false_negative_count": 0,
+                  "human_approved": false,
+                  "human_approved_by": null,
+                  "human_approved_at": null,
+                  "batch_id": null
+                },
+                "reason": "meets nano thresholds"
+              }
+            ]
+          },
+          "gcl": {
+            "implementation": "gcl.falsification.gate.FalsificationGate",
+            "source_revision": "a8ae67ee1198e8b86bf7458119723c0af2d74792",
+            "scope": "supporting-deployment-capacity",
+            "advisory": true,
+            "executed": false,
+            "outcome": null,
+            "authority": null,
+            "network_calls": 0,
+            "verdict": "survives",
+            "failed_check": null,
+            "reasoning": "All deterministic checks passed.",
+            "deterministic": true,
+            "proposal_digest": "sha256:aeb83a23d8d5fabcb2a9f813e90acf28723290c46d4524c9f102273aea533d29"
+          },
+          "source_revisions": {
+            "cascade": "3efd16e053ef2a8a95b1b1ba6c1d1acdd873a3cb",
+            "gcl": "a8ae67ee1198e8b86bf7458119723c0af2d74792"
+          },
+          "executed": false,
+          "authority_created": false
+        }
+      }
+    },
+    {
+      "check": "qualification_does_not_issue_authority",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "real_opa_policy_denial",
+      "passed": true,
+      "evidence": {
+        "reason": "POLICY_DENIED",
+        "mutations": 0
+      }
+    },
+    {
+      "check": "canonical_signed_grant",
+      "passed": true,
+      "evidence": {
+        "revision": 1
+      }
+    },
+    {
+      "check": "fenced_commit_and_independent_pass",
+      "passed": true,
+      "evidence": {
+        "attempt_id": "attempt-58684f7decef490796bda3132c373bce"
+      }
+    },
+    {
+      "check": "canonical_ledger_records_real_lifecycle",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "actual_wire_producer_consumer_bindings",
+      "passed": true,
+      "evidence": {
+        "records_artifact": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/reference-runtime/connected-wire.json"
+      }
+    },
+    {
+      "check": "duplicate_attempt_no_second_mutation",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "wrong_context_denied",
+      "passed": true,
+      "evidence": {
+        "reason": "SCOPE_MISMATCH",
+        "mutations": 1
+      }
+    },
+    {
+      "check": "context_cannot_authorize_another_target",
+      "passed": true,
+      "evidence": {
+        "reason": "CONTEXT_TARGET_MISMATCH",
+        "mutations": 1
+      }
+    },
+    {
+      "check": "canonical_qualification_read-health_11",
+      "passed": true,
+      "evidence": {
+        "qualification_id": "qualification-aadd90efe8be41658e5450f3efae8096",
+        "report": {
+          "disposition": "ELIGIBLE",
+          "reason": "CANONICAL_CHECKS_PASSED",
+          "eligible_for_authority_review": true,
+          "qualification_id": "qualification-aadd90efe8be41658e5450f3efae8096",
+          "skill_digest": "sha256:9abe70324eeac871619ca0831bdd0875ea896e4c125e92df44f11111ff4d5041",
+          "context_digest": "sha256:2f7452c0735233bda48fb35c9567b0460d6ae427206db12d57b4e1a1c7a17f1f",
+          "passes": 3,
+          "failures": 0,
+          "unknown": 0,
+          "policy_profile": "demo-three-pass",
+          "statistical_adequacy_claim": false,
+          "cascade": {
+            "implementation": "cascade_compression.cascade.promotion.PromotionEngine",
+            "source_revision": "3efd16e053ef2a8a95b1b1ba6c1d1acdd873a3cb",
+            "tier": "nano",
+            "active": true,
+            "deactivated": false,
+            "samples_tested": 3,
+            "false_negative_count": 0,
+            "events": [
+              {
+                "agent_name": "sha256:9abe70324eeac871619ca0831bdd0875ea896e4c125e92df44f11111ff4d5041:sha256:2f7452c0735233bda48fb35c9567b0460d6ae427206db12d57b4e1a1c7a17f1f",
+                "event_type": "promotion",
+                "from_tier": "draft",
+                "to_tier": "candidate",
+                "timestamp": "2026-10-10T03:46:59.068880+00:00",
+                "evidence": {
+                  "samples_tested": 3,
+                  "accuracy": "1.0",
+                  "false_positive_rate": "0.0",
+                  "false_negative_rate": "0.0",
+                  "false_negative_count": 0,
+                  "human_approved": false,
+                  "human_approved_by": null,
+                  "human_approved_at": null,
+                  "batch_id": null
+                },
+                "reason": "meets candidate thresholds"
+              },
+              {
+                "agent_name": "sha256:9abe70324eeac871619ca0831bdd0875ea896e4c125e92df44f11111ff4d5041:sha256:2f7452c0735233bda48fb35c9567b0460d6ae427206db12d57b4e1a1c7a17f1f",
+                "event_type": "promotion",
+                "from_tier": "candidate",
+                "to_tier": "nano",
+                "timestamp": "2026-10-10T03:46:59.068912+00:00",
+                "evidence": {
+                  "samples_tested": 3,
+                  "accuracy": "1.0",
+                  "false_positive_rate": "0.0",
+                  "false_negative_rate": "0.0",
+                  "false_negative_count": 0,
+                  "human_approved": false,
+                  "human_approved_by": null,
+                  "human_approved_at": null,
+                  "batch_id": null
+                },
+                "reason": "meets nano thresholds"
+              }
+            ]
+          },
+          "gcl": {
+            "implementation": "gcl.falsification.gate.FalsificationGate",
+            "source_revision": "a8ae67ee1198e8b86bf7458119723c0af2d74792",
+            "scope": "supporting-deployment-capacity",
+            "advisory": true,
+            "executed": false,
+            "outcome": null,
+            "authority": null,
+            "network_calls": 0,
+            "verdict": "survives",
+            "failed_check": null,
+            "reasoning": "All deterministic checks passed.",
+            "deterministic": true,
+            "proposal_digest": "sha256:aeb83a23d8d5fabcb2a9f813e90acf28723290c46d4524c9f102273aea533d29"
+          },
+          "source_revisions": {
+            "cascade": "3efd16e053ef2a8a95b1b1ba6c1d1acdd873a3cb",
+            "gcl": "a8ae67ee1198e8b86bf7458119723c0af2d74792"
+          },
+          "executed": false,
+          "authority_created": false
+        }
+      }
+    },
+    {
+      "check": "acknowledged_revoke_fences_prior_admission",
+      "passed": true,
+      "evidence": {
+        "reason": "REVOKED_AUTHORITY",
+        "mutations": 1
+      }
+    },
+    {
+      "check": "selective_withdrawal_preserves_unrelated_skill",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "canonical_qualification_release-model_14",
+      "passed": true,
+      "evidence": {
+        "qualification_id": "qualification-cc8e04dbce894cad86be8b3ad4252786",
+        "report": {
+          "disposition": "ELIGIBLE",
+          "reason": "CANONICAL_CHECKS_PASSED",
+          "eligible_for_authority_review": true,
+          "qualification_id": "qualification-cc8e04dbce894cad86be8b3ad4252786",
+          "skill_digest": "sha256:003e16b2097cc177270cf964ce143f56650046641f3a802fa20f358859b70049",
+          "context_digest": "sha256:443abf907f6a0af2a0d4af101300919b26fce8d401fff5e50eee96187b026491",
+          "passes": 3,
+          "failures": 0,
+          "unknown": 0,
+          "policy_profile": "demo-three-pass",
+          "statistical_adequacy_claim": false,
+          "cascade": {
+            "implementation": "cascade_compression.cascade.promotion.PromotionEngine",
+            "source_revision": "3efd16e053ef2a8a95b1b1ba6c1d1acdd873a3cb",
+            "tier": "nano",
+            "active": true,
+            "deactivated": false,
+            "samples_tested": 3,
+            "false_negative_count": 0,
+            "events": [
+              {
+                "agent_name": "sha256:003e16b2097cc177270cf964ce143f56650046641f3a802fa20f358859b70049:sha256:443abf907f6a0af2a0d4af101300919b26fce8d401fff5e50eee96187b026491",
+                "event_type": "promotion",
+                "from_tier": "draft",
+                "to_tier": "candidate",
+                "timestamp": "2026-10-10T03:46:59.593521+00:00",
+                "evidence": {
+                  "samples_tested": 3,
+                  "accuracy": "1.0",
+                  "false_positive_rate": "0.0",
+                  "false_negative_rate": "0.0",
+                  "false_negative_count": 0,
+                  "human_approved": false,
+                  "human_approved_by": null,
+                  "human_approved_at": null,
+                  "batch_id": null
+                },
+                "reason": "meets candidate thresholds"
+              },
+              {
+                "agent_name": "sha256:003e16b2097cc177270cf964ce143f56650046641f3a802fa20f358859b70049:sha256:443abf907f6a0af2a0d4af101300919b26fce8d401fff5e50eee96187b026491",
+                "event_type": "promotion",
+                "from_tier": "candidate",
+                "to_tier": "nano",
+                "timestamp": "2026-10-10T03:46:59.593555+00:00",
+                "evidence": {
+                  "samples_tested": 3,
+                  "accuracy": "1.0",
+                  "false_positive_rate": "0.0",
+                  "false_negative_rate": "0.0",
+                  "false_negative_count": 0,
+                  "human_approved": false,
+                  "human_approved_by": null,
+                  "human_approved_at": null,
+                  "batch_id": null
+                },
+                "reason": "meets nano thresholds"
+              }
+            ]
+          },
+          "gcl": {
+            "implementation": "gcl.falsification.gate.FalsificationGate",
+            "source_revision": "a8ae67ee1198e8b86bf7458119723c0af2d74792",
+            "scope": "supporting-deployment-capacity",
+            "advisory": true,
+            "executed": false,
+            "outcome": null,
+            "authority": null,
+            "network_calls": 0,
+            "verdict": "survives",
+            "failed_check": null,
+            "reasoning": "All deterministic checks passed.",
+            "deterministic": true,
+            "proposal_digest": "sha256:6f988f81d38704ed71a58a0fae5bf11b6b37cc52bd0585e92d8a265a70fb6551"
+          },
+          "source_revisions": {
+            "cascade": "3efd16e053ef2a8a95b1b1ba6c1d1acdd873a3cb",
+            "gcl": "a8ae67ee1198e8b86bf7458119723c0af2d74792"
+          },
+          "executed": false,
+          "authority_created": false
+        }
+      }
+    },
+    {
+      "check": "known_failure_demotes_and_withdraws",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_wire_preserves_prior_qualification_binding",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "next_mutation_after_failure_denied",
+      "passed": true,
+      "evidence": {
+        "reason": "REVOKED_AUTHORITY",
+        "mutations": 2
+      }
+    },
+    {
+      "check": "failure_preserves_other_skill",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "restart_preserves_outcomes_and_demotion",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "canonical_qualification_release-model_20",
+      "passed": true,
+      "evidence": {
+        "qualification_id": "qualification-c02eb6554c154b8b861e8b86caea534b",
+        "report": {
+          "disposition": "ELIGIBLE",
+          "reason": "CANONICAL_CHECKS_PASSED",
+          "eligible_for_authority_review": true,
+          "qualification_id": "qualification-c02eb6554c154b8b861e8b86caea534b",
+          "skill_digest": "sha256:003e16b2097cc177270cf964ce143f56650046641f3a802fa20f358859b70049",
+          "context_digest": "sha256:fef44191e8ca69640e058c9c616a26a3606228d557aee9249fa2786f7c9a23f7",
+          "passes": 3,
+          "failures": 0,
+          "unknown": 0,
+          "policy_profile": "demo-three-pass",
+          "statistical_adequacy_claim": false,
+          "cascade": {
+            "implementation": "cascade_compression.cascade.promotion.PromotionEngine",
+            "source_revision": "3efd16e053ef2a8a95b1b1ba6c1d1acdd873a3cb",
+            "tier": "nano",
+            "active": true,
+            "deactivated": false,
+            "samples_tested": 3,
+            "false_negative_count": 0,
+            "events": [
+              {
+                "agent_name": "sha256:003e16b2097cc177270cf964ce143f56650046641f3a802fa20f358859b70049:sha256:fef44191e8ca69640e058c9c616a26a3606228d557aee9249fa2786f7c9a23f7",
+                "event_type": "promotion",
+                "from_tier": "draft",
+                "to_tier": "candidate",
+                "timestamp": "2026-10-10T03:47:00.585288+00:00",
+                "evidence": {
+                  "samples_tested": 3,
+                  "accuracy": "1.0",
+                  "false_positive_rate": "0.0",
+                  "false_negative_rate": "0.0",
+                  "false_negative_count": 0,
+                  "human_approved": false,
+                  "human_approved_by": null,
+                  "human_approved_at": null,
+                  "batch_id": null
+                },
+                "reason": "meets candidate thresholds"
+              },
+              {
+                "agent_name": "sha256:003e16b2097cc177270cf964ce143f56650046641f3a802fa20f358859b70049:sha256:fef44191e8ca69640e058c9c616a26a3606228d557aee9249fa2786f7c9a23f7",
+                "event_type": "promotion",
+                "from_tier": "candidate",
+                "to_tier": "nano",
+                "timestamp": "2026-10-10T03:47:00.585311+00:00",
+                "evidence": {
+                  "samples_tested": 3,
+                  "accuracy": "1.0",
+                  "false_positive_rate": "0.0",
+                  "false_negative_rate": "0.0",
+                  "false_negative_count": 0,
+                  "human_approved": false,
+                  "human_approved_by": null,
+                  "human_approved_at": null,
+                  "batch_id": null
+                },
+                "reason": "meets nano thresholds"
+              }
+            ]
+          },
+          "gcl": {
+            "implementation": "gcl.falsification.gate.FalsificationGate",
+            "source_revision": "a8ae67ee1198e8b86bf7458119723c0af2d74792",
+            "scope": "supporting-deployment-capacity",
+            "advisory": true,
+            "executed": false,
+            "outcome": null,
+            "authority": null,
+            "network_calls": 0,
+            "verdict": "survives",
+            "failed_check": null,
+            "reasoning": "All deterministic checks passed.",
+            "deterministic": true,
+            "proposal_digest": "sha256:ef2625ddf527a6e5b0b2e9902c0ea4c9afb600f5ba4d435b9265c91b043e6a06"
+          },
+          "source_revisions": {
+            "cascade": "3efd16e053ef2a8a95b1b1ba6c1d1acdd873a3cb",
+            "gcl": "a8ae67ee1198e8b86bf7458119723c0af2d74792"
+          },
+          "executed": false,
+          "authority_created": false
+        }
+      }
+    },
+    {
+      "check": "controlled_revocation_race_denied",
+      "passed": true,
+      "evidence": {
+        "reason": "REVOKED_AUTHORITY",
+        "mutations": 2
+      }
+    },
+    {
+      "check": "all_outbox_events_have_verified_canonical_receipts",
+      "passed": true,
+      "evidence": {
+        "events": 39
+      }
+    }
+  ],
+  "scope": "Real Passport, Foundation/PostgreSQL/OPA, Cascade, deterministic GCL constraint, canonical Ledger/PostgreSQL; local fenced SQLite registry. No product-value or distributed guarantee.",
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "agent_id": "agt-idem-efadb918571e4e51ade44d97e78bd476",
+  "state_path": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/reference-runtime/connected-validation/connected-23b960bbc4c540a1b27f165638382626.sqlite",
+  "mutation_count": 2,
+  "procedure_revision": "sha256:93dd5939baa06b42a7472b8ae8e5bf3dd96113df462cf0e1d000d1eff100cf3f",
+  "canonical_sources": {
+    "cascade": "3efd16e053ef2a8a95b1b1ba6c1d1acdd873a3cb",
+    "gcl": "a8ae67ee1198e8b86bf7458119723c0af2d74792"
+  },
+  "finished_at": "2026-10-10T03:47:01.172347+00:00",
+  "source_hashes_before": {
+    "tools/validate_connected.py": "sha256:dc9c007353e26c3b5a29305d522f85bb231ff6a6a7521a203fd3d4f17eeb5b2a",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/connected.py": "sha256:20c6caed79299b5b8d2707878c8e7775e516c8aebed4e2076c0bef1defce95e3",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/runtime.py": "sha256:f36a19824929002701f8c55b1b9bdc76943377dd5167a02ba9c7302c5899551a",
+    "earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a"
+  },
+  "source_hashes": {
+    "tools/validate_connected.py": "sha256:dc9c007353e26c3b5a29305d522f85bb231ff6a6a7521a203fd3d4f17eeb5b2a",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/connected.py": "sha256:20c6caed79299b5b8d2707878c8e7775e516c8aebed4e2076c0bef1defce95e3",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/runtime.py": "sha256:f36a19824929002701f8c55b1b9bdc76943377dd5167a02ba9c7302c5899551a",
+    "earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a"
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "run_id": "adversarial-7fd988c9a61f497998bcdaf5482898d5",
+  "environment": "REAL_LOCAL_SERVICES",
+  "started_at": "2026-10-10T03:47:01.439049+00:00",
+  "scope": "Bounded engineering fault evaluation; no comparator value or statistical reliability claim",
+  "checks": [
+    {
+      "check": "missing_observation_is_unknown_and_withdraws",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "unknown_cannot_permit_new_attempt",
+      "passed": true,
+      "evidence": {
+        "reason": "EVIDENCE_UNCONFIRMED"
+      }
+    },
+    {
+      "check": "real_scope_expiry_denies_admitted_command",
+      "passed": true,
+      "evidence": {
+        "reason": "EXPIRED_SCOPE"
+      }
+    },
+    {
+      "check": "known_failure_with_unreachable_ledger_still_withdraws",
+      "passed": true,
+      "evidence": {
+        "elapsed_ms": 66,
+        "fault": "canonical SDK endpoint set to unused loopback port"
+      }
+    },
+    {
+      "check": "actual_cascade_demoted",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "ledger_recovery_records_without_second_mutation",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "signed_cross_skill_qualification_borrowing_denied",
+      "passed": true,
+      "evidence": {
+        "reason": "BINDING_MISMATCH"
+      }
+    },
+    {
+      "check": "real_canonical_concurrent_cas_has_one_winner",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "subprocess_crash_occurs_after_durable_commit",
+      "passed": true,
+      "evidence": {
+        "exit_code": 23
+      }
+    },
+    {
+      "check": "post_crash_observation_reconciles_without_reexecution",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "revoke_waits_for_prior_fenced_commit",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "earlier_commit_preserved_after_revoke_ack",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "no_new_command_after_ack",
+      "passed": true,
+      "evidence": {
+        "reason": "REVOKED_AUTHORITY"
+      }
+    },
+    {
+      "check": "revocation_ack_does_not_wait_for_remote_delivery",
+      "passed": true,
+      "evidence": {
+        "elapsed_ms": 46
+      }
+    },
+    {
+      "check": "real_gcl_capacity_veto_not_outcome_failure",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "gcl_deterministic_path_no_network_calls",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "final_outbox_all_recorded",
+      "passed": true,
+      "evidence": {
+        "event_count": 75
+      }
+    }
+  ],
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "state_path": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/reference-runtime/connected-validation/adversarial-7fd988c9a61f497998bcdaf5482898d5.sqlite",
+  "mutation_count": 5,
+  "finished_at": "2026-10-10T03:47:07.195970+00:00",
+  "source_hashes_before": {
+    "tools/validate_adversarial.py": "sha256:c9c57b66cf87fe83ed907bb523e4a27c18ff933305c4bbe06ca6954ab28381b4",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/connected.py": "sha256:20c6caed79299b5b8d2707878c8e7775e516c8aebed4e2076c0bef1defce95e3",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/runtime.py": "sha256:f36a19824929002701f8c55b1b9bdc76943377dd5167a02ba9c7302c5899551a",
+    "earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a"
+  },
+  "source_hashes": {
+    "tools/validate_adversarial.py": "sha256:c9c57b66cf87fe83ed907bb523e4a27c18ff933305c4bbe06ca6954ab28381b4",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/connected.py": "sha256:20c6caed79299b5b8d2707878c8e7775e516c8aebed4e2076c0bef1defce95e3",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/runtime.py": "sha256:f36a19824929002701f8c55b1b9bdc76943377dd5167a02ba9c7302c5899551a",
+    "earned_authority/authority_journal.py": "sha256:06870eb89dcecd6d658678d276ba1dd800e47035e3fcc0c64ccc3997f1d494d3",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/wire_contracts.py": "sha256:c4278f62b92de43dac4c67d6404229c37c7bd9c9c65c300037c5ca97682e7e9e",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a"
+  }
+}
