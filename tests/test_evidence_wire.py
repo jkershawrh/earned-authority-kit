@@ -44,7 +44,7 @@ def produced(request, tmp_path, rt):
         assert decision["admitted"] is (kind == "EVIDENCE_ADMITTED")
     rows = [r for r in runtime.events() if r["event"]["event_type"] == kind]
     assert len(rows) == 1
-    assert runtime.mutation_count == 0 and runtime.authority()["grants"] == {}
+    assert runtime.mutation_count == 0 and not runtime.authority()["grants"]
     return runtime, kind, rows[0]["event_id"]
 
 

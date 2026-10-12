@@ -11,6 +11,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
 from earned_authority.connected import ConnectedRuntime
 from earned_authority.contracts import canonical_digest
+from earned_authority.grants import has_skill
 from earned_authority.runtime import Denied
 from test_connected_evidence import CONTEXT, ready, rt
 
@@ -59,7 +60,7 @@ def test_cached_active_grant_cannot_admit_or_commit_during_current_status_outage
         assert failure.value.reason == 'AUTHORITY_UNCONFIRMED'
     assert rt.cached_authority_observation() == observed
     assert observed['authority']['status'] == 'ACTIVE'
-    assert 'release-model' in observed['authority']['grants']
+    assert has_skill(observed['authority'], 'release-model')
     assert rt.attempts('new-attempt') is None
     assert rt.attempts('cache-attempt')['state'] == 'REQUESTED'
     assert rt.events() == events
@@ -76,7 +77,7 @@ def test_canonical_revocation_overrides_cached_active_observation(rt):
     assert failure.value.reason == 'REVOKED_AUTHORITY'
     newer = rt.refresh_authority_observation()
     assert newer['authority']['revision'] > observed['authority']['revision']
-    assert 'release-model' not in newer['authority']['grants']
+    assert not has_skill(newer['authority'], 'release-model')
     assert rt.mutation_count == 0
 
 

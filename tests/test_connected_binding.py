@@ -8,9 +8,13 @@ class BindingRegression(unittest.TestCase):
     def test_a_signed_grant_cannot_borrow_another_skills_qualification(self):
         rt=ConnectedRuntime.__new__(ConnectedRuntime);rt.clock=ControlledClock();rt.procedure_revision='rev1'
         rt._assert_authority_ready=lambda db,agent:None  # this test isolates skill binding
-        q={'qualification_id':'q1','skill':'original-skill','version':'rev1','context':{'model_version':'model-v2'},
-           'skill_digest':'sha256:'+'1'*64,'context_digest':'sha256:'+'2'*64}
-        grant={**q,'skill':'different-skill','action':'release','resource':'model/champion',
+        context={'model_version':'model-v2'}
+        q={'qualification_id':'q1','skill':'original-skill','version':'rev1','context':context,
+           'skill_digest':canonical_digest({'skill':'original-skill','version':'rev1'}),
+           'context_digest':canonical_digest({'environment':context})}
+        grant={**q,'grant_id':'grant-1','skill':'different-skill',
+               'skill_digest':canonical_digest({'skill':'different-skill','version':'rev1'}),
+               'action':'release','resource':'model/champion',
                'qualification_digest':canonical_digest(q),'policy_digest':'policy','expires_at_ms':2000000}
         rt.authority=lambda agent:{'grants':{'different-skill':grant},'status':'ACTIVE','revision':1,'expires_at_ms':2000000}
         rt.eligibility=lambda *args:q

@@ -34,14 +34,16 @@ from validate_connected import build_runtime
 from deploy.ledger.validate import client_from_config, read_config
 from earned_authority.contracts import canonical_digest
 from earned_authority.passport_client import PassportClient, PAYLOAD_HEADER
+from earned_authority.grants import grants_for_skill, has_skill, unique_grant
 from earned_authority.runtime import ControlledClock, Denied, ident, encoded
 
 
 # These cases remain unbound until the exact requirement has an observable API.
 UNBOUND = {}
-PARTIAL = {
-    31: 'The current public aggregate has one resource grant per skill. Stale changed-resource rejection is exercised, but adding a second read-health resource while retaining the first is not represented.',
-}
+# BDD-031 asserts stale rejection and the revision-6 recomputation. The published
+# live report still predates this runner, so that report remains partial until
+# the canonical services are re-run.
+PARTIAL = {}
 
 
 class MalformedPassportRelay:
@@ -159,7 +161,7 @@ class Case:
         self.denied_types=(Denied,)
         self.q = None
         self.eq('real canonical agent is active',registration['status'],'ACTIVE')
-        self.eq('no initial canonical authority before policy-approved grant',self.authority()['grants'],{})
+        self.eq('no initial canonical authority before policy-approved grant',self.authority()['grants'],[])
 
     def check(self, name, condition, **evidence):
         self.assertions.append({'assertion': name, 'passed': bool(condition), 'evidence': public(evidence)})
@@ -399,7 +401,7 @@ class Case:
                        o['outcome'] == 'PASS' and 0 <= rt.clock.now_ms-o['observed_at_ms'] < rt.evidence_window_ms for o in observations))
             self.eq('checker revision bound',q['evaluator_digest'],observations[0]['evaluator_digest'])
             self.eq('qualification policy revision bound',q['policy_digest'],canonical_digest({'required_passes':3,'window_ms':rt.evidence_window_ms,'version':1}))
-            self.eq('qualification creates no authority', self.authority()['grants'], {})
+            self.eq('qualification creates no authority', self.authority()['grants'], [])
             self.eq('shadow creates no live mutation', self.state(), before)
         elif n == 2:
             reports=[rt.record_procedure_report(ident('self-report'),reported_outcome='PASS',agent=self.agent,
@@ -415,7 +417,7 @@ class Case:
             self.eq('missing independent evidence remains insufficient',q['reason'],'INSUFFICIENT_EVIDENCE')
             self.eq('self reports count as neither passes nor failures',(q['passes'],q['failures']),(0,0))
             self.eq('no independent outcome reference fabricated',q['outcome_refs'],[])
-            self.eq('no passport from self reports',self.authority()['grants'],{})
+            self.eq('no passport from self reports',self.authority()['grants'],[])
         elif n == 3:
             q = self.qualify(); original = copy.deepcopy(q)
             version, context = rt.procedure_revision, self.context
@@ -444,7 +446,7 @@ class Case:
             try:
                 q = rt.qualify(context=self.context)
                 for key, value in [('disposition',expected),('reason',reason),('passes',passes),('failures',failures)]: self.eq(key, q[key], value)
-                self.eq('no authority from ineligible evidence', self.authority()['grants'], {})
+                self.eq('no authority from ineligible evidence', self.authority()['grants'], [])
                 if n == 4: self.eq('unknown reason retained', unknown['reason'], 'OBSERVATION_UNAVAILABLE')
                 if n == 5: self.check('historical observations remain PASS', all(o['outcome']=='PASS' for o in rt.observations()))
                 if n == 6: self.eq('one distinct observed attempt', len(rt.observations()), 1)
@@ -453,7 +455,7 @@ class Case:
                 if old_clock: rt.clock = old_clock
         elif n == 8:
             self.qualify(); before = rt.clock.now_ms
-            a = rt.grant(self.q['qualification_id'], agent=self.agent, ttl_ms=300000); g = a['grants']['release-model']
+            a = rt.grant(self.q['qualification_id'], agent=self.agent, ttl_ms=300000); g = unique_grant(a,'release-model')
             cmd = self.admit()
             self.eq('grant actor bound', a['agent_id'], self.agent)
             self.eq('grant exact scope', (g['version'],g['context'],g['action'],g['resource']), (rt.procedure_revision,self.context,'release','model/champion'))
@@ -487,7 +489,7 @@ class Case:
                        evaluated_at_ms=evaluated,request_started_at_ms=before,response_received_at_ms=after,clock_tolerance_ms=5000)
             self.eq('policy denial is check-only and creates no execution receipt',(response['executed'],response['receipt_created']),(False,False))
             self.deny('verified temporal denial prevents otherwise eligible grant',lambda:rt.grant(q['qualification_id'],agent=self.agent,resource='model/champion',requested_window=window),'POLICY_WINDOW_DENIED')
-            self.eq('no active grant', self.authority()['grants'], {})
+            self.eq('no active grant', self.authority()['grants'], [])
             self.eq('temporal denial leaves canonical authority unchanged',self.authority(),before_authority)
             self.eq('temporal denial creates no authority operation',rt.authority_operations(self.agent),before_operations)
             self.eq('temporal denial creates no grant event',self.events('GRANTED'),[])
@@ -500,7 +502,7 @@ class Case:
             self.deny('out-of-scope next mutation denied',lambda:rt.commit(self.admit(**changes)))
         elif n in (11,12):
             a = self.ready(scope_ttl_ms=60000 if n==12 else None); cmd = self.admit()
-            t = a['expires_at_ms'] if n==11 else a['grants']['release-model']['expires_at_ms']
+            t = a['expires_at_ms'] if n==11 else unique_grant(a,'release-model')['expires_at_ms']
             if n == 12: self.check('scope expires before passport', t<a['expires_at_ms'])
             clock = self.clock_at(t)
             try: self.deny('exact local enforcement expiry equality',lambda:rt.commit(cmd),'EXPIRED_PASSPORT' if n==11 else 'EXPIRED_SCOPE')
@@ -541,7 +543,7 @@ class Case:
             self.eq('cached snapshot was actually fetched from current canonical authority',observed['authority'],known)
             self.eq('observed grant was marked active',observed['authority']['status'],'ACTIVE')
             self.eq('cache binds exact authority snapshot',observed['authority_digest'],canonical_digest(known))
-            self.check('cached release grant is present','release-model' in observed['authority']['grants'])
+            self.check('cached release grant is present',has_skill(observed['authority'],'release-model'))
             self.check('diagnostic observation is authenticated by pinned local writer',rt._verified(observed,{'writer'}))
             self.eq('diagnostic data explicitly cannot authorize execution',(observed['can_authorize_execution'],observed['requires_current_check']),(False,True))
             self.eq('diagnostic refresh does not create execution or ledger events',rt.events(),before_events)
@@ -717,7 +719,7 @@ class Case:
                 self.eq('known actual failure',result['outcome']['outcome'],'FAIL')
                 self.eq('canonical Cascade deactivated',q['canonical_demotion']['deactivated'],True)
                 self.eq('affected qualification ineligible',q['disposition'],'INELIGIBLE')
-                self.check('affected grant revoked', 'release-model' not in current['grants'])
+                self.check('affected grant revoked', not has_skill(current,'release-model'))
                 self.check('revocation revision advances',current['revision']>cmd['authority_revision'])
                 rows=self.events('REVOKED',cmd['attempt_id'])
                 self.check('revocation is durably pending for exact failed attempt',bool(rows) and all(r['delivery']=='PENDING' and r['receipt'] is None for r in rows))
@@ -725,9 +727,9 @@ class Case:
                 self.deny('next release denied before mutation',lambda:rt.commit(self.admit()))
             finally:self.restore_ledger(good)
         elif n == 24:
-            prior=self.ready(second=True);read=prior['grants']['read-health'];old=self.admit()
+            prior=self.ready(second=True);read=unique_grant(prior,'read-health');old=self.admit()
             rt.commit(self.admit(),actual='wrong-model');current=self.authority()
-            preserved=current['grants']['read-health']
+            preserved=unique_grant(current,'read-health')
             for key in ('grant_id','qualification_id','qualification_digest','policy_digest','skill_digest','context_digest','action','resource','expires_at_ms'):
                 self.eq('unaffected grant keeps '+key,preserved[key],read[key])
             self.check('passport replaced monotonically',current['passport_id']!=prior['passport_id'] and current['revision']>prior['revision'])
@@ -760,7 +762,7 @@ class Case:
                 self.eq('hold never invents failed evidence',[o for o in rt.observations() if o['outcome']=='FAIL'],before)
                 current=self.authority()
                 for field in ('grant_id','qualification_id','qualification_digest'):
-                    self.eq('detector preserves unrelated '+field,current['grants']['read-health'][field],prior['grants']['read-health'][field])
+                    self.eq('detector preserves unrelated '+field,unique_grant(current,'read-health')[field],unique_grant(prior,'read-health')[field])
                 self.deny('new matching release reports exact evidence hold',lambda:rt.commit(self.admit()),reason)
                 self.deny('already admitted command remains generically revoked',lambda:rt.commit(old_command),'REVOKED_AUTHORITY')
                 self.read_other()
@@ -771,7 +773,7 @@ class Case:
             failed=rt.commit(self.admit(),actual='wrong-model')
             self.eq('old procedure independently failed',failed['outcome']['outcome'],'FAIL')
             withdrawn=self.authority();withdrawals=self.events('REVOKED',failed['attempt_id'])
-            self.check('old release grant withdrawn before revision change','release-model' not in withdrawn['grants'] and bool(withdrawals))
+            self.check('old release grant withdrawn before revision change',not has_skill(withdrawn,'release-model') and bool(withdrawals))
             withdrawal_id=withdrawals[-1]['event_id']
             old_revision=self.switch_to_changed_procedure();rt=self.rt
             q=self.qualify();self.check('revised procedure has a new qualification',q['qualification_id']!=oldq['qualification_id'])
@@ -780,7 +782,7 @@ class Case:
             self.eq('new qualification has three fresh exact-revision outcomes',len(q['outcome_refs']),3)
             self.check('old evidence is not borrowed',all(observations[ref['observation_id']]['version']==rt.procedure_revision
                        and observations[ref['observation_id']]['outcome']=='PASS' for ref in q['outcome_refs']))
-            issued=rt.grant(q['qualification_id'],agent=self.agent);grant=issued['grants']['release-model']
+            issued=rt.grant(q['qualification_id'],agent=self.agent);grant=unique_grant(issued,'release-model')
             self.eq('new grant binds new executable and evidence',(grant['version'],grant['qualification_id'],grant['qualification_digest']),
                     (rt.procedure_revision,q['qualification_id'],canonical_digest(q)))
             self.check('new grant is a later canonical authority revision',issued['revision']>withdrawn['revision'])
@@ -822,11 +824,28 @@ class Case:
             events=rt.events();commits=[i for i,r in enumerate(events) if r['event']['event_type']=='COMMITTED'];revokes=[i for i,r in enumerate(events) if r['event']['event_type']=='REVOKED']
             self.check('durable event order preserves prior commit',bool(commits) and bool(revokes) and max(commits)<max(revokes))
         elif n == 31:
-            self.ready(second=True);self.exact_revision_four();stale=self.authority();readq=stale['grants']['read-health']['qualification_id']
+            self.ready(second=True);self.exact_revision_four();stale=self.authority();original=unique_grant(stale,'read-health')
+            readq=original['qualification_id']
             rt.revoke(self.agent,'release-model');self.eq('selective revoke revision',self.authority()['revision'],5)
             self.deny('stale changed-resource update cannot restore old aggregate',lambda:rt.grant(readq,agent=self.agent,action='read',resource='urn:dataset/health-extra',expected_revision=4),'REVISION_CONFLICT')
-            current=self.authority();self.check('release remains revoked','release-model' not in current['grants']);self.read_other()
-            self.eq('unaffected original read resource preserved',current['grants']['read-health']['resource'],stale['grants']['read-health']['resource'])
+            current=self.authority();self.check('release remains revoked',not has_skill(current,'release-model'))
+            preserved=unique_grant(current,'read-health')
+            self.eq('unaffected original read resource preserved',preserved['resource'],original['resource'])
+            for field in ('grant_id','qualification_id','qualification_digest','policy_digest','expires_at_ms','context','action'):
+                self.eq('original read binding preserved '+field,preserved[field],original[field])
+            recomputed=rt.grant(readq,agent=self.agent,action='read',resource='urn:dataset/health-extra',expected_revision=5)
+            self.eq('recomputed replacement is revision six',recomputed['revision'],6)
+            reads=grants_for_skill(recomputed,'read-health')
+            self.eq('both read resources are current',sorted(g['resource'] for g in reads),['urn:dataset/health','urn:dataset/health-extra'])
+            kept=next(g for g in reads if g['resource']==original['resource'])
+            added=next(g for g in reads if g['resource']=='urn:dataset/health-extra')
+            self.eq('original read grant and expiry survive recomputation',(kept['grant_id'],kept['expires_at_ms'],kept['qualification_id']),(original['grant_id'],original['expires_at_ms'],original['qualification_id']))
+            self.check('added read resource is a distinct grant',added['grant_id']!=kept['grant_id'] and added['qualification_id']==original['qualification_id'])
+            self.check('release remains revoked after recomputation',not has_skill(recomputed,'release-model'))
+            self.read_other()
+            extra=rt.commit(self.admit(skill='read-health',action='read',resource='urn:dataset/health-extra'))
+            self.eq('second read resource is independently authorized',extra['outcome']['outcome'],'PASS')
+            self.deny('one read resource cannot borrow the other binding',lambda:rt.admit(agent=self.agent,skill='read-health',version=rt.procedure_revision,context=self.context,action='read',resource='urn:dataset/not-granted'),'SCOPE_MISMATCH')
         elif n == 32:
             self.ready();cmd=self.admit();barrier=threading.Barrier(2)
             def execute(_):barrier.wait(10);return rt.commit(cmd)
@@ -896,7 +915,7 @@ class Case:
                     self.eq('remote delivery pending',result['delivery'],'PENDING');self.eq('no fabricated receipt',result['receipt'],None)
                     self.check('durable exact outcome queued',any(r['event'].get('outcome')==result['outcome'] and r['delivery']=='PENDING' for r in self.events('OUTCOME_OBSERVED',cmd['attempt_id'])))
                 self.eq('remote outage does not hold qualification',rt.qualification(self.q['qualification_id'])['disposition'],'ELIGIBLE')
-                self.check('remote outage does not revoke grant','release-model' in self.authority()['grants'])
+                self.check('remote outage does not revoke grant',has_skill(self.authority(),'release-model'))
             finally:
                 if good:self.restore_ledger(good)
             count=rt.mutation_count;observation=copy.deepcopy(result['outcome']);self.reopen();rt=self.rt
@@ -926,7 +945,7 @@ class Case:
             self.check('tampered observation is excluded from new qualification references',all(ref['attempt_id']!=observation['attempt_id'] for ref in q['outcome_refs']))
             self.eq('remaining evidence cannot qualify a replacement',q['disposition'],'HOLD')
             self.deny('held affected grant cannot mutate without confirmed evidence',lambda:rt.commit(self.admit()),'EVIDENCE_UNCONFIRMED')
-            self.eq('unrelated qualification preserved',self.authority()['grants']['read-health']['qualification_id'],prior['grants']['read-health']['qualification_id'])
+            self.eq('unrelated qualification preserved',unique_grant(self.authority(),'read-health')['qualification_id'],unique_grant(prior,'read-health')['qualification_id'])
             self.read_other()
         elif n == 36:
             observation=self.shadow();row=self.observed_receipt(observation)
@@ -948,7 +967,7 @@ class Case:
                 records=[record for record in rt.evidence_intakes() if record['intake_id']==decision['intake_id']]
                 self.eq('purpose rejection durably recorded exactly once',len(records),1)
                 self.eq('durable rejection retains exact reason',records[0]['decision']['reason'],reason)
-                self.eq('receipt cannot issue any authority',self.authority()['grants'],{})
+                self.eq('receipt cannot issue any authority',self.authority()['grants'],[])
                 self.deny('receipt alone cannot authorize a new mutation',lambda:rt.commit(self.admit()),'REVOKED_AUTHORITY')
             finally:
                 if restored_clock:rt.clock=restored_clock
@@ -983,7 +1002,7 @@ class Case:
             self.eq('qualification counts no pass from untrusted assertion',q['passes'],0)
             self.eq('qualification excludes untrusted outcome reference',q['outcome_refs'],[])
             self.eq('untrusted assertion cannot qualify',q['disposition'],'HOLD')
-            self.eq('untrusted assertion creates no authority',self.authority()['grants'],{})
+            self.eq('untrusted assertion creates no authority',self.authority()['grants'],[])
             self.deny('no mutation authorized by intact but untrusted evidence',lambda:rt.commit(self.admit()),'REVOKED_AUTHORITY')
         else:
             raise NotImplementedError('unbound scenario')

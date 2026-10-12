@@ -1,20 +1,20 @@
 # Multiple resource grants under one skill
 
-Status: **PLANNED / AMBER**. This document specifies a later, coordinated implementation. It does not add multi-resource support or certify BDD-031 as complete.
+Status: **LIVE SERVICE SCENARIO GREEN**. The connected adapter stores every current grant, selects an exact resource, and withdraws a skill only while the failed anchor is still current. `reports/service-bdd-live-010.json` records BDD-031 green: the stale revision-4 update loses, revision 6 contains both read resources, both reads execute, and release stays revoked. `reports/service-bdd-live-008.json` remains the earlier partial run.
 
-## Current gap
+## Current state
 
 BDD-031 requires a stale revision-4 replacement to lose after release authority is revoked at revision 5. A replacement recomputed from revision 5 must then add a second read resource while retaining the first read grant and preserving the release revocation.
 
-The current connected test proves stale replacement rejection, release revocation, and continued use of the original read resource. It does not perform the successful recomputation. Canonical Agent Passport already carries several scopes in one signed aggregate and provides active-passport-ID plus agent-revision compare-and-swap. The kit adapter currently indexes grants by skill, rejects duplicate skill names when normalizing a passport, and overwrites the prior same-skill grant when granting another resource. Removing the duplicate check alone would leave other consumers incomplete.
+The connected normalized `grants` value is a complete list. The fixture runtime still stores one grant per skill and cannot certify this behavior. Shared helpers in `earned_authority/grants.py` read both shapes and do not collapse a list back into a skill-keyed dictionary. `reports/service-bdd-live-010.json` records that sequence against Passport, Foundation/OPA, and Ledger. The runner exited 0 with all 37 scenario acceptances green.
 
 No canonical Passport protocol change is proposed. Passport remains the only authority source. The ledger and historical operation receipts remain evidence of assertions and transitions, not current permission.
 
-## Proposed complete representation
+## Representation
 
-Represent the connected adapter's normalized `grants` as a complete list of grant records, matching the existing public wire authority's list semantics. Each entry retains the current exact signed inner binding: grant ID, skill and version, skill/context digests, context, qualification ID/digest, policy digest, action, resource, and absolute expiry. Canonical scope ID may be retained as derived metadata. Do not flatten the list to one representative grant per skill.
+The connected adapter's normalized `grants` value is a complete list of grant records, matching the existing public wire authority's list semantics. Each entry retains the current exact signed inner binding: grant ID, skill and version, skill/context digests, context, qualification ID/digest, policy digest, action, resource, and absolute expiry. Canonical scope ID may be retained as derived metadata. Do not flatten the list to one representative grant per skill.
 
-Introduce one shared grant-access module before changing the representation:
+Shared access lives in `earned_authority/grants.py`:
 
 ```python
 iter_grants(authority) -> tuple[dict, ...]
@@ -53,7 +53,7 @@ Automatic withdrawal remains anchored to the failed or held command's exact gran
 
 Recomputation after a competing authority change must recheck the anchor. It may not replay an old target list against a new aggregate. An administrative `revoke(skill)` intentionally targets all current grants of that skill. A separate resource-specific revocation API, if later needed, needs an explicit distinct contract; do not infer it from a skill-wide demotion call.
 
-Evidence audit and reevaluation must inspect every current grant of the selected skill, deduplicating qualification work only when its exact ID/digest match. A bad qualification triggers the specified skill-wide withdrawal. The result should identify each inspected grant and affected qualification. The existing one-row-per-agent/skill withdrawal queue can remain only if that row represents this explicit skill-wide operation and retains an exact anchor; otherwise it requires a migration. That decision must be settled before coding.
+Evidence audit and reevaluation must inspect every current grant of the selected skill, deduplicating qualification work only when its exact ID/digest match. A bad qualification triggers the specified skill-wide withdrawal. The result should identify each inspected grant and affected qualification. The withdrawal queue primary key is `(agent, skill, target_grant_id)`, so a second resource cannot overwrite another grant's pending anchor. A current anchor removes every current grant of that skill. An anchor that is no longer current is reconciled and does not withdraw its replacement.
 
 The hold diagnostic must recognize each removed target's version/context/action/resource from the authenticated applied operation. It remains restricted to new matching requests at the exact acknowledged current canonical tuple. Older admitted commands remain revoked; a valid replacement grant takes precedence. A historical receipt never supplies permission.
 
@@ -61,7 +61,7 @@ The hold diagnostic must recognize each removed target's version/context/action/
 
 - `connected.py`: normalization, grant upsert, exact execution selection, skill-wide revoke, audit, reevaluation, and held-reason selection.
 - `authority_journal.py`: immutable multi-target metadata, exact replay binding, event content, historical receipt reconciliation, and backward reading of existing single-target operations.
-- `wire_contracts.py`: export every current grant and every required qualification; consume exact grant IDs. Existing public authority records already use an array, but the exporter currently iterates the skill-keyed map.
+- `wire_contracts.py`: export every current grant through `iter_grants`, sorted by skill, action, resource, and grant ID, and export every required qualification. Consume exact grant IDs. Existing public authority records already use an array.
 - `runtime.py` and fixtures: use shared grant iteration/selection where the public and fixture paths overlap. A fixture that still supports one resource per skill must stay explicitly limited; its passes cannot certify the connected multi-resource behavior.
 - BDD, recovery, and deployment runners: migrate consumers atomically, retain old reports, and rerun against the final source fingerprints.
 
@@ -93,4 +93,4 @@ After source freeze, reproduce the connected seven-part deployment suite in a di
 
 These checks establish the tested authority and evidence behavior. They do not establish held-out task success, business value, or universal distributed safety. Evaluation-driven development remains separate: its preregistered comparator protocol and unselected risk budget still apply.
 
-RED means a demonstrated invariant failure. AMBER means any integration dependency, negative case, live behavior, or evidence binding above remains unimplemented or unexecuted. GREEN is limited to the reviewed, source-bound test profile after every gate passes. BDD-031 is AMBER today.
+Unit tests cover second-resource preservation, stale compare-and-swap rejection, exact execution, duplicate identity, skill-wide demotion, replaced-anchor reconciliation, qualification audit, legacy queue migration, and rejection of an old procedure revision before resource selection. The live BDD-031 case in `reports/service-bdd-live-010.json` is green. The `reports/reference-*-011.json` rerun also passed the 123-check profile, including authority recovery, restart, and historical receipt readback, on the existing reference stack. `reports/observation-reference-combined.json` remains the earlier fresh-workspace reconstruction. RED means a demonstrated invariant failure. AMBER means any integration dependency, negative case, live behavior, or evidence binding above remains unimplemented or unexecuted. GREEN is limited to the reviewed, source-bound test profile after every gate passes.

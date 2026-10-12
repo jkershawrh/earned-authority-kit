@@ -85,7 +85,7 @@ class AuthorityJournal:
         if any(o['state'] in PENDING for o in records):
             raise Denied('AUTHORITY_OPERATION_PENDING')
 
-    def _new_authority_operation(self,*,operation_id,agent,kind,request,prior_authority,invocation,skill,qualification_id=None,qualification_digest=None,policy_digest=None,grant_expires_at_ms=None,reason=None,target_grant_id=None,target_qualification_id=None):
+    def _new_authority_operation(self,*,operation_id,agent,kind,request,prior_authority,invocation,skill,qualification_id=None,qualification_digest=None,policy_digest=None,grant_expires_at_ms=None,reason=None,target_grant_id=None,target_qualification_id=None,targets=None):
         self._authority_durability()
         oid=operation_id or ident('authority-op')
         if not isinstance(oid,str) or not oid or len(oid)>128:raise Denied('INVALID_OPERATION_ID')
@@ -97,6 +97,7 @@ class AuthorityJournal:
                    'target_grant_id':target_grant_id,'target_qualification_id':target_qualification_id,
                    'created_at_ms':self.clock.now_ms,'event_id':ident('event'),'state':'PREPARED',
                    'prior_withdrawal_event_id':None,'requalification_event_id':None}
+        if targets is not None:operation['targets']=targets
         with self._tx() as db:
             self._assert_authority_ready(db,agent)
             if any(o['operation_id']==oid for o in self._read_authority_operations(db)):raise Denied('IDEMPOTENCY_CONFLICT')
@@ -153,6 +154,7 @@ class AuthorityJournal:
                                 prior_withdrawal_event_id=fresh['prior_withdrawal_event_id'])
                 self._event(db,'GRANTED',fresh['agent_id'],fresh['operation_id'],qualification_id=fresh['qualification_id'],authority=authority,**fields)
             else:
+                if fresh.get('targets') is not None:fields['targets']=fresh['targets']
                 self._event(db,'REVOKED',fresh['agent_id'],fresh['invocation']['attempt_id'] or fresh['operation_id'],
                             reason=fresh['reason'],target_grant_id=fresh['target_grant_id'],target_qualification_id=fresh['target_qualification_id'],**fields)
             applied=self._store_authority_operation(db,{**fresh,'state':'APPLIED','receipt':receipt,'recorded_at_ms':self.clock.now_ms,'last_error':None})

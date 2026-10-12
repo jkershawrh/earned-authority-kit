@@ -419,6 +419,8 @@ class Runtime:
                    'skill_digest':q['skill_digest'],'context_digest':q['context_digest'],
                    'qualification_id':qid,'qualification_digest':canonical_digest(q),'policy_digest':policy,
                    'action':action,'resource':resource,'expires_at_ms':scope_expiry}
+            # One grant per skill. A second resource replaces this entry and
+            # cannot certify the connected multi-resource behavior.
             grants=current['grants']; grants[q['skill']]=grant
             body={'agent_id':agent,'revision':current['revision']+1,'passport_id':ident('passport'),'issued_at_ms':self.clock.now_ms,
                   'grants':grants,'expires_at_ms':max([expiry]+[g['expires_at_ms'] for g in grants.values()]),'status':'ACTIVE'}
@@ -457,7 +459,8 @@ class Runtime:
         if not self._verified(a,{'authority'}): raise Denied('INVALID_AUTHORITY')
         if expected_revision is not None and a['revision']!=expected_revision: raise Denied('REVOKED_AUTHORITY')
         if a['expires_at_ms']<=self.clock.now_ms: raise Denied('EXPIRED_PASSPORT')
-        g=a['grants'][skill]
+        from .grants import select_grant
+        g=select_grant(a,skill=intent['skill'],version=intent['version'],context=intent['context'],action=intent['action'],resource=intent['resource'])
         if g['expires_at_ms']<=self.clock.now_ms: raise Denied('EXPIRED_SCOPE')
         for name in ('version','context','action','resource'):
             if g[name]!=intent[name]: raise Denied('SCOPE_MISMATCH')

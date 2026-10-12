@@ -1,0 +1,913 @@
+{
+  "run_id": "service-bdd-b60538f5368d4ea58b2f5b0164f5e2ac",
+  "started_at": "2026-10-12T16:01:42.444471+00:00",
+  "execution_state": "COMPLETED_WITH_GAPS",
+  "environment": "REAL_LOCAL_SERVICES_WITH_EXPLICIT_LOCAL_FAULT_CONTROLS",
+  "acceptance_color": "AMBER",
+  "cases": [
+    {
+      "scenario_id": "BDD-026",
+      "case": "default",
+      "requirements": {
+        "feature": "features/withdrawal_and_requalification.feature",
+        "line": 41,
+        "background": [
+          "Given agent \"agent-a\" has active logical grants for \"release-model\" and \"read-health\"",
+          "And each grant binds a separate skill revision and qualification"
+        ],
+        "steps": [
+          "Given \"release-model\" revision \"skill-v1\" was demoted",
+          "And revision \"skill-v2\" has 3 fresh independent shadow PASS outcomes in the required context",
+          "When \"skill-v2\" passes qualification and receives separate policy approval",
+          "Then a new grant is issued for \"skill-v2\" and its new qualification",
+          "And \"skill-v1\" remains unauthorized",
+          "And the reinstatement record references both the new evidence and prior withdrawal"
+        ]
+      },
+      "execution_state": "PASSED",
+      "acceptance_color": "GREEN",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [
+        {
+          "assertion": "real canonical agent is active",
+          "passed": true,
+          "evidence": {
+            "actual": "ACTIVE",
+            "expected": "ACTIVE"
+          }
+        },
+        {
+          "assertion": "no initial canonical authority before policy-approved grant",
+          "passed": true,
+          "evidence": {
+            "actual": [],
+            "expected": []
+          }
+        },
+        {
+          "assertion": "fresh qualification is eligible: release-model",
+          "passed": true,
+          "evidence": {
+            "actual": "ELIGIBLE",
+            "expected": "ELIGIBLE"
+          }
+        },
+        {
+          "assertion": "fresh qualification is eligible: read-health",
+          "passed": true,
+          "evidence": {
+            "actual": "ELIGIBLE",
+            "expected": "ELIGIBLE"
+          }
+        },
+        {
+          "assertion": "old procedure independently failed",
+          "passed": true,
+          "evidence": {
+            "actual": "FAIL",
+            "expected": "FAIL"
+          }
+        },
+        {
+          "assertion": "old release grant withdrawn before revision change",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "exact executable revision patch location",
+          "passed": true,
+          "evidence": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "assertion": "new validation is a behavior change",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "copied baseline computes original procedure digest",
+          "passed": true,
+          "evidence": {
+            "actual": "sha256:31743cb02aad9203cfcafa3ccbc0a09c66ffef9ad16b3c6e5d7584ff22d89db8",
+            "expected": "sha256:31743cb02aad9203cfcafa3ccbc0a09c66ffef9ad16b3c6e5d7584ff22d89db8"
+          }
+        },
+        {
+          "assertion": "original executable accepts integer health input",
+          "passed": true,
+          "evidence": {
+            "actual": "PASS",
+            "expected": "PASS"
+          }
+        },
+        {
+          "assertion": "revised executable computes a different procedure digest",
+          "passed": true,
+          "evidence": {
+            "baseline_revision": "sha256:31743cb02aad9203cfcafa3ccbc0a09c66ffef9ad16b3c6e5d7584ff22d89db8",
+            "revised_revision": "sha256:d1012698075f7c3b2e9cb10c9779465a5538743557f266c6dae94da544d4be12"
+          }
+        },
+        {
+          "assertion": "revised executable enforces its added validation",
+          "passed": true,
+          "evidence": {
+            "reason": "INVALID_HEALTH_STATE",
+            "expected_reason": "INVALID_HEALTH_STATE"
+          }
+        },
+        {
+          "assertion": "revised executable enforces its added validation: independent registry unchanged",
+          "passed": true,
+          "evidence": {
+            "actual": {
+              "registry": {
+                "version": "wrong-model",
+                "healthy": true
+              },
+              "mutations": 1
+            },
+            "expected": {
+              "registry": {
+                "version": "wrong-model",
+                "healthy": true
+              },
+              "mutations": 1
+            }
+          }
+        },
+        {
+          "assertion": "fresh qualification is eligible: release-model",
+          "passed": true,
+          "evidence": {
+            "actual": "ELIGIBLE",
+            "expected": "ELIGIBLE"
+          }
+        },
+        {
+          "assertion": "revised procedure has a new qualification",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "new qualification exact computed revision",
+          "passed": true,
+          "evidence": {
+            "actual": "sha256:d1012698075f7c3b2e9cb10c9779465a5538743557f266c6dae94da544d4be12",
+            "expected": "sha256:d1012698075f7c3b2e9cb10c9779465a5538743557f266c6dae94da544d4be12"
+          }
+        },
+        {
+          "assertion": "new qualification has three fresh exact-revision outcomes",
+          "passed": true,
+          "evidence": {
+            "actual": 3,
+            "expected": 3
+          }
+        },
+        {
+          "assertion": "old evidence is not borrowed",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "new grant binds new executable and evidence",
+          "passed": true,
+          "evidence": {
+            "actual": [
+              "sha256:d1012698075f7c3b2e9cb10c9779465a5538743557f266c6dae94da544d4be12",
+              "qualification-3f0eb41d8135424cb6d620c23af9d77f",
+              "sha256:875f7476f3167974b6c5d035fda03381fbea40a23730a678bceba7288e999563"
+            ],
+            "expected": [
+              "sha256:d1012698075f7c3b2e9cb10c9779465a5538743557f266c6dae94da544d4be12",
+              "qualification-3f0eb41d8135424cb6d620c23af9d77f",
+              "sha256:875f7476f3167974b6c5d035fda03381fbea40a23730a678bceba7288e999563"
+            ]
+          }
+        },
+        {
+          "assertion": "new grant is a later canonical authority revision",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "new separate policy approval is bound",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "old executable revision remains unauthorized",
+          "passed": true,
+          "evidence": {
+            "reason": "SKILL_REVISION_MISMATCH",
+            "expected_reason": "SKILL_REVISION_MISMATCH"
+          }
+        },
+        {
+          "assertion": "old executable revision remains unauthorized: independent registry unchanged",
+          "passed": true,
+          "evidence": {
+            "actual": {
+              "registry": {
+                "version": "wrong-model",
+                "healthy": true
+              },
+              "mutations": 1
+            },
+            "expected": {
+              "registry": {
+                "version": "wrong-model",
+                "healthy": true
+              },
+              "mutations": 1
+            }
+          }
+        },
+        {
+          "assertion": "old admitted authority cannot return",
+          "passed": true,
+          "evidence": {
+            "reason": "REVOKED_AUTHORITY",
+            "expected_reason": "REVOKED_AUTHORITY"
+          }
+        },
+        {
+          "assertion": "old admitted authority cannot return: independent registry unchanged",
+          "passed": true,
+          "evidence": {
+            "actual": {
+              "registry": {
+                "version": "wrong-model",
+                "healthy": true
+              },
+              "mutations": 1
+            },
+            "expected": {
+              "registry": {
+                "version": "wrong-model",
+                "healthy": true
+              },
+              "mutations": 1
+            }
+          }
+        },
+        {
+          "assertion": "reinstatement links new evidence and prior withdrawal",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "exact actual registry postcondition from independent reader",
+          "passed": true,
+          "evidence": {
+            "actual": {
+              "version": "wrong-model",
+              "healthy": true
+            },
+            "expected": {
+              "version": "wrong-model",
+              "healthy": true
+            }
+          }
+        },
+        {
+          "assertion": "exact registry mutation count for scenario",
+          "passed": true,
+          "evidence": {
+            "actual": 1,
+            "expected": 1
+          }
+        },
+        {
+          "assertion": "all local events authenticated",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-ba6ad3d5be2d41489eebc7c9617d026c",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-f23248e7f4f5426e83919d5ecc66ce7b",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-c37e647f1b0f492c8b3040928c28f6e9",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-cf12b68875044e3da503d7ee8c4ce48e",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-6fd2b12ddb144c9e8e0d520e4c7d2e5b",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-2929242d8a0445318946dbfc23918189",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-111c323f9ff947b1b12f201e02007dbe",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-eeea1e17cef14b94907f50a9a2888818",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-dbe17c269c4546f2bb466e0dabbc8ce2",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-11d52f274869487483d2f5c532139594",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-4ffe09ce91a34c759366af405900e4a5",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-0669683431964fb3b89d6af81dd3f26c",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-d20ce5362ec147fc88bea8a7c5013007",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-d379ebe9e9fb42c4a8b28d32408d1ea3",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-941655dad3b246a693cbb234cf4d429f",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-a21a0149e52f42a594a2f60a432e87bf",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-644df528d03141c895d461749eab0840",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-f3b02570001b429d9b96d5a4b9013a55",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-277f87d4f5b04612a7a220540f9f6384",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-4b59062a6d0a45058b1812f523aa6e34",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-52bea8e39a034e4ba2b709fa9245aee1",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-d1ae44c056dd47158daeda2dbd0773aa",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-6d0c48cbf266489ba3a1f275b7b7fb1a",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-b8763df3b0be4cd4bc002f278b723cd9",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-c0b14e8a86d1405aa6fa843c536d9913",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-212aa75ea130423cb75a8977b110774b",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-16bfbde02832451bb5e3d4b2d099aa0c",
+          "passed": true,
+          "evidence": {}
+        }
+      ],
+      "faults": [
+        "A copied controller package executes an added health-type validation; original sources and signatures are untouched, and versions are computed from file bytes."
+      ],
+      "receipts": [
+        {
+          "event_id": "event-ba6ad3d5be2d41489eebc7c9617d026c",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-shadow-59470635cd5d475aa579edf440007dd2",
+          "entry_id": "18701fd3-1b45-468b-9342-1730cf887d5a",
+          "entry_hash": "fe27ae30aa7a33ba9405f376e4949eb198c654a2dda9a81a9a43ceece6db5919",
+          "verified": true
+        },
+        {
+          "event_id": "event-f23248e7f4f5426e83919d5ecc66ce7b",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-shadow-fa9fb1b4045a452586bd4d3c7a67db10",
+          "entry_id": "adb34a0b-1aec-4177-b0a2-975ff14b0af6",
+          "entry_hash": "e50ba8d99f0385b2d2ba57f50724aa15188ffc9efb251b5e4767269806372d85",
+          "verified": true
+        },
+        {
+          "event_id": "event-c37e647f1b0f492c8b3040928c28f6e9",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-shadow-d5f3505b87544117a3f315a85e2ce280",
+          "entry_id": "5126fd19-f83d-4d6a-8cd3-7975747749bd",
+          "entry_hash": "ca5692a7921f210676db841b965b18e403fc91d0b685e32beb658236323063b4",
+          "verified": true
+        },
+        {
+          "event_id": "event-cf12b68875044e3da503d7ee8c4ce48e",
+          "event_type": "CANONICAL_QUALIFICATION_EVALUATED",
+          "attempt_id": "lifecycle-100eb9af48824d95aadc65f91e7ceec8",
+          "entry_id": "8d86f859-6ff8-470c-896b-0d61eebe02c4",
+          "entry_hash": "5b6f5fc4a2b4579024c68e63882d86ce086b29d121bd6d11b77119ae443561c0",
+          "verified": true
+        },
+        {
+          "event_id": "event-6fd2b12ddb144c9e8e0d520e4c7d2e5b",
+          "event_type": "QUALIFIED",
+          "attempt_id": "lifecycle-79c5f31eb32d429fb6725f7af5befd8c",
+          "entry_id": "74fbdd25-a4aa-418b-bf63-839273af5032",
+          "entry_hash": "48f332987e9bd27c6655dfd132aab9cbe7f9b9997d1ae76babf687c2ecb354f1",
+          "verified": true
+        },
+        {
+          "event_id": "event-2929242d8a0445318946dbfc23918189",
+          "event_type": "GRANTED",
+          "attempt_id": "authority-op-5260565d139c476c8b213333840952a7",
+          "entry_id": "9e51bf9d-f1d6-437d-8859-2afc765daee3",
+          "entry_hash": "d66b7a99c4dda4c7d0d34e90f15bc8e91a1ded669c97306a87dc1787b04ef34f",
+          "verified": true
+        },
+        {
+          "event_id": "event-111c323f9ff947b1b12f201e02007dbe",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-shadow-208f6f663b2e44938779cf8753874ded",
+          "entry_id": "e8992d50-2bc9-4297-aef4-6ad9a639fc20",
+          "entry_hash": "9394a4e14b6b672fdc99a578d3e46da3e7cac8bc13a2b761a495292b144ea99b",
+          "verified": true
+        },
+        {
+          "event_id": "event-eeea1e17cef14b94907f50a9a2888818",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-shadow-06e2159511194d5593c4af171afac615",
+          "entry_id": "0e44db1b-bcab-4abb-a005-aad6098bcaad",
+          "entry_hash": "b0bb981ee80c092da793cdd7597a7e5134be4c2df74559e192efc3981769a6cc",
+          "verified": true
+        },
+        {
+          "event_id": "event-dbe17c269c4546f2bb466e0dabbc8ce2",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-shadow-cb705e0139c74928a220d081f91287f0",
+          "entry_id": "b188b40c-48e4-42d1-b959-0ba67b7ead21",
+          "entry_hash": "1340fce2aba1a5c9089d7cc88221125365492f9478c101189b00c7903db1658d",
+          "verified": true
+        },
+        {
+          "event_id": "event-11d52f274869487483d2f5c532139594",
+          "event_type": "CANONICAL_QUALIFICATION_EVALUATED",
+          "attempt_id": "lifecycle-15ed9c3f230b4a8f942ed50ae2b78f0b",
+          "entry_id": "46b8ad21-7133-4ef8-a932-cbcde1f33e99",
+          "entry_hash": "c7bd823f8798aa4c0d40f8731cf39a71169c3bc22f638d0062c2cbd94f7827c7",
+          "verified": true
+        },
+        {
+          "event_id": "event-4ffe09ce91a34c759366af405900e4a5",
+          "event_type": "QUALIFIED",
+          "attempt_id": "lifecycle-5c69f18751654f95bef2e9ff7c96fc02",
+          "entry_id": "7d377c62-4f5e-4642-8201-f637dad23dca",
+          "entry_hash": "f263fb4d8997e0ca9a0f4eb074d8a4ec913ab62190c25006c259fe5db11879bb",
+          "verified": true
+        },
+        {
+          "event_id": "event-0669683431964fb3b89d6af81dd3f26c",
+          "event_type": "GRANTED",
+          "attempt_id": "authority-op-85a9dd77878548acb4ee67c179d2d6c6",
+          "entry_id": "4f1582cd-681c-4d72-90c1-6831cfadb1c8",
+          "entry_hash": "5c8b7af26abb079929c6310dc80f4dcd7d7ffc1aa871360954d4bce4d478bc81",
+          "verified": true
+        },
+        {
+          "event_id": "event-d20ce5362ec147fc88bea8a7c5013007",
+          "event_type": "QUALIFICATION_CHECKED",
+          "attempt_id": "bdd-attempt-c2ff8a3fc73c43b78133fd52e723a119",
+          "entry_id": "22604ac5-3cc4-4315-a222-f5f635c21f63",
+          "entry_hash": "516bb220e67fdecf1118bb3949de0b0072b809df76c7f41c754e80da282138d6",
+          "verified": true
+        },
+        {
+          "event_id": "event-d379ebe9e9fb42c4a8b28d32408d1ea3",
+          "event_type": "AUTHORIZATION_CHECKED",
+          "attempt_id": "bdd-attempt-c2ff8a3fc73c43b78133fd52e723a119",
+          "entry_id": "86055f66-d809-43ea-96c9-7b16a22f7cbd",
+          "entry_hash": "ed35e5fd9943dfddc2459eb9025241e1c68838f6f65a9e22c16f73fa7c40dc52",
+          "verified": true
+        },
+        {
+          "event_id": "event-941655dad3b246a693cbb234cf4d429f",
+          "event_type": "INTENT",
+          "attempt_id": "bdd-attempt-c2ff8a3fc73c43b78133fd52e723a119",
+          "entry_id": "b7675c3f-cb6c-4bb4-b3ca-8b0636123813",
+          "entry_hash": "a8e2a74ceb21fce09dc0955d6835246ef4565f9277cd97096a6aa90ad7f05aa8",
+          "verified": true
+        },
+        {
+          "event_id": "event-a21a0149e52f42a594a2f60a432e87bf",
+          "event_type": "COMMITTED",
+          "attempt_id": "bdd-attempt-c2ff8a3fc73c43b78133fd52e723a119",
+          "entry_id": "403e60c8-8830-48cb-ac39-4d2d6bd7f51e",
+          "entry_hash": "a6c99443078532b95014df2187a14697d2595726e26cffa764532ef3653ea1b3",
+          "verified": true
+        },
+        {
+          "event_id": "event-644df528d03141c895d461749eab0840",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-attempt-c2ff8a3fc73c43b78133fd52e723a119",
+          "entry_id": "62d79195-5500-4981-814c-236427c60f2c",
+          "entry_hash": "c81a88eb3acae5c5504bf675c4d89646e9f33f7d80697130b5040f18652bfa8e",
+          "verified": true
+        },
+        {
+          "event_id": "event-f3b02570001b429d9b96d5a4b9013a55",
+          "event_type": "DEMOTED",
+          "attempt_id": "bdd-attempt-c2ff8a3fc73c43b78133fd52e723a119",
+          "entry_id": "cbd0131d-b9cf-4207-9460-11b426b1e700",
+          "entry_hash": "73bca26d9ba28fe1f29886b5f832a55ddb3cfa67a27197cf394bd159a6643265",
+          "verified": true
+        },
+        {
+          "event_id": "event-277f87d4f5b04612a7a220540f9f6384",
+          "event_type": "REVOKED",
+          "attempt_id": "bdd-attempt-c2ff8a3fc73c43b78133fd52e723a119",
+          "entry_id": "40671893-35b1-4ff0-b83a-551348d49cb1",
+          "entry_hash": "83075e4a9cfc81cbe1d92dbd806f5e10194b1f67054938668363373b4e0b2d08",
+          "verified": true
+        },
+        {
+          "event_id": "event-4b59062a6d0a45058b1812f523aa6e34",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "baseline-health-type-3e89333829bf428296ad83db82fda86b",
+          "entry_id": "78950509-479f-40b1-a7b0-0447c9362a49",
+          "entry_hash": "2fb843740356bbe9eecf3b859ac369b87b8cdec9a45c277a2e7babcbd94598cb",
+          "verified": true
+        },
+        {
+          "event_id": "event-52bea8e39a034e4ba2b709fa9245aee1",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-shadow-f8a197299e494fabbc08ef5e6b48f4b0",
+          "entry_id": "7f0d7ee6-a135-477a-bf61-1ef902112cdb",
+          "entry_hash": "bf2c79ba026a79c1564f257bc6770602f919061f1814bf9694a02a192c656fc3",
+          "verified": true
+        },
+        {
+          "event_id": "event-d1ae44c056dd47158daeda2dbd0773aa",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-shadow-217d56d80ea04542bb0dad1921f2ffe3",
+          "entry_id": "a22a1aef-c83a-460e-a2f0-671316502beb",
+          "entry_hash": "595fba4483a309bf26afb7848d3daab29e941a9a4f16f1301a519ea416a7e064",
+          "verified": true
+        },
+        {
+          "event_id": "event-6d0c48cbf266489ba3a1f275b7b7fb1a",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-shadow-856dc5c64f864b0bb1f3194b6f86f90e",
+          "entry_id": "fed14392-b9a0-4e46-aa3c-9042cb583d7c",
+          "entry_hash": "634e9a556450d9d8a1491f8d995489ce064defb6bb344825100f331f0aa7e040",
+          "verified": true
+        },
+        {
+          "event_id": "event-b8763df3b0be4cd4bc002f278b723cd9",
+          "event_type": "CANONICAL_QUALIFICATION_EVALUATED",
+          "attempt_id": "lifecycle-15831188ce3947589c95c83a19ddb6a9",
+          "entry_id": "bb4f3f21-51bc-4d61-951c-c94a977bb4ad",
+          "entry_hash": "bf75ddfdcbe5547785344ee8d948095ed02d11eb5e93d9f421117199d4e4a262",
+          "verified": true
+        },
+        {
+          "event_id": "event-c0b14e8a86d1405aa6fa843c536d9913",
+          "event_type": "QUALIFIED",
+          "attempt_id": "lifecycle-95d507775e1a4006931dbe77d191bc9b",
+          "entry_id": "5195821d-1a3c-4a09-bd9e-862ea5270214",
+          "entry_hash": "b9a9447125b6ad68df60e83bdd11c0997bebb87d3e5a47ede1a7d73344a8d835",
+          "verified": true
+        },
+        {
+          "event_id": "event-212aa75ea130423cb75a8977b110774b",
+          "event_type": "REQUALIFIED",
+          "attempt_id": "authority-op-9b4896fd7d354443ba2c134b5033bf65",
+          "entry_id": "1bad4f22-4561-4cb7-8f8a-b3429334dfe5",
+          "entry_hash": "45735c30529da710781b99c1fc40003e92db1e92d43556e5b5c2cdf5555c0fbd",
+          "verified": true
+        },
+        {
+          "event_id": "event-16bfbde02832451bb5e3d4b2d099aa0c",
+          "event_type": "GRANTED",
+          "attempt_id": "authority-op-9b4896fd7d354443ba2c134b5033bf65",
+          "entry_id": "8126c8bc-037a-40bb-ab69-2a5113b44e1b",
+          "entry_hash": "d510de2e9ffdd057732ae7e36b5896cb96256e63763042b62931014f3c588880",
+          "verified": true
+        }
+      ],
+      "artifacts": [
+        {
+          "path": "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/manifest.json",
+          "sha256": "sha256:cd79d2ad06bd893cebfc70f55afa18619f8ad24f3068d8c78392e438811396e1",
+          "procedure_artifacts": [
+            {
+              "kind": "baseline",
+              "directory": "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/baseline/earned_authority",
+              "procedure_revision": "sha256:31743cb02aad9203cfcafa3ccbc0a09c66ffef9ad16b3c6e5d7584ff22d89db8",
+              "sources": {
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/baseline/earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/baseline/earned_authority/authority_journal.py": "sha256:5e13e8ef0164caa761ad7b91b10d28f4be17d4e7b0c14f88281fc3b977bcdf20",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/baseline/earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/baseline/earned_authority/connected.py": "sha256:9d270d8a7d678ffaafda2211683919245cf3b947736c5811b06ec39035ca1723",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/baseline/earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/baseline/earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/baseline/earned_authority/grants.py": "sha256:13be9447151a7b3db7f71749ea1e6829aac7c46e0d227768ad360fad4d6e1a97",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/baseline/earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/baseline/earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/baseline/earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/baseline/earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/baseline/earned_authority/runtime.py": "sha256:c8832c91986b46abed3610496560769d818175ad2d8c4d549b484e57db975758",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/baseline/earned_authority/wire_contracts.py": "sha256:f99ed0e790b1efc0c7f795a9ab64e2d08bd0ea61df2c7875b0fb804031e7d268"
+              }
+            },
+            {
+              "kind": "revised",
+              "directory": "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/revised/earned_authority",
+              "procedure_revision": "sha256:d1012698075f7c3b2e9cb10c9779465a5538743557f266c6dae94da544d4be12",
+              "sources": {
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/revised/earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/revised/earned_authority/authority_journal.py": "sha256:5e13e8ef0164caa761ad7b91b10d28f4be17d4e7b0c14f88281fc3b977bcdf20",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/revised/earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/revised/earned_authority/connected.py": "sha256:74161eab8c39791678e473a7388108fad51a34a7ada38a5acd179fbf6e302f0d",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/revised/earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/revised/earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/revised/earned_authority/grants.py": "sha256:13be9447151a7b3db7f71749ea1e6829aac7c46e0d227768ad360fad4d6e1a97",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/revised/earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/revised/earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/revised/earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/revised/earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/revised/earned_authority/runtime.py": "sha256:c8832c91986b46abed3610496560769d818175ad2d8c4d549b484e57db975758",
+                "reports/service-bdd-live-010-scenario-26-procedure-revisions/026-default/revised/earned_authority/wire_contracts.py": "sha256:f99ed0e790b1efc0c7f795a9ab64e2d08bd0ea61df2c7875b0fb804031e7d268"
+              }
+            }
+          ]
+        }
+      ],
+      "state_before": {
+        "registry": {
+          "version": "model-v1",
+          "healthy": true
+        },
+        "mutations": 0
+      },
+      "authority_before": {
+        "agent_id": "agt-idem-27ff5f1f2ca247c5815ca1567b444b9b",
+        "revision": 0,
+        "passport_id": null,
+        "grants": [],
+        "expires_at_ms": 0,
+        "status": "REVOKED",
+        "canonical": {
+          "subject": null,
+          "signature": {
+            "redacted_digest": "sha256:1c197daef20de3f47eec5e2f735ec6669869d3180cc29f35be4788511e0af0f8"
+          },
+          "status": "REVOKED",
+          "revision": 0
+        }
+      },
+      "state_after": {
+        "registry": {
+          "version": "wrong-model",
+          "healthy": true
+        },
+        "mutations": 1
+      },
+      "authority_after": {
+        "agent_id": "agt-idem-27ff5f1f2ca247c5815ca1567b444b9b",
+        "revision": 4,
+        "passport_id": "7e1a0ab4-3a70-49be-84fc-2ca3e69e56fa",
+        "grants": [
+          {
+            "action": "read",
+            "context": {
+              "desired_replicas": 1,
+              "environment": "service-bdd-b60538f5368d4ea58b2f5b0164f5e2ac-026-default",
+              "max_replicas": 2,
+              "model_version": "model-v2"
+            },
+            "context_digest": "sha256:341c87a42caefd22dc515dbbbef93f6e2334a38fa2b932889e062f166f1b86ff",
+            "expires_at_ms": 1791821203119,
+            "grant_id": "grant-9436339bb13547c5934c44a4978420d8",
+            "policy_digest": "sha256:cba16c8345271f6ef2ad493e2597bfcb2618b54760185638c6c0e4be912a470e",
+            "qualification_digest": "sha256:93b408bd5137f8ec0ba37a7e138f53fd8d34c04e33e442d65d67972a0d37d167",
+            "qualification_id": "qualification-4525693717da4603baf3694fd05820ab",
+            "resource": "urn:dataset/health",
+            "skill": "read-health",
+            "skill_digest": "sha256:ff20d6656e983f1b9663ce300abee203170a8969f7f5b9706be67282f5f339c7",
+            "version": "sha256:31743cb02aad9203cfcafa3ccbc0a09c66ffef9ad16b3c6e5d7584ff22d89db8",
+            "canonical_scope_id": "ee6e5e3a-1b64-426f-8989-2ef91e27894d"
+          },
+          {
+            "action": "release",
+            "context": {
+              "desired_replicas": 1,
+              "environment": "service-bdd-b60538f5368d4ea58b2f5b0164f5e2ac-026-default",
+              "max_replicas": 2,
+              "model_version": "model-v2"
+            },
+            "context_digest": "sha256:341c87a42caefd22dc515dbbbef93f6e2334a38fa2b932889e062f166f1b86ff",
+            "expires_at_ms": 1791821203730,
+            "grant_id": "grant-c16e73279dec462f960b179f2788f018",
+            "policy_digest": "sha256:cba16c8345271f6ef2ad493e2597bfcb2618b54760185638c6c0e4be912a470e",
+            "qualification_digest": "sha256:875f7476f3167974b6c5d035fda03381fbea40a23730a678bceba7288e999563",
+            "qualification_id": "qualification-3f0eb41d8135424cb6d620c23af9d77f",
+            "resource": "model/champion",
+            "skill": "release-model",
+            "skill_digest": "sha256:31485fc89c49a0d29a046628ea124729452470ef676bfea1f77f6cc111be274d",
+            "version": "sha256:d1012698075f7c3b2e9cb10c9779465a5538743557f266c6dae94da544d4be12",
+            "canonical_scope_id": "3d2ba73a-2a20-42fb-b8f5-f6ca17f4e370"
+          }
+        ],
+        "expires_at_ms": 1791821203755,
+        "issued_at_ms": 1791820903755,
+        "status": "ACTIVE",
+        "canonical": {
+          "subject": {
+            "credential_id": "ed25519:e67464dc44e2c908b2898ba92c569e20c78bf30a060bb3d0e02e9a8deb7fddf1",
+            "public_key_pem": {
+              "redacted_digest": "sha256:3942ade11275979870c9d8db7f04a42c0d1a15c4c1de6084d4a8b4a423c8e98b"
+            },
+            "canonical_version": "are.passport.v2",
+            "passport_id": "7e1a0ab4-3a70-49be-84fc-2ca3e69e56fa",
+            "agent_id": "agt-idem-27ff5f1f2ca247c5815ca1567b444b9b",
+            "issuance_revision": 4,
+            "passport_type": "STANDARD",
+            "scope_set": [
+              {
+                "scope_id": "ee6e5e3a-1b64-426f-8989-2ef91e27894d",
+                "action_class": "demo.read",
+                "resource_pattern": "urn:dataset/health",
+                "context_constraints": {
+                  "earned_authority_binding_v1": "{\"action\":\"read\",\"context\":{\"desired_replicas\":1,\"environment\":\"service-bdd-b60538f5368d4ea58b2f5b0164f5e2ac-026-default\",\"max_replicas\":2,\"model_version\":\"model-v2\"},\"context_digest\":\"sha256:341c87a42caefd22dc515dbbbef93f6e2334a38fa2b932889e062f166f1b86ff\",\"expires_at_ms\":1791821203119,\"grant_id\":\"grant-9436339bb13547c5934c44a4978420d8\",\"policy_digest\":\"sha256:cba16c8345271f6ef2ad493e2597bfcb2618b54760185638c6c0e4be912a470e\",\"qualification_digest\":\"sha256:93b408bd5137f8ec0ba37a7e138f53fd8d34c04e33e442d65d67972a0d37d167\",\"qualification_id\":\"qualification-4525693717da4603baf3694fd05820ab\",\"resource\":\"urn:dataset/health\",\"skill\":\"read-health\",\"skill_digest\":\"sha256:ff20d6656e983f1b9663ce300abee203170a8969f7f5b9706be67282f5f339c7\",\"version\":\"sha256:31743cb02aad9203cfcafa3ccbc0a09c66ffef9ad16b3c6e5d7584ff22d89db8\"}"
+                },
+                "granted_ts": 1791820903755,
+                "expires_ts": 1791821203755,
+                "is_escalation": false
+              },
+              {
+                "scope_id": "3d2ba73a-2a20-42fb-b8f5-f6ca17f4e370",
+                "action_class": "model.promote_to_production",
+                "resource_pattern": "model/champion",
+                "context_constraints": {
+                  "earned_authority_binding_v1": "{\"action\":\"release\",\"context\":{\"desired_replicas\":1,\"environment\":\"service-bdd-b60538f5368d4ea58b2f5b0164f5e2ac-026-default\",\"max_replicas\":2,\"model_version\":\"model-v2\"},\"context_digest\":\"sha256:341c87a42caefd22dc515dbbbef93f6e2334a38fa2b932889e062f166f1b86ff\",\"expires_at_ms\":1791821203730,\"grant_id\":\"grant-c16e73279dec462f960b179f2788f018\",\"policy_digest\":\"sha256:cba16c8345271f6ef2ad493e2597bfcb2618b54760185638c6c0e4be912a470e\",\"qualification_digest\":\"sha256:875f7476f3167974b6c5d035fda03381fbea40a23730a678bceba7288e999563\",\"qualification_id\":\"qualification-3f0eb41d8135424cb6d620c23af9d77f\",\"resource\":\"model/champion\",\"skill\":\"release-model\",\"skill_digest\":\"sha256:31485fc89c49a0d29a046628ea124729452470ef676bfea1f77f6cc111be274d\",\"version\":\"sha256:d1012698075f7c3b2e9cb10c9779465a5538743557f266c6dae94da544d4be12\"}"
+                },
+                "granted_ts": 1791820903755,
+                "expires_ts": 1791821203755,
+                "is_escalation": false
+              }
+            ],
+            "issued_by": "earned-authority-coordinator",
+            "reason": "qualification qualification-3f0eb41d8135424cb6d620c23af9d77f",
+            "issued_ts": 1791820903755,
+            "expires_ts": 1791821203755,
+            "policy_id_at_issuance": "earned-authority-reference",
+            "policy_ver_at_issuance": "0.1.0"
+          },
+          "signature": {
+            "redacted_digest": "sha256:059a4692a211aa1947ed9ac1eb29e19626671e54dfd26e0f5fbc7dc6a377349a"
+          },
+          "status": "ACTIVE",
+          "revision": 4
+        }
+      },
+      "authority_after_digest": "sha256:7f7d0cfe0c09849c0382d766ac82f8ffca944bd588d0b501de4b77ca2e2ff7b1"
+    }
+  ],
+  "scope": "Named BDD assertions on actual local canonical services and fenced SQLite registry; no cross-host, product-value or hardware claim.",
+  "source_hashes_before": {
+    "tools/validate_bdd_connected.py": "sha256:7d5c080d835a6ab925b2822c523a30edfc0e37baa8d825c1102a8a6fa1ed01a7",
+    "tools/validate_connected.py": "sha256:2a56eda79e1b5998d79d2328a39ab632fa139eb69b84a675355622a5740dbd0a",
+    "features/bindings.json": "sha256:eb2d1bb46611964a100b5e5515f3f44d72d0cb5f94e08e16121147855da3d13d",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:5e13e8ef0164caa761ad7b91b10d28f4be17d4e7b0c14f88281fc3b977bcdf20",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:9d270d8a7d678ffaafda2211683919245cf3b947736c5811b06ec39035ca1723",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:13be9447151a7b3db7f71749ea1e6829aac7c46e0d227768ad360fad4d6e1a97",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:c8832c91986b46abed3610496560769d818175ad2d8c4d549b484e57db975758",
+    "earned_authority/wire_contracts.py": "sha256:f99ed0e790b1efc0c7f795a9ab64e2d08bd0ea61df2c7875b0fb804031e7d268",
+    "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
+    "features/concurrency.feature": "sha256:a593d6b2ee5ceb79260f97e0dbfd768843c2c7f4fcd5b6705e11797f023f0e27",
+    "features/execution_and_evidence.feature": "sha256:5c03e38759cae3c8d84536efdd463c91492183e72ce0d3941a9b8ae7b8a23ded",
+    "features/future_robot_simulation.feature": "sha256:916435ba5489e20024f589161dc3a4e3a5df5c23f211a211a9baab8a6ea33771",
+    "features/ledger_integrity.feature": "sha256:6f3039c21f36f2b0d052b168d30547d3a5ec76ca39b2046f653a59b3a4e442a6",
+    "features/qualification.feature": "sha256:8545997b35e1600c7f2e63e4e743ca5f3563aa4ef295cb6b395fda614a286629",
+    "features/withdrawal_and_requalification.feature": "sha256:417a22c6940ab6b0fb70e2c0e44d27646da5c18d9ac10e242b7f8a27bc7fa8da"
+  },
+  "EDD": "evaluation-driven development; no preregistered value result",
+  "CUT": "unconfirmed",
+  "fixture_parameter_mapping": {
+    "agent-a": "fresh canonical identity per case",
+    "skill-v1": "actual controller procedure_revision content digest",
+    "demo-a": "fresh isolated context per case",
+    "registry-a/model-a": "model/champion",
+    "qual-policy-v1": "demo3 canonical adapter profile; three fresh independent outcomes",
+    "auth-policy-v1": "actual loaded Foundation/OPA policy revision",
+    "BDD-009 requested window": "Explicit source-configured demo blackout 2100-01-01T00:00:00Z through 00:01:00Z; real OPA evaluation time, no business calendar claim",
+    "BDD-015 cached grant": "Durable last-verified current-authority observation for diagnostics; never an executable authorization fallback",
+    "BDD-016 qualification and authorization records": "Per-attempt consumption checks at mutation boundary; prior evaluation and grant creation records retain their original IDs and timestamps"
+  },
+  "exit_codes": {
+    "0": "prepared inventory or all selected scenarios fully green",
+    "1": "observed failed assertion or runtime operation",
+    "2": "blocked, partial, unbound, or sources changed; acceptance incomplete"
+  },
+  "canonical_source_revisions": {
+    "cascade": "3efd16e053ef2a8a95b1b1ba6c1d1acdd873a3cb",
+    "gcl": "a8ae67ee1198e8b86bf7458119723c0af2d74792"
+  },
+  "source_hashes": {
+    "tools/validate_bdd_connected.py": "sha256:7d5c080d835a6ab925b2822c523a30edfc0e37baa8d825c1102a8a6fa1ed01a7",
+    "tools/validate_connected.py": "sha256:2a56eda79e1b5998d79d2328a39ab632fa139eb69b84a675355622a5740dbd0a",
+    "features/bindings.json": "sha256:eb2d1bb46611964a100b5e5515f3f44d72d0cb5f94e08e16121147855da3d13d",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:5e13e8ef0164caa761ad7b91b10d28f4be17d4e7b0c14f88281fc3b977bcdf20",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:9d270d8a7d678ffaafda2211683919245cf3b947736c5811b06ec39035ca1723",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:13be9447151a7b3db7f71749ea1e6829aac7c46e0d227768ad360fad4d6e1a97",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:c8832c91986b46abed3610496560769d818175ad2d8c4d549b484e57db975758",
+    "earned_authority/wire_contracts.py": "sha256:f99ed0e790b1efc0c7f795a9ab64e2d08bd0ea61df2c7875b0fb804031e7d268",
+    "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
+    "features/concurrency.feature": "sha256:a593d6b2ee5ceb79260f97e0dbfd768843c2c7f4fcd5b6705e11797f023f0e27",
+    "features/execution_and_evidence.feature": "sha256:5c03e38759cae3c8d84536efdd463c91492183e72ce0d3941a9b8ae7b8a23ded",
+    "features/future_robot_simulation.feature": "sha256:916435ba5489e20024f589161dc3a4e3a5df5c23f211a211a9baab8a6ea33771",
+    "features/ledger_integrity.feature": "sha256:6f3039c21f36f2b0d052b168d30547d3a5ec76ca39b2046f653a59b3a4e442a6",
+    "features/qualification.feature": "sha256:8545997b35e1600c7f2e63e4e743ca5f3563aa4ef295cb6b395fda614a286629",
+    "features/withdrawal_and_requalification.feature": "sha256:417a22c6940ab6b0fb70e2c0e44d27646da5c18d9ac10e242b7f8a27bc7fa8da"
+  },
+  "source_unchanged_during_run": true,
+  "finished_at": "2026-10-12T16:01:43.950359+00:00",
+  "scenario_acceptance": {
+    "BDD-026": "GREEN"
+  },
+  "counts": {
+    "scenario_ids": 1,
+    "cases": 1,
+    "passed_cases": 1,
+    "failed_cases": 0,
+    "blocked_cases": 0,
+    "unrun_cases": 0,
+    "complete_green_scenarios": 1
+  }
+}

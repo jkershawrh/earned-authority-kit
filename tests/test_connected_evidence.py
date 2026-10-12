@@ -8,6 +8,7 @@ from earned_authority.connected import ConnectedRuntime
 from earned_authority.runtime import ControlledClock
 from earned_authority.runtime import Denied
 from earned_authority.contracts import canonical_digest
+from earned_authority.grants import has_skill, unique_grant
 from test_connected_security import UnitPassport, UnitPolicy
 
 
@@ -59,7 +60,7 @@ def test_verified_import_is_durable_and_deduplicated(rt):
     assert result['admitted'] and result['counts_as_pass']
     assert rt.admit_evidence(obs,row['event'],row['receipt'],expected_attempt_id='imported',context=CONTEXT)==result
     assert len(rt.observations())==1 and len(rt.evidence_intakes())==1 and rt.mutation_count==0
-    assert rt.authority()['grants']=={}
+    assert rt.authority()['grants']==[]
 
 
 def test_no_observations_remain_insufficient_when_canonical_evaluation_runs_later(rt):
@@ -72,7 +73,7 @@ def test_no_observations_remain_insufficient_when_canonical_evaluation_runs_late
     for i in range(3):rt.record_procedure_report('claim-'+str(i),version=rt.procedure_revision,context=CONTEXT)
     q=rt.qualify(context=CONTEXT)
     assert (q['passes'],q['disposition'],q['reason'])==(0,'HOLD','INSUFFICIENT_EVIDENCE')
-    assert rt.observations()==[] and rt.authority()['grants']=={} and rt.mutation_count==0
+    assert rt.observations()==[] and rt.authority()['grants']==[] and rt.mutation_count==0
 
 
 def test_rejected_copy_does_not_quarantine_valid_stored_observation(rt):
@@ -81,7 +82,7 @@ def test_rejected_copy_does_not_quarantine_valid_stored_observation(rt):
     rejected=rt.admit_evidence(bad,row['event'],row['receipt'],expected_attempt_id=obs['attempt_id'],context=CONTEXT)
     assert not rejected['admitted'] and rejected['reason']=='TAMPER_DETECTED'
     assert rt.qualification(q['qualification_id'])['disposition']=='ELIGIBLE'
-    assert rt.authority()['grants']['release-model']['qualification_id']==q['qualification_id']
+    assert unique_grant(rt.authority(),'release-model')['qualification_id']==q['qualification_id']
     assert rt._observation_admissible(obs)
 
 
@@ -94,8 +95,8 @@ def test_stored_tamper_is_excluded_and_only_affected_grant_is_held(rt):
     result=rt.audit_qualification_evidence()
     assert result['reason']=='TAMPER_DETECTED' and not result['verified']
     assert rt.qualification(q['qualification_id'])['disposition']=='HOLD'
-    assert 'release-model' not in rt.authority()['grants']
-    assert rt.authority()['grants']['read-health']['qualification_id']==read['qualification_id']
+    assert not has_skill(rt.authority(),'release-model')
+    assert unique_grant(rt.authority(),'read-health')['qualification_id']==read['qualification_id']
     assert rt.qualify(context=CONTEXT)['passes']==2
     assert rt.mutation_count==0
 
@@ -107,7 +108,7 @@ def test_missing_required_observation_holds_without_task_failure(rt):
     assert result['reason']=='EVIDENCE_UNCONFIRMED'
     assert rt.qualification(q['qualification_id'])['failures']==0
     assert rt.qualification(q['qualification_id'])['disposition']=='HOLD'
-    assert rt.authority()['grants']['read-health']['qualification_id']==read['qualification_id']
+    assert unique_grant(rt.authority(),'read-health')['qualification_id']==read['qualification_id']
 
 
 def test_remote_outage_does_not_hold_authentic_local_evidence(rt):
@@ -116,7 +117,7 @@ def test_remote_outage_does_not_hold_authentic_local_evidence(rt):
     assert result['reason']=='LEDGER_READ_UNAVAILABLE' and not result['verified']
     assert not result['requires_hold']
     assert rt.qualification(q['qualification_id'])['disposition']=='ELIGIBLE'
-    assert set(rt.authority()['grants'])=={'release-model','read-health'}
+    assert {g['skill'] for g in rt.authority()['grants']}=={'release-model','read-health'}
 
 
 def test_local_pending_delivery_does_not_require_remote_receipt(rt):
@@ -178,7 +179,7 @@ def test_preexisting_eligible_qualification_cannot_reuse_quarantined_evidence(rt
     quarantine_first(rt)
     with pytest.raises(Denied,match='TAMPER_DETECTED'):
         rt.grant(other['qualification_id'])
-    assert 'release-model' not in rt.authority()['grants']
+    assert not has_skill(rt.authority(),'release-model')
 
 
 def test_quarantine_during_evaluation_prevents_stale_eligibility_publication(rt):

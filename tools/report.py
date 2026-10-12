@@ -246,7 +246,7 @@ def main():
         add(key,lane,name,method,'REAL_LOCAL_SERVICES',scope,path,'FAIL' if failed else ('PASS' if passed else 'UNKNOWN'),valid=pins_current,milestone=milestone,detail=f'{len(checks)} executed checks')
     total=sum(c.get('checks',0) for c in combined.get('components',{}).values())
     add('DEP-BUILD','WP6','Fresh source reconstruction and one-command validation','BDD','FRESH_SAME_HOST',f'Five pinned upstream repositories, explicit patches, distinct keys/state/volumes and {total} recorded checks.',combined_path,'PASS' if combined.get('command_exit_code')==0 and combined.get('acceptance_color')=='GREEN' else 'UNKNOWN',valid=combined_valid,milestone='M3')
-    bdd_path='reports/service-bdd-live-008.json'; bdd=read(bdd_path)
+    bdd_path='reports/service-bdd-live-010.json'; bdd=read(bdd_path)
     statuses=bdd.get('scenario_acceptance',{})
     full=[key for key,status in statuses.items() if status=='GREEN']
     failed=any(status=='RED' for status in statuses.values())

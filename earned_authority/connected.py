@@ -14,6 +14,7 @@ import urllib.request
 from contextlib import contextmanager
 from pathlib import Path
 from .contracts import canonical_digest,load_unique_json
+from .grants import grants_for_skill,iter_grants,select_grant,target_view,upsert_grant
 from .runtime import Runtime,Denied,ident,encoded
 from .authority_journal import AuthorityJournal
 from .authority_observations import AuthorityObservations
@@ -95,15 +96,33 @@ class ConnectedRuntime(AuthorityObservations,AuthorityJournal,Runtime):
         self._init_authority_observations()
         with self._tx() as db:
             db.execute('CREATE TABLE IF NOT EXISTS shadow_registry(attempt_id TEXT PRIMARY KEY,version TEXT NOT NULL,healthy INTEGER NOT NULL)')
-            db.execute('CREATE TABLE IF NOT EXISTS withdrawals(agent TEXT NOT NULL,skill TEXT NOT NULL,attempt_id TEXT NOT NULL,reason TEXT NOT NULL,PRIMARY KEY(agent,skill))')
             db.execute('CREATE TABLE IF NOT EXISTS evidence_intakes(id TEXT PRIMARY KEY,body TEXT NOT NULL)')
             db.execute('CREATE TABLE IF NOT EXISTS evidence_quarantine(attempt_id TEXT NOT NULL,body_digest TEXT NOT NULL,reason TEXT NOT NULL,PRIMARY KEY(attempt_id,body_digest))')
-            columns={r[1] for r in db.execute('PRAGMA table_info(withdrawals)')}
-            for column in ('target_grant_id','target_qualification_id'):
-                if column not in columns:db.execute("ALTER TABLE withdrawals ADD COLUMN "+column+" TEXT NOT NULL DEFAULT ''")
+            self._ensure_withdrawal_queue(db)
         self._init_authority_journal()
         self._trusted_outcome_producers={'checker':self.keys['checker'].public_key()}
-        self.procedure_revision=canonical_digest({p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (Path(__file__),Path(__file__).with_name('runtime.py'),Path(__file__).with_name('authority_journal.py'),Path(__file__).with_name('evidence_admission.py'))})
+        self.procedure_revision=canonical_digest({p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in (Path(__file__),Path(__file__).with_name('runtime.py'),Path(__file__).with_name('authority_journal.py'),Path(__file__).with_name('evidence_admission.py'),Path(__file__).with_name('grants.py'))})
+
+    def _ensure_withdrawal_queue(self,db):
+        """Keep one skill-wide withdrawal per exact failure anchor.
+
+        A second resource must not replace another grant's pending anchor.
+        Draining a current anchor removes every current grant of that skill.
+        """
+        db.execute('CREATE TABLE IF NOT EXISTS withdrawals(agent TEXT NOT NULL,skill TEXT NOT NULL,attempt_id TEXT NOT NULL,reason TEXT NOT NULL,target_grant_id TEXT NOT NULL DEFAULT \'\',target_qualification_id TEXT NOT NULL DEFAULT \'\',PRIMARY KEY(agent,skill,target_grant_id))')
+        columns={row[1] for row in db.execute('PRAGMA table_info(withdrawals)')}
+        for column in ('target_grant_id','target_qualification_id'):
+            if column not in columns:
+                db.execute('ALTER TABLE withdrawals ADD COLUMN '+column+' TEXT NOT NULL DEFAULT \'\'')
+        primary=[row[1] for row in sorted(db.execute('PRAGMA table_info(withdrawals)'),key=lambda row: row[5]) if row[5]]
+        if primary==['agent','skill','target_grant_id']:return
+        db.execute('ALTER TABLE withdrawals RENAME TO withdrawals_legacy')
+        db.execute('CREATE TABLE withdrawals(agent TEXT NOT NULL,skill TEXT NOT NULL,attempt_id TEXT NOT NULL,reason TEXT NOT NULL,target_grant_id TEXT NOT NULL DEFAULT \'\',target_qualification_id TEXT NOT NULL DEFAULT \'\',PRIMARY KEY(agent,skill,target_grant_id))')
+        legacy={row[1] for row in db.execute('PRAGMA table_info(withdrawals_legacy)')}
+        grant_id='target_grant_id' if 'target_grant_id' in legacy else "''"
+        qualification_id='target_qualification_id' if 'target_qualification_id' in legacy else "''"
+        db.execute('INSERT INTO withdrawals(agent,skill,attempt_id,reason,target_grant_id,target_qualification_id) SELECT agent,skill,attempt_id,reason,'+grant_id+','+qualification_id+' FROM withdrawals_legacy')
+        db.execute('DROP TABLE withdrawals_legacy')
 
     def _evidence_verifier(self):
         return EvidenceAdmission(self.ledger,trusted_producers=self._trusted_outcome_producers,
@@ -181,44 +200,60 @@ class ConnectedRuntime(AuthorityObservations,AuthorityJournal,Runtime):
         return decision
 
     def audit_qualification_evidence(self,agent='agent-a',skill='release-model'):
-        """Audit this grant's bound evidence; bad unsolicited copies cannot hold it."""
+        """Audit every current grant of this skill. A bad qualification withdraws the whole skill."""
         with self._authority_serial():
-            authority=self.authority(agent);grant=authority['grants'].get(skill)
-            if not grant:return {'verified':False,'status':'NO_ACTIVE_GRANT','reason':'REVOKED_AUTHORITY','requires_hold':False}
-            q=self.qualification(grant['qualification_id'])
-            if q['disposition']!='ELIGIBLE':
-                return {'verified':False,'status':q['disposition'],'reason':q['reason'],'requires_hold':True,'qualification_id':q['qualification_id']}
+            grants=grants_for_skill(self.authority(agent),skill)
+            groups=[];seen=set()
+            for grant in grants:
+                key=(grant['qualification_id'],grant['qualification_digest'])
+                if key in seen:continue
+                seen.add(key);groups.append(grant)
+            meta={'inspected_grants':[grant['grant_id'] for grant in grants],
+                  'qualifications':[grant['qualification_id'] for grant in groups]}
+            def finish(body):return {**body,**meta}
+            if not grants:
+                return finish({'verified':False,'status':'NO_ACTIVE_GRANT','reason':'REVOKED_AUTHORITY','requires_hold':False})
+            loaded=[]
+            for grant in groups:
+                q=self.qualification(grant['qualification_id'])
+                if q['disposition']!='ELIGIBLE':
+                    return finish({'verified':False,'status':q['disposition'],'reason':q['reason'],'requires_hold':True,'qualification_id':q['qualification_id']})
+                loaded.append((grant,q))
             verifier=self._evidence_verifier()
             observations={o['attempt_id']:o for o in self.observations()}
             rows=self.events();intakes=self.evidence_intakes();deferred=None;bad=None
-            refs=q.get('outcome_refs',[])
-            if canonical_digest(q)!=grant['qualification_digest']:
-                bad=(None,{'reason':'TAMPER_DETECTED','requires_hold':True})
-            if not refs and bad is None:bad=(None,{'reason':'EVIDENCE_UNCONFIRMED','requires_hold':True})
-            for ref in refs if bad is None else []:
-                obs=observations.get(ref['attempt_id'])
-                expected={'expected_attempt_id':ref['attempt_id'],'expected_skill_digest':q['skill_digest'],
-                    'expected_context_digest':q['context_digest'],'now_ms':self.clock.now_ms}
-                checked=verifier.verify_observation(obs,**expected)
-                if obs is None:checked={**checked,'reason':'EVIDENCE_UNCONFIRMED'}
-                elif obs.get('evidence_digest')!=ref['evidence_digest'] or obs.get('observation_id')!=ref['observation_id']:
-                    checked={**checked,'admitted':False,'reason':'TAMPER_DETECTED','requires_hold':True}
-                if checked['admitted'] and not checked['requires_hold']:
-                    row=next((r for r in rows if r['event'].get('event_type')=='OUTCOME_OBSERVED' and r['event'].get('attempt_id')==ref['attempt_id']),None)
-                    imported=next((i for i in intakes if i['decision']['admitted'] and i['observation']==obs),None)
-                    if row and row['delivery']=='RECORDED':checked=verifier.verify(obs,row['event'],row['receipt'],**expected)
-                    elif row and row['event'].get('outcome')!=obs:checked={**checked,'admitted':False,'reason':'TAMPER_DETECTED','requires_hold':True}
-                    elif imported:checked=verifier.verify(obs,imported['event'],imported['receipt'],**expected)
-                    elif not row:checked={**checked,'admitted':False,'reason':'EVIDENCE_UNCONFIRMED','requires_hold':True}
-                if checked['requires_hold']:
-                    bad=(obs,checked);break
-                if not checked['admitted']:deferred=checked
+            for grant,q in loaded:
+                refs=q.get('outcome_refs',[])
+                local_bad=None
+                if canonical_digest(q)!=grant['qualification_digest']:
+                    local_bad=(None,{'reason':'TAMPER_DETECTED','requires_hold':True})
+                if not refs and local_bad is None:local_bad=(None,{'reason':'EVIDENCE_UNCONFIRMED','requires_hold':True})
+                for ref in refs if local_bad is None else []:
+                    obs=observations.get(ref['attempt_id'])
+                    expected={'expected_attempt_id':ref['attempt_id'],'expected_skill_digest':q['skill_digest'],
+                        'expected_context_digest':q['context_digest'],'now_ms':self.clock.now_ms}
+                    checked=verifier.verify_observation(obs,**expected)
+                    if obs is None:checked={**checked,'reason':'EVIDENCE_UNCONFIRMED'}
+                    elif obs.get('evidence_digest')!=ref['evidence_digest'] or obs.get('observation_id')!=ref['observation_id']:
+                        checked={**checked,'admitted':False,'reason':'TAMPER_DETECTED','requires_hold':True}
+                    if checked['admitted'] and not checked['requires_hold']:
+                        row=next((r for r in rows if r['event'].get('event_type')=='OUTCOME_OBSERVED' and r['event'].get('attempt_id')==ref['attempt_id']),None)
+                        imported=next((i for i in intakes if i['decision']['admitted'] and i['observation']==obs),None)
+                        if row and row['delivery']=='RECORDED':checked=verifier.verify(obs,row['event'],row['receipt'],**expected)
+                        elif row and row['event'].get('outcome')!=obs:checked={**checked,'admitted':False,'reason':'TAMPER_DETECTED','requires_hold':True}
+                        elif imported:checked=verifier.verify(obs,imported['event'],imported['receipt'],**expected)
+                        elif not row:checked={**checked,'admitted':False,'reason':'EVIDENCE_UNCONFIRMED','requires_hold':True}
+                    if checked['requires_hold']:
+                        local_bad=(obs,checked);break
+                    if not checked['admitted']:deferred=checked
+                if local_bad is not None:
+                    bad=(grant,q,*local_bad);break
             if bad is None:
                 if deferred:
-                    return {'verified':False,'status':'UNAVAILABLE','requires_hold':False,
-                        'reason':(deferred.get('ledger_verification') or {}).get('reason',deferred['reason'])}
-                return {'verified':True,'status':'VERIFIED','reason':'BOUND_LOCAL_EVIDENCE_VERIFIED','requires_hold':False}
-            obs,checked=bad;reason=checked['reason']
+                    return finish({'verified':False,'status':'UNAVAILABLE','requires_hold':False,
+                        'reason':(deferred.get('ledger_verification') or {}).get('reason',deferred['reason'])})
+                return finish({'verified':True,'status':'VERIFIED','reason':'BOUND_LOCAL_EVIDENCE_VERIFIED','requires_hold':False})
+            grant,q,obs,checked=bad;reason=checked['reason']
             with self._tx() as db:
                 if obs is not None and not checked.get('admitted',False):
                     db.execute('INSERT OR REPLACE INTO evidence_quarantine VALUES (?,?,?)',(obs['attempt_id'],canonical_digest(obs),reason))
@@ -226,15 +261,15 @@ class ConnectedRuntime(AuthorityObservations,AuthorityJournal,Runtime):
                 # An outcome may have arrived while receipt verification was in flight.
                 # Keep its stronger decision and already queued target-bound withdrawal.
                 if current['disposition']!='ELIGIBLE':
-                    return {'verified':False,'status':current['disposition'],'reason':current['reason'],
-                        'requires_hold':True,'qualification_id':current['qualification_id']}
+                    return finish({'verified':False,'status':current['disposition'],'reason':current['reason'],
+                        'requires_hold':True,'qualification_id':current['qualification_id']})
                 current['qualification_revision']+=1;current['disposition']='HOLD'
                 current['reason']='STALE_EVIDENCE' if reason=='STALE_EVIDENCE' else 'EVIDENCE_UNCONFIRMED'
                 self._save_qualification(db,current)
-                audit=self._event(db,'HELD',agent,skill=skill,reason=current['reason'],evidence_reason=reason,qualification_id=q['qualification_id'])
+                audit=self._event(db,'HELD',agent,skill=skill,reason=current['reason'],evidence_reason=reason,qualification_id=q['qualification_id'],inspected_grants=meta['inspected_grants'])
                 db.execute('INSERT OR REPLACE INTO withdrawals VALUES (?,?,?,?,?,?)',(agent,skill,audit['attempt_id'],current['reason'],grant['grant_id'],grant['qualification_id']))
             self.drain_withdrawals(only_agent=agent)
-            return {'verified':False,'status':'HOLD','reason':reason,'requires_hold':True,'qualification_id':q['qualification_id']}
+            return finish({'verified':False,'status':'HOLD','reason':reason,'requires_hold':True,'qualification_id':q['qualification_id']})
 
     def _event(self,db,kind,agent='reference-qualification-checker',attempt_id='',**fields):
         return super()._event(db,kind,agent,attempt_id or ident('lifecycle'),**fields)
@@ -288,16 +323,17 @@ class ConnectedRuntime(AuthorityObservations,AuthorityJournal,Runtime):
     def _normalize(self,raw,agent):
         subject=raw['subject']
         if subject is None:
-            return {'agent_id':agent,'revision':raw['revision'],'passport_id':None,'grants':{},'expires_at_ms':0,'status':'REVOKED','canonical':raw}
-        grants={}
+            return {'agent_id':agent,'revision':raw['revision'],'passport_id':None,'grants':[],'expires_at_ms':0,'status':'REVOKED','canonical':raw}
+        grants=[]
         try:
             for scope in subject['scope_set']:
                 if set(scope['context_constraints'])!={BINDING}: raise ValueError('unknown binding format')
                 g=load_unique_json(scope['context_constraints'][BINDING])
-                if g['skill'] in grants: raise ValueError('duplicate skill grant')
                 if ACTIONS[g['action']]!=scope['action_class'] or g['resource']!=scope['resource_pattern']: raise ValueError('scope binding mismatch')
                 g['expires_at_ms']=min(g['expires_at_ms'],scope['expires_ts'],subject['expires_ts'])
-                g['canonical_scope_id']=scope['scope_id'];grants[g['skill']]=g
+                g['canonical_scope_id']=scope['scope_id'];grants.append(g)
+            iter_grants({'grants':grants})
+        except Denied: raise
         except Exception as exc: raise Denied('BINDING_MISMATCH') from exc
         return {'agent_id':agent,'revision':raw['revision'],'passport_id':subject['passport_id'],'grants':grants,
                 'expires_at_ms':subject['expires_ts'],'issued_at_ms':subject['issued_ts'],'status':raw['status'],'canonical':raw}
@@ -315,7 +351,7 @@ class ConnectedRuntime(AuthorityObservations,AuthorityJournal,Runtime):
 
     def _requests(self,grants):
         now=self.clock.now_ms;scopes=[]
-        for g in grants.values():
+        for g in iter_grants({'grants':grants}):
             # The signed inner absolute bound remains the execution deadline.
             # Rounding its containing TTL down would shorten unaffected grants
             # on every aggregate replacement. Round up, never extend the inner bound.
@@ -367,7 +403,7 @@ class ConnectedRuntime(AuthorityObservations,AuthorityJournal,Runtime):
                 g['requested_window']=window
                 g['expires_at_ms']=min(g['expires_at_ms'],window['not_after_ms'])
             if g['expires_at_ms']-self.clock.now_ms<1000:raise Denied('EXPIRED_SCOPE')
-            grants=current['grants'];grants[q['skill']]=g;scopes=self._requests(grants)
+            grants=upsert_grant(current,g);scopes=self._requests(grants)
             oid=operation_id or ident('authority-op')
             request=issue_operation_request(agent,scopes,max(300,max(s['scope_ttl_seconds'] for s in scopes)),raw,'qualification '+qid,oid)
             operation=self._new_authority_operation(operation_id=oid,agent=agent,kind='GRANT',request=request,prior_authority=raw,invocation=invocation,
@@ -389,29 +425,37 @@ class ConnectedRuntime(AuthorityObservations,AuthorityJournal,Runtime):
             if receipt['agent_revision']!=authority['revision'] or (receipt['active_passport_id'] or None)!=authority['passport_id']:
                 return None
             if operation['reason'] not in ('EVIDENCE_UNCONFIRMED','STALE_EVIDENCE'):return None
-            prior=self._normalize(operation['prior_authority'],intent['agent'])['grants'].get(intent['skill'])
-            if not prior or prior['grant_id']!=operation['target_grant_id'] or prior['qualification_id']!=operation['target_qualification_id']:
-                return None
-            if any(prior[k]!=intent[k] for k in ('skill','version','context','action','resource')):return None
-            q=self.qualification(operation['target_qualification_id'])
-            if q['disposition']=='HOLD' and q['reason']==operation['reason'] and all(q[k]==prior[k] for k in ('skill','version','context')):
-                return q['reason']
+            prior_authority=self._normalize(operation['prior_authority'],intent['agent'])
+            targets=operation.get('targets')
+            if not targets:
+                prior=next((g for g in grants_for_skill(prior_authority,intent['skill']) if g['grant_id']==operation['target_grant_id'] and g['qualification_id']==operation['target_qualification_id']),None)
+                targets=[prior] if prior else []
+            for prior in targets:
+                if any(prior[k]!=intent[k] for k in ('skill','version','context','action','resource')):continue
+                q=self.qualification(prior['qualification_id'])
+                if q['disposition']=='HOLD' and q['reason']==operation['reason'] and all(q[k]==prior[k] for k in ('skill','version','context')):
+                    return q['reason']
             return None
         return None
 
     def _check(self,db,intent,expected_revision=None):
         self._assert_authority_ready(db,intent['agent'])
-        a=self.authority(intent['agent']);g=a['grants'].get(intent['skill'])
-        if not g or a['status']!='ACTIVE':
+        a=self.authority(intent['agent'])
+        if a['status']!='ACTIVE' or not grants_for_skill(a,intent['skill']):
             reason=self._held_reason(db,intent,a) if expected_revision is None else None
             raise Denied(reason or 'REVOKED_AUTHORITY')
         if expected_revision is not None and a['revision']!=expected_revision: raise Denied('REVOKED_AUTHORITY')
         if a['expires_at_ms']<=self.clock.now_ms: raise Denied('EXPIRED_PASSPORT')
+        # An old procedure is unauthorized before resource selection. Otherwise a
+        # version that matches no current grant is reported as a scope miss.
+        if intent['version']!=self.procedure_revision: raise Denied('SKILL_REVISION_MISMATCH')
+        g=select_grant(a,skill=intent['skill'],version=intent['version'],context=intent['context'],action=intent['action'],resource=intent['resource'])
+        if 'grant_id' in intent and (g['grant_id']!=intent['grant_id'] or g['qualification_id']!=intent.get('qualification_id') or g['qualification_digest']!=intent.get('qualification_digest')):
+            raise Denied('BINDING_MISMATCH')
         if g['expires_at_ms']<=self.clock.now_ms: raise Denied('EXPIRED_SCOPE')
         window=validate_requested_window(g['requested_window']) if 'requested_window' in g else None
         if window is not None and not window['not_before_ms']<=self.clock.now_ms<window['not_after_ms']:
             raise Denied('WINDOW_NOT_ACTIVE')
-        if intent['version']!=self.procedure_revision: raise Denied('SKILL_REVISION_MISMATCH')
         for name in ('version','context','action','resource'):
             if g[name]!=intent[name]: raise Denied('SCOPE_MISMATCH')
         q=self.eligibility(g['qualification_id'],intent['version'],intent['context'])
@@ -480,33 +524,40 @@ class ConnectedRuntime(AuthorityObservations,AuthorityJournal,Runtime):
             self.recover_authority_intents(agent)
             raw=self.passport.current(agent,require_valid=False);a=self._normalize(raw,agent)
             if expected_revision is not None and a['revision']!=expected_revision: raise Denied('REVISION_CONFLICT')
-            grant=a['grants'].get(skill)
-            if target_grant_id is not None and (not grant or grant['grant_id']!=target_grant_id or grant['qualification_id']!=target_qualification_id):
+            same=grants_for_skill(a,skill)
+            anchor=next((g for g in same if g['grant_id']==target_grant_id and g['qualification_id']==target_qualification_id),None) if target_grant_id is not None else (same[0] if same else None)
+            if target_grant_id is not None and anchor is None:
                 event_id='reconciled-'+canonical_digest(invocation).split(':')[1]
                 with self._tx() as db:
                     if not db.execute('SELECT 1 FROM events WHERE id=?',(event_id,)).fetchone():
                         self._event(db,'WITHDRAWAL_RECONCILED',agent,attempt_id,event_id=event_id,skill=skill,target_grant_id=target_grant_id,
                                     target_qualification_id=target_qualification_id,status='TARGET_NOT_CURRENT',authority_revision=a['revision'])
                 return a
-            if not grant:return a
-            a['grants'].pop(skill);scopes=self._requests(a['grants']);oid=operation_id or ident('authority-op')
+            if anchor is None:return a
+            removed=same;kept=[g for g in iter_grants(a) if g['skill']!=skill];targets=[target_view(g) for g in removed]
+            scopes=self._requests(kept);oid=operation_id or ident('authority-op')
             if scopes:request=issue_operation_request(agent,scopes,max(300,max(s['scope_ttl_seconds'] for s in scopes)),raw,'selective withdrawal '+reason,oid)
             else:request=revoke_operation_request(raw,reason,oid)
             operation=self._new_authority_operation(operation_id=oid,agent=agent,kind='REVOKE',request=request,prior_authority=raw,invocation=invocation,
-                skill=skill,reason=reason,target_grant_id=grant['grant_id'],target_qualification_id=grant['qualification_id'])
+                skill=skill,reason=reason,target_grant_id=anchor['grant_id'],target_qualification_id=anchor['qualification_id'],targets=targets)
             result=self._recover_authority_operation(operation)
             if result['state']=='CANCELLED':raise Denied(result['last_error'])
             return self.authority(agent)
 
     def reevaluate(self,agent='agent-a',skill='release-model',state='UNKNOWN'):
         if state not in ('UNKNOWN','STALE'): raise ValueError('unknown hold state')
-        a=self.authority(agent);g=a['grants'].get(skill)
-        if not g:return a
-        q=self.qualification(g['qualification_id']);q['qualification_revision']+=1;q['disposition']='HOLD'
-        q['reason']='STALE_EVIDENCE' if state=='STALE' else 'EVIDENCE_UNCONFIRMED'
+        grants=grants_for_skill(self.authority(agent),skill)
+        if not grants:return self.authority(agent)
+        reason='STALE_EVIDENCE' if state=='STALE' else 'EVIDENCE_UNCONFIRMED'
         with self._tx() as db:
-            self._save_qualification(db,q)
-            event=self._event(db,'HELD',agent,skill=skill,reason=q['reason'])
-            db.execute('INSERT OR REPLACE INTO withdrawals VALUES (?,?,?,?,?,?)',(agent,skill,event['attempt_id'],q['reason'],g['grant_id'],g['qualification_id']))
+            seen=set()
+            for grant in grants:
+                if grant['qualification_id'] in seen:continue
+                seen.add(grant['qualification_id'])
+                q=self.qualification(grant['qualification_id']);q['qualification_revision']+=1;q['disposition']='HOLD';q['reason']=reason
+                self._save_qualification(db,q)
+            event=self._event(db,'HELD',agent,skill=skill,reason=reason,inspected_grants=[grant['grant_id'] for grant in grants])
+            for grant in grants:
+                db.execute('INSERT OR REPLACE INTO withdrawals VALUES (?,?,?,?,?,?)',(agent,skill,event['attempt_id'],reason,grant['grant_id'],grant['qualification_id']))
         self.drain_withdrawals()
         return self.authority(agent)

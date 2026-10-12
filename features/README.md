@@ -11,14 +11,15 @@ also records all 52 BDD-module tests as passing within its 437-case component ru
 the environment coverage file cites their individual case IDs. BDD-038 remains
 unbound future robot-simulation scope.
 
-The dedicated `reports/service-bdd-live-008.json` exercises actual canonical
-services and passes all 52 executed cases. It completely covers 36 of 37 scenario
-IDs. BDD-031 retains an explicit multi-resource recomputation gap even though its
-implemented stale-update cases pass. BDD-009 uses the source-pinned demo blackout;
+`reports/service-bdd-live-010.json` exercises actual canonical services, passes
+all 52 executed cases, and records green acceptance for all 37 scenario IDs.
+BDD-031 rejects the stale revision-4 update, grants the second read resource at
+revision 6, executes both reads, and leaves release revoked.
+`reports/service-bdd-live-008.json` remains the earlier partial run. BDD-009 uses the source-pinned demo blackout;
 BDD-015 persists an authenticated diagnostic snapshot that cannot authorize
 execution; BDD-016 records attempt-specific consumption checks without rewriting
-prior qualification or issuance history. `reports/bdd-environment-coverage.json` supplies exact
-case pointers and remaining gaps. Full real-adapter acceptance remains AMBER.
+prior qualification or issuance history. `reports/bdd-environment-coverage.json` still
+points at the 008 run. The `reports/reference-*-011.json` files re-run the 123-check profile on the existing stack. `reports/observation-reference-combined.json` remains the earlier fresh-workspace reconstruction.
 Live005 preserves three failed storage-fault precondition assertions: retained
 SQLite connections prevented the intended file-permission failure. Live006 uses
 explicit test cleanup of inactive connections and restores the owned main/WAL/SHM
