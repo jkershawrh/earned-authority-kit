@@ -45,6 +45,10 @@
         {
           "path": "patches/canonical-passport-hardening.patch",
           "sha256": "1f633ff8b4dd0f8e71de5e4a435d2ac5bae205a5e75a6618fa0b052a4cb7cbf7"
+        },
+        {
+          "path": "patches/passport-historical-issuer.patch",
+          "sha256": "629a71fa46fd8d8293b05797c547873cc9dc890fe4730e5734522614580294de"
         }
       ],
       "reconstruction_status": "PINNED_WITH_EXPLICIT_COMPLETE_PATCH"

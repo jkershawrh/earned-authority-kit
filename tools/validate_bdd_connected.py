@@ -521,7 +521,7 @@ class Case:
             relay=MalformedPassportRelay(original,self.label)
             config=read_config(self.args.config)
             proxy=PassportClient('127.0.0.1:'+str(relay.port),original.token,original.public_key,
-                sdk_path=config['PASSPORT_SDK_DIR'],timeout_seconds=3)
+                sdk_path=config['PASSPORT_SDK_DIR'],timeout_seconds=3,historical_public_keys=getattr(original,'historical_public_keys',()))
             rt.passport=proxy
             self.faults.append('Loopback forwarding proxy corrupts expiry in an actual canonical reply; original signature is retained and no credential is fabricated or re-signed.')
             try:

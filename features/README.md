@@ -11,7 +11,7 @@ also records all 52 BDD-module tests as passing within its 437-case component ru
 the environment coverage file cites their individual case IDs. BDD-038 remains
 unbound future robot-simulation scope.
 
-`reports/service-bdd-live-010.json` exercises actual canonical services, passes
+`reports/service-bdd-live-011.json` exercises actual canonical services, passes
 all 52 executed cases, and records green acceptance for all 37 scenario IDs.
 BDD-031 rejects the stale revision-4 update, grants the second read resource at
 revision 6, executes both reads, and leaves release revoked.
@@ -19,7 +19,7 @@ revision 6, executes both reads, and leaves release revoked.
 BDD-015 persists an authenticated diagnostic snapshot that cannot authorize
 execution; BDD-016 records attempt-specific consumption checks without rewriting
 prior qualification or issuance history. `reports/bdd-environment-coverage.json` still
-points at the 008 run. The `reports/reference-*-011.json` files re-run the 123-check profile on the existing stack. `reports/observation-reference-combined.json` remains the earlier fresh-workspace reconstruction.
+points at the 008 run. The `reports/reference-*-011.json` files re-run the 123-check profile on the existing stack. `reports/source-b-combined.json` is the fresh workspace of this source. `reports/source-a-combined.json` and `reports/observation-reference-combined.json` remain earlier reconstructions.
 Live005 preserves three failed storage-fault precondition assertions: retained
 SQLite connections prevented the intended file-permission failure. Live006 uses
 explicit test cleanup of inactive connections and restores the owned main/WAL/SHM
@@ -28,7 +28,7 @@ Garbage collection in that setup is not a production storage-recovery guarantee.
 
 The fresh same-host reference separately passes 123 checks across policy,
 interfaces, lifecycle, faults, authority-operation recovery and persistent restart.
-See `reports/observation-reference-combined.json` and its seven child reports.
+See `reports/source-b-combined.json` and its seven child reports. `reports/source-a-combined.json` remains the earlier reconstruction.
 These are reconstruction and recovery checks, not 123 additional BDD scenarios.
 They do not establish an independent installer, another host, OpenShift or robot safety.
 

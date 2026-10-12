@@ -12,7 +12,7 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from earned_authority.connected import ConnectedRuntime,FoundationPolicy
-from earned_authority.passport_client import PassportClient
+from earned_authority.passport_client import PassportClient, public_key_pems
 from earned_authority.qualification_client import QualificationClient
 from earned_authority.grants import has_skill, unique_grant
 from earned_authority.runtime import Denied,ident
@@ -31,8 +31,9 @@ def build_runtime(args,state_path):
         key=serialization.load_pem_private_key(Path(config['ARE_PASSPORT_KEY_PATH']).read_bytes(),None)
         public=key.public_key().public_bytes(serialization.Encoding.PEM,serialization.PublicFormat.SubjectPublicKeyInfo).decode()
     task=ROOT.parents[1]
+    historical=public_key_pems(Path(config['ARE_PASSPORT_HISTORICAL_KEYS_PATH']).read_text()) if config.get('ARE_PASSPORT_HISTORICAL_KEYS_PATH') and Path(config['ARE_PASSPORT_HISTORICAL_KEYS_PATH']).is_file() else ()
     passport=PassportClient('127.0.0.1:'+config['ARE_PASSPORT_GRPC_PORT'],config['ARE_PASSPORT_MUTATION_TOKEN'],public,
-        sdk_path=config.get('PASSPORT_SDK_DIR',str(task/'work/passport-python-sdk')))
+        sdk_path=config.get('PASSPORT_SDK_DIR',str(task/'work/passport-python-sdk')),historical_public_keys=historical)
     ledger=client_from_config(read_config(args.ledger_config))
     qualifier=QualificationClient(cascade_root=config.get('CASCADE_SOURCE_DIR',str(task/'work/cascade-compression-oss')),
         gcl_root=config.get('GCL_SOURCE_DIR','/Users/jkershaw/Documents/governed-cognitive-loop'),min_samples=3)

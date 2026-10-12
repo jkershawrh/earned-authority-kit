@@ -105,6 +105,8 @@ def main():
                   "PASSPORT_SOURCE_DIR", "PASSPORT_SDK_DIR", "CASCADE_SOURCE_DIR", "GCL_SOURCE_DIR"):
         if field in previous:
             values[field] = previous[field]
+    if previous.get("ARE_PASSPORT_HISTORICAL_KEYS_PATH"):
+        values["ARE_PASSPORT_HISTORICAL_KEYS_PATH"] = previous["ARE_PASSPORT_HISTORICAL_KEYS_PATH"]
     (RUNTIME / "passport").mkdir(mode=0o700, exist_ok=True)
     env_path.write_text("".join(f"{key}={value}\n" for key,value in values.items()))
     os.chmod(env_path, 0o600)

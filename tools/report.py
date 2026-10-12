@@ -166,7 +166,7 @@ def main():
     component = read('reports/component-verification.json')
     pins = read('deploy/reference/sources.json')
     patches_current = all((ROOT / p['path']).is_file() and digest(ROOT / p['path']) == 'sha256:' + p['sha256'] for s in pins.get('sources', []) for p in s.get('patches', [])) and bool(pins.get('sources'))
-    combined_path = 'reports/observation-reference-combined.json'
+    combined_path = 'reports/source-b-combined.json'
     combined = read(combined_path)
     pins_current = 'sha256:' + combined.get('source_manifest_sha256', '') == digest(ROOT / 'deploy/reference/sources.json') and patches_current
     children = {part: read(item.get('report','')) for part,item in combined.get('components',{}).items()}
@@ -239,14 +239,24 @@ def main():
         ('AUDIT-ATOMIC','WP4','Authority-to-audit process crash recovery','authority_recovery','BDD','Real process termination, lost RPC reply, local persistence failure and historical receipt reconciliation. Separate service commits; no distributed atomic transaction.','M2'),
         ('DEP-RESTORE','WP6','Persistent full-stack stop and restore','restore','BDD','6 checks preserve prior identity, authority revision/scopes, registry mutations and ledger receipts. Same host; no disk-loss claim.','M3'),
         ('AUDIT-RESTORE','WP4','Historical operation receipts after stack restart','authority_recovery_restored','BDD','Read-only revalidation of prior signed operation receipts, lifecycle events and ledger delivery after retained-state restart.','M3')]
+    # Fresh workspace of this source, including the historical-issuer patch.
+    rerun={
+        'policy':'reports/source-b-policy.json',
+        'services':'reports/source-b-services.json',
+        'connected':'reports/source-b-connected.json',
+        'adversarial':'reports/source-b-adversarial.json',
+        'authority_recovery':'reports/source-b-authority-recovery.json',
+        'restore':'reports/source-b-restore.json',
+        'authority_recovery_restored':'reports/source-b-authority-recovery-restored.json'}
+    rerun_recovery=read(rerun['authority_recovery'])
     for key,lane,name,part,method,scope,milestone in live_specs:
-        path=combined.get('components',{}).get(part,{}).get('report',f'reports/observation-reference-{part.replace("_","-")}.json'); data=read(path); checks=data.get('checks',[])
+        path=rerun[part]; data=read(path); checks=data.get('checks',[])
         failed=any(c.get('passed') is False for c in checks)
-        passed=live_passed(part,data,recovery)
+        passed=live_passed(part,data,rerun_recovery)
         add(key,lane,name,method,'REAL_LOCAL_SERVICES',scope,path,'FAIL' if failed else ('PASS' if passed else 'UNKNOWN'),valid=pins_current,milestone=milestone,detail=f'{len(checks)} executed checks')
     total=sum(c.get('checks',0) for c in combined.get('components',{}).values())
     add('DEP-BUILD','WP6','Fresh source reconstruction and one-command validation','BDD','FRESH_SAME_HOST',f'Five pinned upstream repositories, explicit patches, distinct keys/state/volumes and {total} recorded checks.',combined_path,'PASS' if combined.get('command_exit_code')==0 and combined.get('acceptance_color')=='GREEN' else 'UNKNOWN',valid=combined_valid,milestone='M3')
-    bdd_path='reports/service-bdd-live-010.json'; bdd=read(bdd_path)
+    bdd_path='reports/service-bdd-live-011.json'; bdd=read(bdd_path)
     statuses=bdd.get('scenario_acceptance',{})
     full=[key for key,status in statuses.items() if status=='GREEN']
     failed=any(status=='RED' for status in statuses.values())
@@ -288,7 +298,7 @@ def render(data):
 <div class="links"><a href="docs/ROADMAP.md">Full roadmap and handoffs</a><a href="evaluations/README.md">EDD protocol</a><a href="features/README.md">38 BDD specifications</a><a href="deploy/reference/README.md">Reproduce the deployment</a><a href="docs/BOUNDARIES.md">Scope and remaining gaps</a><a href="reports/readiness.json">Machine-readable matrix</a></div>
 <h2>Three bounded engineering milestones</h2><div class="methods">__MILESTONES__</div><p class="note">Same host and a disposable model registry. A passing milestone covers its named checks. It does not pass every broader G0–G4 acceptance criterion.</p><h2>Broader dependency gates</h2><div class="phases"><div class="phase"><b>G0 · Shared contract</b><p>Agree producer/consumer fixtures, ownership, bindings and signed fields.</p></div><div class="phase"><b>G1 · Parallel components</b><p>Authority · Qualification · Fenced execution · Durable evidence</p></div><div class="phase"><b>G2 · Connected lifecycle</b><p>Execute the whole arc and preserve an unaffected second skill.</p></div><div class="phase"><b>G3 · Evaluation</b><p>Held-out comparisons, uncertainty, failure injection and stopping rules.</p></div><div class="phase"><b>G4 · Repeatable deployment</b><p>Fresh setup, recovery, then a tested Red Hat reference profile.</p></div></div>
 <h2>Development methods</h2><div class="methods"><div><b>TDD · Test-driven</b><p>Capture a failing behavior, make the smallest correction, retain the regression.</p></div><div><b>EDD · Evaluation-driven</b><p>Freeze metrics, baselines and held-out cases before measuring benefit.</p></div><div><b>CDD · Contract-driven</b><p>Shared schemas and producer/consumer compatibility, including rejection cases.</p></div><div><b>BDD · Behavior-driven</b><p>Given/When/Then scenarios must execute against observable state changes.</p></div></div><p class="note">Evidence supports all four. CUT terminology remains unconfirmed. The business-value evaluation is still unrun: choose the target, human baseline and sample adequacy before scoring.</p>
-<h2>Rubric matrix</h2><div class="controls"><label>Acceptance <select id="status"><option value="ALL">All statuses</option><option>RED</option><option>AMBER</option><option>GREEN</option></select></label><label>Work package <select id="lane"><option value="ALL">All packages</option><option>WP0</option><option>WP1</option><option>WP2</option><option>WP3</option><option>WP4</option><option>WP5</option><option>WP6</option><option>History</option><option>Later</option></select></label><span id="visible" aria-live="polite" class="note"></span></div><div class="table-wrap"><table><thead><tr><th>Requirement</th><th>Component under test</th><th>Methods</th><th>Baseline</th><th>Current scope</th><th>Acceptance gate</th><th>Evidence</th></tr></thead><tbody>__ROWS__</tbody></table></div><footer>__COUNT__ component tests in the recorded run, including pytest and unittest cases. Live check sets and their exact environments are listed above; repeated runs are not independent trials or additional BDD scenarios. Full real-service coverage of all 37 BDD scenarios and held-out value EDD remain amber. Original tracked Foundation and Passport sources were preserved.<br>Kit revision: __REVISION__</footer></main><script>
+<h2>Rubric matrix</h2><div class="controls"><label>Acceptance <select id="status"><option value="ALL">All statuses</option><option>RED</option><option>AMBER</option><option>GREEN</option></select></label><label>Work package <select id="lane"><option value="ALL">All packages</option><option>WP0</option><option>WP1</option><option>WP2</option><option>WP3</option><option>WP4</option><option>WP5</option><option>WP6</option><option>History</option><option>Later</option></select></label><span id="visible" aria-live="polite" class="note"></span></div><div class="table-wrap"><table><thead><tr><th>Requirement</th><th>Component under test</th><th>Methods</th><th>Baseline</th><th>Current scope</th><th>Acceptance gate</th><th>Evidence</th></tr></thead><tbody>__ROWS__</tbody></table></div><footer>__COUNT__ component tests in the recorded run, including pytest and unittest cases. Live check sets and their exact environments are listed above; repeated runs are not independent trials or additional BDD scenarios. The 37 service scenarios and a fresh same-host reconstruction are recorded for this source. Held-out value EDD remains amber. Original tracked Foundation and Passport sources were preserved.<br>Kit revision: __REVISION__</footer></main><script>
 const statusFilter=document.getElementById('status'),laneFilter=document.getElementById('lane');function filter(){let n=0;document.querySelectorAll('tbody tr').forEach(row=>{const show=(statusFilter.value==='ALL'||row.dataset.status===statusFilter.value)&&(laneFilter.value==='ALL'||row.dataset.lane===laneFilter.value);row.hidden=!show;if(show)n++;});document.getElementById('visible').textContent=n+' requirements shown';}statusFilter.addEventListener('change',filter);laneFilter.addEventListener('change',filter);filter();
 </script></body></html>'''
     milestones=''.join(f'<div><b>{h(m["id"])} · {h(m["title"])}</b><p><span class="badge {m["status"].lower()}">{m["status"]}</span></p><p>{h(m["scope"])}</p></div>' for m in data['milestones'])

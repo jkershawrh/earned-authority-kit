@@ -1,0 +1,129 @@
+{
+  "environment": "REAL_LOCAL_SERVICES",
+  "started_at": "2026-10-12T18:42:58.892364+00:00",
+  "registry": "/Users/jkershaw/Documents/earned-authority-reference-b/work/reference-runtime/connected-validation/connected-281de728dd8d493c95c3620b6eae0539.sqlite",
+  "passport_state": "/Users/jkershaw/Documents/earned-authority-reference-b/work/reference-runtime/passport/state.json",
+  "ledger_volume": "ea-source-b-ledger-data",
+  "checks": [
+    {
+      "check": "pre_restore_historical_receipts_verify",
+      "passed": true,
+      "evidence": {
+        "events": 45,
+        "verified": 45,
+        "all_verified": true,
+        "applied": 7,
+        "mutations": 2
+      }
+    },
+    {
+      "check": "live_copy_differs_from_backup",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "restored_files_match_backup",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_receipts_reread_and_verify",
+      "passed": true,
+      "evidence": {
+        "before": {
+          "events": 45,
+          "verified": 45,
+          "all_verified": true,
+          "applied": 7,
+          "mutations": 2
+        },
+        "after": {
+          "events": 45,
+          "verified": 45,
+          "all_verified": true,
+          "applied": 7,
+          "mutations": 2
+        }
+      }
+    }
+  ],
+  "scope": "Same-host copy restore of Passport state, the registry SQLite file, and the Ledger volume. Installer keys stay in place. This is not corrupted-disk repair, a second host, or hostile rollback protection.",
+  "limits": [
+    "Not filesystem or disk repair",
+    "Not a different host",
+    "Foundation identity volume is left as retained container state"
+  ],
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "source_hashes_before": {
+    "deploy/ledger/prepare.py": "sha256:6bf9b96be1b31ff9d5aa22a6b9c0e2fcf409f0dd8d20cd80b35fa545fde49c16",
+    "deploy/ledger/validate.py": "sha256:cd2316879b7297f019d2286ca5ff8924709de368dd566ae85fb2d0c764050c32",
+    "deploy/reference/Foundation.Dockerfile": "sha256:c64d2bfb6d4c1686cc2dbd3f9a37440e251fbadfef6dfb3b486e42d3ea0ffca9",
+    "deploy/reference/README.md": "sha256:7248f61910bc98501fce15bea606877321f08cd1282adb893249fc82492b1d29",
+    "deploy/reference/bootstrap.py": "sha256:5d59686150c6683275f6e79ff1cc68330b23bc8b243b902c42f144927781a89a",
+    "deploy/reference/build.py": "sha256:2b42458dad599c79dc65dc6f2cd36e10ad8a21b6985edc57160ab1213fa927d7",
+    "deploy/reference/compose.yaml": "sha256:d233b948dc02127de9981f79846d0c3aebb24c7b372209e5960d83d27d3b9ea7",
+    "deploy/reference/evidence.py": "sha256:2e48590c2d272582bdc9d1fb8370b985268d0543e8a6ecf49481b974e66b5e84",
+    "deploy/reference/policy-inventory.json": "sha256:e074011351d2154b27dd7d40395bbe718faea9ab32ca3049be25c57727899309",
+    "deploy/reference/prepare.py": "sha256:f4b380ae0f96b1b86d1d85019f8d8ef163f2c3e3074e38c82f7502cf6eba89c8",
+    "deploy/reference/prepare_policy.py": "sha256:8a45e3d6b4ebdb17bee96a73369e74877fe9cc5b99c86b0278fea2c49e1a8423",
+    "deploy/reference/reference.py": "sha256:84835287bc44dcbbbd5758b165ed469d546e5602bc7808684c019072d374b947",
+    "deploy/reference/requirements.lock.txt": "sha256:ccc6272d5f11ef46daba25236ea4c0436a8569109851873f6f85b2a867ab2aa2",
+    "deploy/reference/sources.json": "sha256:79a276ff943f70785f34ce2b1c9392dd0164180f00a83f8284c3584e5b0203db",
+    "deploy/reference/validate_backup_restore.py": "sha256:4f43cb620b905dbf6cede0245d88152b07f443151bf448c4dd45fd6326a10520",
+    "deploy/reference/validate_issuer_cutover.py": "sha256:7e48ddc18a229820171912dd5631d6fc9c5042968e2580ee8cf4357dde208ad4",
+    "deploy/reference/validate_policy.py": "sha256:f4492c692e969b36d31762abe93a3c50e961ec961ad84c5f49aed5d4605939c8",
+    "deploy/reference/validate_restore.py": "sha256:ed4cd99eaf012d380e8bf5f6c0a5efb7876699a6dac30bcd2a1bb228fbe66249",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:5e13e8ef0164caa761ad7b91b10d28f4be17d4e7b0c14f88281fc3b977bcdf20",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:9d270d8a7d678ffaafda2211683919245cf3b947736c5811b06ec39035ca1723",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:13be9447151a7b3db7f71749ea1e6829aac7c46e0d227768ad360fad4d6e1a97",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:ac44693dbc163496d7728a880fc493a0b7c3c4ec8611bf6645fe1cd5e9c32659",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/retention.py": "sha256:6e842b428a0af21772dd824583a9928a69f515610c8ec41b5a2b1c13caec94af",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:c8832c91986b46abed3610496560769d818175ad2d8c4d549b484e57db975758",
+    "earned_authority/wire_contracts.py": "sha256:f99ed0e790b1efc0c7f795a9ab64e2d08bd0ea61df2c7875b0fb804031e7d268",
+    "tools/validate_connected.py": "sha256:e79460a92420d2e42816b74d18fe684cbb054e90cebbe5960df16060716543da"
+  },
+  "source_hashes": {
+    "deploy/ledger/prepare.py": "sha256:6bf9b96be1b31ff9d5aa22a6b9c0e2fcf409f0dd8d20cd80b35fa545fde49c16",
+    "deploy/ledger/validate.py": "sha256:cd2316879b7297f019d2286ca5ff8924709de368dd566ae85fb2d0c764050c32",
+    "deploy/reference/Foundation.Dockerfile": "sha256:c64d2bfb6d4c1686cc2dbd3f9a37440e251fbadfef6dfb3b486e42d3ea0ffca9",
+    "deploy/reference/README.md": "sha256:7248f61910bc98501fce15bea606877321f08cd1282adb893249fc82492b1d29",
+    "deploy/reference/bootstrap.py": "sha256:5d59686150c6683275f6e79ff1cc68330b23bc8b243b902c42f144927781a89a",
+    "deploy/reference/build.py": "sha256:2b42458dad599c79dc65dc6f2cd36e10ad8a21b6985edc57160ab1213fa927d7",
+    "deploy/reference/compose.yaml": "sha256:d233b948dc02127de9981f79846d0c3aebb24c7b372209e5960d83d27d3b9ea7",
+    "deploy/reference/evidence.py": "sha256:2e48590c2d272582bdc9d1fb8370b985268d0543e8a6ecf49481b974e66b5e84",
+    "deploy/reference/policy-inventory.json": "sha256:e074011351d2154b27dd7d40395bbe718faea9ab32ca3049be25c57727899309",
+    "deploy/reference/prepare.py": "sha256:f4b380ae0f96b1b86d1d85019f8d8ef163f2c3e3074e38c82f7502cf6eba89c8",
+    "deploy/reference/prepare_policy.py": "sha256:8a45e3d6b4ebdb17bee96a73369e74877fe9cc5b99c86b0278fea2c49e1a8423",
+    "deploy/reference/reference.py": "sha256:84835287bc44dcbbbd5758b165ed469d546e5602bc7808684c019072d374b947",
+    "deploy/reference/requirements.lock.txt": "sha256:ccc6272d5f11ef46daba25236ea4c0436a8569109851873f6f85b2a867ab2aa2",
+    "deploy/reference/sources.json": "sha256:79a276ff943f70785f34ce2b1c9392dd0164180f00a83f8284c3584e5b0203db",
+    "deploy/reference/validate_backup_restore.py": "sha256:4f43cb620b905dbf6cede0245d88152b07f443151bf448c4dd45fd6326a10520",
+    "deploy/reference/validate_issuer_cutover.py": "sha256:7e48ddc18a229820171912dd5631d6fc9c5042968e2580ee8cf4357dde208ad4",
+    "deploy/reference/validate_policy.py": "sha256:f4492c692e969b36d31762abe93a3c50e961ec961ad84c5f49aed5d4605939c8",
+    "deploy/reference/validate_restore.py": "sha256:ed4cd99eaf012d380e8bf5f6c0a5efb7876699a6dac30bcd2a1bb228fbe66249",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:5e13e8ef0164caa761ad7b91b10d28f4be17d4e7b0c14f88281fc3b977bcdf20",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:9d270d8a7d678ffaafda2211683919245cf3b947736c5811b06ec39035ca1723",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:13be9447151a7b3db7f71749ea1e6829aac7c46e0d227768ad360fad4d6e1a97",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:ac44693dbc163496d7728a880fc493a0b7c3c4ec8611bf6645fe1cd5e9c32659",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/retention.py": "sha256:6e842b428a0af21772dd824583a9928a69f515610c8ec41b5a2b1c13caec94af",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:c8832c91986b46abed3610496560769d818175ad2d8c4d549b484e57db975758",
+    "earned_authority/wire_contracts.py": "sha256:f99ed0e790b1efc0c7f795a9ab64e2d08bd0ea61df2c7875b0fb804031e7d268",
+    "tools/validate_connected.py": "sha256:e79460a92420d2e42816b74d18fe684cbb054e90cebbe5960df16060716543da"
+  },
+  "finished_at": "2026-10-12T18:43:38.094177+00:00"
+}

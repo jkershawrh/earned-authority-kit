@@ -1,0 +1,82 @@
+{
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "environment": "REAL_LOCAL_SERVICES",
+  "command_exit_code": 0,
+  "command": [
+    "python3",
+    "deploy/reference/bootstrap.py",
+    "--workspace",
+    "/Users/jkershaw/Documents/earned-authority-reference-b",
+    "--instance",
+    "ea-source-b",
+    "--port-offset",
+    "9000",
+    "--validate"
+  ],
+  "completed_at": "2026-10-12T18:42:26.185000+00:00",
+  "components": {
+    "policy": {
+      "report": "reports/source-b-policy.json",
+      "status": "GREEN",
+      "checks": 8,
+      "source_stable": true
+    },
+    "services": {
+      "report": "reports/source-b-services.json",
+      "status": "GREEN",
+      "checks": 7,
+      "source_stable": true
+    },
+    "connected": {
+      "report": "reports/source-b-connected.json",
+      "status": "GREEN",
+      "checks": 23,
+      "source_stable": true
+    },
+    "adversarial": {
+      "report": "reports/source-b-adversarial.json",
+      "status": "GREEN",
+      "checks": 17,
+      "source_stable": true
+    },
+    "authority_recovery": {
+      "report": "reports/source-b-authority-recovery.json",
+      "status": "GREEN",
+      "checks": 41,
+      "source_stable": true
+    },
+    "restore": {
+      "report": "reports/source-b-restore.json",
+      "status": "GREEN",
+      "checks": 6,
+      "source_stable": true
+    },
+    "authority_recovery_restored": {
+      "report": "reports/source-b-authority-recovery-restored.json",
+      "status": "GREEN",
+      "checks": 21,
+      "source_stable": true
+    }
+  },
+  "artifacts": {
+    "reports/source-b-policy.json": "sha256:d2c4e046e59a73815cedb3934ebb3db78adff81ce9c36e7e3c1652bf1d132d3b",
+    "reports/source-b-services.json": "sha256:30d1dc9111197a8c9d7eeb3671c8940e76a60067022574be7ca9b3117f926e3d",
+    "reports/source-b-connected.json": "sha256:9612a8fea7fc6f15b8a3441673a0ab5412b21b94450614c2de8c710bf2678101",
+    "reports/source-b-adversarial.json": "sha256:5ee50e9318bbb11e8ade673970fb2480d2dcb39bebcd2a1be3d16b39590beb01",
+    "reports/source-b-authority-recovery.json": "sha256:96ff24b2ca7bb7caabcd526bd51e06f0f419f07841f89e8dc582f2bd876399d7",
+    "reports/source-b-restore.json": "sha256:86734aa83ff1cec6bcda3999600cc1799a0d33ff16efeb712c9e19189a942618",
+    "reports/source-b-authority-recovery-restored.json": "sha256:d158d26b1c6bd2f174c21f4d710fee5d7160a996f662d8e283f46a5aa9de3b4c",
+    "reports/source-b-bootstrap.json": "sha256:8ff2cd8c36c4d3c92769755ffbc104fe2aff69c06bcb85204b6a35704865db25",
+    "reports/source-b-build-manifest.json": "sha256:ee28e04254feaef2cf07cd4098463c8b8dd5cabc668195752749b659aeaf909d"
+  },
+  "source_manifest_sha256": "79a276ff943f70785f34ce2b1c9392dd0164180f00a83f8284c3584e5b0203db",
+  "scope": "Same host; independently fetched and patched canonical sources in a new workspace, distinct virtual environment, keys, state, networks, ports and volumes. Instance ea-source-b, port offset 9000. Includes the explicit historical-issuer patch. This does not replace source-a-combined.json or observation-reference-combined.json.",
+  "limits": [
+    "Not a different host or independent human installer",
+    "No statistical held-out product-value claim",
+    "No backup/disk-loss recovery claim",
+    "No hardware or production deployment claim",
+    "No universal distributed atomicity or safety claim"
+  ]
+}

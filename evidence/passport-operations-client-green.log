@@ -1,29 +1,5 @@
-test_go_v2_signature_verifies_in_python (test_passport_client.CanonicalProviderVector.test_go_v2_signature_verifies_in_python) ... ok
-test_active_read_revision_mismatch_denied (test_passport_client.PassportConsumer.test_active_read_revision_mismatch_denied) ... ok
-test_boolean_expiry_is_not_a_timestamp (test_passport_client.PassportConsumer.test_boolean_expiry_is_not_a_timestamp) ... ok
-test_cross_agent_replay_denied (test_passport_client.PassportConsumer.test_cross_agent_replay_denied) ... ok
-test_loopback_allowed (test_passport_client.PassportConsumer.test_loopback_allowed) ... ok
-test_remote_plaintext_denied (test_passport_client.PassportConsumer.test_remote_plaintext_denied) ... ok
-test_scope_outliving_passport_denied (test_passport_client.PassportConsumer.test_scope_outliving_passport_denied) ... ok
-test_unknown_mandatory_field_denied (test_passport_client.PassportConsumer.test_unknown_mandatory_field_denied) ... ok
-test_unpinned_key_denied (test_passport_client.PassportConsumer.test_unpinned_key_denied) ... ok
-test_valid_exact_envelope (test_passport_client.PassportConsumer.test_valid_exact_envelope) ... ok
-test_empty_current_state_cannot_claim_successful_operation_revoke (test_passport_operations.OperationClientTransport.test_empty_current_state_cannot_claim_successful_operation_revoke) ... ok
-test_issue_and_lookup_use_explicit_signed_operation (test_passport_operations.OperationClientTransport.test_issue_and_lookup_use_explicit_signed_operation) ... ok
-test_only_canonical_notfound_returns_no_operation (test_passport_operations.OperationClientTransport.test_only_canonical_notfound_returns_no_operation) ... ok
-test_go_operation_receipts_and_request_canonicalization (test_passport_operations.OperationProviderVectors.test_go_operation_receipts_and_request_canonicalization) ... ok
-test_altered_nested_passport_signature_denied (test_passport_operations.OperationReceiptVerification.test_altered_nested_passport_signature_denied) ... ok
-test_empty_state_cannot_make_revoke_request (test_passport_operations.OperationReceiptVerification.test_empty_state_cannot_make_revoke_request) ... ok
-test_falsey_non_map_context_is_not_silently_normalized (test_passport_operations.OperationReceiptVerification.test_falsey_non_map_context_is_not_silently_normalized) ... ok
-test_other_agent_or_operation_denied (test_passport_operations.OperationReceiptVerification.test_other_agent_or_operation_denied) ... ok
-test_receipt_cannot_claim_different_scope_than_request (test_passport_operations.OperationReceiptVerification.test_receipt_cannot_claim_different_scope_than_request) ... ok
-test_request_reason_scope_and_cas_mismatch_denied (test_passport_operations.OperationReceiptVerification.test_request_reason_scope_and_cas_mismatch_denied) ... ok
-test_unknown_or_duplicate_receipt_fields_denied (test_passport_operations.OperationReceiptVerification.test_unknown_or_duplicate_receipt_fields_denied) ... ok
-test_unpinned_receipt_signature_denied (test_passport_operations.OperationReceiptVerification.test_unpinned_receipt_signature_denied) ... ok
-test_valid_receipt_derives_historical_authority (test_passport_operations.OperationReceiptVerification.test_valid_receipt_derives_historical_authority) ... ok
-test_wrong_result_revision_or_target_denied (test_passport_operations.OperationReceiptVerification.test_wrong_result_revision_or_target_denied) ... ok
-
+.........................
 ----------------------------------------------------------------------
-Ran 24 tests in 0.071s
+Ran 25 tests in 0.076s
 
 OK

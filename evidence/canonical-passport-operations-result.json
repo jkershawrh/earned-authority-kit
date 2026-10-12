@@ -69,9 +69,9 @@
   },
   "python": {
     "log": "evidence/passport-operations-client-green.log",
-    "sha256": "db3906ce1d605a412794ed5c37b3ebbe44c2ebffd18723b317e389e003ded2eb",
-    "passed": 24,
-    "scope": "14 operation unit/provider-vector tests plus 10 prior Passport consumer tests; mock transport seam explicitly UNIT"
+    "sha256": "7710e68ee6dba9a38053c479e34a8ff93a118e4bb3c605c7fbd4aaa3e706eab6",
+    "passed": 25,
+    "scope": "15 operation unit/provider-vector tests plus 10 prior Passport consumer tests; mock transport seam explicitly UNIT"
   },
   "red_evidence": [
     {
@@ -122,8 +122,8 @@
     }
   },
   "python_owned_files_sha256": {
-    "earned_authority/passport_client.py": "fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
-    "tests/test_passport_operations.py": "7e158bc68d3e548f6f0756e758ff904ead8acbf2f5a2a9f79b4d7db777f6cf80"
+    "earned_authority/passport_client.py": "ac44693dbc163496d7728a880fc493a0b7c3c4ec8611bf6645fe1cd5e9c32659",
+    "tests/test_passport_operations.py": "2ec5038de32759bed1cc31d76d2bc48f84b817c07fdbb7e8ba67908439951cf3"
   },
   "complete_patch": {
     "patch": "patches/canonical-passport-hardening.patch",

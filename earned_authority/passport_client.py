@@ -22,11 +22,34 @@ def check_endpoint(endpoint):
         raise ValueError('plaintext reference transport requires loopback')
 
 
-def verify_envelope(payload,signature,public_key_pem,revision,agent_id,passport=None):
+def public_key_pems(text):
+    """Split an explicit historical-issuer file into public PEM blocks."""
+    pems=[];current=[]
+    for line in text.splitlines(keepends=True):
+        current.append(line)
+        if '-----END PUBLIC KEY-----' in line:
+            pems.append(''.join(current));current=[]
+    if ''.join(current).strip():raise ValueError('historical issuer file has trailing data')
+    if any('PRIVATE KEY' in pem for pem in pems):raise ValueError('historical issuer file must contain public keys only')
+    return pems
+
+
+def _signature_key(payload,signature,pems):
+    for pem in pems:
+        try:
+            serialization.load_pem_public_key(pem.encode()).verify(signature,payload)
+            return pem
+        except Exception:
+            continue
+    return None
+
+
+def verify_envelope(payload,signature,public_key_pem,revision,agent_id,passport=None,trusted_public_keys=()):
     """The transport is not trusted to supply its own trust anchor."""
     try:
-        key=serialization.load_pem_public_key(public_key_pem.encode())
-        key.verify(signature,payload)
+        signer=_signature_key(payload,signature,(public_key_pem,*trusted_public_keys))
+        if signer is None:raise ValueError('signature')
+        public_key_pem=signer
         def unique(pairs):
             value={}
             for k,v in pairs:
@@ -120,11 +143,17 @@ def canonical_operation_request(request):
     return raw.encode('utf-8')
 
 
-def verify_operation_receipt(receipt,public_key_pem,agent,operation_id,expected_request=None):
-    """Verify immutable transition evidence; never assert its authority is current."""
+def verify_operation_receipt(receipt,public_key_pem,agent,operation_id,expected_request=None,*,historical_public_keys=(),require_current_signer=False):
+    """Verify immutable transition evidence; never assert its authority is current.
+
+    historical_public_keys trusts receipts and predecessor passports already stored.
+    A new operation sets require_current_signer so its receipt must use the current key.
+    """
     try:
-        key=serialization.load_pem_public_key(public_key_pem.encode())
-        key.verify(receipt.signature,receipt.canonical_payload)
+        current_key=public_key_pem
+        signer=_signature_key(receipt.canonical_payload,receipt.signature,(current_key,*historical_public_keys))
+        if signer is None or (require_current_signer and signer!=current_key):raise ValueError('signature')
+        public_key_pem=signer
         def unique(pairs):
             value={}
             for name,item in pairs:
@@ -152,7 +181,7 @@ def verify_operation_receipt(receipt,public_key_pem,agent,operation_id,expected_
         def artifact(payload_field,signature_field,issuance_revision):
             payload=base64.b64decode(result[payload_field],validate=True)
             signature=base64.b64decode(result[signature_field],validate=True)
-            subject=verify_envelope(payload,signature,public_key_pem,issuance_revision,agent)
+            subject=verify_envelope(payload,signature,current_key,issuance_revision,agent,trusted_public_keys=historical_public_keys)
             # All operation artifacts use the current closed canonical passport scope schema.
             scope_fields={'scope_id','action_class','resource_pattern','context_constraints','granted_ts','expires_ts','is_escalation'}
             if not isinstance(subject['scope_set'],list) or not subject['scope_set']:raise ValueError('empty passport scopes')
@@ -164,6 +193,7 @@ def verify_operation_receipt(receipt,public_key_pem,agent,operation_id,expected_
         elif result['previous_passport_payload_base64']!='' or result['previous_passport_signature_base64']!='':raise ValueError('unexpected prior artifact')
         if request['action']=='ISSUE':
             subject=artifact('passport_payload_base64','passport_signature_base64',revision)
+            if subject['public_key_pem']!=signer:raise ValueError('issued artifact issuer mismatch')
             issue=request['issue']
             if result['status']!='ACTIVE' or body['active_passport_id']!=subject['passport_id'] or result['passport_id']!=subject['passport_id']:raise ValueError('issue result mismatch')
             if subject['passport_id']==body['previous_active_passport_id'] or (body['previous_active_passport_id'] and not issue['force_reissue']):raise ValueError('invalid replacement')
@@ -187,10 +217,11 @@ def verify_operation_receipt(receipt,public_key_pem,agent,operation_id,expected_
         raise Denied('INVALID_OPERATION_RECEIPT') from exc
 
 class PassportClient:
-    def __init__(self,endpoint,mutation_token,public_key_pem,*,sdk_path,timeout_seconds=5):
+    def __init__(self,endpoint,mutation_token,public_key_pem,*,sdk_path,timeout_seconds=5,historical_public_keys=()):
         check_endpoint(endpoint)
         import grpc
         self.grpc=grpc;self.token=mutation_token;self.public_key=public_key_pem
+        self.historical_public_keys=tuple(historical_public_keys)
         self.timeout=timeout_seconds
         sdk=str(Path(sdk_path).resolve())
         if sdk not in sys.path: sys.path.insert(0,sdk)
@@ -212,7 +243,7 @@ class PassportClient:
         payloads=[v for k,v in metadata if k==PAYLOAD_HEADER]
         if len(payloads)!=1: raise Denied('AUTHORITY_ENVELOPE_MISSING')
         p=response.passport
-        body=verify_envelope(payloads[0],p.signature,self.public_key,revision,agent,p)
+        body=verify_envelope(payloads[0],p.signature,self.public_key,revision,agent,p,self.historical_public_keys)
         if p.status!='ACTIVE': raise Denied('REVOKED_AUTHORITY')
         return {'subject':body,'signature':base64.b64encode(p.signature).decode(),'status':p.status,'revision':revision}
 
@@ -238,7 +269,7 @@ class PassportClient:
             raise Denied('AUTHORITY_UNCONFIRMED')
         payloads=[v for k,v in metadata if k==PAYLOAD_HEADER]
         if len(payloads)!=1:raise Denied('AUTHORITY_ENVELOPE_MISSING')
-        verified=verify_envelope(payloads[0],response.passport.signature,self.public_key,snapshot['revision'],agent,response.passport)
+        verified=verify_envelope(payloads[0],response.passport.signature,self.public_key,snapshot['revision'],agent,response.passport,self.historical_public_keys)
         if verified!=snapshot['subject']:raise Denied('AUTHORITY_UNCONFIRMED')
         return snapshot
 
@@ -292,7 +323,7 @@ class PassportClient:
             if exc.code()==self.grpc.StatusCode.ALREADY_EXISTS:raise Denied('OPERATION_CONFLICT') from exc
             if exc.code()==self.grpc.StatusCode.FAILED_PRECONDITION:raise Denied('REVISION_CONFLICT') from exc
             raise Denied('AUTHORITY_UNCONFIRMED') from exc
-        return verify_operation_receipt(response.receipt,self.public_key,request['agent_id'],request['operation_id'],request)
+        return verify_operation_receipt(response.receipt,self.public_key,request['agent_id'],request['operation_id'],request,historical_public_keys=getattr(self,'historical_public_keys',()),require_current_signer=True)
 
     def operation(self,agent,operation_id,expected_request=None):
         try:
@@ -301,4 +332,4 @@ class PassportClient:
         except self.grpc.RpcError as exc:
             if exc.code()==self.grpc.StatusCode.NOT_FOUND:return None
             raise Denied('AUTHORITY_UNCONFIRMED') from exc
-        return verify_operation_receipt(response.receipt,self.public_key,agent,operation_id,expected_request)
+        return verify_operation_receipt(response.receipt,self.public_key,agent,operation_id,expected_request,historical_public_keys=getattr(self,'historical_public_keys',()))

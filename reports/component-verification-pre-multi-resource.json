@@ -1,0 +1,1979 @@
+{
+  "scope": "LOCAL_COMPONENT_TESTS_AND_CANONICAL_IN_PROCESS_ADAPTERS",
+  "started_at_ms": 1791610800179,
+  "finished_at_ms": 1791610815790,
+  "tests_run": 437,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "exit_code": 0,
+  "source_hashes_before": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:289d449b197f49b94372a43e6022e0274c8971ec3f3acb94fed03ebf8b47d1af",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:bec79d5495744611a4d2c539e76ca7e8824b0f15ab649f2063ed8d775843796c",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "earned_authority/wire_contracts.py": "sha256:6f81d2809c367eb882d0eb78e70fad540ca75458f773a3d66d5f6ee66bb53c5c",
+    "tests/test_attempt_checks.py": "sha256:ed71a1981280a9d4988bf8b88d9cdc9fe0fae52c4f46858231480c4cf82c0b1d",
+    "tests/test_authority_journal.py": "sha256:212c83084dabcda38979b1e5a651f7ff2f683319761de084ea68dabf7be3b30c",
+    "tests/test_authority_observations.py": "sha256:41db09cd31a82169a436611bb7a198cc1e095e9f22ae6e29158607e0929d0664",
+    "tests/test_connected_binding.py": "sha256:e60d9378ade1725c7dd858529b2f3b2696181c583d85d8edc064e408288f4ce5",
+    "tests/test_connected_evidence.py": "sha256:b558926ae3fbb2b55a64fd57956a10d2e7e4fd33d2ce4ef360eed1477e1ad21a",
+    "tests/test_connected_security.py": "sha256:26bed459d5180330404f2937aa2045cc843be058ff048f4870b55b9eef170a77",
+    "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
+    "tests/test_evidence_admission.py": "sha256:47c59f09d7a8cf3236e9e46f0581b7c1fb9c5e809329316e280252da613c31f9",
+    "tests/test_evidence_boundary.py": "sha256:403f53cb0b9a6fbd00a94688bbde80b43a720e73028255e4cfa4b0bd8cf4a5e0",
+    "tests/test_evidence_wire.py": "sha256:df555f550c4d5e1ef4303ef573ae30eda53fc513625ab617787634249bf3c245",
+    "tests/test_execution_boundary.py": "sha256:1811ef8b07274fc78b561e66923bf0850e6b6ff916e1bd40135b464cb916ba11",
+    "tests/test_hold_diagnostics.py": "sha256:b4709f4388a917e7c091a030ba36a3fe5c40df21b07a5e5eb2d554ef8e2af4b1",
+    "tests/test_ledger_client.py": "sha256:6a05dce90f5dfa0627c188000ad12951dbbb96e7df7f7f149cd4e640438765f2",
+    "tests/test_lifecycle_bdd.py": "sha256:a376b2d47c059aea4ae5ffc79ef007eb9eff7eed1964702ec643a564c4866cdc",
+    "tests/test_passport_client.py": "sha256:d86ff13cf90f3fdae60f68de7ab85af51d1ca55777245c72478d531a361153b7",
+    "tests/test_passport_operations.py": "sha256:7e158bc68d3e548f6f0756e758ff904ead8acbf2f5a2a9f79b4d7db777f6cf80",
+    "tests/test_policy_windows.py": "sha256:5fe2fd527931cafe1eb28dbf68d11d7b210500276f2da5e039ae0048a49be8b5",
+    "tests/test_qualification_client.py": "sha256:fa875d69b98440ce13545e17517f986cc4c045cbecf214c316cbe34bde9392b1",
+    "tests/test_reconciliation_wire.py": "sha256:b9cb6efee8f9afae333a327b76e6651c7dce06f5064d9768de48ba8996d69d6d",
+    "tests/test_rubric.py": "sha256:845e476cc97af2be8c4f913a60b1cae6ae76f0a0c81a217f4b581c5712a213db",
+    "tests/test_runtime_security.py": "sha256:76ea516ef8d41bdd974a084ba8ea6a83071745bd09e1a51783668d0b9d60b025",
+    "tests/test_wire_contracts.py": "sha256:69b1d2a86b3decb724d832de0caf601d67ab89a227b075df936e86afcadbe280",
+    "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
+    "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
+    "contracts/fixtures/attempt.json": "sha256:d6a7e3571ab9b4698f01175b21e128fa45a01acadc69f507ffc6c1bcb58e9041",
+    "contracts/fixtures/authority.json": "sha256:d36365cb845dc72a1c52550cff017282a5f69d5b00a9472bf173bd2e5626979a",
+    "contracts/fixtures/lifecycle-event.json": "sha256:075e93e0e71ec0ff30ed8929ed989795b60ab1b7161c9d11b716e265050a7057",
+    "contracts/fixtures/outcome.json": "sha256:bd8bfaba9be520fe2c9c6cb8d5eb5fde843c1b553424923640dafed181142f16",
+    "contracts/fixtures/passport-canonical-v2.json": "sha256:40b5c68eb6333ed1fdd6a4db28bc5013253ac17f20e0f1efa85c2d23699dff66",
+    "contracts/fixtures/passport-operations-v1.json": "sha256:7fb91f569080ac5da3b289ca9f62e5a8342e2bbb620e5020db5d1617fa2c2aff",
+    "contracts/fixtures/qualification-client-cases.json": "sha256:5d201b632a3a1a323136fdcad0905f258492988fb7a79e1051eb0675f114742e",
+    "contracts/fixtures/qualification.json": "sha256:c0b8c64ec3860f9a7aa785892bef5aef4e188962275880b069ab6df3114f93bb",
+    "contracts/fixtures/runtime-wire-records.json": "sha256:cbe6c1b5bed7c50ae739983fea588a45986ce3b2a12abb7f1f771e7906e4537d",
+    "contracts/lifecycle-event.schema.json": "sha256:3c9b88bfe5a4fd5300786e0fd57656e660fa49db134b0cd0245a86dd1697a16d",
+    "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
+    "contracts/qualification.schema.json": "sha256:2a4a4f6921a3f839b6b4a554f0c8fa019600d14411d5cfd8355f119aa28449b3",
+    "contracts/unknown-reconciliation-result.schema.json": "sha256:6193e4fcadc9a2ee7f89b043306aaf088124a272adc9227f5453e56881faf8e6",
+    "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
+    "features/concurrency.feature": "sha256:a593d6b2ee5ceb79260f97e0dbfd768843c2c7f4fcd5b6705e11797f023f0e27",
+    "features/execution_and_evidence.feature": "sha256:5c03e38759cae3c8d84536efdd463c91492183e72ce0d3941a9b8ae7b8a23ded",
+    "features/future_robot_simulation.feature": "sha256:916435ba5489e20024f589161dc3a4e3a5df5c23f211a211a9baab8a6ea33771",
+    "features/ledger_integrity.feature": "sha256:6f3039c21f36f2b0d052b168d30547d3a5ec76ca39b2046f653a59b3a4e442a6",
+    "features/qualification.feature": "sha256:8545997b35e1600c7f2e63e4e743ca5f3563aa4ef295cb6b395fda614a286629",
+    "features/withdrawal_and_requalification.feature": "sha256:417a22c6940ab6b0fb70e2c0e44d27646da5c18d9ac10e242b7f8a27bc7fa8da",
+    "requirements-dev.txt": "sha256:1a4272ec830941ecba77716e4b18e0588ec0de3c63e368fe712c6ac0354091c3",
+    "deploy/reference/requirements.lock.txt": "sha256:ccc6272d5f11ef46daba25236ea4c0436a8569109851873f6f85b2a867ab2aa2",
+    "tools/verify.py": "sha256:f50c482fdc25ae553c3d1dc3753a5af7ad89828f299868e972b61a9fcb3bf1da"
+  },
+  "source_hashes": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:289d449b197f49b94372a43e6022e0274c8971ec3f3acb94fed03ebf8b47d1af",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:bec79d5495744611a4d2c539e76ca7e8824b0f15ab649f2063ed8d775843796c",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "earned_authority/wire_contracts.py": "sha256:6f81d2809c367eb882d0eb78e70fad540ca75458f773a3d66d5f6ee66bb53c5c",
+    "tests/test_attempt_checks.py": "sha256:ed71a1981280a9d4988bf8b88d9cdc9fe0fae52c4f46858231480c4cf82c0b1d",
+    "tests/test_authority_journal.py": "sha256:212c83084dabcda38979b1e5a651f7ff2f683319761de084ea68dabf7be3b30c",
+    "tests/test_authority_observations.py": "sha256:41db09cd31a82169a436611bb7a198cc1e095e9f22ae6e29158607e0929d0664",
+    "tests/test_connected_binding.py": "sha256:e60d9378ade1725c7dd858529b2f3b2696181c583d85d8edc064e408288f4ce5",
+    "tests/test_connected_evidence.py": "sha256:b558926ae3fbb2b55a64fd57956a10d2e7e4fd33d2ce4ef360eed1477e1ad21a",
+    "tests/test_connected_security.py": "sha256:26bed459d5180330404f2937aa2045cc843be058ff048f4870b55b9eef170a77",
+    "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
+    "tests/test_evidence_admission.py": "sha256:47c59f09d7a8cf3236e9e46f0581b7c1fb9c5e809329316e280252da613c31f9",
+    "tests/test_evidence_boundary.py": "sha256:403f53cb0b9a6fbd00a94688bbde80b43a720e73028255e4cfa4b0bd8cf4a5e0",
+    "tests/test_evidence_wire.py": "sha256:df555f550c4d5e1ef4303ef573ae30eda53fc513625ab617787634249bf3c245",
+    "tests/test_execution_boundary.py": "sha256:1811ef8b07274fc78b561e66923bf0850e6b6ff916e1bd40135b464cb916ba11",
+    "tests/test_hold_diagnostics.py": "sha256:b4709f4388a917e7c091a030ba36a3fe5c40df21b07a5e5eb2d554ef8e2af4b1",
+    "tests/test_ledger_client.py": "sha256:6a05dce90f5dfa0627c188000ad12951dbbb96e7df7f7f149cd4e640438765f2",
+    "tests/test_lifecycle_bdd.py": "sha256:a376b2d47c059aea4ae5ffc79ef007eb9eff7eed1964702ec643a564c4866cdc",
+    "tests/test_passport_client.py": "sha256:d86ff13cf90f3fdae60f68de7ab85af51d1ca55777245c72478d531a361153b7",
+    "tests/test_passport_operations.py": "sha256:7e158bc68d3e548f6f0756e758ff904ead8acbf2f5a2a9f79b4d7db777f6cf80",
+    "tests/test_policy_windows.py": "sha256:5fe2fd527931cafe1eb28dbf68d11d7b210500276f2da5e039ae0048a49be8b5",
+    "tests/test_qualification_client.py": "sha256:fa875d69b98440ce13545e17517f986cc4c045cbecf214c316cbe34bde9392b1",
+    "tests/test_reconciliation_wire.py": "sha256:b9cb6efee8f9afae333a327b76e6651c7dce06f5064d9768de48ba8996d69d6d",
+    "tests/test_rubric.py": "sha256:845e476cc97af2be8c4f913a60b1cae6ae76f0a0c81a217f4b581c5712a213db",
+    "tests/test_runtime_security.py": "sha256:76ea516ef8d41bdd974a084ba8ea6a83071745bd09e1a51783668d0b9d60b025",
+    "tests/test_wire_contracts.py": "sha256:69b1d2a86b3decb724d832de0caf601d67ab89a227b075df936e86afcadbe280",
+    "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
+    "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
+    "contracts/fixtures/attempt.json": "sha256:d6a7e3571ab9b4698f01175b21e128fa45a01acadc69f507ffc6c1bcb58e9041",
+    "contracts/fixtures/authority.json": "sha256:d36365cb845dc72a1c52550cff017282a5f69d5b00a9472bf173bd2e5626979a",
+    "contracts/fixtures/lifecycle-event.json": "sha256:075e93e0e71ec0ff30ed8929ed989795b60ab1b7161c9d11b716e265050a7057",
+    "contracts/fixtures/outcome.json": "sha256:bd8bfaba9be520fe2c9c6cb8d5eb5fde843c1b553424923640dafed181142f16",
+    "contracts/fixtures/passport-canonical-v2.json": "sha256:40b5c68eb6333ed1fdd6a4db28bc5013253ac17f20e0f1efa85c2d23699dff66",
+    "contracts/fixtures/passport-operations-v1.json": "sha256:7fb91f569080ac5da3b289ca9f62e5a8342e2bbb620e5020db5d1617fa2c2aff",
+    "contracts/fixtures/qualification-client-cases.json": "sha256:5d201b632a3a1a323136fdcad0905f258492988fb7a79e1051eb0675f114742e",
+    "contracts/fixtures/qualification.json": "sha256:c0b8c64ec3860f9a7aa785892bef5aef4e188962275880b069ab6df3114f93bb",
+    "contracts/fixtures/runtime-wire-records.json": "sha256:cbe6c1b5bed7c50ae739983fea588a45986ce3b2a12abb7f1f771e7906e4537d",
+    "contracts/lifecycle-event.schema.json": "sha256:3c9b88bfe5a4fd5300786e0fd57656e660fa49db134b0cd0245a86dd1697a16d",
+    "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
+    "contracts/qualification.schema.json": "sha256:2a4a4f6921a3f839b6b4a554f0c8fa019600d14411d5cfd8355f119aa28449b3",
+    "contracts/unknown-reconciliation-result.schema.json": "sha256:6193e4fcadc9a2ee7f89b043306aaf088124a272adc9227f5453e56881faf8e6",
+    "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
+    "features/concurrency.feature": "sha256:a593d6b2ee5ceb79260f97e0dbfd768843c2c7f4fcd5b6705e11797f023f0e27",
+    "features/execution_and_evidence.feature": "sha256:5c03e38759cae3c8d84536efdd463c91492183e72ce0d3941a9b8ae7b8a23ded",
+    "features/future_robot_simulation.feature": "sha256:916435ba5489e20024f589161dc3a4e3a5df5c23f211a211a9baab8a6ea33771",
+    "features/ledger_integrity.feature": "sha256:6f3039c21f36f2b0d052b168d30547d3a5ec76ca39b2046f653a59b3a4e442a6",
+    "features/qualification.feature": "sha256:8545997b35e1600c7f2e63e4e743ca5f3563aa4ef295cb6b395fda614a286629",
+    "features/withdrawal_and_requalification.feature": "sha256:417a22c6940ab6b0fb70e2c0e44d27646da5c18d9ac10e242b7f8a27bc7fa8da",
+    "requirements-dev.txt": "sha256:1a4272ec830941ecba77716e4b18e0588ec0de3c63e368fe712c6ac0354091c3",
+    "deploy/reference/requirements.lock.txt": "sha256:ccc6272d5f11ef46daba25236ea4c0436a8569109851873f6f85b2a867ab2aa2",
+    "tools/verify.py": "sha256:f50c482fdc25ae553c3d1dc3753a5af7ad89828f299868e972b61a9fcb3bf1da"
+  },
+  "source_unchanged_during_run": true,
+  "cases": [
+    {
+      "test": "tests/test_attempt_checks.py::test_checks_bind_actual_boundary_without_rewriting_prior_qualification_or_grant",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_retry_and_restart_preserve_one_check_pair",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_command_cannot_misattribute_the_actual_authorization_check[grant_id-invented-grant]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_command_cannot_misattribute_the_actual_authorization_check[passport_id-invented-passport]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_command_cannot_misattribute_the_actual_authorization_check[skill_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_command_cannot_misattribute_the_actual_authorization_check[context_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_command_cannot_misattribute_the_actual_authorization_check[policy_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_actual_check_write_failure_rolls_back_checks_intent_and_mutation[AUTHORIZATION_CHECKED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_actual_check_write_failure_rolls_back_checks_intent_and_mutation[QUALIFICATION_CHECKED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[qualification_revision-999]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[qualification_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[grant_id-borrowed-grant]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[policy_decision_id-admission-only-decision]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[command_digest-sha256:0000000000000000000000000000000000000000000000000000000000000000]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[correlation_id-another-attempt]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[resource-another-resource]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_authenticated_but_misattributed_check_cannot_be_exported_as_attempt_proof[authorizes_execution-True]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_consumer_rejects_omitted_check_record_even_with_retained_authenticated_proof",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_same_attempt_label_cannot_substitute_a_different_authenticated_check_event[QUALIFICATION_CHECKED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_same_attempt_label_cannot_substitute_a_different_authenticated_check_event[COMMITTED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_requested_attempt_has_no_claim_of_completed_checks",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_pre_upgrade_committed_attempt_remains_historical_without_fabricated_checks",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_new_attempt_cannot_remove_checks_proof_input_to_claim_legacy_format",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_unknown_or_ambiguous_check_version_denies_before_mutation[True]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_unknown_or_ambiguous_check_version_denies_before_mutation[1.0]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_unknown_or_ambiguous_check_version_denies_before_mutation[2]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_attempt_checks.py::test_unknown_or_ambiguous_check_version_denies_before_mutation[None]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_advanced_authority_without_matching_operation_cancels_stale_cas",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_crash_after_intent_before_rpc_recovers_once",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_dispatched_unknown_is_not_cancelled_when_policy_changes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_event_and_applied_marker_commit_atomically",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_failed_local_intent_never_calls_canonical_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_idempotent_public_retry_does_not_reissue",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_later_replacement_does_not_erase_old_operation_evidence",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_local_intent_tamper_blocks_recovery_and_execution",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_lost_response_recovers_without_new_revision",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_missing_lookup_never_infers_success_from_current_revision",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_never_dispatched_intent_is_cancelled_when_policy_changes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_operation_id_cannot_be_rebound",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_pending_operation_blocks_existing_authority",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_precondition_refusal_without_cas_advance_cannot_cancel_unknown_dispatch",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_remote_success_before_local_event_recovers_from_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_revoke_to_empty_has_its_own_historical_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_journal.py::AuthorityJournalTests::test_untrusted_local_writer_cannot_revoke",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_explicit_refresh_records_verified_snapshot_without_execution_authority",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_cached_observation_survives_restart_without_calling_canonical_service",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_cached_active_grant_cannot_admit_or_commit_during_current_status_outage",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_canonical_revocation_overrides_cached_active_observation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_malformed_canonical_response_cannot_refresh_cache[False]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_malformed_canonical_response_cannot_refresh_cache[True]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_tampered_diagnostic_record_is_rejected_without_network_fallback",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_bad_diagnostic_cache_is_not_an_input_to_live_authorization",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_signed_observation_cannot_be_reindexed_to_another_agent",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_actual_wrong_local_signing_key_cannot_replace_cached_observation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_delayed_older_observation_cannot_overwrite_later_revision",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_same_revision_conflicting_observation_does_not_replace_known_record",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_delayed_same_revision_observation_cannot_regress_observed_time",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_actual_readonly_sqlite_write_preserves_prior_diagnostic_snapshot",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_authority_observations.py::test_trigger_replay_of_valid_signed_record_cannot_replace_exact_observation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_binding.py::BindingRegression::test_a_signed_grant_cannot_borrow_another_skills_qualification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_binding.py::PolicyDecisionBinding::test_another_evaluated_policy_denies",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_binding.py::PolicyDecisionBinding::test_decision_for_another_subject_denies",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_binding.py::PolicyDecisionBinding::test_matching_evaluation_binding_passes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_binding.py::PolicyDecisionBinding::test_missing_evaluated_policy_binding_denies",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_evidence.py::test_verified_import_is_durable_and_deduplicated",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_evidence.py::test_no_observations_remain_insufficient_when_canonical_evaluation_runs_later",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_evidence.py::test_rejected_copy_does_not_quarantine_valid_stored_observation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_evidence.py::test_stored_tamper_is_excluded_and_only_affected_grant_is_held",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_evidence.py::test_missing_required_observation_holds_without_task_failure",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_evidence.py::test_remote_outage_does_not_hold_authentic_local_evidence",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_evidence.py::test_local_pending_delivery_does_not_require_remote_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_evidence.py::test_receipt_import_retries_after_remote_verification_recovers",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_evidence.py::test_audit_cannot_downgrade_known_failure_while_withdrawal_is_pending",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_evidence.py::test_failure_during_remote_audit_is_preserved_at_final_transaction",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_evidence.py::test_preexisting_eligible_qualification_cannot_reuse_quarantined_evidence",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_evidence.py::test_quarantine_during_evaluation_prevents_stale_eligibility_publication",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_evidence.py::test_conflicting_valid_import_retries_do_not_duplicate_rejection",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::PassportVerificationSnapshotBoundary::test_matching_verification_snapshot_is_accepted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::PassportVerificationSnapshotBoundary::test_other_passport_at_same_agent_generation_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::PassportVerificationSnapshotBoundary::test_second_rpc_notfound_is_not_an_empty_aggregate",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::PassportVerificationSnapshotBoundary::test_verify_envelope_different_from_signed_snapshot_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::PassportVerificationSnapshotBoundary::test_verify_expiry_different_from_signed_snapshot_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::ConnectedDeadlineAndWithdrawalBoundary::test_delayed_old_withdrawal_does_not_revoke_requalified_grant",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::ConnectedDeadlineAndWithdrawalBoundary::test_scope_expiring_during_policy_call_cannot_commit",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::ConnectedDeadlineAndWithdrawalBoundary::test_short_requested_grant_cannot_disappear_behind_other_live_skill",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_connected_security.py::ConnectedDeadlineAndWithdrawalBoundary::test_unaffected_scope_keeps_exact_absolute_expiry_on_replacement",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::ContractTests::test_committed_attempt_requires_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::ContractTests::test_duplicate_grants_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::ContractTests::test_duplicate_observation_cannot_inflate_reference_count",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::ContractTests::test_each_schema_and_its_individual_fixture_are_valid",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::ContractTests::test_float_and_ambiguous_duplicate_json_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::ContractTests::test_malformed_binding_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::ContractTests::test_order_independent_digest_binds_changed_context",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::ContractTests::test_pending_ledger_is_not_recorded",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::ContractTests::test_scope_cannot_outlive_parent_authority",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::ContractTests::test_unknown_contract_version_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::ContractTests::test_unknown_fields_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::ContractTests::test_validity_window_must_follow_observations",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::EncodingRegressions::test_integral_float_timestamp_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::EncodingRegressions::test_trailing_newline_in_digest_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::RuntimeShapeRegressions::test_actual_runtime_intent_and_canonical_evaluation_events_validate",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::RuntimeShapeRegressions::test_eligible_cannot_have_empty_evidence",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::RuntimeShapeRegressions::test_empty_evidence_cannot_invent_observation_time",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::RuntimeShapeRegressions::test_every_grant_requires_exact_policy_digest",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::RuntimeShapeRegressions::test_evidence_refs_require_observation_time",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::RuntimeShapeRegressions::test_hold_without_observations_is_representable",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::RuntimeShapeRegressions::test_ineligible_without_observations_is_representable",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::RuntimeShapeRegressions::test_noneligible_late_evidence_does_not_extend_expired_authority",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::RuntimeShapeRegressions::test_noneligible_window_still_cannot_be_reversed",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::RuntimeShapeRegressions::test_partial_null_window_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::RuntimeShapeRegressions::test_pending_event_cannot_claim_ledger_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_contracts.py::RuntimeShapeRegressions::test_requested_attempt_cannot_claim_mutation_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_actual_producer_signature_and_ledger_proof_admit_distinct_outcome[PASS]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_actual_producer_signature_and_ledger_proof_admit_distinct_outcome[FAIL]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_actual_producer_signature_and_ledger_proof_admit_distinct_outcome[UNKNOWN]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_altered_local_observation_does_not_match_recorded_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_rewritten_event_and_digest_do_not_defeat_producer_signature",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_other_valid_producer_signature_cannot_impersonate_pinned_signer",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_intact_ledger_does_not_establish_producer_trust",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_trusted_key_alone_does_not_attest_approved_independent_evaluator[changes0]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_trusted_key_alone_does_not_attest_approved_independent_evaluator[changes1]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_trusted_key_alone_does_not_attest_approved_independent_evaluator[changes2]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_valid_receipt_cannot_be_repurposed[expected0-ATTEMPT_MISMATCH]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_valid_receipt_cannot_be_repurposed[expected1-SKILL_REVISION_MISMATCH]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_valid_receipt_cannot_be_repurposed[expected2-QUALIFICATION_CONTEXT_MISMATCH]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_signed_timestamp_future_or_exact_expiry_boundary_is_stale[999]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_signed_timestamp_future_or_exact_expiry_boundary_is_stale[1100]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_signed_timestamp_future_or_exact_expiry_boundary_is_stale[1101]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_new_receipt_does_not_refresh_old_observation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_old_receipt_does_not_pass_with_a_new_signed_observation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_missing_observation_is_unknown",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_pending_delivery_does_not_make_local_outcome_a_failure_or_trigger_hold",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_actual_transport_read_failure_is_unknown_not_tamper",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_positive_remote_content_mismatch_is_tamper",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_ledger_writer_trust_is_separate_from_producer_trust",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_signature_over_internally_inconsistent_or_malformed_claim_does_not_make_it_valid[change0]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_signature_over_internally_inconsistent_or_malformed_claim_does_not_make_it_valid[change1]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_signature_over_internally_inconsistent_or_malformed_claim_does_not_make_it_valid[change2]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_signature_over_internally_inconsistent_or_malformed_claim_does_not_make_it_valid[change3]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_event_attempt_must_match_its_nested_observation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_other_event_type_is_not_outcome_evidence",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_boolean_ledger_verifier_cannot_claim_receipt_verification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_invalid_consumer_freshness_policy_cannot_be_created[True]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_invalid_consumer_freshness_policy_cannot_be_created[0]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_invalid_consumer_freshness_policy_cannot_be_created[-1]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_invalid_consumer_freshness_policy_cannot_be_created[100]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_local_attestation_audit_never_requires_remote_delivery",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_local_attestation_audit_detects_tamper_without_ledger",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_changed_signed_claim_is_tamper_even_when_changed_claim_would_be_untrusted[version-skill-v2]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_changed_signed_claim_is_tamper_even_when_changed_claim_would_be_untrusted[context-demo-b]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_changed_signed_claim_is_tamper_even_when_changed_claim_would_be_untrusted[independent-False]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_changed_signed_claim_is_tamper_even_when_changed_claim_would_be_untrusted[evaluator_digest-sha256:0184263db798e147e8cacadca30424bc67fba69e25ddb6ffd8629b73dd168fe3]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_local_audit_preserves_missing_stale_binding_and_trust_distinctions[missing-MISSING_EVIDENCE]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_local_audit_preserves_missing_stale_binding_and_trust_distinctions[stale-STALE_EVIDENCE]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_local_audit_preserves_missing_stale_binding_and_trust_distinctions[wrong-attempt-ATTEMPT_MISMATCH]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_admission.py::test_local_audit_preserves_missing_stale_binding_and_trust_distinctions[untrusted-UNTRUSTED_ATTESTATION]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_boundary.py::test_self_reports_cannot_supply_qualification_passes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_boundary.py::test_report_retry_retains_identity_and_rebinding_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_boundary.py::test_invalid_procedure_report_cannot_poison_outbox[kwargs0]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_boundary.py::test_invalid_procedure_report_cannot_poison_outbox[kwargs1]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_boundary.py::test_invalid_procedure_report_cannot_poison_outbox[kwargs2]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_boundary.py::test_invalid_procedure_report_cannot_poison_outbox[kwargs3]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_boundary.py::test_invalid_procedure_report_cannot_poison_outbox[kwargs4]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_boundary.py::test_self_report_never_overrides_independent_failure",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_boundary.py::test_check_only_rejects_missing_or_positive_side_effect_claims[executed-True]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_boundary.py::test_check_only_rejects_missing_or_positive_side_effect_claims[executed-None]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_boundary.py::test_check_only_rejects_missing_or_positive_side_effect_claims[receipt_created-True]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_boundary.py::test_check_only_rejects_missing_or_positive_side_effect_claims[receipt_created-None]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_boundary.py::test_check_only_keeps_outcome_and_delivery_separate",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_boundary.py::test_connected_boundary_maps_invalid_canonical_authority",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_wire.py::test_evidence_events_round_trip_actual_signed_producers[PROCEDURE_REPORTED-pending]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_wire.py::test_evidence_events_round_trip_actual_signed_producers[PROCEDURE_REPORTED-recorded]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_wire.py::test_evidence_events_round_trip_actual_signed_producers[EVIDENCE_ADMITTED-pending]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_wire.py::test_evidence_events_round_trip_actual_signed_producers[EVIDENCE_ADMITTED-recorded]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_wire.py::test_evidence_events_round_trip_actual_signed_producers[EVIDENCE_REJECTED-pending]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_wire.py::test_evidence_events_round_trip_actual_signed_producers[EVIDENCE_REJECTED-recorded]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_wire.py::test_rehashed_evidence_event_copy_still_requires_original_source[PROCEDURE_REPORTED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_wire.py::test_rehashed_evidence_event_copy_still_requires_original_source[EVIDENCE_ADMITTED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_wire.py::test_rehashed_evidence_event_copy_still_requires_original_source[EVIDENCE_REJECTED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_wire.py::test_mutated_durable_evidence_event_requires_original_writer_signature[PROCEDURE_REPORTED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_wire.py::test_mutated_durable_evidence_event_requires_original_writer_signature[EVIDENCE_ADMITTED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_wire.py::test_mutated_durable_evidence_event_requires_original_writer_signature[EVIDENCE_REJECTED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_wire.py::test_pre_evidence_enum_consumer_rejects_new_producer_events[PROCEDURE_REPORTED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_wire.py::test_pre_evidence_enum_consumer_rejects_new_producer_events[EVIDENCE_ADMITTED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_evidence_wire.py::test_pre_evidence_enum_consumer_rejects_new_producer_events[EVIDENCE_REJECTED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_readonly_transaction_refuses_before_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_replacement_writer_private_key_cannot_replace_verification_trust",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_exact_persisted_intent_is_authenticated_before_registry_write[invalid-signature]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_exact_persisted_intent_is_authenticated_before_registry_write[different-valid-event]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_unavailable_retry_lookup_preserves_actual_commit_and_never_reexecutes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_missing_attempt_cannot_be_created_by_retry",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_commit_acknowledgement_failure_returns_unknown_not_false_denial",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_observer_storage_failure_after_commit_retains_known_commit",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_outbox_write_failure_cannot_report_a_committed_attempt_as_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_retry_with_different_authenticated_payload_remains_a_conflict",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_execution_boundary.py::test_postcommit_outcome_signature_failure_is_uncertainty_not_execution_denial",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_new_matching_request_gets_precise_hold_but_old_command_remains_revoked[missing]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_new_matching_request_gets_precise_hold_but_old_command_remains_revoked[stale]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_hold_diagnosis_cannot_be_borrowed_by_a_different_request[changes0]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_hold_diagnosis_cannot_be_borrowed_by_a_different_request[changes1]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_hold_diagnosis_cannot_be_borrowed_by_a_different_request[changes2]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_hold_diagnosis_cannot_be_borrowed_by_a_different_request[changes3]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_manual_revoke_reason_is_not_a_qualification_hold",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_later_authority_change_does_not_reuse_old_hold_diagnosis",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_valid_replacement_grant_takes_precedence_over_historical_hold",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_hold_diagnostics.py::test_tampered_revoke_journal_cannot_supply_a_hold_diagnosis",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_round_trip_and_idempotent_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_conflicting_idempotent_content_fails",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_receipt_cannot_be_rebound_to_changed_event[attempt_id-another]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_receipt_cannot_be_rebound_to_changed_event[agent_id-other]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_receipt_cannot_be_rebound_to_changed_event[authority_revision-9]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_receipt_cannot_be_rebound_to_changed_event[outcome-FAIL]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_changed_receipt_fails[entry_hash]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_changed_receipt_fails[entry_id]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_changed_receipt_fails[input_hash]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_changed_receipt_fails[writer_signature]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_changed_receipt_fails[signer_key_reference]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_changed_receipt_fails[attempt_id]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_changed_receipt_fails[content_sha256]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_changed_receipt_fails[idempotency_key]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_changed_receipt_fails[correlation_id]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_changed_receipt_fails[agent_id]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_stored_bytes_tampering_fails_independent_hash_check",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_untrusted_writer_is_not_accepted_even_when_ledger_proof_passes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_valid_hash_does_not_make_a_bad_signature_valid",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_remote_failure_or_unsupported_hash_version_fails_closed",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_no_append_without_explicit_authentication_and_signer",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_required_attempt_binding_and_nonfinite_json_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_dependency_outage_is_unknown_not_tamper",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_expired_receipt_is_stale_not_tamper",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_ledger_client.py::test_positive_content_mismatch_is_distinct_from_missing_trust",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_001_fresh_independent_outcomes_qualify_only",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_002_self_report_is_not_independent_evidence",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_003_changed_environment",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_003_changed_skill",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_004_unknown_is_neither_pass_nor_failure",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_005_stale_passes_hold_qualification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_006_duplicate_attempt_cannot_inflate_qualification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_007_known_failure_prevents_qualification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_008_policy_grants_exact_bounded_authority",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_009_qualification_cannot_override_policy_denial",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_010_changed_revision",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_010_wrong_action",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_010_wrong_context",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_010_wrong_resource",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_011_expiry_equality_denies_passport",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_012_scope_expiry_precedes_passport",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_013_revocation_invalidates_prior_admission",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_014_invalid_expiry",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_014_missing_expiry",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_015_unconfirmed_authority_denies_new_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_016_independent_postcondition_and_correlation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_017_correct_version_with_unhealthy_state_is_failure",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_017_wrong_observed_postcondition_is_failure",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_018_unavailable_observer_is_unknown_and_holds",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_019_completed_retry_returns_result_without_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_020_changed_retry_payload_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_021_crash_after_mutation_before_observation_reconciles",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_021_lost_response_reconciles_after_restart",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_021_unavailable_reconciliation_never_blindly_repeats",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_022_foundation_check_only_is_not_execution",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_023_known_failure_demotes_despite_remote_outage",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_024_selective_withdrawal_preserves_other_grant",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_025_missing_result",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_025_old_result",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_026_revised_skill_requalifies_under_new_grant",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_027_manual_reactivation_cannot_bypass_qualification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_028_concurrent_issue_has_one_current_revision",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_029_acknowledged_revocation_fences_paused_commit",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_030_prior_commit_remains_completed_after_revocation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_031_stale_update_cannot_revive_revoked_skill",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_032_concurrent_duplicate_attempt_commits_once",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_033_local_store_down",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_033_unauthenticated_writer",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_034_after_commit",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_034_before_intent_send",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_034_remote_audit_unavailable_preserves_known_outcome",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_035_modified_ledger_evidence_fails_verification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_036_expired_proof",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_036_old_skill",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_036_other_attempt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::LifecycleBDD::test_BDD_037_untrusted_signer_cannot_qualify",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_lifecycle_bdd.py::BindingCoverage::test_all_current_scenarios_have_explicit_bindings",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_client.py::PassportConsumer::test_active_read_revision_mismatch_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_client.py::PassportConsumer::test_boolean_expiry_is_not_a_timestamp",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_client.py::PassportConsumer::test_cross_agent_replay_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_client.py::PassportConsumer::test_loopback_allowed",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_client.py::PassportConsumer::test_remote_plaintext_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_client.py::PassportConsumer::test_scope_outliving_passport_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_client.py::PassportConsumer::test_unknown_mandatory_field_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_client.py::PassportConsumer::test_unpinned_key_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_client.py::PassportConsumer::test_valid_exact_envelope",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_client.py::CanonicalProviderVector::test_go_v2_signature_verifies_in_python",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_operations.py::OperationReceiptVerification::test_altered_nested_passport_signature_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_operations.py::OperationReceiptVerification::test_empty_state_cannot_make_revoke_request",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_operations.py::OperationReceiptVerification::test_falsey_non_map_context_is_not_silently_normalized",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_operations.py::OperationReceiptVerification::test_other_agent_or_operation_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_operations.py::OperationReceiptVerification::test_receipt_cannot_claim_different_scope_than_request",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_operations.py::OperationReceiptVerification::test_request_reason_scope_and_cas_mismatch_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_operations.py::OperationReceiptVerification::test_unknown_or_duplicate_receipt_fields_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_operations.py::OperationReceiptVerification::test_unpinned_receipt_signature_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_operations.py::OperationReceiptVerification::test_valid_receipt_derives_historical_authority",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_operations.py::OperationReceiptVerification::test_wrong_result_revision_or_target_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_operations.py::OperationProviderVectors::test_go_operation_receipts_and_request_canonicalization",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_operations.py::OperationClientTransport::test_empty_current_state_cannot_claim_successful_operation_revoke",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_operations.py::OperationClientTransport::test_issue_and_lookup_use_explicit_signed_operation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_passport_operations.py::OperationClientTransport::test_only_canonical_notfound_returns_no_operation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_foundation_propagates_only_bound_window_denial",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>0]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>1]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>2]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>3]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>4]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>5]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>6]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>7]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>8]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_unbound_denial_cannot_claim_policy_window_reason[<lambda>9]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window0]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window1]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window2]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window3]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window4]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window5]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_invalid_grant_window_is_rejected_before_authority_or_policy[window6]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_policy_window_denial_preserves_eligibility_and_creates_no_authority",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_future_window_allow_does_not_schedule_or_issue_immediate_authority",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_active_window_is_signed_and_caps_scope_exactly",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_preflight_rechecks_window_after_synchronous_policy",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_legacy_grant_keeps_prior_invocation_and_signed_shape",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_window_rechecked_at_execution_even_when_scope_and_passport_live",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_prepared_window_grant_recovery_after_expiry_cancels_without_issuance",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_policy_windows.py::test_execution_policy_crossing_window_end_denies_before_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q01_actual_cascade_promotes_demo_three_verified_passes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q02_actual_gcl_capacity_gate_is_advisory_and_network_free",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q03_real_gcl_capacity_failure_blocks_eligibility_not_outcome",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q04_missing_gcl_is_not_claimed_as_pass",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q05_changed_capacity_cannot_reuse_context_qualification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q06_unknown_does_not_enter_cascade_failure_counts",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q07_known_miss_calls_canonical_instant_demotion",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q08_untrusted_signed_observations_cannot_promote",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q09_authenticated_self_report_is_not_independent",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q10_duplicate_delivery_does_not_inflate_canonical_samples",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q11_changed_signed_evidence_cannot_be_counted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q12_stale_evidence_holds_without_failure",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q13_referenced_outcome_cannot_be_silently_omitted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q14_new_skill_revision_requires_fresh_canonical_metrics",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q15_canonical_threshold_defaults_remain_unchanged",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q16_portable_capacity_fixtures_use_actual_canonical_checks",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_qualification_client.py::QualificationClientTests::test_CDD_Q17_changed_canonical_source_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_obstructed_durable_lookup_produces_unknown_without_writes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_sqlite_readonly_retry_cannot_manufacture_commit_or_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_missing_database_lookup_does_not_create_replacement_database",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_missing_durable_attempt_is_unknown_and_never_readmitted",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_postcommit_storage_failure_preserves_known_commit_without_claiming_outcome",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_execution_uncertainty_does_not_erase_existing_commit",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_unknown_outcome_is_a_durable_commit_not_unknown_execution",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_unknown_cannot_be_exported_as_durable_attempt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_rehashed_unknown_cannot_replace_authenticated_attempt_proof",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[state-COMMITTED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[reason-POSTCONDITION_MET]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[committed-False]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[outcome-PASS]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[outcome-value4]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[delivery-RECORDED]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[receipt-value6]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[persisted-True]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[next_action-EXECUTE]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[attempt_id-]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[request_digest-wrong]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[command_digest-sha256:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[authority-value12]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[signature-invented]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[mutation_receipt_ref-local-event:invented]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[proof_store-value15]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_transient_schema_rejects_fabricated_evidence_or_permission[reexecution_permitted-True]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_reconciliation_wire.py::test_missing_attempt_must_not_claim_confirmed_commit",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::RubricTests::test_complete_current_evidence_is_green",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::RubricTests::test_component_pass_cannot_satisfy_integration",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::RubricTests::test_different_requirement_does_not_count",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::RubricTests::test_empty_required_methods_are_invalid",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::RubricTests::test_future_timestamp_is_amber",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::RubricTests::test_known_failure_dominates_pass",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::RubricTests::test_missing_evidence_is_amber",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::RubricTests::test_no_artifact_digest_cannot_be_green",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::RubricTests::test_one_missing_method_is_amber",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::RubricTests::test_previous_revision_cannot_satisfy_current",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::RubricTests::test_release_is_worst_required_status",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::RubricTests::test_stale_failure_remains_red_until_revision_changes",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::RubricTests::test_stale_pass_is_amber",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::RubricTests::test_unexecuted_scenario_is_amber",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::RubricTests::test_unknown_and_skipped_are_amber",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::ArtifactTests::test_external_artifacts_cannot_satisfy_local_manifest",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::ArtifactTests::test_hash_is_recomputed_and_tampering_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::ArtifactTests::test_unverified_pass_cannot_turn_green",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::ReviewRegressions::test_claimed_artifact_verification_cannot_forge_green",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::ReviewRegressions::test_newer_unknown_supersedes_old_pass",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_rubric.py::SkippedRunRegression::test_newer_unexecuted_skip_blocks_old_pass",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_runtime_security.py::RecoverySecurity::test_observation_digest_is_verified_not_trusted_as_unsigned_label",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_runtime_security.py::RecoverySecurity::test_recovery_cannot_attribute_a_later_mutation_to_old_attempt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_runtime_security.py::RecoverySecurity::test_tampered_local_outbox_is_not_resigned_and_delivered",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_runtime_security.py::QualificationHistory::test_failure_keeps_earlier_grant_evidence_and_records_trigger",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_runtime_security.py::QualificationHistory::test_shadow_retry_at_later_time_reuses_original_observation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_all_five_actual_producers_validate_and_consume",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_changed_context_in_valid_shape_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_changed_policy_decision_in_valid_shape_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_changed_source_and_rehashed_envelope_still_need_external_trust",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_committed_attempt_cannot_omit_local_commit_lifecycle_record",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_committed_attempt_uses_actual_boundary_policy_decision",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_current_authority_revocation_invalidates_active_credential_export",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_each_skill_keeps_its_exact_policy_binding",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_empty_bundle_cannot_report_verification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_empty_hold_has_null_window_and_no_fabricated_evidence",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_expired_active_credential_is_rejected_at_consumer_time",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_historical_attempt_binds_original_eligible_revision_after_fail",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_historical_qualification_digest_substitution_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_historical_unknown_remains_hold_without_a_fail_count",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_late_failure_readback_does_not_extend_expired_qualification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_missing_proof_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_new_draft_events_export_without_fabricated_mutable_revision",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_pending_delivery_cannot_claim_recorded_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_pending_ledger_keeps_confirmed_pass_and_local_commit_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_public_records_omit_raw_signature_material",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_qualification_cannot_omit_its_outcome_records",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_qualification_digest_preserves_authenticated_raw_source_binding",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_qualification_revision_change_invalidates_old_source",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_raw_evidence_tamper_is_rejected_even_before_cross_binding",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_read_outcome_uses_health_condition_without_registry_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_remote_tamper_is_rejected_by_receipt_verification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_replayed_ledger_receipt_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_requested_attempt_is_not_a_commit",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_revoked_authority_has_no_fabricated_active_credential",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_signed_but_wrong_postcondition_label_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_source_digest_tampering_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_unknown_is_hold_without_failure_evidence",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::WireContractTests::test_wrong_qualification_digest_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_wire_contracts.py::CapturedWireFixtureTests::test_actual_capture_is_only_shape_example_not_transferable_authority",
+      "outcome": "PASS"
+    }
+  ],
+  "modules": {
+    "test_attempt_checks": {
+      "count": 27,
+      "status": "PASS"
+    },
+    "test_authority_journal": {
+      "count": 17,
+      "status": "PASS"
+    },
+    "test_authority_observations": {
+      "count": 15,
+      "status": "PASS"
+    },
+    "test_connected_binding": {
+      "count": 5,
+      "status": "PASS"
+    },
+    "test_connected_evidence": {
+      "count": 13,
+      "status": "PASS"
+    },
+    "test_connected_security": {
+      "count": 9,
+      "status": "PASS"
+    },
+    "test_contracts": {
+      "count": 26,
+      "status": "PASS"
+    },
+    "test_evidence_admission": {
+      "count": 44,
+      "status": "PASS"
+    },
+    "test_evidence_boundary": {
+      "count": 14,
+      "status": "PASS"
+    },
+    "test_evidence_wire": {
+      "count": 15,
+      "status": "PASS"
+    },
+    "test_execution_boundary": {
+      "count": 11,
+      "status": "PASS"
+    },
+    "test_hold_diagnostics": {
+      "count": 10,
+      "status": "PASS"
+    },
+    "test_ledger_client": {
+      "count": 25,
+      "status": "PASS"
+    },
+    "test_lifecycle_bdd": {
+      "count": 52,
+      "status": "PASS"
+    },
+    "test_passport_client": {
+      "count": 10,
+      "status": "PASS"
+    },
+    "test_passport_operations": {
+      "count": 14,
+      "status": "PASS"
+    },
+    "test_policy_windows": {
+      "count": 26,
+      "status": "PASS"
+    },
+    "test_qualification_client": {
+      "count": 17,
+      "status": "PASS"
+    },
+    "test_reconciliation_wire": {
+      "count": 27,
+      "status": "PASS"
+    },
+    "test_rubric": {
+      "count": 21,
+      "status": "PASS"
+    },
+    "test_runtime_security": {
+      "count": 5,
+      "status": "PASS"
+    },
+    "test_wire_contracts": {
+      "count": 34,
+      "status": "PASS"
+    }
+  },
+  "status": "PASS",
+  "exclusions": [
+    "Live-service acceptance runs are separate",
+    "No held-out product-value comparison",
+    "No OpenShift or physical robot deployment"
+  ]
+}
