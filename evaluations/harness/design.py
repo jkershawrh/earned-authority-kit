@@ -28,8 +28,8 @@ def audit_partitions(families):
 def validate_manifest(manifest):
     if manifest.get('mode') != 'DEVELOPMENT_PILOT' or manifest.get('split') != 'development':
         raise ValueError('Confirmatory execution is not implemented; pilot requires development families')
-    if manifest.get('comparators') != ['fixed_deterministic', 'adaptive_qualification']:
-        raise ValueError('Only the two declared automatic pilot arms are implemented')
+    if manifest.get('version') != 'pilot-2-general-fixed' or manifest.get('comparators') != ['pinned_runbook', 'fixed_deterministic', 'adaptive_qualification']:
+        raise ValueError('Requires current three-arm plan; legacy fixed semantics cannot be relabelled')
     seeds = manifest.get('seeds')
     if not seeds or any(type(s) is not int or s < 0 for s in seeds) or len(seeds) != len(set(seeds)):
         raise ValueError('Unique nonnegative integer seeds required')

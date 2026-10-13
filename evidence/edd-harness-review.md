@@ -1,28 +1,23 @@
 # EDD harness review
 
-Reviewed 2026-10-13T17:55:09.107588+00:00. **GREEN for the reviewed development harness controls.** There are no remaining blockers in this bounded review. Overall business-value and confirmatory acceptance remain **AMBER**.
+Reviewed 2026-10-13T18:06:44.033190+00:00. **GREEN for the current development harness and readiness diagnostic controls.** No open blocker was found. Confirmatory and business-value acceptance remain **AMBER**.
 
-I independently ran **41 dedicated tests and 18 direct probes: all passed**, with source hashes unchanged. No core source or services were changed by the reviewer. The original 31-test pass, initial RED findings, intermediate failure and correction probes remain preserved.
+Independent verification passed **50 dedicated tests and 30 direct probes**: 18 repeated grader/control probes and 12 new comparator/readiness probes. Source hashes stayed unchanged. No source or service changes were made by the reviewer.
 
-The strongest negative probe writes the actual disposable SQLite target after acknowledged revocation while omitting the counter and attempt record. The revised grader detects it, stops subsequent episodes and preserves a RED partial report. Other probes check full request/qualification/grant identity, typed revisions and attempt records, false PASS claims, ERROR denial scoring, assigned denominators, preparation failures, support/query IDs and held-out refusal.
+## Current comparison
 
-## Findings resolved
+The general fixed and adaptive policies receive identical fresh support and follow identical exact qualification rules. Actual SQLite runs across all ten strata produced equivalent decisions and outcomes. The pinned runbook remains a separate diagnostic arm. This design provides no evidence of an adaptive-learning advantage.
 
-- **EDD-R1 — A target write can evade the invariant when mutation bookkeeping is missing:** Grading compares independent registry changes to the mutation counter and validates any observed change. An injected real SQLite forbidden write now stops the run.
-- **EDD-R2 — The private query reference does not bind the complete requested operation:** The driver freezes a complete query reference; grading compares all requested fields using canonical typed comparison.
-- **EDD-R3 — Qualification content is not checked against its grant subject:** Qualification identity, skill/version/context and digest bindings must match the grant; the grant skill must also match the command map key subject.
-- **EDD-R4 — An execution error counts as a correct denial:** An actual captured denial reason is required; ERROR cannot increase the correct-denial numerator. Deadline overrun is separately reported.
-- **EDD-R5 — Private fault labels are encoded in controller-visible IDs:** Controller-visible context/resource/attempt identifiers are opaque hashes; literal private stratum labels are absent from the explicit request/support inputs.
-- **EDD-R6 — Residual grant map key and inner subject disagreement:** The exact command-to-grant field comparison now includes skill.
-- **EDD-R7 — Boolean revisions and typed attempt attribution:** Authority, command and result revisions require strict integers; stored attempt commands are compared with canonical typed equality. Expiry values also require integer types.
-- **EDD-R8 — Started but unscored episodes were labelled unstarted:** Assignments are frozen before execution. Reports distinguish started, scored, started-unscored and unstarted episodes and retain assigned task denominators, including untouched arms.
+The current three-arm plan rejects the old plan and partial relabelling. Historical two-arm evidence retains its original meaning. All three arms and assigned denominators remain visible after abort, including unstarted arms and started-unscored failures. The earlier unauthorized-write, binding and false-denial checks still pass.
 
-## Scope and limits
+## Readiness boundary
 
-The grader uses separate read-only code in one trusted process. Support outcomes are generated fixture inputs. Explicit controller inputs no longer contain literal stratum labels; this is not isolation against hostile code in the same process.
+The current proposal reports nine open prerequisites. Even a fully self-declared proposal stays AMBER with authorizes_execution=false because the confirmatory execution adapter is absent. Existing readiness reports cannot be overwritten by the CLI.
 
-The deadline measures completion and does not preempt a hung call. Abort reports now retain assigned denominators and separate started-unscored from unstarted work. Query refusals and dependency failures remain in their declared task denominators.
+Readiness checks inspect declarations; they do not authenticate reviewer attestations, verify artifact content, confirm real human participation, establish dataset independence or certify sample adequacy. A successful CLI exit means a diagnostic was written, never that execution is authorized.
 
-The comparison uses a deliberately pinned fixed runbook, one query per reset episode and shared ancestry across seeds. A stronger fixed policy, actual human baseline, real business observations, calibrated risk budget and untouched held-out families remain necessary before value claims. Held-out and confirmatory execution are blocked.
+## Retained limits
 
-Exact current and historical hashes, all probe results and the preserved intermediate failure are in the companion JSON. The initial review remains in edd-harness-review-initial.json and .md.
+Support remains generated fixture data; seeds share ancestry; grading runs inside one trusted process; deadlines score elapsed time without preempting hung calls. Held-out and confirmatory execution remain blocked. Canonical-service performance, human effort, LLM costs, production safety and business value were not established.
+
+Earlier findings, RED evidence, intermediate failures and the prior 41-test review remain preserved in the initial and before-general-fixed review files. The companion JSON contains current source hashes, all 30 probe results and hashes of those historical records.

@@ -20,7 +20,8 @@ def digest(path):
 def source_hashes():
     patterns = ('earned_authority/*.py', 'evaluations/harness/*.py',
                 'evaluations/tests/*.py', 'evaluations/protocol.json',
-                'evaluations/pilot-plan.json', 'tools/run_edd_pilot.py')
+                'evaluations/pilot-plan-v2.json', 'tools/run_edd_pilot.py',
+                'evaluations/confirmatory-design.json', 'tools/check_edd_readiness.py')
     return {str(p.relative_to(KIT)): digest(p) for pattern in patterns for p in sorted(KIT.glob(pattern))}
 
 
@@ -138,7 +139,8 @@ def run(plan_path, workspace, report_path):
                   held_out=dict(status='NOT_EXECUTED', episodes=0),
                   overall_value_acceptance='AMBER', confirmatory_acceptance='AMBER',
                   limits=['Development cases only; no held-out or preregistered value claim.',
-                          'Fixed arm is pinned to its original procedure/context; stronger general fixed baselines remain open.',
+                          'General fixed and adaptive use identical exact qualification on fresh support; this one-query design cannot establish accumulated-learning value.',
+                          'Pinned runbook is a legacy diagnostic third arm, not the primary fixed baseline.',
                           'Support preparation is reported separately and excluded from query latency; not end-to-end deployment latency.',
                           'Seeds vary nominal targets and order, not independent populations; shared generator/procedure ancestry prevents statistical independence claims.',
                           'Separate read-only grading code in the same trusted process; not a separate security principal or operator.',

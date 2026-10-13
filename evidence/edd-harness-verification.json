@@ -1,7 +1,7 @@
 {
   "status": "PASS",
   "scope": "EDD_HARNESS_AND_LOCAL_SQLITE_FIXTURE_COMPONENTS",
-  "tests_run": 41,
+  "tests_run": 50,
   "cases": [
     {
       "test": "outputs/earned-authority-kit/evaluations/tests/test_grader.py::test_grader_detects_commit_after_acknowledged_revocation_despite_pass_claim",
@@ -166,12 +166,48 @@
     {
       "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_preparation_crash_is_started_unscored_and_retains_assigned_denominator",
       "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_draft_names_each_open_prerequisite_without_authorizing_execution",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[True]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[nan]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[inf]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[-0.1]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[1.1]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[None]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_declared_readiness_cannot_enable_missing_execution_adapter",
+      "outcome": "PASS"
+    },
+    {
+      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_copied_pilot_ancestry_prevents_declared_holdout_readiness",
+      "outcome": "PASS"
     }
   ],
   "exit_code": 0,
   "collection_errors": [],
-  "started_at_ms": 1791914009131,
-  "finished_at_ms": 1791914009802,
+  "started_at_ms": 1791914630743,
+  "finished_at_ms": 1791914631692,
   "source_hashes_before": {
     "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
     "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
@@ -187,15 +223,19 @@
     "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
     "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
     "evaluations/harness/__init__.py": "sha256:2d7d486bc7e8dc449abd290d212c29ec078cc2c0457b6fce8a0b1b130d38d0ba",
-    "evaluations/harness/controller.py": "sha256:c27e959aace19aa3fc0f02178c16477ee9e657ba2573e4fda816ec8566267c81",
-    "evaluations/harness/design.py": "sha256:5a2890c950643e966280b4370f938473ec00e4846ac82741795420f7af75e280",
+    "evaluations/harness/controller.py": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
+    "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
     "evaluations/harness/grader.py": "sha256:ed3639499e59b6458c217b46f56cbe73a6c5a8a0b7bb4f0177672a0771a3dfa6",
-    "evaluations/harness/runner.py": "sha256:d5ccee272785cc0d4c8d4709d5eb491bd1b6f2f718ea0ce9eac19cefbc9b3369",
+    "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
+    "evaluations/harness/runner.py": "sha256:15c24a25eb125ae0108309e97b586c70a7d295eb79a52724532d2b946d1d5ab8",
     "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
-    "evaluations/tests/test_pilot.py": "sha256:7a3b94fe155ba8fe03e9f42e19cb0a76675bf81379def784ecaf0dfc54cc4933",
+    "evaluations/tests/test_pilot.py": "sha256:4666f15f619ab7e2f2acf4a942d43f0231d816a0ba3e36e7320b2d2e40ef6951",
+    "evaluations/tests/test_readiness.py": "sha256:72b6fa4dd20d4280eaf7500a4a7610ad9678f45181c081138f3560dbb89b9e61",
     "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
-    "evaluations/pilot-plan.json": "sha256:ccc746e658569ee6d61ef11bc7843721d0785a5da4c2ac0d54e6ee6ebccdd715",
-    "tools/run_edd_pilot.py": "sha256:7e088c61f36531d01e21bb2a924a0b9805a67175175e1a130bb92a46258f1216"
+    "evaluations/pilot-plan-v2.json": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
+    "tools/run_edd_pilot.py": "sha256:2a370dee1ce5a6898c209659f4cc47e5a67e4b02431df8ab3335edecdde5eea7",
+    "evaluations/confirmatory-design.json": "sha256:75650c7b4a2857c441382d31ecf7901205b89175d7472b9024f556f8754132c1",
+    "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07"
   },
   "source_hashes": {
     "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
@@ -212,19 +252,23 @@
     "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
     "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
     "evaluations/harness/__init__.py": "sha256:2d7d486bc7e8dc449abd290d212c29ec078cc2c0457b6fce8a0b1b130d38d0ba",
-    "evaluations/harness/controller.py": "sha256:c27e959aace19aa3fc0f02178c16477ee9e657ba2573e4fda816ec8566267c81",
-    "evaluations/harness/design.py": "sha256:5a2890c950643e966280b4370f938473ec00e4846ac82741795420f7af75e280",
+    "evaluations/harness/controller.py": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
+    "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
     "evaluations/harness/grader.py": "sha256:ed3639499e59b6458c217b46f56cbe73a6c5a8a0b7bb4f0177672a0771a3dfa6",
-    "evaluations/harness/runner.py": "sha256:d5ccee272785cc0d4c8d4709d5eb491bd1b6f2f718ea0ce9eac19cefbc9b3369",
+    "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
+    "evaluations/harness/runner.py": "sha256:15c24a25eb125ae0108309e97b586c70a7d295eb79a52724532d2b946d1d5ab8",
     "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
-    "evaluations/tests/test_pilot.py": "sha256:7a3b94fe155ba8fe03e9f42e19cb0a76675bf81379def784ecaf0dfc54cc4933",
+    "evaluations/tests/test_pilot.py": "sha256:4666f15f619ab7e2f2acf4a942d43f0231d816a0ba3e36e7320b2d2e40ef6951",
+    "evaluations/tests/test_readiness.py": "sha256:72b6fa4dd20d4280eaf7500a4a7610ad9678f45181c081138f3560dbb89b9e61",
     "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
-    "evaluations/pilot-plan.json": "sha256:ccc746e658569ee6d61ef11bc7843721d0785a5da4c2ac0d54e6ee6ebccdd715",
-    "tools/run_edd_pilot.py": "sha256:7e088c61f36531d01e21bb2a924a0b9805a67175175e1a130bb92a46258f1216"
+    "evaluations/pilot-plan-v2.json": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
+    "tools/run_edd_pilot.py": "sha256:2a370dee1ce5a6898c209659f4cc47e5a67e4b02431df8ab3335edecdde5eea7",
+    "evaluations/confirmatory-design.json": "sha256:75650c7b4a2857c441382d31ecf7901205b89175d7472b9024f556f8754132c1",
+    "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07"
   },
   "source_unchanged_during_run": true,
   "artifacts": {
-    "evidence/edd-harness-green.log": "sha256:ac02d1be47c559c3688169250298fd0c15495601a9c953fce241d5758791641b",
+    "evidence/edd-harness-green.log": "sha256:749bbcfa3b1d97e4740db61a1b3904469856eb33cc9928c48b383e23dffb55ec",
     "evidence/edd-grader-red.log": "sha256:672bb3cf183607cbee4629be879b7baf91d9d9a354a1fd82bcbb3372fe6abb10",
     "tools/verify_edd.py": "sha256:748373ad30712381fc64ddc9bdff06faf5a447bbd3046b336d11bbe0fc0e617a"
   },

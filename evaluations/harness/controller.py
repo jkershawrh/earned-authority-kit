@@ -1,16 +1,17 @@
-"""Two frozen pilot policies with the same fixture qualification/enforcement.
+"""Frozen policy comparison; one fresh-support query cannot expose learning value.
 
-The fixed runbook can grant only its original exact procedure/context. The
-adaptive arm can qualify the requested exact binding from fresh support. This
-is a declared policy contrast, not the strongest possible deterministic baseline.
-Neither receives query grades or the driver's private fault reference.
+General fixed and adaptive currently use identical exact qualification rules.
+The legacy pinned runbook is a separately named diagnostic arm. None receives
+query grades or private fault strata. No adaptive advantage is assumed.
 """
 
 
 def prepare(runtime, comparator, request, support, base_version, base_context):
+    if comparator not in ('pinned_runbook', 'fixed_deterministic', 'adaptive_qualification'):
+        raise ValueError('Unknown comparator')
     for observation in support:
         runtime.shadow(**observation)
-    version, context = (base_version, base_context) if comparator == 'fixed_deterministic' else (request['version'], request['context'])
+    version, context = (base_version, base_context) if comparator == 'pinned_runbook' else (request['version'], request['context'])
     q = runtime.qualify(skill=request['skill'], version=version, context=context)
     if q['disposition'] == 'ELIGIBLE':
         runtime.grant(q['qualification_id'], agent=request['agent'], resource=request['resource'])

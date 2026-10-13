@@ -1,0 +1,22 @@
+{
+  "scope": "GENERAL_FIXED_BASELINE_REQUIREMENT_REGRESSION",
+  "legacy_revision": "74998e7d45b81a9be4be132b1d4cd38779da0982",
+  "legacy_controller_sha256": "sha256:c27e959aace19aa3fc0f02178c16477ee9e657ba2573e4fda816ec8566267c81",
+  "current_controller_sha256": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
+  "regression": "General fixed must qualify the requested new version under identical fresh support and authority rules.",
+  "red": {
+    "failed": 1,
+    "reason": "Legacy fixed qualified skill-v1 instead of requested skill-v2"
+  },
+  "green": {
+    "passed": 1
+  },
+  "artifacts": {
+    "evidence/general-fixed-baseline-red.log": "sha256:598abf14ab91b04122772caa7c3b5aea64371667d3afe018364923015faef546",
+    "evidence/general-fixed-baseline-green.log": "sha256:3605abb09038ce24e90d81df8f7c0d87bb6f647a5e016bf461d8a8fcb408f6e9"
+  },
+  "limits": [
+    "Behavior requirement change for a stronger comparator, not a canonical-service authorization defect.",
+    "One direct regression probe; not an additional independent pilot population."
+  ]
+}

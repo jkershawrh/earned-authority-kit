@@ -57,4 +57,4 @@ The current increment records the exact qualification and authorization checks f
 
 TDD is test-driven, CDD contract-driven, BDD behavior-driven, and EDD evaluation-driven development. Evidence collection supports all four. CUT's expansion remains unconfirmed; the roadmap names each component under test without assuming the intended expansion.
 
-An [executable development EDD pilot](evaluations/PILOT.md) now compares two declared automatic policies on 200 fixture episodes. It checks the evaluation harness and retains full denominators; its pinned-runbook contrast does not establish business value. The human and held-out comparisons remain AMBER.
+An [executable development EDD pilot](evaluations/PILOT.md) now compares three declared automatic policies on 300 fixture episodes. It checks the evaluation harness and retains full denominators; general fixed and adaptive tie on this single-query workload, so business value remains unestablished. The human and held-out comparisons remain AMBER.

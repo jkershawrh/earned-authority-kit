@@ -1,6 +1,6 @@
 {
-  "generated_at_ms": 1791914141644,
-  "kit_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+  "generated_at_ms": 1791914874045,
+  "kit_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
   "overall_integration_readiness": "AMBER",
   "milestones": [
     {
@@ -62,7 +62,7 @@
   "rows": [
     {
       "id": "CON-01",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "CDD"
@@ -82,7 +82,7 @@
     },
     {
       "id": "KIT-01",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -102,7 +102,7 @@
     },
     {
       "id": "BDD-LOCAL",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "BDD"
@@ -122,7 +122,7 @@
     },
     {
       "id": "EXEC-LOCAL",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -142,7 +142,7 @@
     },
     {
       "id": "QUAL-01",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -162,7 +162,7 @@
     },
     {
       "id": "AUTH-CLIENT",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -182,7 +182,7 @@
     },
     {
       "id": "AUTH-OPS",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "CDD"
@@ -202,7 +202,7 @@
     },
     {
       "id": "AUDIT-LOCAL",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -222,7 +222,7 @@
     },
     {
       "id": "GRANTS-MULTI",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -242,7 +242,7 @@
     },
     {
       "id": "LED-01",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -262,7 +262,7 @@
     },
     {
       "id": "EVID-VERIFY",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -282,7 +282,7 @@
     },
     {
       "id": "EVID-GUARD",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -302,7 +302,7 @@
     },
     {
       "id": "POL-01",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "CANONICAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -322,7 +322,7 @@
     },
     {
       "id": "AUTH-01",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "CANONICAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -342,7 +342,7 @@
     },
     {
       "id": "POL-LIVE",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "CDD"
@@ -362,7 +362,7 @@
     },
     {
       "id": "SVC-LIVE",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "CDD"
@@ -382,7 +382,7 @@
     },
     {
       "id": "ARC-LIVE",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -402,7 +402,7 @@
     },
     {
       "id": "FAULT-LIVE",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -422,7 +422,7 @@
     },
     {
       "id": "AUDIT-ATOMIC",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -442,7 +442,7 @@
     },
     {
       "id": "DEP-RESTORE",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -462,7 +462,7 @@
     },
     {
       "id": "AUDIT-RESTORE",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -482,7 +482,7 @@
     },
     {
       "id": "DEP-BUILD",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "FRESH_SAME_HOST",
       "required_methods": [
         "BDD"
@@ -502,7 +502,7 @@
     },
     {
       "id": "BDD-SERVICE",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -522,7 +522,7 @@
     },
     {
       "id": "BDD-CORE",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "SERVICE_ACCEPTANCE",
       "required_methods": [
         "BDD"
@@ -542,7 +542,7 @@
     },
     {
       "id": "EDD-PILOT",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "DEVELOPMENT_PILOT",
       "required_methods": [
         "EDD"
@@ -553,16 +553,16 @@
       "missing_methods": [],
       "lane": "WP5",
       "component": "Development pilot instrumentation and grading",
-      "acceptance": "200 fixture episodes with separate persisted-state grading and shared enforcement. Fixed arm is deliberately pinned; no human baseline, held-out value, cost or effort claim.",
+      "acceptance": "300 fixture episodes compare general fixed, adaptive and a legacy pinned diagnostic arm. Shared grading/enforcement; no human, held-out value, cost or effort claim.",
       "baseline": "AMBER",
       "release_required": false,
       "milestone": null,
-      "implementation": "Development engineering gate only; 41 dedicated harness tests are separate from the component baseline",
-      "artifact": "reports/edd-pilot-003.json"
+      "implementation": "Development engineering gate only; 50 dedicated harness tests are separate from the component baseline",
+      "artifact": "reports/edd-pilot-004.json"
     },
     {
       "id": "EDD-PLAN",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "HELD_OUT_EVALUATION",
       "required_methods": [
         "EDD"
@@ -579,12 +579,12 @@
       "baseline": "AMBER",
       "release_required": true,
       "milestone": null,
-      "implementation": "Acceptance outstanding",
-      "artifact": null
+      "implementation": "Prerequisite diagnostic only; nine open requirements, no execution permission",
+      "artifact": "reports/edd-confirmatory-readiness-001.json"
     },
     {
       "id": "EDD-RUN",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "HELD_OUT_EVALUATION",
       "required_methods": [
         "EDD"
@@ -606,7 +606,7 @@
     },
     {
       "id": "DEP-EXTERNAL",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "INDEPENDENT_REPRODUCTION",
       "required_methods": [
         "BDD"
@@ -628,7 +628,7 @@
     },
     {
       "id": "DEP-RH",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "OPENSHIFT",
       "required_methods": [
         "BDD"
@@ -650,7 +650,7 @@
     },
     {
       "id": "ROB-01",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "SIMULATION",
       "required_methods": [
         "EDD"
@@ -672,7 +672,7 @@
     },
     {
       "id": "BASE-01",
-      "target_revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "target_revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "HISTORICAL_BASELINE",
       "required_methods": [
         "TDD"
@@ -694,7 +694,7 @@
   "evidence": [
     {
       "requirement_id": "CON-01",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "method": "CDD",
       "outcome": "PASS",
@@ -705,7 +705,7 @@
     },
     {
       "requirement_id": "KIT-01",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -716,7 +716,7 @@
     },
     {
       "requirement_id": "BDD-LOCAL",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "method": "BDD",
       "outcome": "PASS",
@@ -727,7 +727,7 @@
     },
     {
       "requirement_id": "EXEC-LOCAL",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -738,7 +738,7 @@
     },
     {
       "requirement_id": "QUAL-01",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -749,7 +749,7 @@
     },
     {
       "requirement_id": "AUTH-CLIENT",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -760,7 +760,7 @@
     },
     {
       "requirement_id": "AUTH-OPS",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "method": "CDD",
       "outcome": "PASS",
@@ -771,7 +771,7 @@
     },
     {
       "requirement_id": "AUDIT-LOCAL",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -782,7 +782,7 @@
     },
     {
       "requirement_id": "GRANTS-MULTI",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -793,7 +793,7 @@
     },
     {
       "requirement_id": "LED-01",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -804,7 +804,7 @@
     },
     {
       "requirement_id": "EVID-VERIFY",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -815,7 +815,7 @@
     },
     {
       "requirement_id": "EVID-GUARD",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -826,7 +826,7 @@
     },
     {
       "requirement_id": "POL-01",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "CANONICAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -837,7 +837,7 @@
     },
     {
       "requirement_id": "AUTH-01",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "CANONICAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -848,7 +848,7 @@
     },
     {
       "requirement_id": "POL-LIVE",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "CDD",
       "outcome": "PASS",
@@ -859,7 +859,7 @@
     },
     {
       "requirement_id": "SVC-LIVE",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "CDD",
       "outcome": "PASS",
@@ -870,7 +870,7 @@
     },
     {
       "requirement_id": "ARC-LIVE",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -881,7 +881,7 @@
     },
     {
       "requirement_id": "FAULT-LIVE",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -892,7 +892,7 @@
     },
     {
       "requirement_id": "AUDIT-ATOMIC",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -903,7 +903,7 @@
     },
     {
       "requirement_id": "DEP-RESTORE",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -914,7 +914,7 @@
     },
     {
       "requirement_id": "AUDIT-RESTORE",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -925,7 +925,7 @@
     },
     {
       "requirement_id": "DEP-BUILD",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "FRESH_SAME_HOST",
       "method": "BDD",
       "outcome": "PASS",
@@ -936,7 +936,7 @@
     },
     {
       "requirement_id": "BDD-SERVICE",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -947,7 +947,7 @@
     },
     {
       "requirement_id": "BDD-CORE",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "SERVICE_ACCEPTANCE",
       "method": "BDD",
       "outcome": "PASS",
@@ -958,18 +958,29 @@
     },
     {
       "requirement_id": "EDD-PILOT",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "DEVELOPMENT_PILOT",
       "method": "EDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791914098953,
+      "timestamp_ms": 1791914815743,
       "executed": true,
-      "artifact": "reports/edd-pilot-003.json",
-      "artifact_digest": "sha256:5864602c522dd5f68368d7fd65f767a33edd831b8169c7757711b062beaab17a"
+      "artifact": "reports/edd-pilot-004.json",
+      "artifact_digest": "sha256:91f351e3e24873617b40294de41182a182ed47ff49eee0bc5ca5e73221bf0fa4"
+    },
+    {
+      "requirement_id": "EDD-PLAN",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
+      "environment": "HELD_OUT_EVALUATION",
+      "method": "EDD",
+      "outcome": "UNKNOWN",
+      "timestamp_ms": 1791914676753,
+      "executed": true,
+      "artifact": "reports/edd-confirmatory-readiness-001.json",
+      "artifact_digest": "sha256:c8a4303587d72aa6fd9701722b528f55fc9f250799b1b381d79fe9961e05d1b6"
     },
     {
       "requirement_id": "BASE-01",
-      "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
+      "revision": "sha256:f863e23592f7ffc052ee1e35aab46943448bdc24344225a9917021cdf27e502f",
       "environment": "HISTORICAL_BASELINE",
       "method": "TDD",
       "outcome": "FAIL",

@@ -254,13 +254,13 @@ def main():
     bdd_valid=bool(bdd.get('source_hashes')) and bdd.get('source_unchanged_during_run') is True and set(statuses)=={f'BDD-{i:03}' for i in range(1,38)}
     add('BDD-SERVICE','WP5','Explicit complete service behaviors','BDD','REAL_LOCAL_SERVICES',f'{len(full)} complete scenario IDs: '+(', '.join(full) or 'none recorded')+'. Every named scenario requires all its outline rows and assertions.',bdd_path,'FAIL' if failed else ('PASS' if full else 'UNKNOWN'),valid=bdd_valid,release=False,detail='Partial and unbound scenarios retain their own gaps in the raw report')
     add('BDD-CORE','WP5','All 37 behaviors on real service adapters','BDD','SERVICE_ACCEPTANCE',f'{len(full)} of 37 complete scenarios recorded with explicit real-service assertions; acceptance is scoped to this local profile.',bdd_path,'FAIL' if failed else ('PASS' if set(statuses)=={f'BDD-{i:03}' for i in range(1,38)} and len(full)==37 else 'UNKNOWN'),valid=bdd_valid)
-    pilot_path='reports/edd-pilot-003.json'; pilot=read(pilot_path)
+    pilot_path='reports/edd-pilot-004.json'; pilot=read(pilot_path)
     episodes=pilot.get('episodes',[])
     expected=pilot.get('expected_episodes',0)
     pilot_valid=(pilot.get('mode')=='DEVELOPMENT_PILOT' and pilot.get('split')=='development'
                  and pilot.get('source_unchanged_during_run') is True and bool(pilot.get('source_hashes'))
-                 and pilot.get('plan_digest')==digest(ROOT/'evaluations/pilot-plan.json')
-                 and expected==200 and len(episodes)==expected
+                 and pilot.get('plan_digest')==digest(ROOT/'evaluations/pilot-plan-v2.json')
+                 and expected==300 and len(episodes)==expected
                  and len({(e.get('comparator'),e.get('seed'),e.get('family_id')) for e in episodes})==expected
                  and pilot.get('held_out',{}).get('episodes')==0
                  and pilot.get('counts',{}).get('started_unscored_episodes')==0
@@ -271,9 +271,9 @@ def main():
                          and e.get('grade',{}).get('unauthorized_commits')==0
                          and e.get('grade',{}).get('integrity_errors')==[] for e in episodes))
     add('EDD-PILOT','WP5','Development pilot instrumentation and grading','EDD','DEVELOPMENT_PILOT',
-        '200 fixture episodes with separate persisted-state grading and shared enforcement. Fixed arm is deliberately pinned; no human baseline, held-out value, cost or effort claim.',
+        '300 fixture episodes compare general fixed, adaptive and a legacy pinned diagnostic arm. Shared grading/enforcement; no human, held-out value, cost or effort claim.',
         pilot_path,'PASS' if pilot.get('engineering_acceptance')=='GREEN' and pilot.get('execution_state')=='COMPLETED' else 'UNKNOWN',
-        valid=pilot_valid,release=False,detail='Development engineering gate only; 41 dedicated harness tests are separate from the component baseline')
+        valid=pilot_valid,release=False,detail='Development engineering gate only; 50 dedicated harness tests are separate from the component baseline')
     pending=[
         ('EDD-PLAN','WP5','Preregistered evaluation thresholds and risk budget','EDD','HELD_OUT_EVALUATION','Choose value target, sample adequacy, fixed versions, family-disjoint holdout and actual human baseline before scoring.'),
         ('EDD-RUN','WP5','Measured business value and uncertainty','EDD','HELD_OUT_EVALUATION','Confirmatory protocol is unexecuted. A development pilot exists; its engineered policy contrast does not establish reduced effort, cost or customer benefit.'),
@@ -281,7 +281,11 @@ def main():
         ('DEP-RH','Later','Red Hat reference profile','BDD','OPENSHIFT','Select deployment target and validate identity, policy, persistence and mutation fencing; no compatibility/support claim.'),
         ('ROB-01','Later','Robotics simulation transfer','EDD','SIMULATION','Deferred BDD-038: separately governed simulator and safety/controller boundaries before any hardware consideration.')]
     for key,lane,name,method,environment,scope in pending:
-        add(key,lane,name,method,environment,scope,release=key not in ('DEP-RH','ROB-01'))
+        if key=='EDD-PLAN':
+            add(key,lane,name,method,environment,scope,'reports/edd-confirmatory-readiness-001.json','UNKNOWN',
+                detail='Prerequisite diagnostic only; nine open requirements, no execution permission')
+        else:
+            add(key,lane,name,method,environment,scope,release=key not in ('DEP-RH','ROB-01'))
     redpath='evidence/canonical-passport-results.json'; red=read(redpath).get('checks',{}).get('red',{})
     add('BASE-01','History','Original canonical authority defects','TDD','HISTORICAL_BASELINE','16 retained failing baseline leaf cases; patched target checked separately.',redpath,'FAIL' if red.get('failed',0)>0 else 'UNKNOWN',release=False,baseline='RED',detail='Historical red regression, not current target')
     required=[dict(requirement_id=r['id'],status=r['status']) for r in rows if r['release_required']]

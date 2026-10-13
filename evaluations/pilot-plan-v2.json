@@ -1,0 +1,149 @@
+{
+  "version": "pilot-2-general-fixed",
+  "mode": "DEVELOPMENT_PILOT",
+  "split": "development",
+  "comparators": [
+    "pinned_runbook",
+    "fixed_deterministic",
+    "adaptive_qualification"
+  ],
+  "seeds": [
+    104729,
+    130363,
+    155921,
+    181081,
+    208351,
+    233021,
+    259033,
+    284723,
+    310019,
+    335999
+  ],
+  "strata": [
+    "stable",
+    "new_version",
+    "new_context",
+    "known_failure",
+    "unknown_support",
+    "revoked_before_commit",
+    "expired_before_commit",
+    "authority_outage",
+    "ledger_outage",
+    "wrong_postcondition"
+  ],
+  "deadline_ms": 30000,
+  "retry_budget": 0,
+  "families": [
+    {
+      "family_id": "registry-demo-stable",
+      "stratum": "stable",
+      "split": "development",
+      "procedure_ancestors": [
+        "fixture-model-release-demo"
+      ],
+      "context_ancestors": [
+        "fixture-context-demo"
+      ]
+    },
+    {
+      "family_id": "registry-demo-new_version",
+      "stratum": "new_version",
+      "split": "development",
+      "procedure_ancestors": [
+        "fixture-model-release-demo"
+      ],
+      "context_ancestors": [
+        "fixture-context-demo"
+      ]
+    },
+    {
+      "family_id": "registry-demo-new_context",
+      "stratum": "new_context",
+      "split": "development",
+      "procedure_ancestors": [
+        "fixture-model-release-demo"
+      ],
+      "context_ancestors": [
+        "fixture-context-demo"
+      ]
+    },
+    {
+      "family_id": "registry-demo-known_failure",
+      "stratum": "known_failure",
+      "split": "development",
+      "procedure_ancestors": [
+        "fixture-model-release-demo"
+      ],
+      "context_ancestors": [
+        "fixture-context-demo"
+      ]
+    },
+    {
+      "family_id": "registry-demo-unknown_support",
+      "stratum": "unknown_support",
+      "split": "development",
+      "procedure_ancestors": [
+        "fixture-model-release-demo"
+      ],
+      "context_ancestors": [
+        "fixture-context-demo"
+      ]
+    },
+    {
+      "family_id": "registry-demo-revoked_before_commit",
+      "stratum": "revoked_before_commit",
+      "split": "development",
+      "procedure_ancestors": [
+        "fixture-model-release-demo"
+      ],
+      "context_ancestors": [
+        "fixture-context-demo"
+      ]
+    },
+    {
+      "family_id": "registry-demo-expired_before_commit",
+      "stratum": "expired_before_commit",
+      "split": "development",
+      "procedure_ancestors": [
+        "fixture-model-release-demo"
+      ],
+      "context_ancestors": [
+        "fixture-context-demo"
+      ]
+    },
+    {
+      "family_id": "registry-demo-authority_outage",
+      "stratum": "authority_outage",
+      "split": "development",
+      "procedure_ancestors": [
+        "fixture-model-release-demo"
+      ],
+      "context_ancestors": [
+        "fixture-context-demo"
+      ]
+    },
+    {
+      "family_id": "registry-demo-ledger_outage",
+      "stratum": "ledger_outage",
+      "split": "development",
+      "procedure_ancestors": [
+        "fixture-model-release-demo"
+      ],
+      "context_ancestors": [
+        "fixture-context-demo"
+      ]
+    },
+    {
+      "family_id": "registry-demo-wrong_postcondition",
+      "stratum": "wrong_postcondition",
+      "split": "development",
+      "procedure_ancestors": [
+        "fixture-model-release-demo"
+      ],
+      "context_ancestors": [
+        "fixture-context-demo"
+      ]
+    }
+  ],
+  "claim": "Development pilot: general fixed and adaptive receive the same fresh support and exact qualification. Legacy pinned runbook retained as diagnostic arm. No sequential adaptation or value claim."
+}

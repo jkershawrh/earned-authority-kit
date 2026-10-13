@@ -1,0 +1,26 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+___________ test_general_fixed_qualifies_requested_exact_new_version ___________
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-193/test_general_fixed_qualifies_r0')
+
+    def test_general_fixed_qualifies_requested_exact_new_version(tmp_path):
+        source = Path(os.environ['EA_CONTROLLER_PROBE'])
+        spec = importlib.util.spec_from_file_location('tested_controller', source)
+        module = importlib.util.module_from_spec(spec); spec.loader.exec_module(module)
+        rt = Runtime(tmp_path / 'state.sqlite')
+        request = dict(agent='probe',skill='release-model',version='skill-v2',context='ctx',action='release',resource='r',target='model-v2',attempt_id='query')
+        support = [dict(skill='release-model',version=v,context='ctx',attempt_id=v+str(i)) for v in ['skill-v1','skill-v2'] for i in range(3)]
+        result = module.prepare(rt,'fixed_deterministic',request,support,'skill-v1','ctx')
+>       assert result['qualification']['version'] == 'skill-v2'
+E       AssertionError: assert 'skill-v1' == 'skill-v2'
+E         
+E         - skill-v2
+E         ?        ^
+E         + skill-v1
+E         ?        ^
+
+work/general-fixed-baseline-probe.py:16: AssertionError
+=========================== short test summary info ============================
+FAILED work/general-fixed-baseline-probe.py::test_general_fixed_qualifies_requested_exact_new_version
+1 failed in 0.13s

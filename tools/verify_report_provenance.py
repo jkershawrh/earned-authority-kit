@@ -73,7 +73,7 @@ def missing_foundation_check(t,*args):
 run_case('missing_foundation_race_check_does_not_pass',missing_foundation_check,row='POL-01')
 run_case('complete_development_pilot_passes',lambda *args:None,'GREEN',row='EDD-PILOT')
 def incomplete_pilot(t,*args):
-    p=t/'reports/edd-pilot-003.json';d=json.loads(p.read_text());d['episodes'].pop();p.write_text(json.dumps(d))
+    p=t/'reports/edd-pilot-004.json';d=json.loads(p.read_text());d['episodes'].pop();p.write_text(json.dumps(d))
 run_case('partial_pilot_does_not_pass',incomplete_pilot,row='EDD-PILOT')
 def changed_grader(t,*args):
     p=t/'evaluations/harness/grader.py';p.write_text(p.read_text()+'\n')

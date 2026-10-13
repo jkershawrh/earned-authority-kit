@@ -1,0 +1,40 @@
+{
+  "version": "confirmatory-proposal-1",
+  "primary_outcome": {
+    "metric": "task_success",
+    "status": "PROPOSED"
+  },
+  "thresholds": {
+    "status": "UNSELECTED",
+    "minimum_completion_improvement": null,
+    "maximum_false_acceptance": null,
+    "maximum_false_demotion": null
+  },
+  "families": [],
+  "dataset_review": {
+    "status": "NOT_REVIEWED",
+    "artifact_digest": null
+  },
+  "sample_plan": {
+    "status": "UNSELECTED",
+    "independent_family_count": null,
+    "risk_budget": null,
+    "uncertainty_method": null
+  },
+  "manual_baseline": {
+    "status": "NOT_ASSIGNED",
+    "operator_id": null,
+    "counterbalancing_plan": null,
+    "runbook": "evaluations/HUMAN_BASELINE.md"
+  },
+  "sequential_schedule": {
+    "status": "NOT_REVIEWED",
+    "phases": [],
+    "query_grade_leakage_rule": "SEAL_BEFORE_NEXT_SUPPORT"
+  },
+  "preregistration": {
+    "status": "DRAFT",
+    "manifest_digest": null
+  },
+  "claim": "Diagnostic prerequisite proposal only; no invented business thresholds or unseen data. Existing pilot families are development data."
+}
