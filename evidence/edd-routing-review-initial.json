@@ -1,0 +1,199 @@
+{
+  "review_id": "edd-routing-review-initial",
+  "reviewed_at_utc": "2026-10-13T19:03:10.303147+00:00",
+  "status": "RED",
+  "scope": "Read-only review and actual disposable SQLite/meter negative controls; no production source edits.",
+  "source_hashes_before": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
+    "evaluations/harness/__init__.py": "sha256:2d7d486bc7e8dc449abd290d212c29ec078cc2c0457b6fce8a0b1b130d38d0ba",
+    "evaluations/harness/controller.py": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
+    "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
+    "evaluations/harness/grader.py": "sha256:da20cca667bf56d3063fc0a874687bf779284b358310ff1c311c450e7885e1ac",
+    "evaluations/harness/lookup.py": "sha256:dd326c73ceb0f0a694dba3e552cd8097289523307d2f751ec244d55e96d680a4",
+    "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
+    "evaluations/harness/routing.py": "sha256:0559febe325e81730e02958140945c30411df19bbaf44a257a2657a80711192f",
+    "evaluations/harness/runner.py": "sha256:e8df9c0b399d8b8096956e41686451c7e1622b06d4a67b673ade0e73b907e6b0",
+    "evaluations/harness/sequential.py": "sha256:b7b696b5399b3bb609d04d9ce51087a6975220de0e5ac2630340073f5bfca0b3",
+    "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
+    "evaluations/tests/test_pilot.py": "sha256:83aa40ffc3af227db90fb8c745140670eb8247ea1f9a0ee3ad7af98b08a6e631",
+    "evaluations/tests/test_readiness.py": "sha256:72b6fa4dd20d4280eaf7500a4a7610ad9678f45181c081138f3560dbb89b9e61",
+    "evaluations/tests/test_routing.py": "sha256:a29a79eb525365a90b472e942961d3ea843d749474e8b1820a3e4af64d88ad83",
+    "evaluations/tests/test_sequential.py": "sha256:1072e15d7fa4f77a0383a1c46fc6dfe07ad17c09cf10076c09ca3592baff8e1a",
+    "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
+    "evaluations/pilot-plan-v2.json": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
+    "tools/run_edd_pilot.py": "sha256:2a370dee1ce5a6898c209659f4cc47e5a67e4b02431df8ab3335edecdde5eea7",
+    "evaluations/confirmatory-design.json": "sha256:75650c7b4a2857c441382d31ecf7901205b89175d7472b9024f556f8754132c1",
+    "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07",
+    "evaluations/sequential-plan.json": "sha256:5d8357a6ff6c596bef82ad5b27dd7e9f003904d980c42755c2980a57395df8e4",
+    "tools/run_edd_sequential.py": "sha256:83f6c54ef7e2be116f6f4920711965e8efd9d18220ccc9ed0d7b1ad5f7fff923",
+    "evaluations/routing-plan.json": "sha256:eac993df8aae2f2c801c8037c1c7267f9d1a67c9d4698210a273596e44a5de1f",
+    "tools/run_edd_routing.py": "sha256:2f8884b1477cf5b2f1cce06f6517f08993b6b3e49144ea7a212caea24d4fde08"
+  },
+  "source_hashes_after": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
+    "evaluations/harness/__init__.py": "sha256:2d7d486bc7e8dc449abd290d212c29ec078cc2c0457b6fce8a0b1b130d38d0ba",
+    "evaluations/harness/controller.py": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
+    "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
+    "evaluations/harness/grader.py": "sha256:da20cca667bf56d3063fc0a874687bf779284b358310ff1c311c450e7885e1ac",
+    "evaluations/harness/lookup.py": "sha256:dd326c73ceb0f0a694dba3e552cd8097289523307d2f751ec244d55e96d680a4",
+    "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
+    "evaluations/harness/routing.py": "sha256:0559febe325e81730e02958140945c30411df19bbaf44a257a2657a80711192f",
+    "evaluations/harness/runner.py": "sha256:e8df9c0b399d8b8096956e41686451c7e1622b06d4a67b673ade0e73b907e6b0",
+    "evaluations/harness/sequential.py": "sha256:b7b696b5399b3bb609d04d9ce51087a6975220de0e5ac2630340073f5bfca0b3",
+    "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
+    "evaluations/tests/test_pilot.py": "sha256:83aa40ffc3af227db90fb8c745140670eb8247ea1f9a0ee3ad7af98b08a6e631",
+    "evaluations/tests/test_readiness.py": "sha256:72b6fa4dd20d4280eaf7500a4a7610ad9678f45181c081138f3560dbb89b9e61",
+    "evaluations/tests/test_routing.py": "sha256:a29a79eb525365a90b472e942961d3ea843d749474e8b1820a3e4af64d88ad83",
+    "evaluations/tests/test_sequential.py": "sha256:1072e15d7fa4f77a0383a1c46fc6dfe07ad17c09cf10076c09ca3592baff8e1a",
+    "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
+    "evaluations/pilot-plan-v2.json": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
+    "tools/run_edd_pilot.py": "sha256:2a370dee1ce5a6898c209659f4cc47e5a67e4b02431df8ab3335edecdde5eea7",
+    "evaluations/confirmatory-design.json": "sha256:75650c7b4a2857c441382d31ecf7901205b89175d7472b9024f556f8754132c1",
+    "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07",
+    "evaluations/sequential-plan.json": "sha256:5d8357a6ff6c596bef82ad5b27dd7e9f003904d980c42755c2980a57395df8e4",
+    "tools/run_edd_sequential.py": "sha256:83f6c54ef7e2be116f6f4920711965e8efd9d18220ccc9ed0d7b1ad5f7fff923",
+    "evaluations/routing-plan.json": "sha256:eac993df8aae2f2c801c8037c1c7267f9d1a67c9d4698210a273596e44a5de1f",
+    "tools/run_edd_routing.py": "sha256:2f8884b1477cf5b2f1cce06f6517f08993b6b3e49144ea7a212caea24d4fde08"
+  },
+  "source_unchanged_during_checks": true,
+  "findings": [
+    {
+      "id": "ROUTE-R1",
+      "priority": "P1",
+      "status": "OPEN",
+      "title": "Publication can discard retained signed evidence",
+      "evidence": "After sealed query0, a wrapper around actual record_cost deleted an existing support cost and linked SQLite observation. All32 assigned tasks still completed GREEN because post-publication state replaced prior baselines without a retention comparison.",
+      "required_change": "Preserve observations and costs through publication, require exactly the intended new record, and compare before accepting a new baseline."
+    },
+    {
+      "id": "ROUTE-R2",
+      "priority": "P1",
+      "status": "OPEN",
+      "title": "Signed non-independent observation accepted as independent cost evidence",
+      "evidence": "verified_costs accepted a trusted-checker-signed observation with independent=false and its signed cost record.",
+      "required_change": "Require the exact trusted independent observation contract, not merely a valid checker signature."
+    },
+    {
+      "id": "ROUTE-R3",
+      "priority": "P1",
+      "status": "OPEN",
+      "title": "Procedure can rewrite the host meter trace",
+      "evidence": "An adversarial forward procedure made9 actual instrumented catalog reads, then rewrote public catalog.trace to [0]. execute reported1 read and check_reads accepted it.",
+      "required_change": "Keep the measurement event sink outside the procedure-writable catalog API. Continue to disclose same-process trust limits."
+    },
+    {
+      "id": "ROUTE-R4",
+      "priority": "P1",
+      "status": "OPEN",
+      "title": "Cost publication lacks an independent exact job binding",
+      "evidence": "A cost record re-signed by the trusted checker with a different resource passed verification. This is a misbound-producer probe, not a forged-signature attack; the verifier has no independently registered expected job/candidate direction to compare.",
+      "required_change": "Register the expected job, candidate direction and exact resource/catalog/key binding before execution and verify cost publication against it, or explicitly narrow the binding claim."
+    }
+  ],
+  "independent_checks": {
+    "initial_dedicated_suite": "94 passed in 9.00s",
+    "suite_note": "The initial suite preceded the separately added replay/live-failure/revocation tests; probe hashes identify the later source actually exercised.",
+    "probe_results": {
+      "signed_nonindependent_observation_accepted": true,
+      "duplicate_attempt_cost_accepted": false,
+      "resigned_resource_rebinding_accepted": true,
+      "procedure_can_rewrite_meter_trace": {
+        "actual_accesses": 9,
+        "reported_reads": 1,
+        "checker_accepts": true
+      },
+      "publication_deletion": {
+        "status": "GREEN",
+        "state": "COMPLETED",
+        "error": null,
+        "counts": {
+          "assigned_queries": 32,
+          "started_queries": 32,
+          "scored_queries": 32,
+          "started_unscored_queries": 0,
+          "unstarted_queries": 0
+        },
+        "first_sequence": [
+          {
+            "query": 0,
+            "public_cost_rows": 12,
+            "observations": 13,
+            "success": true
+          },
+          {
+            "query": 1,
+            "public_cost_rows": 12,
+            "observations": 13,
+            "success": true
+          },
+          {
+            "query": 2,
+            "public_cost_rows": 13,
+            "observations": 14,
+            "success": true
+          },
+          {
+            "query": 3,
+            "public_cost_rows": 14,
+            "observations": 15,
+            "success": true
+          },
+          {
+            "query": 4,
+            "public_cost_rows": 15,
+            "observations": 16,
+            "success": true
+          },
+          {
+            "query": 5,
+            "public_cost_rows": 16,
+            "observations": 17,
+            "success": true
+          },
+          {
+            "query": 6,
+            "public_cost_rows": 17,
+            "observations": 18,
+            "success": true
+          },
+          {
+            "query": 7,
+            "public_cost_rows": 18,
+            "observations": 19,
+            "success": true
+          }
+        ]
+      }
+    }
+  },
+  "source_inspection_limits": [
+    "Support generation reuses the exact catalog/key/target inputs of query indices0..5, under separate attempt IDs; this is controlled development evidence, not unseen-query generalization.",
+    "The pooled comparator also retains outcomes and updates ranking; the contrast is context conditioning.",
+    "Read counts measure catalog operations, not wall-clock speed, money, human effort or LLM savings.",
+    "Both policies and the grader share one trusted process; no hostile-runtime isolation is claimed."
+  ]
+}

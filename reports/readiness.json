@@ -1,6 +1,6 @@
 {
-  "generated_at_ms": 1791916863664,
-  "kit_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+  "generated_at_ms": 1791919386558,
+  "kit_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
   "overall_integration_readiness": "AMBER",
   "milestones": [
     {
@@ -62,7 +62,7 @@
   "rows": [
     {
       "id": "CON-01",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "CDD"
@@ -82,7 +82,7 @@
     },
     {
       "id": "KIT-01",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -102,7 +102,7 @@
     },
     {
       "id": "BDD-LOCAL",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "BDD"
@@ -122,7 +122,7 @@
     },
     {
       "id": "EXEC-LOCAL",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -142,7 +142,7 @@
     },
     {
       "id": "QUAL-01",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -162,7 +162,7 @@
     },
     {
       "id": "AUTH-CLIENT",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -182,7 +182,7 @@
     },
     {
       "id": "AUTH-OPS",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "CDD"
@@ -202,7 +202,7 @@
     },
     {
       "id": "AUDIT-LOCAL",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -222,7 +222,7 @@
     },
     {
       "id": "GRANTS-MULTI",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -242,7 +242,7 @@
     },
     {
       "id": "LED-01",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -262,7 +262,7 @@
     },
     {
       "id": "EVID-VERIFY",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -282,7 +282,7 @@
     },
     {
       "id": "EVID-GUARD",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -302,7 +302,7 @@
     },
     {
       "id": "POL-01",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "CANONICAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -322,7 +322,7 @@
     },
     {
       "id": "AUTH-01",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "CANONICAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -342,7 +342,7 @@
     },
     {
       "id": "POL-LIVE",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "CDD"
@@ -362,7 +362,7 @@
     },
     {
       "id": "SVC-LIVE",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "CDD"
@@ -382,7 +382,7 @@
     },
     {
       "id": "ARC-LIVE",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -402,7 +402,7 @@
     },
     {
       "id": "FAULT-LIVE",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -422,7 +422,7 @@
     },
     {
       "id": "AUDIT-ATOMIC",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -442,7 +442,7 @@
     },
     {
       "id": "DEP-RESTORE",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -462,7 +462,7 @@
     },
     {
       "id": "AUDIT-RESTORE",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -482,7 +482,7 @@
     },
     {
       "id": "DEP-BUILD",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "FRESH_SAME_HOST",
       "required_methods": [
         "BDD"
@@ -502,7 +502,7 @@
     },
     {
       "id": "BDD-SERVICE",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
@@ -522,7 +522,7 @@
     },
     {
       "id": "BDD-CORE",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "SERVICE_ACCEPTANCE",
       "required_methods": [
         "BDD"
@@ -542,7 +542,7 @@
     },
     {
       "id": "EDD-PILOT",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "DEVELOPMENT_PILOT",
       "required_methods": [
         "EDD"
@@ -557,12 +557,12 @@
       "baseline": "AMBER",
       "release_required": false,
       "milestone": null,
-      "implementation": "Development engineering gate only; 70 dedicated harness tests are separate from the component baseline",
+      "implementation": "Development engineering gate only; 114 current dedicated harness tests are separate from the component baseline",
       "artifact": "reports/edd-pilot-007.json"
     },
     {
       "id": "EDD-SEQUENTIAL",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "DEVELOPMENT_SEQUENTIAL",
       "required_methods": [
         "EDD"
@@ -581,8 +581,28 @@
       "artifact": "reports/edd-sequential-003.json"
     },
     {
+      "id": "EDD-ROUTING",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
+      "environment": "DEVELOPMENT_ROUTING",
+      "required_methods": [
+        "EDD"
+      ],
+      "max_age_ms": 604800000,
+      "status": "GREEN",
+      "reason": "All required methods passed for this revision and environment",
+      "missing_methods": [],
+      "lane": "WP5",
+      "component": "Context-conditioned deterministic agent selection",
+      "acceptance": "40 development sequences, 320 queries; pooled and context-conditioned policies both learn from retained verified outcomes. Actual catalog reads include separately reported support work.",
+      "baseline": "AMBER",
+      "release_required": false,
+      "milestone": null,
+      "implementation": "114 harness tests and 42 independent probes; constructed fixture, business and confirmatory acceptance remain AMBER",
+      "artifact": "reports/edd-routing-002.json"
+    },
+    {
       "id": "EDD-PLAN",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "HELD_OUT_EVALUATION",
       "required_methods": [
         "EDD"
@@ -600,11 +620,11 @@
       "release_required": true,
       "milestone": null,
       "implementation": "Prerequisite diagnostic only; nine open requirements, no execution permission",
-      "artifact": "reports/edd-confirmatory-readiness-002.json"
+      "artifact": "reports/edd-confirmatory-readiness-003.json"
     },
     {
       "id": "EDD-RUN",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "HELD_OUT_EVALUATION",
       "required_methods": [
         "EDD"
@@ -626,7 +646,7 @@
     },
     {
       "id": "DEP-EXTERNAL",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "INDEPENDENT_REPRODUCTION",
       "required_methods": [
         "BDD"
@@ -648,7 +668,7 @@
     },
     {
       "id": "DEP-RH",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "OPENSHIFT",
       "required_methods": [
         "BDD"
@@ -670,7 +690,7 @@
     },
     {
       "id": "ROB-01",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "SIMULATION",
       "required_methods": [
         "EDD"
@@ -692,7 +712,7 @@
     },
     {
       "id": "BASE-01",
-      "target_revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "target_revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "HISTORICAL_BASELINE",
       "required_methods": [
         "TDD"
@@ -714,7 +734,7 @@
   "evidence": [
     {
       "requirement_id": "CON-01",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "method": "CDD",
       "outcome": "PASS",
@@ -725,7 +745,7 @@
     },
     {
       "requirement_id": "KIT-01",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -736,7 +756,7 @@
     },
     {
       "requirement_id": "BDD-LOCAL",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "method": "BDD",
       "outcome": "PASS",
@@ -747,7 +767,7 @@
     },
     {
       "requirement_id": "EXEC-LOCAL",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -758,7 +778,7 @@
     },
     {
       "requirement_id": "QUAL-01",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -769,7 +789,7 @@
     },
     {
       "requirement_id": "AUTH-CLIENT",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -780,7 +800,7 @@
     },
     {
       "requirement_id": "AUTH-OPS",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "method": "CDD",
       "outcome": "PASS",
@@ -791,7 +811,7 @@
     },
     {
       "requirement_id": "AUDIT-LOCAL",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -802,7 +822,7 @@
     },
     {
       "requirement_id": "GRANTS-MULTI",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -813,7 +833,7 @@
     },
     {
       "requirement_id": "LED-01",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -824,7 +844,7 @@
     },
     {
       "requirement_id": "EVID-VERIFY",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -835,7 +855,7 @@
     },
     {
       "requirement_id": "EVID-GUARD",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -846,7 +866,7 @@
     },
     {
       "requirement_id": "POL-01",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "CANONICAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -857,7 +877,7 @@
     },
     {
       "requirement_id": "AUTH-01",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "CANONICAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -868,7 +888,7 @@
     },
     {
       "requirement_id": "POL-LIVE",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "CDD",
       "outcome": "PASS",
@@ -879,7 +899,7 @@
     },
     {
       "requirement_id": "SVC-LIVE",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "CDD",
       "outcome": "PASS",
@@ -890,7 +910,7 @@
     },
     {
       "requirement_id": "ARC-LIVE",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -901,7 +921,7 @@
     },
     {
       "requirement_id": "FAULT-LIVE",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -912,7 +932,7 @@
     },
     {
       "requirement_id": "AUDIT-ATOMIC",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -923,7 +943,7 @@
     },
     {
       "requirement_id": "DEP-RESTORE",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -934,7 +954,7 @@
     },
     {
       "requirement_id": "AUDIT-RESTORE",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -945,7 +965,7 @@
     },
     {
       "requirement_id": "DEP-BUILD",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "FRESH_SAME_HOST",
       "method": "BDD",
       "outcome": "PASS",
@@ -956,7 +976,7 @@
     },
     {
       "requirement_id": "BDD-SERVICE",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -967,7 +987,7 @@
     },
     {
       "requirement_id": "BDD-CORE",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "SERVICE_ACCEPTANCE",
       "method": "BDD",
       "outcome": "PASS",
@@ -978,7 +998,7 @@
     },
     {
       "requirement_id": "EDD-PILOT",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "DEVELOPMENT_PILOT",
       "method": "EDD",
       "outcome": "PASS",
@@ -989,7 +1009,7 @@
     },
     {
       "requirement_id": "EDD-SEQUENTIAL",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "DEVELOPMENT_SEQUENTIAL",
       "method": "EDD",
       "outcome": "PASS",
@@ -999,19 +1019,30 @@
       "artifact_digest": "sha256:7e32421a1a88554e994b11468e97057d68e4d13f5aefa820a9136a8f5ed1b5fa"
     },
     {
+      "requirement_id": "EDD-ROUTING",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
+      "environment": "DEVELOPMENT_ROUTING",
+      "method": "EDD",
+      "outcome": "PASS",
+      "timestamp_ms": 1791919374324,
+      "executed": true,
+      "artifact": "reports/edd-routing-002.json",
+      "artifact_digest": "sha256:12aba49adbbeed9da19ae2be7724a1cbd8dbb2a4ad796183d811fbdc0dbe903b"
+    },
+    {
       "requirement_id": "EDD-PLAN",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "HELD_OUT_EVALUATION",
       "method": "EDD",
       "outcome": "UNKNOWN",
-      "timestamp_ms": 1791916718810,
+      "timestamp_ms": 1791919200511,
       "executed": true,
-      "artifact": "reports/edd-confirmatory-readiness-002.json",
+      "artifact": "reports/edd-confirmatory-readiness-003.json",
       "artifact_digest": "sha256:c8a4303587d72aa6fd9701722b528f55fc9f250799b1b381d79fe9961e05d1b6"
     },
     {
       "requirement_id": "BASE-01",
-      "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+      "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
       "environment": "HISTORICAL_BASELINE",
       "method": "TDD",
       "outcome": "FAIL",

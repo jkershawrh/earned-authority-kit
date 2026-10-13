@@ -4,13 +4,17 @@
   "business_value": "AMBER",
   "held_out": "NOT_EXECUTED",
   "manual": "NOT_EXECUTED",
-  "completed_at_utc": "2026-10-13T18:41:03.499370+00:00",
+  "completed_at_utc": "2026-10-13T19:27:06.741731+00:00",
   "counts": {
-    "harness_tests": 70,
+    "harness_tests": 114,
+    "routing_sequences": 40,
+    "routing_queries": 320,
+    "independent_review_probes": 42
+  },
+  "prior_scoped_controls": {
     "pilot_episodes": 300,
     "sequences": 20,
-    "sequential_queries": 140,
-    "independent_review_probes": 20
+    "sequential_queries": 140
   },
   "source_hashes": {
     "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
@@ -30,12 +34,16 @@
     "evaluations/harness/controller.py": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
     "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
     "evaluations/harness/grader.py": "sha256:da20cca667bf56d3063fc0a874687bf779284b358310ff1c311c450e7885e1ac",
+    "evaluations/harness/lookup.py": "sha256:43d7f310a530187ab275cc00b9a432c6a4d3cc00348692620f25bbe1952e2880",
     "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
+    "evaluations/harness/routing.py": "sha256:aa1aeba9b203045c339f1e3de1d1c29ef520cf336ccb1738209f42cb9553d537",
+    "evaluations/harness/routing_audit.py": "sha256:91991dd0a39a08b47ea2eb733e3a636ea85a3c8ecee7fc1da040d863024f70de",
     "evaluations/harness/runner.py": "sha256:e8df9c0b399d8b8096956e41686451c7e1622b06d4a67b673ade0e73b907e6b0",
     "evaluations/harness/sequential.py": "sha256:b7b696b5399b3bb609d04d9ce51087a6975220de0e5ac2630340073f5bfca0b3",
     "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
     "evaluations/tests/test_pilot.py": "sha256:83aa40ffc3af227db90fb8c745140670eb8247ea1f9a0ee3ad7af98b08a6e631",
     "evaluations/tests/test_readiness.py": "sha256:72b6fa4dd20d4280eaf7500a4a7610ad9678f45181c081138f3560dbb89b9e61",
+    "evaluations/tests/test_routing.py": "sha256:c5102d4fe87d4ddba67391741178eb7db83beca8ebf570b8a5d191427ebd6807",
     "evaluations/tests/test_sequential.py": "sha256:1072e15d7fa4f77a0383a1c46fc6dfe07ad17c09cf10076c09ca3592baff8e1a",
     "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
     "evaluations/pilot-plan-v2.json": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
@@ -43,40 +51,112 @@
     "evaluations/confirmatory-design.json": "sha256:75650c7b4a2857c441382d31ecf7901205b89175d7472b9024f556f8754132c1",
     "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07",
     "evaluations/sequential-plan.json": "sha256:5d8357a6ff6c596bef82ad5b27dd7e9f003904d980c42755c2980a57395df8e4",
-    "tools/run_edd_sequential.py": "sha256:83f6c54ef7e2be116f6f4920711965e8efd9d18220ccc9ed0d7b1ad5f7fff923"
+    "tools/run_edd_sequential.py": "sha256:83f6c54ef7e2be116f6f4920711965e8efd9d18220ccc9ed0d7b1ad5f7fff923",
+    "evaluations/routing-plan.json": "sha256:4bea4472fc5e6825ef34dfdc99f6188cd60c0d12d7d84b3896aba8643fcb7bb4",
+    "tools/run_edd_routing.py": "sha256:2f8884b1477cf5b2f1cce06f6517f08993b6b3e49144ea7a212caea24d4fde08"
   },
   "artifacts": {
+    "reports/edd-routing-002.json": "sha256:a2cfe76fbe0d89b4cee3ddd9edf283b7e8a58f89ea7771fe148a1d08239f65d6",
     "reports/edd-pilot-007.json": "sha256:850ed34833fdfad4a8af1676d285ae2138ae1e6c2d2155de6d7b2f1449fb9983",
     "reports/edd-sequential-003.json": "sha256:7e32421a1a88554e994b11468e97057d68e4d13f5aefa820a9136a8f5ed1b5fa",
-    "reports/edd-confirmatory-readiness-002.json": "sha256:c8a4303587d72aa6fd9701722b528f55fc9f250799b1b381d79fe9961e05d1b6",
-    "evidence/edd-harness-verification.json": "sha256:7edb5263bd0158b94a80baf446d292e5cb02484331c9839e2bbeec252a8cb2d9",
-    "evidence/edd-harness-review.json": "sha256:32eb76c2af96a011f0d8ce0cdf03751545f8205165f19a4536e14ade2bb87706",
-    "evidence/edd-sequential-review.json": "sha256:a636debf9fd3a458eeb5e0bf688a22f16a7c7ad04f498968c6d92c1d57f60d21",
-    "evidence/edd-sequential-red.log": "sha256:e6d904296aa274fb17e4ff871c52455decaa97cd4b5755ce543d902bf8bb1419",
-    "evidence/edd-sequential-review-regressions-red.log": "sha256:b9ccd1ca6a292d2505e70cbbb981c706ace30a42b8c7637f86d1996c91fc38ac",
-    "evidence/edd-sequential-retention-red.log": "sha256:a77fea3879a23554df5277ccc1a847858b339f04a9b580b71207442e725c93b0",
-    "evidence/edd-sequential-boundary-regressions-red.log": "sha256:c61eacf91957d3e9dfb9da4d87ac1c3623f5933dd7cf18988b4dc8f85263c4ef",
-    "evidence/edd-sequential-green.log": "sha256:137feb2b428817f6ca7fd017c264fed4037029cb1ac5d1a3357dff8c676db847",
-    "evidence/edd-sequential-boundary-regressions-green.log": "sha256:c1264e2d5ac70931c62c5d421fcddcdad1dd0f37c805ee7d946ca8b91ffcf256"
+    "reports/edd-confirmatory-readiness-003.json": "sha256:c8a4303587d72aa6fd9701722b528f55fc9f250799b1b381d79fe9961e05d1b6",
+    "evidence/edd-harness-verification.json": "sha256:457e4af8cef71f4d89118365d3b5c2fc6448cc5f7f59455431d4b00e08d64054",
+    "evidence/edd-harness-review.json": "sha256:bcf740f0d16528180977aa3c1ae7bce9e33cc84820c1c9d9073f0a4fe7c8cbc8",
+    "evidence/edd-routing-review.json": "sha256:cb136f079f40ab562ec3575b2201bfd4eb5f0962ecf39f15da4c4872c8b8ea5c",
+    "evidence/edd-routing-green.log": "sha256:43af5f92ea6b65b854deebfffa6422f89d30daf655a43dae56d201a7b9f2f37f",
+    "evidence/edd-routing-qualification-red.log": "sha256:8fed6235813b3fc95516cb0f47bb47bce00c33155d37600e74c397b1ed0b743e",
+    "evidence/edd-routing-red.log": "sha256:b0c9ee1c5860767a6531cd3c146218c9380e6d9e940b832462cbc879c91954be",
+    "evidence/edd-routing-replay-red.log": "sha256:a962a916311f0439ede59da73682c52e4d346a1221dc2c7ef77ae26bfb1ceb3e",
+    "evidence/edd-routing-retention-intermediate.log": "sha256:a456d1fc38371cf53975411828248fd4205a93a5a3ba42841700f45805dfe99a",
+    "evidence/edd-routing-review-intermediate-suite.log": "sha256:fc08c193566a53dc93025722488a51c869e4eb4603f80f35747086350729c375",
+    "evidence/edd-routing-review-probes.log": "sha256:e1555a71e0769bac3ad546bc40555f28cbe5fd19568aa35c32e36ca22bc84d2e",
+    "evidence/edd-routing-review-red.log": "sha256:1d5f62e7656024ded5c4967a95838579f0600aac91e3cd7299140d98efeea2aa",
+    "evidence/edd-routing-review-suite.log": "sha256:1a0a808aa6d98fbfa083381b522bf8a29506a20f1e5ded9c361c5f2099783a3a"
   },
   "preserved_history": {
-    "reports/edd-development-acceptance-before-sequential.json": "sha256:f72e3c3df6358eca78ba482b956fb7501779d1c227ad49d23b8efab5d25f91cc",
-    "evidence/edd-harness-review-before-sequential.json": "sha256:dc17578cedc2ad575bd827bf09b53c824d1882a0747101cabf98a3788b3d58bd",
-    "evidence/edd-harness-verification-before-sequential.json": "sha256:258fb80d31f438444bece5897694f5964f3b499a8cdac30ebc1005ab103bead7",
-    "reports/edd-pilot-004.json": "sha256:91f351e3e24873617b40294de41182a182ed47ff49eee0bc5ca5e73221bf0fa4",
-    "reports/edd-pilot-005.json": "sha256:e12f1311c2f8821e2061b46f61e0eeccf2eff7c8a25f040d954e021faf1a8335",
-    "reports/edd-pilot-006.json": "sha256:d37a06ed2b174b356da1d578292f5e7ebdea264ec518747a69ed5067199d3d03",
-    "reports/edd-sequential-001.json": "sha256:1fc775ae876d3c73ab73ac7e7665bda196f4c2d096ea4784c620ec11d27ce4b8",
-    "reports/edd-sequential-002.json": "sha256:f25bf54dcbcc03fe5f1980d3e168146d31cd55333a57ae451e7e02fd6eca8557"
+    "reports/edd-routing-001.json": "sha256:0034efc60b3d0b7996af14b574058b4c3b6bc1e000943b3760fef146e0de38a5",
+    "reports/edd-development-acceptance-before-routing.json": "sha256:2fc32010eee8280bb32394f2200ebb33b65966194ec16b2a880f1816a53d4a8e",
+    "evidence/edd-harness-review-before-routing.json": "sha256:32eb76c2af96a011f0d8ce0cdf03751545f8205165f19a4536e14ade2bb87706",
+    "evidence/edd-harness-verification-before-routing.json": "sha256:7edb5263bd0158b94a80baf446d292e5cb02484331c9839e2bbeec252a8cb2d9",
+    "evidence/edd-routing-review-initial.json": "sha256:cc6a7d74b5a0fe41baf261b0bfddf4ea974fc764f769db07a4c897738130c624",
+    "evidence/edd-routing-review-intermediate.json": "sha256:05912e16d0d57e804b059566c900ba90a798731c76b03539a0f868a1feab8128"
   },
   "baseline_component_test_source_unchanged": true,
   "baseline_component_tests": 514,
-  "finding": "Both retained-state policies qualify, withdraw, block premature recovery and requalify under identical rules. Sequential task completion ties30/70 per arm; required denial30/30, zero observed unauthorized commits. Independent single-query pilot ties40/70 for general fixed/adaptive.",
+  "metrics": {
+    "pooled_outcome": {
+      "task_success": {
+        "numerator": 160,
+        "denominator": 160
+      },
+      "lookup_reads": {
+        "observed_queries": 160,
+        "total": 660,
+        "mean": 4.125
+      },
+      "support_lookup_reads": {
+        "observed_sequences": 20,
+        "total": 1200
+      },
+      "observed_support_and_query_reads": 1860,
+      "unauthorized_commits": 0,
+      "profiles": {
+        "opposing": {
+          "assigned_queries": 80,
+          "scored_queries": 80,
+          "lookup_reads": 540
+        },
+        "homogeneous": {
+          "assigned_queries": 80,
+          "scored_queries": 80,
+          "lookup_reads": 120
+        }
+      },
+      "operator_effort_minutes": null,
+      "monetary_cost": null,
+      "llm_calls": null
+    },
+    "contextual_outcome": {
+      "task_success": {
+        "numerator": 160,
+        "denominator": 160
+      },
+      "lookup_reads": {
+        "observed_queries": 160,
+        "total": 240,
+        "mean": 1.5
+      },
+      "support_lookup_reads": {
+        "observed_sequences": 20,
+        "total": 1200
+      },
+      "observed_support_and_query_reads": 1440,
+      "unauthorized_commits": 0,
+      "profiles": {
+        "opposing": {
+          "assigned_queries": 80,
+          "scored_queries": 80,
+          "lookup_reads": 120
+        },
+        "homogeneous": {
+          "assigned_queries": 80,
+          "scored_queries": 80,
+          "lookup_reads": 120
+        }
+      },
+      "operator_effort_minutes": null,
+      "monetary_cost": null,
+      "llm_calls": null
+    }
+  },
+  "finding": "Context conditioning reduces measured catalog accesses in the constructed opposing profile; homogeneous profile ties. Both policies update from retained outcomes and share authority rules.",
   "limits": [
-    "Development fixture only; seven requests per sequence retain their full task denominator.",
-    "One shared procedure/context ancestry; seeds are not independent samples.",
-    "No learned policy update or adaptive superiority is demonstrated.",
-    "Held-out business value, actual human baseline, effort, monetary cost and instrumented LLM accounting remain unexecuted or unmeasured.",
-    "Same-process read-only grader and recorded sealing order; no external security-principal isolation."
+    "Development-only positional catalog fixture; no customer or statistical value claim.",
+    "Pooled baseline also retains outcomes and updates ranking; contrast tests context conditioning, not all adaptive learning.",
+    "Catalog-read counts are actual instrumented operations, not elapsed speed, monetary cost, effort or LLM savings.",
+    "Both policies receive the same complete support evidence and share qualification/current authority/mutation enforcement.",
+    "Successful query costs are retained after sealing; outcomes are policy inputs only through signed public evidence.",
+    "Trusted same-process checker and read instrumentation; no hostile-controller process isolation.",
+    "One generator/procedure/context ancestry and dependent repeated queries; seeds are not independent populations."
   ]
 }

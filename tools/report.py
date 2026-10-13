@@ -14,6 +14,7 @@ sys.path.insert(0, str(ROOT))
 from earned_authority.rubric import assess, release_status
 from evaluations.harness.grader import registry_unchanged
 from evaluations.harness.sequential import retained_observations
+from evaluations.harness.routing_audit import valid_report
 
 
 # Named acceptance sets reviewed against the producer assertions. A shortened
@@ -276,7 +277,7 @@ def main():
     add('EDD-PILOT','WP5','Development pilot instrumentation and grading','EDD','DEVELOPMENT_PILOT',
         '300 fixture episodes compare general fixed, adaptive and a legacy pinned diagnostic arm. Shared grading/enforcement; no human, held-out value, cost or effort claim.',
         pilot_path,'PASS' if pilot.get('engineering_acceptance')=='GREEN' and pilot.get('execution_state')=='COMPLETED' else 'UNKNOWN',
-        valid=pilot_valid,release=False,detail='Development engineering gate only; 70 dedicated harness tests are separate from the component baseline')
+        valid=pilot_valid,release=False,detail='Development engineering gate only; 114 current dedicated harness tests are separate from the component baseline')
     sequence_path='reports/edd-sequential-003.json'; sequence=read(sequence_path)
     queries=sequence.get('queries',[])
     phases=('initial_qualification','retained_success','observed_failure','withdrawn_query','fresh_passes_blocked','expired_without_support','requalified_recovery')
@@ -325,6 +326,14 @@ def main():
         '20 paired sequences, 140 queries: retain successful authority, withdraw after failure, block fresh-pass recovery, expire failure and requalify. Both arms use identical retained-state rules.',
         sequence_path,'PASS' if sequence.get('engineering_acceptance')=='GREEN' and sequence.get('execution_state')=='COMPLETED' else 'UNKNOWN',
         valid=sequence_valid,release=False,detail='Lifecycle engineering evidence; no adaptive advantage or held-out business-value claim')
+    routing_path='reports/edd-routing-002.json'; routing=read(routing_path)
+    routing_plan=read('evaluations/routing-plan.json')
+    routing_valid=(current(routing) and routing.get('plan_digest')==digest(ROOT/'evaluations/routing-plan.json')
+                   and len(routing.get('queries',[]))==320 and valid_report(routing,routing_plan))
+    add('EDD-ROUTING','WP5','Context-conditioned deterministic agent selection','EDD','DEVELOPMENT_ROUTING',
+        '40 development sequences, 320 queries; pooled and context-conditioned policies both learn from retained verified outcomes. Actual catalog reads include separately reported support work.',
+        routing_path,'PASS' if routing.get('engineering_acceptance')=='GREEN' and routing.get('execution_state')=='COMPLETED' else 'UNKNOWN',
+        valid=routing_valid,release=False,detail='114 harness tests and 42 independent probes; constructed fixture, business and confirmatory acceptance remain AMBER')
     pending=[
         ('EDD-PLAN','WP5','Preregistered evaluation thresholds and risk budget','EDD','HELD_OUT_EVALUATION','Choose value target, sample adequacy, fixed versions, family-disjoint holdout and actual human baseline before scoring.'),
         ('EDD-RUN','WP5','Measured business value and uncertainty','EDD','HELD_OUT_EVALUATION','Confirmatory protocol is unexecuted. A development pilot exists; its engineered policy contrast does not establish reduced effort, cost or customer benefit.'),
@@ -333,7 +342,7 @@ def main():
         ('ROB-01','Later','Robotics simulation transfer','EDD','SIMULATION','Deferred BDD-038: separately governed simulator and safety/controller boundaries before any hardware consideration.')]
     for key,lane,name,method,environment,scope in pending:
         if key=='EDD-PLAN':
-            add(key,lane,name,method,environment,scope,'reports/edd-confirmatory-readiness-002.json','UNKNOWN',
+            add(key,lane,name,method,environment,scope,'reports/edd-confirmatory-readiness-003.json','UNKNOWN',
                 detail='Prerequisite diagnostic only; nine open requirements, no execution permission')
         else:
             add(key,lane,name,method,environment,scope,release=key not in ('DEP-RH','ROB-01'))

@@ -1,0 +1,25 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____________ test_replayed_cost_observation_cannot_change_ranking _____________
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-236/test_replayed_cost_observation0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1099f4380>
+
+    def test_replayed_cost_observation_cannot_change_ranking(tmp_path,monkeypatch):
+        import evaluations.harness.routing as routing
+        original=routing.cost_history
+        def duplicate(runtime):
+            rows=original(runtime)
+            return rows+[copy.deepcopy(rows[0])] if rows else rows
+        monkeypatch.setattr(routing,'cost_history',duplicate)
+        report=one_seed_run(tmp_path)
+        assert report['engineering_acceptance']=='RED'
+>       assert 'cost evidence' in report['error'].lower()
+E       AssertionError: assert 'cost evidence' in 'runtimeerror: state altered during preparation'
+E        +  where 'runtimeerror: state altered during preparation' = <built-in method lower of str object at 0x109a68b10>()
+E        +    where <built-in method lower of str object at 0x109a68b10> = 'RuntimeError: State altered during preparation'.lower
+
+evaluations/tests/test_routing.py:142: AssertionError
+=========================== short test summary info ============================
+FAILED evaluations/tests/test_routing.py::test_replayed_cost_observation_cannot_change_ranking
+1 failed, 26 deselected in 0.17s

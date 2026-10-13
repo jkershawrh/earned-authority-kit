@@ -1,0 +1,58 @@
+{
+  "version": "routing-development-1",
+  "mode": "DEVELOPMENT_ROUTING",
+  "split": "development",
+  "comparators": [
+    "pooled_outcome",
+    "contextual_outcome"
+  ],
+  "seeds": [
+    104729,
+    130363,
+    155921,
+    181081,
+    208351,
+    233021,
+    259033,
+    284723,
+    310019,
+    335999
+  ],
+  "profiles": [
+    "opposing",
+    "homogeneous"
+  ],
+  "queries_per_sequence": 8,
+  "catalog_size": 9,
+  "deadline_ms": 30000,
+  "retry_budget": 0,
+  "policy": "Rank live-eligible candidates by mean verified fresh catalog reads; pooled across contexts or exact requested context; stable candidate-ID ties.",
+  "feedback_rule": "SEAL_QUERY_BEFORE_RETAINING_ITS_COST",
+  "family": {
+    "family_id": "directional-lookup-demo",
+    "procedure_ancestors": [
+      "directional-catalog-scan-v1"
+    ],
+    "context_ancestors": [
+      "catalog-position-generator-v1"
+    ],
+    "split": "development"
+  },
+  "support_task_indices": [
+    100,
+    102,
+    104
+  ],
+  "first_candidate_direction_by_seed": {
+    "104729": "forward",
+    "130363": "reverse",
+    "155921": "forward",
+    "181081": "reverse",
+    "208351": "forward",
+    "233021": "reverse",
+    "259033": "forward",
+    "284723": "reverse",
+    "310019": "forward",
+    "335999": "reverse"
+  }
+}

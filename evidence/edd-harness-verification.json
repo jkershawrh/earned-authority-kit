@@ -1,7 +1,7 @@
 {
   "status": "PASS",
   "scope": "EDD_HARNESS_AND_LOCAL_SQLITE_FIXTURE_COMPONENTS",
-  "tests_run": 70,
+  "tests_run": 114,
   "cases": [
     {
       "test": "evaluations/tests/test_grader.py::test_grader_detects_commit_after_acknowledged_revocation_despite_pass_claim",
@@ -212,6 +212,182 @@
       "outcome": "PASS"
     },
     {
+      "test": "evaluations/tests/test_routing.py::test_contextual_choice_uses_requested_context_and_baseline_uses_all_same_evidence",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_invalid_stale_or_wrong_binding_cost_cannot_select[change0]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_invalid_stale_or_wrong_binding_cost_cannot_select[change1]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_invalid_stale_or_wrong_binding_cost_cannot_select[change2]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_invalid_stale_or_wrong_binding_cost_cannot_select[change3]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_invalid_stale_or_wrong_binding_cost_cannot_select[change4]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_invalid_stale_or_wrong_binding_cost_cannot_select[change5]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_invalid_stale_or_wrong_binding_cost_cannot_select[change6]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_read_count_comes_from_actual_catalog_accesses_and_trace_is_checked[forward]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_read_count_comes_from_actual_catalog_accesses_and_trace_is_checked[reverse]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_routing_rejects_unfrozen_or_heldout_plan[mode-CONFIRMATORY]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_routing_rejects_unfrozen_or_heldout_plan[split-held_out]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_routing_rejects_unfrozen_or_heldout_plan[seeds-value2]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_routing_rejects_unfrozen_or_heldout_plan[seeds-value3]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_routing_rejects_unfrozen_or_heldout_plan[profiles-value4]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_routing_rejects_unfrozen_or_heldout_plan[retry_budget-1]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_real_routing_sequence_keeps_success_and_compares_real_work[opposing]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_real_routing_sequence_keeps_success_and_compares_real_work[homogeneous]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_routing_hard_stop_retains_all_assigned_tasks",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_routing_support_mutation_fails_before_query",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_routing_admission_mutation_fails",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_routing_no_candidate_cannot_fake_success",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_cost_signature_corruption_stops_run",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_current_sources_include_plan_cli_and_both_procedures",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_replayed_cost_observation_cannot_change_ranking",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_known_failure_removes_candidate_from_both_live_policy_choices",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_revocation_after_admission_prevents_commit",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_procedure_cannot_replace_host_owned_read_trace",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_cost_publication_cannot_delete_existing_evidence",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_nonindependent_signed_observation_cannot_supply_cost",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_signed_cost_rebinding_cannot_override_independent_work_receipt[resource-registry/other]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_signed_cost_rebinding_cannot_override_independent_work_receipt[direction-reverse]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_complete_public_report_can_be_independently_rechecked",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_public_report_does_not_accept_altered_evidence[missing_query]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_public_report_does_not_accept_altered_evidence[fake_reads]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_public_report_does_not_accept_altered_evidence[signature]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_public_report_does_not_accept_altered_evidence[wrong_resource]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_public_report_does_not_accept_altered_evidence[future_feedback]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_public_report_does_not_accept_altered_evidence[metric]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_public_report_does_not_accept_altered_evidence[wrong_choice]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_public_report_does_not_accept_altered_evidence[unsealed_query]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_report_cannot_fabricate_competitor_ineligibility[public]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_report_cannot_fabricate_competitor_ineligibility[public_and_snapshots]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_routing.py::test_candidate_orientation_is_counterbalanced_and_manifest_bound",
+      "outcome": "PASS"
+    },
+    {
       "test": "evaluations/tests/test_sequential.py::test_sequence_rejects_unfrozen_design[mode-CONFIRMATORY]",
       "outcome": "PASS"
     },
@@ -286,8 +462,8 @@
   ],
   "exit_code": 0,
   "collection_errors": [],
-  "started_at_ms": 1791916654890,
-  "finished_at_ms": 1791916657172,
+  "started_at_ms": 1791918774909,
+  "finished_at_ms": 1791918814662,
   "source_hashes_before": {
     "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
     "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
@@ -306,12 +482,16 @@
     "evaluations/harness/controller.py": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
     "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
     "evaluations/harness/grader.py": "sha256:da20cca667bf56d3063fc0a874687bf779284b358310ff1c311c450e7885e1ac",
+    "evaluations/harness/lookup.py": "sha256:43d7f310a530187ab275cc00b9a432c6a4d3cc00348692620f25bbe1952e2880",
     "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
+    "evaluations/harness/routing.py": "sha256:aa1aeba9b203045c339f1e3de1d1c29ef520cf336ccb1738209f42cb9553d537",
+    "evaluations/harness/routing_audit.py": "sha256:91991dd0a39a08b47ea2eb733e3a636ea85a3c8ecee7fc1da040d863024f70de",
     "evaluations/harness/runner.py": "sha256:e8df9c0b399d8b8096956e41686451c7e1622b06d4a67b673ade0e73b907e6b0",
     "evaluations/harness/sequential.py": "sha256:b7b696b5399b3bb609d04d9ce51087a6975220de0e5ac2630340073f5bfca0b3",
     "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
     "evaluations/tests/test_pilot.py": "sha256:83aa40ffc3af227db90fb8c745140670eb8247ea1f9a0ee3ad7af98b08a6e631",
     "evaluations/tests/test_readiness.py": "sha256:72b6fa4dd20d4280eaf7500a4a7610ad9678f45181c081138f3560dbb89b9e61",
+    "evaluations/tests/test_routing.py": "sha256:c5102d4fe87d4ddba67391741178eb7db83beca8ebf570b8a5d191427ebd6807",
     "evaluations/tests/test_sequential.py": "sha256:1072e15d7fa4f77a0383a1c46fc6dfe07ad17c09cf10076c09ca3592baff8e1a",
     "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
     "evaluations/pilot-plan-v2.json": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
@@ -339,12 +519,16 @@
     "evaluations/harness/controller.py": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
     "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
     "evaluations/harness/grader.py": "sha256:da20cca667bf56d3063fc0a874687bf779284b358310ff1c311c450e7885e1ac",
+    "evaluations/harness/lookup.py": "sha256:43d7f310a530187ab275cc00b9a432c6a4d3cc00348692620f25bbe1952e2880",
     "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
+    "evaluations/harness/routing.py": "sha256:aa1aeba9b203045c339f1e3de1d1c29ef520cf336ccb1738209f42cb9553d537",
+    "evaluations/harness/routing_audit.py": "sha256:91991dd0a39a08b47ea2eb733e3a636ea85a3c8ecee7fc1da040d863024f70de",
     "evaluations/harness/runner.py": "sha256:e8df9c0b399d8b8096956e41686451c7e1622b06d4a67b673ade0e73b907e6b0",
     "evaluations/harness/sequential.py": "sha256:b7b696b5399b3bb609d04d9ce51087a6975220de0e5ac2630340073f5bfca0b3",
     "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
     "evaluations/tests/test_pilot.py": "sha256:83aa40ffc3af227db90fb8c745140670eb8247ea1f9a0ee3ad7af98b08a6e631",
     "evaluations/tests/test_readiness.py": "sha256:72b6fa4dd20d4280eaf7500a4a7610ad9678f45181c081138f3560dbb89b9e61",
+    "evaluations/tests/test_routing.py": "sha256:c5102d4fe87d4ddba67391741178eb7db83beca8ebf570b8a5d191427ebd6807",
     "evaluations/tests/test_sequential.py": "sha256:1072e15d7fa4f77a0383a1c46fc6dfe07ad17c09cf10076c09ca3592baff8e1a",
     "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
     "evaluations/pilot-plan-v2.json": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
@@ -356,7 +540,7 @@
   },
   "source_unchanged_during_run": true,
   "artifacts": {
-    "evidence/edd-harness-green.log": "sha256:7fa0778fd4e69c6fac4c52a7f997cf795b9a43736be95b3c956b7055953e3c65",
+    "evidence/edd-harness-green.log": "sha256:ee1142901d4c7b5c7ea6ea7c1cae67d4915378d1b1e56f09516bbf0bbd646fa9",
     "evidence/edd-grader-red.log": "sha256:672bb3cf183607cbee4629be879b7baf91d9d9a354a1fd82bcbb3372fe6abb10",
     "tools/verify_edd.py": "sha256:748373ad30712381fc64ddc9bdff06faf5a447bbd3046b336d11bbe0fc0e617a"
   },

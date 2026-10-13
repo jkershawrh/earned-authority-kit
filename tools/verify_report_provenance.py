@@ -112,11 +112,23 @@ def pilot_preparation_write(t,*args):
     d['episodes'][0]['preparation_after']['registry']['unrelated/sentinel']['version']='altered'
     p.write_text(json.dumps(d))
 run_case('pilot_preparation_write_does_not_pass',pilot_preparation_write,row='EDD-PILOT')
+run_case('complete_routing_development_passes',lambda *args:None,'GREEN',row='EDD-ROUTING')
+def routing_change(change):
+    def mutate(t,*args):
+        p=t/'reports/edd-routing-002.json';d=json.loads(p.read_text());change(d);p.write_text(json.dumps(d))
+    return mutate
+run_case('partial_routing_does_not_pass',routing_change(lambda d:d['queries'].pop()),row='EDD-ROUTING')
+run_case('false_routing_metrics_do_not_pass',routing_change(lambda d:d['metrics']['pooled_outcome']['lookup_reads'].update(total=0)),row='EDD-ROUTING')
+run_case('altered_routing_choice_does_not_pass',routing_change(lambda d:d['queries'][0].update(choice='unregistered')),row='EDD-ROUTING')
+run_case('altered_routing_receipt_does_not_pass',routing_change(lambda d:d['queries'][0]['published_cost'].update(signature='AAAA')),row='EDD-ROUTING')
+def changed_lookup(t,*args):
+    p=t/'evaluations/harness/lookup.py';p.write_text(p.read_text()+'\n')
+run_case('changed_lookup_source_does_not_pass',changed_lookup,row='EDD-ROUTING')
 module.ROOT = ROOT
 report={'status':'PASS','scope':'READINESS_REPORT_PROVENANCE_NEGATIVE_CONTROLS','checks':checks,
         'finished_at_ms':time.time_ns()//1000000,
         'source_hashes':{name:digest(ROOT/name) for name in ('tools/report.py','tools/verify_report_provenance.py')},
-        'artifacts':{name:digest(ROOT/name) for name in ('reports/multi-resource-reference-combined.json','reports/service-bdd-live-013.json')},
+        'artifacts':{name:digest(ROOT/name) for name in ('reports/multi-resource-reference-combined.json','reports/service-bdd-live-013.json','reports/edd-routing-002.json')},
         'limitations':['Isolated altered evidence copies; original execution records unchanged','Does not execute the underlying services']}
 (ROOT/'reports/report-provenance-checks.json').write_text(json.dumps(report,indent=2)+'\n')
 print(json.dumps({'status':'PASS','checks':len(checks)}))

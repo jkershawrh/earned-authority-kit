@@ -33,7 +33,7 @@ The CLI supports only the frozen development plan. It rejects held-out/confirmat
 
 ## Scope
 
-The dedicated suite contains 70 tests, including eighteen sequence controls and two new boundary controls in the original pilot, separate from the unchanged 514-test component baseline. [edd-sequential-red.log](../evidence/edd-sequential-red.log) records the absent implementation before creation; [edd-sequential-green.log](../evidence/edd-sequential-green.log) records the eighteen implemented sequence controls. The current full harness verification and independent review bind their exact source snapshots.
+The sequential acceptance snapshot contained 70 tests, including eighteen sequence controls and two new boundary controls in the original pilot. The current dedicated suite has 114 tests, separate from the unchanged 514-test component baseline. [edd-sequential-red.log](../evidence/edd-sequential-red.log) records the absent implementation before creation; [edd-sequential-green.log](../evidence/edd-sequential-green.log) records the eighteen implemented sequence controls. The before-routing verification and review preserve that acceptance snapshot. Current verification and review cover the additional routing increment.
 
 This is one development family with shared generator, procedure and context ancestry; nominal seed variation is not independent sampling. Deadlines are retrospective, logical time is controlled, and timing excludes support preparation and the final grade calculation. No actual human comparison, measured cost, operator effort, instrumented LLM usage, production or robotics acceptance is supplied. The confirmatory design remains AMBER and does not authorize execution.
 

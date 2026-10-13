@@ -1,0 +1,73 @@
+{
+  "status": "AMBER",
+  "authorizes_execution": false,
+  "scope": "DECLARED_PREREQUISITE_DIAGNOSTIC_ONLY",
+  "checks": [
+    {
+      "check": "primary_outcome_selected",
+      "passed": false,
+      "detail": "Primary outcome is proposed until selected; pilot success is not value acceptance."
+    },
+    {
+      "check": "explicit_value_and_quality_thresholds",
+      "passed": false,
+      "detail": "Finite fractions and explicitly selected thresholds required; no invented default benefit threshold."
+    },
+    {
+      "check": "declared_family_partitions_disjoint",
+      "passed": false,
+      "detail": "All three partitions and declared ancestry required. Renamed pilot fixtures are not unseen families."
+    },
+    {
+      "check": "dataset_content_and_leakage_review",
+      "passed": false,
+      "detail": "Declared ancestry alone does not prove independent populations or absence of near duplicates."
+    },
+    {
+      "check": "sample_size_and_uncertainty_review",
+      "passed": false,
+      "detail": "An explicit reviewed independent-unit design is required; seed count is not sample adequacy."
+    },
+    {
+      "check": "actual_human_baseline_plan",
+      "passed": false,
+      "detail": "Name a real operator and paired task/order plan; no simulated human baseline."
+    },
+    {
+      "check": "sequential_support_query_design",
+      "passed": false,
+      "detail": "One fresh-support query gives general fixed/adaptive identical behavior; learning requires a separately reviewed schedule."
+    },
+    {
+      "check": "preregistration_frozen",
+      "passed": false,
+      "detail": "Freeze executable sources, data, policies, budgets and stopping rules before held-out inspection."
+    },
+    {
+      "check": "confirmatory_execution_adapter_available",
+      "passed": false,
+      "detail": "The current CLI deliberately rejects held-out/confirmatory execution. A reviewed adapter is not implemented."
+    }
+  ],
+  "blockers": [
+    "primary_outcome_selected",
+    "explicit_value_and_quality_thresholds",
+    "declared_family_partitions_disjoint",
+    "dataset_content_and_leakage_review",
+    "sample_size_and_uncertainty_review",
+    "actual_human_baseline_plan",
+    "sequential_support_query_design",
+    "preregistration_frozen",
+    "confirmatory_execution_adapter_available"
+  ],
+  "limits": [
+    "Local declarations are not signed reviewer attestations.",
+    "This diagnostic does not certify sample adequacy, dataset independence or permission to score."
+  ],
+  "design_sha256": "sha256:75650c7b4a2857c441382d31ecf7901205b89175d7472b9024f556f8754132c1",
+  "source_hashes": {
+    "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
+    "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
+    "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07"
+  }
+}

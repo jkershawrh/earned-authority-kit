@@ -133,16 +133,53 @@
       "expected": "AMBER",
       "actual": "AMBER",
       "passed": true
+    },
+    {
+      "check": "complete_routing_development_passes",
+      "expected": "GREEN",
+      "actual": "GREEN",
+      "passed": true
+    },
+    {
+      "check": "partial_routing_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "false_routing_metrics_do_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "altered_routing_choice_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "altered_routing_receipt_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "changed_lookup_source_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
     }
   ],
-  "finished_at_ms": 1791916883811,
+  "finished_at_ms": 1791919864494,
   "source_hashes": {
-    "tools/report.py": "sha256:5f984dcfc24702e9d79a11f43fd91bb3e8fada28d74eee3f09ab42c612fd0273",
-    "tools/verify_report_provenance.py": "sha256:1f1c89bdac3596859559cca173a0ebef8c34279f9ff353b8c706b06759e6cd5d"
+    "tools/report.py": "sha256:df2e442c07d195a91f07252c920df095eeab408f8d476bc5efc78f3198accce7",
+    "tools/verify_report_provenance.py": "sha256:81b82307e863b79ef6169e4bf26cc14799f5160099ea6d73a9eb02315919a453"
   },
   "artifacts": {
     "reports/multi-resource-reference-combined.json": "sha256:c15c8c7512cfb2f61db04e24ac6a2b6ffd568d4614fd25aad20fe14234179d4c",
-    "reports/service-bdd-live-013.json": "sha256:7377049e19989df1d063c70625bc19e28ea4fceea8840d90e7a87c20a0e406fd"
+    "reports/service-bdd-live-013.json": "sha256:7377049e19989df1d063c70625bc19e28ea4fceea8840d90e7a87c20a0e406fd",
+    "reports/edd-routing-002.json": "sha256:a2cfe76fbe0d89b4cee3ddd9edf283b7e8a58f89ea7771fe148a1d08239f65d6"
   },
   "limitations": [
     "Isolated altered evidence copies; original execution records unchanged",

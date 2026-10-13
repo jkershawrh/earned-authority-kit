@@ -1,5 +1,5 @@
 {
-  "revision": "sha256:eb23e2b8cfcc138c6f5b8570940a4223966a19008a487bf98fc786dd0d6d3340",
+  "revision": "sha256:ef31b0b518be3ced188efb46188dc504533b189dc8f3a449db2f63d9a4222a6f",
   "files": {
     "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
     "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
@@ -55,16 +55,21 @@
     "evaluations/harness/controller.py": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
     "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
     "evaluations/harness/grader.py": "sha256:da20cca667bf56d3063fc0a874687bf779284b358310ff1c311c450e7885e1ac",
+    "evaluations/harness/lookup.py": "sha256:43d7f310a530187ab275cc00b9a432c6a4d3cc00348692620f25bbe1952e2880",
     "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
+    "evaluations/harness/routing.py": "sha256:aa1aeba9b203045c339f1e3de1d1c29ef520cf336ccb1738209f42cb9553d537",
+    "evaluations/harness/routing_audit.py": "sha256:91991dd0a39a08b47ea2eb733e3a636ea85a3c8ecee7fc1da040d863024f70de",
     "evaluations/harness/runner.py": "sha256:e8df9c0b399d8b8096956e41686451c7e1622b06d4a67b673ade0e73b907e6b0",
     "evaluations/harness/sequential.py": "sha256:b7b696b5399b3bb609d04d9ce51087a6975220de0e5ac2630340073f5bfca0b3",
     "evaluations/pilot-plan-v2.json": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
     "evaluations/pilot-plan.json": "sha256:ccc746e658569ee6d61ef11bc7843721d0785a5da4c2ac0d54e6ee6ebccdd715",
     "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
+    "evaluations/routing-plan.json": "sha256:4bea4472fc5e6825ef34dfdc99f6188cd60c0d12d7d84b3896aba8643fcb7bb4",
     "evaluations/sequential-plan.json": "sha256:5d8357a6ff6c596bef82ad5b27dd7e9f003904d980c42755c2980a57395df8e4",
     "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
     "evaluations/tests/test_pilot.py": "sha256:83aa40ffc3af227db90fb8c745140670eb8247ea1f9a0ee3ad7af98b08a6e631",
     "evaluations/tests/test_readiness.py": "sha256:72b6fa4dd20d4280eaf7500a4a7610ad9678f45181c081138f3560dbb89b9e61",
+    "evaluations/tests/test_routing.py": "sha256:c5102d4fe87d4ddba67391741178eb7db83beca8ebf570b8a5d191427ebd6807",
     "evaluations/tests/test_sequential.py": "sha256:1072e15d7fa4f77a0383a1c46fc6dfe07ad17c09cf10076c09ca3592baff8e1a",
     "patches/canonical-passport-hardening.patch": "sha256:1f633ff8b4dd0f8e71de5e4a435d2ac5bae205a5e75a6618fa0b052a4cb7cbf7",
     "patches/foundation-authority-checks.patch": "sha256:8f1b387bceaf36854cbf8d667674ba95b5735737dd873fa3797434ae1af0fa81",
@@ -96,8 +101,9 @@
     "tests/test_runtime_security.py": "sha256:76ea516ef8d41bdd974a084ba8ea6a83071745bd09e1a51783668d0b9d60b025",
     "tests/test_wire_contracts.py": "sha256:69b1d2a86b3decb724d832de0caf601d67ab89a227b075df936e86afcadbe280",
     "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07",
-    "tools/report.py": "sha256:5f984dcfc24702e9d79a11f43fd91bb3e8fada28d74eee3f09ab42c612fd0273",
+    "tools/report.py": "sha256:df2e442c07d195a91f07252c920df095eeab408f8d476bc5efc78f3198accce7",
     "tools/run_edd_pilot.py": "sha256:2a370dee1ce5a6898c209659f4cc47e5a67e4b02431df8ab3335edecdde5eea7",
+    "tools/run_edd_routing.py": "sha256:2f8884b1477cf5b2f1cce06f6517f08993b6b3e49144ea7a212caea24d4fde08",
     "tools/run_edd_sequential.py": "sha256:83f6c54ef7e2be116f6f4920711965e8efd9d18220ccc9ed0d7b1ad5f7fff923",
     "tools/validate_adversarial.py": "sha256:c9c57b66cf87fe83ed907bb523e4a27c18ff933305c4bbe06ca6954ab28381b4",
     "tools/validate_authority_recovery.py": "sha256:eeb59a4db0ca06798094618adc1504f9f1873d827dba11ac14146f873cb2cf83",
@@ -105,6 +111,6 @@
     "tools/validate_connected.py": "sha256:88d8fd6688b79164ae2f39e8f03eeb5efed47e130e47b2faef209bdb32da0865",
     "tools/verify.py": "sha256:f50c482fdc25ae553c3d1dc3753a5af7ad89828f299868e972b61a9fcb3bf1da",
     "tools/verify_edd.py": "sha256:748373ad30712381fc64ddc9bdff06faf5a447bbd3046b336d11bbe0fc0e617a",
-    "tools/verify_report_provenance.py": "sha256:1f1c89bdac3596859559cca173a0ebef8c34279f9ff353b8c706b06759e6cd5d"
+    "tools/verify_report_provenance.py": "sha256:81b82307e863b79ef6169e4bf26cc14799f5160099ea6d73a9eb02315919a453"
   }
 }

@@ -1,0 +1,98 @@
+FFFF.                                                                    [100%]
+=================================== FAILURES ===================================
+_____________ test_procedure_cannot_replace_host_owned_read_trace ______________
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x108fa6450>
+
+    def test_procedure_cannot_replace_host_owned_read_trace(monkeypatch):
+        import evaluations.harness.lookup as lookup
+        def dishonest(catalog,key):
+            found=None
+            for i in range(len(catalog)):
+                record=catalog[i]
+                if record['key']==key: found=record['model']
+            try: catalog.trace=[0]
+            except AttributeError: pass
+            return found
+        monkeypatch.setattr(lookup,'scan_forward',dishonest)
+        records=[dict(key=str(i),model='model-'+str(i)) for i in range(9)]
+        result=lookup.execute('forward',records,'0')
+>       assert result['reads']==9
+E       assert 1 == 9
+
+evaluations/tests/test_routing.py:188: AssertionError
+____________ test_cost_publication_cannot_delete_existing_evidence _____________
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-238/test_cost_publication_cannot_d0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x108f73dd0>
+
+    def test_cost_publication_cannot_delete_existing_evidence(tmp_path,monkeypatch):
+        import evaluations.harness.routing as routing
+        original=routing.record_cost
+        def delete(runtime,candidate,direction,job,result,observation):
+            cost=original(runtime,candidate,direction,job,result,observation)
+            if '-query-0' in observation['attempt_id']:
+                with runtime._tx() as db:
+                    old=db.execute("SELECT attempt_id FROM routing_costs WHERE attempt_id LIKE '%support%' LIMIT 1").fetchone()[0]
+                    db.execute('DELETE FROM routing_costs WHERE attempt_id=?',(old,))
+                    db.execute('DELETE FROM observations WHERE attempt_id=?',(old,))
+            return cost
+        monkeypatch.setattr(routing,'record_cost',delete)
+        report=one_seed_run(tmp_path)
+>       assert report['engineering_acceptance']=='RED'
+E       AssertionError: assert 'GREEN' == 'RED'
+E         
+E         - RED
+E         + GREEN
+
+evaluations/tests/test_routing.py:205: AssertionError
+__________ test_nonindependent_signed_observation_cannot_supply_cost ___________
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-238/test_nonindependent_signed_obs0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x108d812b0>
+
+    def test_nonindependent_signed_observation_cannot_supply_cost(tmp_path,monkeypatch):
+        from earned_authority.runtime import Runtime
+        original=Runtime.shadow
+        def dependent(self,**kwargs):
+            kwargs['independent']=False
+            return original(self,**kwargs)
+        monkeypatch.setattr(Runtime,'shadow',dependent)
+        report=one_seed_run(tmp_path)
+        assert report['engineering_acceptance']=='RED'
+>       assert 'cost evidence' in report['error'].lower()
+E       AssertionError: assert 'cost evidence' in 'runtimeerror: expected legitimate lookup query failed'
+E        +  where 'runtimeerror: expected legitimate lookup query failed' = <built-in method lower of str object at 0x10bbd2c10>()
+E        +    where <built-in method lower of str object at 0x10bbd2c10> = 'RuntimeError: Expected legitimate lookup query failed'.lower
+
+evaluations/tests/test_routing.py:218: AssertionError
+_ test_signed_cost_rebinding_cannot_override_independent_work_receipt[resource-registry/other] _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-238/test_signed_cost_rebinding_can0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10ba17fe0>
+field = 'resource', value = 'registry/other'
+
+    @pytest.mark.parametrize('field,value',[('resource','registry/other'),('direction','reverse')])
+    def test_signed_cost_rebinding_cannot_override_independent_work_receipt(tmp_path,monkeypatch,field,value):
+        import evaluations.harness.routing as routing
+        original=routing.record_cost
+        def rebind(runtime,*args):
+            cost=original(runtime,*args);cost[field]=value if cost[field]!=value else 'forward'
+            cost=runtime._seal(cost,'checker')
+            with runtime._tx() as db: db.execute('UPDATE routing_costs SET body=? WHERE attempt_id=?',(json.dumps(cost),cost['attempt_id']))
+            return cost
+        monkeypatch.setattr(routing,'record_cost',rebind)
+        report=one_seed_run(tmp_path)
+        assert report['engineering_acceptance']=='RED'
+>       assert 'cost evidence' in report['error'].lower()
+E       AssertionError: assert 'cost evidence' in 'runtimeerror: expected legitimate lookup query failed'
+E        +  where 'runtimeerror: expected legitimate lookup query failed' = <built-in method lower of str object at 0x108fce5b0>()
+E        +    where <built-in method lower of str object at 0x108fce5b0> = 'RuntimeError: Expected legitimate lookup query failed'.lower
+
+evaluations/tests/test_routing.py:233: AssertionError
+=========================== short test summary info ============================
+FAILED evaluations/tests/test_routing.py::test_procedure_cannot_replace_host_owned_read_trace
+FAILED evaluations/tests/test_routing.py::test_cost_publication_cannot_delete_existing_evidence
+FAILED evaluations/tests/test_routing.py::test_nonindependent_signed_observation_cannot_supply_cost
+FAILED evaluations/tests/test_routing.py::test_signed_cost_rebinding_cannot_override_independent_work_receipt[resource-registry/other]
+4 failed, 1 passed, 27 deselected in 19.11s
