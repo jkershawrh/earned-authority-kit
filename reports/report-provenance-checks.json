@@ -67,12 +67,30 @@
       "expected": "AMBER",
       "actual": "AMBER",
       "passed": true
+    },
+    {
+      "check": "complete_development_pilot_passes",
+      "expected": "GREEN",
+      "actual": "GREEN",
+      "passed": true
+    },
+    {
+      "check": "partial_pilot_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "changed_pilot_grader_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
     }
   ],
-  "finished_at_ms": 1791906583418,
+  "finished_at_ms": 1791914151202,
   "source_hashes": {
-    "tools/report.py": "sha256:1f364670aa7911c46edae01a54d13ec6a3930d577c2ffa8a83f7afbd0972ea72",
-    "tools/verify_report_provenance.py": "sha256:0283be68cfc720ac36cedcc7056244df62971a56bae991fc9b31a11ddef83e31"
+    "tools/report.py": "sha256:ce188977cbaafa4eee2df3f674c2d21f30a4a059eda7725182f9d59fdbe512c2",
+    "tools/verify_report_provenance.py": "sha256:90f57a048fc76e18092d694d958baaf000975269c9ee331369dbedb8267c78b0"
   },
   "artifacts": {
     "reports/multi-resource-reference-combined.json": "sha256:c15c8c7512cfb2f61db04e24ac6a2b6ffd568d4614fd25aad20fe14234179d4c",

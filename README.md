@@ -4,7 +4,7 @@ This kit connects a deterministic procedure's qualification to bounded authority
 
 **Three bounded engineering milestones have executable evidence:** a local fixture; connected canonical services; and a fresh same-host reference installation with persistent restart. The latest component run passes **514 tests**, and the fresh-reference deployment passes **123 checks**. The dedicated service behavior run passes 52 executed cases and completes **37 of 37 implemented scenarios**. These counts describe different suites and are not statistical trials. The full roadmap remains **AMBER**: business value has not been evaluated, and independent installation, operations, deployment and robotics gates remain open.
 
-Start with [the visual roadmap](roadmap.html), [the parallel work plan](docs/ROADMAP.md), [deployment instructions](deploy/reference/README.md) and [scope and remaining gaps](docs/BOUNDARIES.md). **EDD means evaluation-driven development.** The [evaluation protocol](evaluations/README.md) is drafted but unexecuted; it needs a chosen value target, actual human baseline and preregistered sample/risk criteria.
+Start with [the visual roadmap](roadmap.html), [the parallel work plan](docs/ROADMAP.md), [deployment instructions](deploy/reference/README.md) and [scope and remaining gaps](docs/BOUNDARIES.md). **EDD means evaluation-driven development.** The [evaluation protocol](evaluations/README.md) is drafted; its confirmatory comparison remains unexecuted and needs a chosen value target, actual human baseline and preregistered sample/risk criteria.
 
 ## Reproduce the reference
 
@@ -56,3 +56,5 @@ The current increment records the exact qualification and authorization checks f
 **RED:** a demonstrated required failure on the named target, or an explicitly historical failing baseline. **AMBER:** missing, unexecuted, stale, partial, incompatible or insufficient evidence. **GREEN:** all checks declared for that exact scope passed with recorded evidence. A correct refusal passes its denial test. A successful local demonstration does not pass a value, independent-operator, distributed-system or hardware-safety gate.
 
 TDD is test-driven, CDD contract-driven, BDD behavior-driven, and EDD evaluation-driven development. Evidence collection supports all four. CUT's expansion remains unconfirmed; the roadmap names each component under test without assuming the intended expansion.
+
+An [executable development EDD pilot](evaluations/PILOT.md) now compares two declared automatic policies on 200 fixture episodes. It checks the evaluation harness and retains full denominators; its pinned-runbook contrast does not establish business value. The human and held-out comparisons remain AMBER.

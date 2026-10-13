@@ -1,0 +1,29 @@
+........F............................                                    [100%]
+=================================== FAILURES ===================================
+_______________ test_grader_rejects_corrupted_commit[unrelated] ________________
+
+corruption = 'unrelated'
+
+    @pytest.mark.parametrize('corruption', ['expiry', 'signature', 'context', 'qualification', 'attribution', 'unrelated'])
+    def test_grader_rejects_corrupted_commit(corruption):
+        ref, before, after, cmd = sample()
+        if corruption == 'expiry':
+            before['authority']['grants']['release-model']['expires_at_ms'] = 100
+        elif corruption == 'signature':
+            before['authority_authenticated'] = False
+        elif corruption == 'context':
+            cmd['context'] = 'other'
+        elif corruption == 'qualification':
+            before['qualifications']['q']['disposition'] = 'HOLD'
+        elif corruption == 'attribution':
+            after['attempts'] = {}
+        else:
+            after['registry']['other']['version'] = 'changed'
+        result = grade(ref, before, after, cmd, {'outcome': 'PASS'}, 100)
+>       assert not result['success'] and result['unauthorized_commits'] == 1
+E       assert (not False and 2 == 1)
+
+evaluations/tests/test_grader.py:68: AssertionError
+=========================== short test summary info ============================
+FAILED evaluations/tests/test_grader.py::test_grader_rejects_corrupted_commit[unrelated]
+1 failed, 36 passed in 0.86s

@@ -65,3 +65,7 @@ Every result records separate dimensions: execution state, environment, observat
 **RED** means a required behavior demonstrably fails or evidence is misrepresented. **AMBER** includes unrun work, insufficient evidence, unresolved acceptance thresholds, and inadequate sampling. **GREEN** applies only to a named gate that passed its declared criteria in its declared environment. A green fixture check or local simulator result does not establish production readiness or customer value.
 
 Before running the pilot, complete the manifest and leakage review, implement independent grading and metric instrumentation, and select the risk and sampling assumptions. **No EDD evaluation was run in this increment.**
+
+## Executable development pilot
+
+[PILOT.md](PILOT.md) documents the separate development harness and reports/edd-pilot-003.json. It runs 200 paired fixture episodes with independent persisted-state grading and two declared automatic policies. The 41 dedicated harness tests are separate from the 514-test baseline. The human baseline, confirmatory protocol, risk budget, held-out split and business-value evaluation remain unexecuted/AMBER. The machine-readable draft above is not relabelled as completed by this pilot.

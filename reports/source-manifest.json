@@ -1,5 +1,5 @@
 {
-  "revision": "sha256:ae8bb9d3dedd2b9588d682a577bfde43177935c139b9e2411051d00b5d728f17",
+  "revision": "sha256:d13bdbef5ed60da01d82663f4c2ee11c5ea6ec7273d72474beb5cf2bac5d0210",
   "files": {
     "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
     "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
@@ -50,6 +50,15 @@
     "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
     "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
     "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
+    "evaluations/harness/__init__.py": "sha256:2d7d486bc7e8dc449abd290d212c29ec078cc2c0457b6fce8a0b1b130d38d0ba",
+    "evaluations/harness/controller.py": "sha256:c27e959aace19aa3fc0f02178c16477ee9e657ba2573e4fda816ec8566267c81",
+    "evaluations/harness/design.py": "sha256:5a2890c950643e966280b4370f938473ec00e4846ac82741795420f7af75e280",
+    "evaluations/harness/grader.py": "sha256:ed3639499e59b6458c217b46f56cbe73a6c5a8a0b7bb4f0177672a0771a3dfa6",
+    "evaluations/harness/runner.py": "sha256:d5ccee272785cc0d4c8d4709d5eb491bd1b6f2f718ea0ce9eac19cefbc9b3369",
+    "evaluations/pilot-plan.json": "sha256:ccc746e658569ee6d61ef11bc7843721d0785a5da4c2ac0d54e6ee6ebccdd715",
+    "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
+    "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
+    "evaluations/tests/test_pilot.py": "sha256:7a3b94fe155ba8fe03e9f42e19cb0a76675bf81379def784ecaf0dfc54cc4933",
     "patches/canonical-passport-hardening.patch": "sha256:1f633ff8b4dd0f8e71de5e4a435d2ac5bae205a5e75a6618fa0b052a4cb7cbf7",
     "patches/foundation-authority-checks.patch": "sha256:8f1b387bceaf36854cbf8d667674ba95b5735737dd873fa3797434ae1af0fa81",
     "patches/foundation-canonical-delegation.patch": "sha256:87eaafd42ef1f4f723a72b2749735fea467ec5bbe58c62657f5be1817f853f78",
@@ -79,12 +88,14 @@
     "tests/test_rubric.py": "sha256:845e476cc97af2be8c4f913a60b1cae6ae76f0a0c81a217f4b581c5712a213db",
     "tests/test_runtime_security.py": "sha256:76ea516ef8d41bdd974a084ba8ea6a83071745bd09e1a51783668d0b9d60b025",
     "tests/test_wire_contracts.py": "sha256:69b1d2a86b3decb724d832de0caf601d67ab89a227b075df936e86afcadbe280",
-    "tools/report.py": "sha256:1f364670aa7911c46edae01a54d13ec6a3930d577c2ffa8a83f7afbd0972ea72",
+    "tools/report.py": "sha256:ce188977cbaafa4eee2df3f674c2d21f30a4a059eda7725182f9d59fdbe512c2",
+    "tools/run_edd_pilot.py": "sha256:7e088c61f36531d01e21bb2a924a0b9805a67175175e1a130bb92a46258f1216",
     "tools/validate_adversarial.py": "sha256:c9c57b66cf87fe83ed907bb523e4a27c18ff933305c4bbe06ca6954ab28381b4",
     "tools/validate_authority_recovery.py": "sha256:eeb59a4db0ca06798094618adc1504f9f1873d827dba11ac14146f873cb2cf83",
     "tools/validate_bdd_connected.py": "sha256:ebe98b837be8761c708f4261240f9e6c756f0af7ff85598f3cd822861a01573b",
     "tools/validate_connected.py": "sha256:88d8fd6688b79164ae2f39e8f03eeb5efed47e130e47b2faef209bdb32da0865",
     "tools/verify.py": "sha256:f50c482fdc25ae553c3d1dc3753a5af7ad89828f299868e972b61a9fcb3bf1da",
-    "tools/verify_report_provenance.py": "sha256:0283be68cfc720ac36cedcc7056244df62971a56bae991fc9b31a11ddef83e31"
+    "tools/verify_edd.py": "sha256:748373ad30712381fc64ddc9bdff06faf5a447bbd3046b336d11bbe0fc0e617a",
+    "tools/verify_report_provenance.py": "sha256:90f57a048fc76e18092d694d958baaf000975269c9ee331369dbedb8267c78b0"
   }
 }

@@ -159,7 +159,7 @@ def recorded_time(data, path):
 
 def main():
     now = time.time_ns() // 1000000
-    inputs = sorted({p for pattern in ('earned_authority/*.py', 'tests/*.py', 'contracts/**/*.json', 'tools/*.py', 'deploy/**/*', 'patches/*.patch', 'requirements-dev.txt') for p in ROOT.glob(pattern) if p.is_file() and '__pycache__' not in p.parts and p.suffix != '.pyc'})
+    inputs = sorted({p for pattern in ('earned_authority/*.py', 'tests/*.py', 'contracts/**/*.json', 'tools/*.py', 'deploy/**/*', 'patches/*.patch', 'requirements-dev.txt', 'evaluations/harness/*.py', 'evaluations/tests/*.py', 'evaluations/*.json') for p in ROOT.glob(pattern) if p.is_file() and '__pycache__' not in p.parts and p.suffix != '.pyc'})
     manifest = {str(p.relative_to(ROOT)): digest(p) for p in inputs}
     revision = 'sha256:' + hashlib.sha256(json.dumps(manifest, sort_keys=True).encode()).hexdigest()
     (ROOT / 'reports/source-manifest.json').write_text(json.dumps({'revision': revision, 'files': manifest}, indent=2) + '\n')
@@ -254,9 +254,29 @@ def main():
     bdd_valid=bool(bdd.get('source_hashes')) and bdd.get('source_unchanged_during_run') is True and set(statuses)=={f'BDD-{i:03}' for i in range(1,38)}
     add('BDD-SERVICE','WP5','Explicit complete service behaviors','BDD','REAL_LOCAL_SERVICES',f'{len(full)} complete scenario IDs: '+(', '.join(full) or 'none recorded')+'. Every named scenario requires all its outline rows and assertions.',bdd_path,'FAIL' if failed else ('PASS' if full else 'UNKNOWN'),valid=bdd_valid,release=False,detail='Partial and unbound scenarios retain their own gaps in the raw report')
     add('BDD-CORE','WP5','All 37 behaviors on real service adapters','BDD','SERVICE_ACCEPTANCE',f'{len(full)} of 37 complete scenarios recorded with explicit real-service assertions; acceptance is scoped to this local profile.',bdd_path,'FAIL' if failed else ('PASS' if set(statuses)=={f'BDD-{i:03}' for i in range(1,38)} and len(full)==37 else 'UNKNOWN'),valid=bdd_valid)
+    pilot_path='reports/edd-pilot-003.json'; pilot=read(pilot_path)
+    episodes=pilot.get('episodes',[])
+    expected=pilot.get('expected_episodes',0)
+    pilot_valid=(pilot.get('mode')=='DEVELOPMENT_PILOT' and pilot.get('split')=='development'
+                 and pilot.get('source_unchanged_during_run') is True and bool(pilot.get('source_hashes'))
+                 and pilot.get('plan_digest')==digest(ROOT/'evaluations/pilot-plan.json')
+                 and expected==200 and len(episodes)==expected
+                 and len({(e.get('comparator'),e.get('seed'),e.get('family_id')) for e in episodes})==expected
+                 and pilot.get('held_out',{}).get('episodes')==0
+                 and pilot.get('counts',{}).get('started_unscored_episodes')==0
+                 and pilot.get('counts',{}).get('unstarted_episodes')==0
+                 and len(pilot.get('assignments',[]))==expected
+                 and all(e.get('split')=='development' and e.get('error') is None
+                         and e.get('query_grades_returned_to_controller') is False
+                         and e.get('grade',{}).get('unauthorized_commits')==0
+                         and e.get('grade',{}).get('integrity_errors')==[] for e in episodes))
+    add('EDD-PILOT','WP5','Development pilot instrumentation and grading','EDD','DEVELOPMENT_PILOT',
+        '200 fixture episodes with separate persisted-state grading and shared enforcement. Fixed arm is deliberately pinned; no human baseline, held-out value, cost or effort claim.',
+        pilot_path,'PASS' if pilot.get('engineering_acceptance')=='GREEN' and pilot.get('execution_state')=='COMPLETED' else 'UNKNOWN',
+        valid=pilot_valid,release=False,detail='Development engineering gate only; 41 dedicated harness tests are separate from the component baseline')
     pending=[
         ('EDD-PLAN','WP5','Preregistered evaluation thresholds and risk budget','EDD','HELD_OUT_EVALUATION','Choose value target, sample adequacy, fixed versions, family-disjoint holdout and actual human baseline before scoring.'),
-        ('EDD-RUN','WP5','Measured business value and uncertainty','EDD','HELD_OUT_EVALUATION','Protocol is unexecuted. Engineering acceptance does not establish reduced effort, cost or improved completion.'),
+        ('EDD-RUN','WP5','Measured business value and uncertainty','EDD','HELD_OUT_EVALUATION','Confirmatory protocol is unexecuted. A development pilot exists; its engineered policy contrast does not establish reduced effort, cost or customer benefit.'),
         ('DEP-EXTERNAL','WP6','Independent operator / another host','BDD','INDEPENDENT_REPRODUCTION','Clean same-host reconstruction passed; a second person or different host has not reproduced the run.'),
         ('DEP-RH','Later','Red Hat reference profile','BDD','OPENSHIFT','Select deployment target and validate identity, policy, persistence and mutation fencing; no compatibility/support claim.'),
         ('ROB-01','Later','Robotics simulation transfer','EDD','SIMULATION','Deferred BDD-038: separately governed simulator and safety/controller boundaries before any hardware consideration.')]

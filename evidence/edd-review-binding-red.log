@@ -1,0 +1,31 @@
+..............FF........................                                 [100%]
+=================================== FAILURES ===================================
+_______ test_map_key_cannot_hide_other_skill_in_grant_and_qualification ________
+
+    def test_map_key_cannot_hide_other_skill_in_grant_and_qualification():
+        ref, before, after, cmd = sample()
+        before['qualifications']['q']['skill'] = 'other-skill'
+        g = before['authority']['grants']['release-model']; g['skill'] = 'other-skill'
+        g['qualification_digest'] = canonical_digest(before['qualifications']['q'])
+        cmd['qualification_digest'] = g['qualification_digest']
+        result = grade(ref, before, after, cmd, {}, 100)
+>       assert not result['success'] and result['unauthorized_commits'] == 1
+E       assert (not True)
+
+evaluations/tests/test_grader.py:121: AssertionError
+________ test_boolean_revision_cannot_alias_integer_authority_revision _________
+
+    def test_boolean_revision_cannot_alias_integer_authority_revision():
+        ref, before, after, cmd = sample()
+        before['authority']['revision'] = 1
+        cmd['authority_revision'] = True
+        after['attempts']['query']['result']['authority_revision'] = 1
+        result = grade(ref, before, after, cmd, {}, 100)
+>       assert not result['success'] and result['unauthorized_commits'] == 1
+E       assert (not True)
+
+evaluations/tests/test_grader.py:130: AssertionError
+=========================== short test summary info ============================
+FAILED evaluations/tests/test_grader.py::test_map_key_cannot_hide_other_skill_in_grant_and_qualification
+FAILED evaluations/tests/test_grader.py::test_boolean_revision_cannot_alias_integer_authority_revision
+2 failed, 38 passed in 0.71s

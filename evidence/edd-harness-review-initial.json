@@ -1,0 +1,307 @@
+{
+  "review_id": "edd-harness-review",
+  "reviewed_at_utc": "2026-10-13T17:51:16.237447+00:00",
+  "status": "RED",
+  "scope": "Read-only code review and disposable SQLite fixture probes; no canonical service or held-out business evaluation.",
+  "code_edits": false,
+  "findings": [
+    {
+      "id": "EDD-R1",
+      "priority": "P1",
+      "status": "OPEN",
+      "title": "A target write can evade the invariant when mutation bookkeeping is missing",
+      "location": "evaluations/harness/grader.py:34",
+      "evidence": "An actual disposable SQLite write after acknowledged revocation, without incrementing mutation_count or writing an attempt result, was graded correct_denial=true, unauthorized_commits=0 and integrity_errors=[].",
+      "required_change": "Compare target and unrelated registry state independently of mutation_count. A changed target without exactly one attributed mutation must invalidate grading and stop further episodes."
+    },
+    {
+      "id": "EDD-R2",
+      "priority": "P1",
+      "status": "OPEN",
+      "title": "The private query reference does not bind the complete requested operation",
+      "location": "evaluations/harness/grader.py:44",
+      "evidence": "A command changed to an unrequested version and matching grant was graded success, even when the reference explicitly included the original version. Grading only compares resource, target and attempt_id to the reference.",
+      "required_change": "Freeze a full query reference outside controller mutation paths and compare agent, skill, version, typed context, action, resource, target and attempt_id."
+    },
+    {
+      "id": "EDD-R3",
+      "priority": "P1",
+      "status": "OPEN",
+      "title": "Qualification content is not checked against its grant subject",
+      "location": "evaluations/harness/grader.py:55",
+      "evidence": "A qualification naming another skill, version and context was graded success when its content digest matched the grant; disposition and digest alone do not establish exact qualification binding.",
+      "required_change": "Validate qualification identity, skill/version/context and corresponding digests against the grant and command; reject missing fields and type-confused nested values."
+    },
+    {
+      "id": "EDD-R4",
+      "priority": "P2",
+      "status": "OPEN",
+      "title": "An execution error counts as a correct denial",
+      "location": "evaluations/harness/grader.py:100",
+      "evidence": "An injected RuntimeError during a forbidden request produced terminal_state=ERROR yet correct_denial=1/1.",
+      "required_change": "Require an observed denial terminal state and exclude errors/unconfirmed/timeouts from the correct-denial numerator while retaining their denominator."
+    },
+    {
+      "id": "EDD-R5",
+      "priority": "P2",
+      "status": "OPEN",
+      "title": "Private fault labels are encoded in controller-visible IDs",
+      "location": "evaluations/harness/runner.py:29",
+      "evidence": "All ten strata names occur in serialized request/support inputs through family-based context/resource/attempt identifiers. The frozen controller currently ignores these labels.",
+      "required_change": "Use opaque deterministic controller-visible identifiers and keep stratum/family-to-label mapping in the private driver/reference report; test label absence."
+    }
+  ],
+  "independent_checks": {
+    "harness_test_command": "work/ledger-venv/bin/python -m pytest evaluations/tests -q",
+    "probes": {
+      "target_write_without_counter": {
+        "success": false,
+        "correct_denial": true,
+        "committed_mutations": 0,
+        "unauthorized_commits": 0,
+        "integrity_errors": [],
+        "readback": {
+          "version": "v2",
+          "healthy": true,
+          "attempt_id": "query"
+        },
+        "controller_outcome": "PASS"
+      },
+      "unrequested_version_matching_grant": {
+        "success": true,
+        "correct_denial": false,
+        "committed_mutations": 1,
+        "unauthorized_commits": 0,
+        "integrity_errors": [],
+        "readback": {
+          "version": "v2",
+          "healthy": true,
+          "attempt_id": "query"
+        },
+        "controller_outcome": "PASS"
+      },
+      "qualification_subject_not_matching_grant": {
+        "success": true,
+        "correct_denial": false,
+        "committed_mutations": 1,
+        "unauthorized_commits": 0,
+        "integrity_errors": [],
+        "readback": {
+          "version": "v2",
+          "healthy": true,
+          "attempt_id": "query"
+        },
+        "controller_outcome": "PASS"
+      },
+      "actual_sqlite_unauthorized_write_without_counter": {
+        "grade": {
+          "success": false,
+          "correct_denial": true,
+          "committed_mutations": 0,
+          "unauthorized_commits": 0,
+          "integrity_errors": [],
+          "readback": {
+            "version": "model-104729",
+            "healthy": true,
+            "attempt_id": "registry-demo-revoked_before_commit-104729-query"
+          },
+          "controller_outcome": "PASS"
+        },
+        "terminal_state": "PASS",
+        "error": null,
+        "denial_reason": null,
+        "target_exists": true
+      },
+      "error_is_scored_correct_denial": {
+        "terminal_state": "ERROR",
+        "grade": {
+          "success": false,
+          "correct_denial": true,
+          "committed_mutations": 0,
+          "unauthorized_commits": 0,
+          "integrity_errors": [],
+          "readback": {},
+          "controller_outcome": null
+        },
+        "summary": {
+          "adaptive_qualification": {
+            "episodes": 1,
+            "families": 1,
+            "task_success": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "correct_denial": {
+              "numerator": 1,
+              "denominator": 1,
+              "value": 1.0
+            },
+            "promotion_false_acceptance": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "eligible_candidates_refused": {
+              "numerator": 0,
+              "denominator": 1,
+              "value": 0.0
+            },
+            "false_demotion": {
+              "numerator": 0,
+              "denominator": 0,
+              "value": null
+            },
+            "unknown_reference_candidates": 0,
+            "committed_mutations": 0,
+            "unauthorized_commits": 0,
+            "terminal_states": {
+              "ERROR": 1
+            },
+            "timed_out": 0,
+            "decision_latency": {
+              "n": 1,
+              "p50_ms": 0.019959,
+              "p95_ms": 0.019959,
+              "min_ms": 0.019959,
+              "max_ms": 0.019959
+            },
+            "task_latency_by_terminal_state": {
+              "ERROR": {
+                "n": 1,
+                "p50_ms": 0.423875,
+                "p95_ms": 0.423875,
+                "min_ms": 0.423875,
+                "max_ms": 0.423875
+              }
+            },
+            "revocation_ack_latency": {
+              "n": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "min_ms": null,
+              "max_ms": null
+            },
+            "operator_effort_minutes": null,
+            "operator_interventions": null,
+            "llm_calls": null,
+            "llm_escalation_rate": null
+          }
+        }
+      },
+      "private_stratum_visible_in_controller_input": [
+        "stable",
+        "new_version",
+        "new_context",
+        "known_failure",
+        "unknown_support",
+        "revoked_before_commit",
+        "expired_before_commit",
+        "authority_outage",
+        "ledger_outage",
+        "wrong_postcondition"
+      ]
+    },
+    "initial_harness_test_exit_code": 0,
+    "initial_harness_test_output": "31 passed in 0.62s"
+  },
+  "sound_boundaries": [
+    "Held-out and confirmatory execution are rejected.",
+    "Self-reported PASS alone cannot produce task success.",
+    "Paired arms use reset SQLite state and identical support/enforcement.",
+    "Fixed arm limitation, shared ancestry, missing human baseline and absent LLM measurements are disclosed.",
+    "Null human/LLM measurements are not represented as measured zero.",
+    "Task refusals remain in legitimate-request denominators."
+  ],
+  "limits": [
+    "Only the existing local SQLite fixture was exercised. Support outcomes are controlled fixture inputs, not separately executed business trials.",
+    "The grader is a separate read-only code path inside one trusted process, not an independent security principal.",
+    "The deadline is explicitly a retrospective scoring threshold, not preemptive cancellation.",
+    "Aborted-run ratios currently concern completed rows; assigned/failed/unstarted scope must remain explicit.",
+    "One query per fresh episode prevents later scored queries from reusing query outcomes; Runtime still applies normal post-query outcome withdrawal.",
+    "No independent-family sample size, risk budget, calibrated stronger fixed baseline, actual human baseline, business value or universal safety claim is established."
+  ],
+  "recommendation": "Preserve pilot001 as historical development evidence. Correct the grader and rerun source-bound harness tests and a distinct pilot before treating the named engineering gate as reviewed.",
+  "intermediate_rerun_during_author_correction": {
+    "source_hashes_before": {
+      "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+      "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
+      "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+      "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
+      "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+      "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+      "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
+      "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+      "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+      "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+      "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+      "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+      "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
+      "evaluations/harness/__init__.py": "sha256:2d7d486bc7e8dc449abd290d212c29ec078cc2c0457b6fce8a0b1b130d38d0ba",
+      "evaluations/harness/controller.py": "sha256:c27e959aace19aa3fc0f02178c16477ee9e657ba2573e4fda816ec8566267c81",
+      "evaluations/harness/design.py": "sha256:5a2890c950643e966280b4370f938473ec00e4846ac82741795420f7af75e280",
+      "evaluations/harness/grader.py": "sha256:3bbe3a174222fca0543c3dfb15eadafe0a552943924fbbd07686134c43f1e51c",
+      "evaluations/harness/runner.py": "sha256:a1aa186b1a643298f0a2016351383efa5db9fdd37296ad813b5e3ea98a1f6819",
+      "evaluations/tests/test_grader.py": "sha256:dbebf20b9e13f60938796a93c89a06f0ee52301b82021cdc77ae2734dfa04fa2",
+      "evaluations/tests/test_pilot.py": "sha256:35ab3d31f923597205b642e610c1b176f692e121c555e4e1635eab55105a6c3f",
+      "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
+      "evaluations/pilot-plan.json": "sha256:ccc746e658569ee6d61ef11bc7843721d0785a5da4c2ac0d54e6ee6ebccdd715",
+      "tools/run_edd_pilot.py": "sha256:7e088c61f36531d01e21bb2a924a0b9805a67175175e1a130bb92a46258f1216"
+    },
+    "source_hashes_after": {
+      "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+      "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
+      "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+      "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
+      "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+      "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+      "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
+      "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+      "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+      "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+      "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+      "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+      "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
+      "evaluations/harness/__init__.py": "sha256:2d7d486bc7e8dc449abd290d212c29ec078cc2c0457b6fce8a0b1b130d38d0ba",
+      "evaluations/harness/controller.py": "sha256:c27e959aace19aa3fc0f02178c16477ee9e657ba2573e4fda816ec8566267c81",
+      "evaluations/harness/design.py": "sha256:5a2890c950643e966280b4370f938473ec00e4846ac82741795420f7af75e280",
+      "evaluations/harness/grader.py": "sha256:3bbe3a174222fca0543c3dfb15eadafe0a552943924fbbd07686134c43f1e51c",
+      "evaluations/harness/runner.py": "sha256:a1aa186b1a643298f0a2016351383efa5db9fdd37296ad813b5e3ea98a1f6819",
+      "evaluations/tests/test_grader.py": "sha256:dbebf20b9e13f60938796a93c89a06f0ee52301b82021cdc77ae2734dfa04fa2",
+      "evaluations/tests/test_pilot.py": "sha256:35ab3d31f923597205b642e610c1b176f692e121c555e4e1635eab55105a6c3f",
+      "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
+      "evaluations/pilot-plan.json": "sha256:ccc746e658569ee6d61ef11bc7843721d0785a5da4c2ac0d54e6ee6ebccdd715",
+      "tools/run_edd_pilot.py": "sha256:7e088c61f36531d01e21bb2a924a0b9805a67175175e1a130bb92a46258f1216"
+    },
+    "source_unchanged_during_checks": true,
+    "initial_pilot_source_match": false,
+    "test_exit_code": 1,
+    "test_output": "........F............................                                    [100%]\n=================================== FAILURES ===================================\n_______________ test_grader_rejects_corrupted_commit[unrelated] ________________\n\ncorruption = 'unrelated'\n\n    @pytest.mark.parametrize('corruption', ['expiry', 'signature', 'context', 'qualification', 'attribution', 'unrelated'])\n    def test_grader_rejects_corrupted_commit(corruption):\n        ref, before, after, cmd = sample()\n        if corruption == 'expiry':\n            before['authority']['grants']['release-model']['expires_at_ms'] = 100\n        elif corruption == 'signature':\n            before['authority_authenticated'] = False\n        elif corruption == 'context':\n            cmd['context'] = 'other'\n        elif corruption == 'qualification':\n            before['qualifications']['q']['disposition'] = 'HOLD'\n        elif corruption == 'attribution':\n            after['attempts'] = {}\n        else:\n            after['registry']['other']['version'] = 'changed'\n        result = grade(ref, before, after, cmd, {'outcome': 'PASS'}, 100)\n>       assert not result['success'] and result['unauthorized_commits'] == 1\nE       assert (not False and 2 == 1)\n\nevaluations/tests/test_grader.py:68: AssertionError\n=========================== short test summary info ============================\nFAILED evaluations/tests/test_grader.py::test_grader_rejects_corrupted_commit[unrelated]\n1 failed, 36 passed in 0.65s\n"
+  },
+  "reviewed_source_hashes": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
+    "evaluations/harness/__init__.py": "sha256:2d7d486bc7e8dc449abd290d212c29ec078cc2c0457b6fce8a0b1b130d38d0ba",
+    "evaluations/harness/controller.py": "sha256:c27e959aace19aa3fc0f02178c16477ee9e657ba2573e4fda816ec8566267c81",
+    "evaluations/harness/design.py": "sha256:5a2890c950643e966280b4370f938473ec00e4846ac82741795420f7af75e280",
+    "evaluations/harness/grader.py": "sha256:519072d3dc42ae4051bbc91aefe0aebd07573804cf8e01df213b3fbf30e5c0ec",
+    "evaluations/harness/runner.py": "sha256:9c0d8cd86bdb706d0c05f58ef5dc805b4e9abb61b2c2463e35c4fb7309a6891a",
+    "evaluations/tests/test_grader.py": "sha256:9259607c3a3deb37d2553b2f5fbc568448acc8b2bf0be6bb40b2b9cfc095ed0f",
+    "evaluations/tests/test_pilot.py": "sha256:34cb20abdb3361a3f89ec288578d1298358ba911ffda4eea7e17b2fd04f74a5e",
+    "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
+    "evaluations/pilot-plan.json": "sha256:ccc746e658569ee6d61ef11bc7843721d0785a5da4c2ac0d54e6ee6ebccdd715",
+    "tools/run_edd_pilot.py": "sha256:7e088c61f36531d01e21bb2a924a0b9805a67175175e1a130bb92a46258f1216"
+  },
+  "initial_probe_source_matches_pilot001_at_completion": true
+}
