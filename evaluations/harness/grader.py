@@ -29,6 +29,14 @@ def snapshot(path, agent, public_key):
                               for i, c, r in db.execute('SELECT id,command,result FROM attempts')})
 
 
+def registry_unchanged(before,after):
+    try:
+        return (canonical_digest(before['registry'])==canonical_digest(after['registry'])
+                and canonical_digest(before['mutations'])==canonical_digest(after['mutations']))
+    except (KeyError,TypeError,ValueError):
+        return False
+
+
 def grade(reference, before, after, command, returned, now_ms):
     """Use the commit-boundary snapshot after injected revocation or expiry."""
     delta = after['mutations'] - before['mutations']

@@ -1,0 +1,69 @@
+{
+  "status": "GREEN",
+  "gate": "DEVELOPMENT_EDD_ENGINEERING_ONLY",
+  "business_value": "AMBER",
+  "held_out": "NOT_EXECUTED",
+  "manual": "NOT_EXECUTED",
+  "completed_at_utc": "2026-10-13T18:07:53.962818+00:00",
+  "counts": {
+    "harness_tests": 50,
+    "pilot_episodes": 300,
+    "independent_review_probes": 30
+  },
+  "source_hashes": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
+    "evaluations/harness/__init__.py": "sha256:2d7d486bc7e8dc449abd290d212c29ec078cc2c0457b6fce8a0b1b130d38d0ba",
+    "evaluations/harness/controller.py": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
+    "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
+    "evaluations/harness/grader.py": "sha256:ed3639499e59b6458c217b46f56cbe73a6c5a8a0b7bb4f0177672a0771a3dfa6",
+    "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
+    "evaluations/harness/runner.py": "sha256:15c24a25eb125ae0108309e97b586c70a7d295eb79a52724532d2b946d1d5ab8",
+    "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
+    "evaluations/tests/test_pilot.py": "sha256:4666f15f619ab7e2f2acf4a942d43f0231d816a0ba3e36e7320b2d2e40ef6951",
+    "evaluations/tests/test_readiness.py": "sha256:72b6fa4dd20d4280eaf7500a4a7610ad9678f45181c081138f3560dbb89b9e61",
+    "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
+    "evaluations/pilot-plan-v2.json": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
+    "tools/run_edd_pilot.py": "sha256:2a370dee1ce5a6898c209659f4cc47e5a67e4b02431df8ab3335edecdde5eea7",
+    "evaluations/confirmatory-design.json": "sha256:75650c7b4a2857c441382d31ecf7901205b89175d7472b9024f556f8754132c1",
+    "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07"
+  },
+  "artifacts": {
+    "reports/edd-pilot-004.json": "sha256:91f351e3e24873617b40294de41182a182ed47ff49eee0bc5ca5e73221bf0fa4",
+    "evidence/edd-harness-verification.json": "sha256:258fb80d31f438444bece5897694f5964f3b499a8cdac30ebc1005ab103bead7",
+    "evidence/edd-harness-review.json": "sha256:dc17578cedc2ad575bd827bf09b53c824d1882a0747101cabf98a3788b3d58bd",
+    "reports/edd-confirmatory-readiness-001.json": "sha256:c8a4303587d72aa6fd9701722b528f55fc9f250799b1b381d79fe9961e05d1b6"
+  },
+  "preserved_history": {
+    "reports/edd-pilot-001.json": "sha256:672d3507d60aa722ed7f82b636b629b2bb4026c7307df9fbfc2f6f23ed3e8726",
+    "reports/edd-pilot-002.json": "sha256:0b1348760a6f923a646466ed4276d990839d6758f20fb7d28cfe9f9577aaaa53",
+    "reports/edd-pilot-003.json": "sha256:5864602c522dd5f68368d7fd65f767a33edd831b8169c7757711b062beaab17a",
+    "reports/edd-development-acceptance-before-general-fixed.json": "sha256:e4dc38d8d731e9e413a8c92aacc2c2232a88100f709858bfb5628124c56dceb8",
+    "evidence/edd-harness-review-before-general-fixed.json": "sha256:3ace9b247d8a0f29217c81299034d3400e100b55009e2c5f5a39c3e01e874b21",
+    "evidence/general-fixed-baseline-regression.json": "sha256:f5d2967d398b1c885953108d2ee59d5d1c6cc4f65e6f30ff54f5a6161a84c8cc"
+  },
+  "finding": "General fixed and adaptive tie in this one-query design; no measured accumulated-outcome value.",
+  "limits": [
+    "Development cases only; no held-out or preregistered value claim.",
+    "General fixed and adaptive use identical exact qualification on fresh support; this one-query design cannot establish accumulated-learning value.",
+    "Pinned runbook is a legacy diagnostic third arm, not the primary fixed baseline.",
+    "Support preparation is reported separately and excluded from query latency; not end-to-end deployment latency.",
+    "Seeds vary nominal targets and order, not independent populations; shared generator/procedure ancestry prevents statistical independence claims.",
+    "Separate read-only grading code in the same trusted process; not a separate security principal or operator.",
+    "One query per episode, no query-grade feedback or sequential requalification comparison.",
+    "Logical expiry uses a controlled clock; measured latency uses the host monotonic clock.",
+    "Human effort, monetary cost and instrumented LLM accounting are absent, not zero.",
+    "No universal safety, canonical-service performance, OpenShift, or robotics acceptance."
+  ]
+}

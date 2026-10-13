@@ -12,6 +12,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 from earned_authority.rubric import assess, release_status
+from evaluations.harness.grader import registry_unchanged
+from evaluations.harness.sequential import retained_observations
 
 
 # Named acceptance sets reviewed against the producer assertions. A shortened
@@ -254,7 +256,7 @@ def main():
     bdd_valid=bool(bdd.get('source_hashes')) and bdd.get('source_unchanged_during_run') is True and set(statuses)=={f'BDD-{i:03}' for i in range(1,38)}
     add('BDD-SERVICE','WP5','Explicit complete service behaviors','BDD','REAL_LOCAL_SERVICES',f'{len(full)} complete scenario IDs: '+(', '.join(full) or 'none recorded')+'. Every named scenario requires all its outline rows and assertions.',bdd_path,'FAIL' if failed else ('PASS' if full else 'UNKNOWN'),valid=bdd_valid,release=False,detail='Partial and unbound scenarios retain their own gaps in the raw report')
     add('BDD-CORE','WP5','All 37 behaviors on real service adapters','BDD','SERVICE_ACCEPTANCE',f'{len(full)} of 37 complete scenarios recorded with explicit real-service assertions; acceptance is scoped to this local profile.',bdd_path,'FAIL' if failed else ('PASS' if set(statuses)=={f'BDD-{i:03}' for i in range(1,38)} and len(full)==37 else 'UNKNOWN'),valid=bdd_valid)
-    pilot_path='reports/edd-pilot-004.json'; pilot=read(pilot_path)
+    pilot_path='reports/edd-pilot-007.json'; pilot=read(pilot_path)
     episodes=pilot.get('episodes',[])
     expected=pilot.get('expected_episodes',0)
     pilot_valid=(pilot.get('mode')=='DEVELOPMENT_PILOT' and pilot.get('split')=='development'
@@ -268,12 +270,61 @@ def main():
                  and len(pilot.get('assignments',[]))==expected
                  and all(e.get('split')=='development' and e.get('error') is None
                          and e.get('query_grades_returned_to_controller') is False
+                         and registry_unchanged(e.get('preparation_before',{}),e.get('preparation_after',{}))
                          and e.get('grade',{}).get('unauthorized_commits')==0
                          and e.get('grade',{}).get('integrity_errors')==[] for e in episodes))
     add('EDD-PILOT','WP5','Development pilot instrumentation and grading','EDD','DEVELOPMENT_PILOT',
         '300 fixture episodes compare general fixed, adaptive and a legacy pinned diagnostic arm. Shared grading/enforcement; no human, held-out value, cost or effort claim.',
         pilot_path,'PASS' if pilot.get('engineering_acceptance')=='GREEN' and pilot.get('execution_state')=='COMPLETED' else 'UNKNOWN',
-        valid=pilot_valid,release=False,detail='Development engineering gate only; 50 dedicated harness tests are separate from the component baseline')
+        valid=pilot_valid,release=False,detail='Development engineering gate only; 70 dedicated harness tests are separate from the component baseline')
+    sequence_path='reports/edd-sequential-003.json'; sequence=read(sequence_path)
+    queries=sequence.get('queries',[])
+    phases=('initial_qualification','retained_success','observed_failure','withdrawn_query','fresh_passes_blocked','expired_without_support','requalified_recovery')
+    sequence_plan=read('evaluations/sequential-plan.json')
+    assigned_keys={(a,seed,i) for a in sequence_plan.get('comparators',[]) for seed in sequence_plan.get('seeds',[]) for i in range(7)}
+    sequence_retention=True
+    for arm in sequence_plan.get('comparators',[]):
+        for seed in sequence_plan.get('seeds',[]):
+            chain=[q for q in queries if q.get('comparator')==arm and q.get('seed')==seed]
+            if [q.get('phase_index') for q in chain]!=list(range(7)):
+                sequence_retention=False; continue
+            for previous,following in zip(chain,chain[1:]):
+                retained={o.get('observation_id'):o for o in following.get('observations_after',[])}
+                if not retained_observations(previous.get('observations_after',[]),following.get('observations_after',[])) or not registry_unchanged(previous['after_query'],following['preparation_before']):
+                    sequence_retention=False
+            if chain[0].get('prepared_qualification',{}).get('qualification_id')!=chain[1].get('prepared_qualification',{}).get('qualification_id'):
+                sequence_retention=False
+    sequence_valid=(sequence.get('mode')=='DEVELOPMENT_SEQUENTIAL' and sequence.get('split')=='development'
+                    and sequence.get('source_unchanged_during_run') is True and bool(sequence.get('source_hashes'))
+                    and sequence.get('plan_digest')==digest(ROOT/'evaluations/sequential-plan.json')
+                    and sequence.get('expected_sequences')==20 and sequence.get('expected_queries')==140
+                    and len(queries)==140 and len(sequence.get('assignments',[]))==140 and sequence_retention
+                    and {(q.get('comparator'),q.get('seed'),q.get('phase_index')) for q in queries}==assigned_keys
+                    and {(q.get('comparator'),q.get('seed'),q.get('phase_index')) for q in sequence.get('assignments',[])}==assigned_keys
+                    and sequence.get('counts',{}).get('started_unscored_queries')==0
+                    and sequence.get('counts',{}).get('unstarted_queries')==0
+                    and sequence.get('held_out',{}).get('episodes')==0
+                    and len({(q.get('comparator'),q.get('seed'),q.get('phase_index')) for q in queries})==140
+                    and all(q.get('comparator') in ('fixed_deterministic','adaptive_qualification')
+                            and type(q.get('phase_index')) is int and 0<=q['phase_index']<7
+                            and q.get('phase')==phases[q['phase_index']] and q.get('split')=='development'
+                            and q.get('error') is None and q.get('timed_out') is False
+                            and q.get('prior_query_sealed') is True and bool(q.get('sealed_at_utc'))
+                            and q.get('query_grades_returned_to_controller') is False
+                            and registry_unchanged(q['preparation_before'],q['preparation_after'])
+                            and retained_observations(q.get('observations_prepared',[]),q.get('observations_after',[]))
+                            and q.get('grade',{}).get('unauthorized_commits')==0
+                            and q.get('grade',{}).get('integrity_errors')==[]
+                            and q.get('grade',{}).get('success')==(q['phase_index'] in (0,1,6))
+                            and q.get('grade',{}).get('correct_denial')==(q['phase_index'] in (3,4,5))
+                            and (q['phase_index']!=2 or q.get('withdrawal_acknowledged') is True)
+                            and (q['phase_index']!=4 or q.get('qualification_disposition')=='INELIGIBLE')
+                            and (q['phase_index']!=5 or q.get('qualification_disposition')=='HOLD')
+                            and (q['phase_index']!=6 or q.get('qualification_disposition')=='ELIGIBLE') for q in queries))
+    add('EDD-SEQUENTIAL','WP5','Retained outcome withdrawal and recovery','EDD','DEVELOPMENT_SEQUENTIAL',
+        '20 paired sequences, 140 queries: retain successful authority, withdraw after failure, block fresh-pass recovery, expire failure and requalify. Both arms use identical retained-state rules.',
+        sequence_path,'PASS' if sequence.get('engineering_acceptance')=='GREEN' and sequence.get('execution_state')=='COMPLETED' else 'UNKNOWN',
+        valid=sequence_valid,release=False,detail='Lifecycle engineering evidence; no adaptive advantage or held-out business-value claim')
     pending=[
         ('EDD-PLAN','WP5','Preregistered evaluation thresholds and risk budget','EDD','HELD_OUT_EVALUATION','Choose value target, sample adequacy, fixed versions, family-disjoint holdout and actual human baseline before scoring.'),
         ('EDD-RUN','WP5','Measured business value and uncertainty','EDD','HELD_OUT_EVALUATION','Confirmatory protocol is unexecuted. A development pilot exists; its engineered policy contrast does not establish reduced effort, cost or customer benefit.'),
@@ -282,7 +333,7 @@ def main():
         ('ROB-01','Later','Robotics simulation transfer','EDD','SIMULATION','Deferred BDD-038: separately governed simulator and safety/controller boundaries before any hardware consideration.')]
     for key,lane,name,method,environment,scope in pending:
         if key=='EDD-PLAN':
-            add(key,lane,name,method,environment,scope,'reports/edd-confirmatory-readiness-001.json','UNKNOWN',
+            add(key,lane,name,method,environment,scope,'reports/edd-confirmatory-readiness-002.json','UNKNOWN',
                 detail='Prerequisite diagnostic only; nine open requirements, no execution permission')
         else:
             add(key,lane,name,method,environment,scope,release=key not in ('DEP-RH','ROB-01'))

@@ -1,0 +1,64 @@
+...............F.F..........................F                            [100%]
+=================================== FAILURES ===================================
+_______________ test_admission_cannot_mutate_unrelated_registry ________________
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-223/test_admission_cannot_mutate_u0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bf015b0>
+
+    def test_admission_cannot_mutate_unrelated_registry(tmp_path,monkeypatch):
+        from earned_authority.runtime import Runtime
+        original=Runtime.admit
+        def mutate(self,**kwargs):
+            command=original(self,**kwargs)
+            with self._tx() as db:
+                db.execute("UPDATE registry SET version='unauthorized' WHERE resource='unrelated/sentinel'")
+            return command
+        monkeypatch.setattr(Runtime,'admit',mutate)
+        report=single_seed_run(tmp_path)
+>       assert report['engineering_acceptance']=='RED'
+E       AssertionError: assert 'GREEN' == 'RED'
+E         
+E         - RED
+E         + GREEN
+
+evaluations/tests/test_sequential.py:148: AssertionError
+__________________ test_observation_retention_preserves_types __________________
+
+    def test_observation_retention_preserves_types():
+        from evaluations.harness.sequential import retained_observations
+        original=[dict(observation_id='o',observed_at_ms=1,outcome='FAIL')]
+        alias=[dict(observation_id='o',observed_at_ms=1.0,outcome='FAIL')]
+>       assert not retained_observations(original,alias)
+E       AssertionError: assert not True
+E        +  where True = <function retained_observations at 0x10bed0b80>([{'observation_id': 'o', 'observed_at_ms': 1, 'outcome': 'FAIL'}], [{'observation_id': 'o', 'observed_at_ms': 1.0, 'outcome': 'FAIL'}])
+
+evaluations/tests/test_sequential.py:170: AssertionError
+______________ test_admission_mutation_is_independently_detected _______________
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-223/test_admission_mutation_is_ind0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10bf64e30>
+
+    def test_admission_mutation_is_independently_detected(tmp_path,monkeypatch):
+        from earned_authority.runtime import Runtime
+        original=Runtime.admit
+        def mutate(self,**kwargs):
+            command=original(self,**kwargs)
+            with self._tx() as db:
+                db.execute("UPDATE registry SET version='unauthorized' WHERE resource='unrelated/sentinel'")
+            return command
+        monkeypatch.setattr(Runtime,'admit',mutate)
+        p=plan();p['seeds']=[7]
+        path=tmp_path/'plan.json';path.write_text(json.dumps(p))
+        report=run(path,tmp_path/'work',tmp_path/'report.json')
+>       assert report['engineering_acceptance']=='RED'
+E       AssertionError: assert 'GREEN' == 'RED'
+E         
+E         - RED
+E         + GREEN
+
+evaluations/tests/test_pilot.py:139: AssertionError
+=========================== short test summary info ============================
+FAILED evaluations/tests/test_sequential.py::test_admission_cannot_mutate_unrelated_registry
+FAILED evaluations/tests/test_sequential.py::test_observation_retention_preserves_types
+FAILED evaluations/tests/test_pilot.py::test_admission_mutation_is_independently_detected
+3 failed, 42 passed in 16.73s

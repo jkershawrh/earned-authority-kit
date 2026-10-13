@@ -1,0 +1,44 @@
+.................F...........................                            [100%]
+=================================== FAILURES ===================================
+__________________ test_observation_retention_preserves_types __________________
+
+    def test_observation_retention_preserves_types():
+        from evaluations.harness.sequential import retained_observations
+        original=[dict(observation_id='o',observed_at_ms=1,outcome='FAIL')]
+        alias=[dict(observation_id='o',observed_at_ms=1.0,outcome='FAIL')]
+>       assert not retained_observations(original,alias)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+evaluations/tests/test_sequential.py:170: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+evaluations/harness/sequential.py:51: in retained_observations
+    return len(indexed)==len(current) and all(canonical_digest(indexed.get(o['observation_id']))==canonical_digest(o) for o in previous)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+evaluations/harness/sequential.py:51: in <genexpr>
+    return len(indexed)==len(current) and all(canonical_digest(indexed.get(o['observation_id']))==canonical_digest(o) for o in previous)
+                                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/contracts.py:69: in canonical_digest
+    check(value)
+earned_authority/contracts.py:66: in check
+    for item in node.values(): check(item)
+                               ^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+node = 1.0
+
+    def check(node):
+        if node is None or type(node) in (str, bool, int):
+            return
+        if isinstance(node, list):
+            for item in node: check(item)
+            return
+        if isinstance(node, dict) and all(isinstance(k, str) for k in node):
+            for item in node.values(): check(item)
+            return
+>       raise ValueError("canonical contract payloads permit only JSON with integer numbers")
+E       ValueError: canonical contract payloads permit only JSON with integer numbers
+
+earned_authority/contracts.py:68: ValueError
+=========================== short test summary info ============================
+FAILED evaluations/tests/test_sequential.py::test_observation_retention_preserves_types
+1 failed, 44 passed in 8.73s

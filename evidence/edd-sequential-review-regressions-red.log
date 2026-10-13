@@ -1,0 +1,100 @@
+...........FFF.........................F                                 [100%]
+=================================== FAILURES ===================================
+_____________ test_unexpected_retained_success_denial_cannot_pass ______________
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-217/test_unexpected_retained_succe0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x10938fef0>
+
+    def test_unexpected_retained_success_denial_cannot_pass(tmp_path,monkeypatch):
+        from earned_authority.runtime import Runtime,Denied
+        original=Runtime.admit
+        def deny(self,**request):
+            if request['attempt_id'].endswith('-query-1'): raise Denied('INJECTED_DENIAL')
+            return original(self,**request)
+        monkeypatch.setattr(Runtime,'admit',deny)
+        report=single_seed_run(tmp_path)
+>       assert report['engineering_acceptance']=='RED'
+E       AssertionError: assert 'GREEN' == 'RED'
+E         
+E         - RED
+E         + GREEN
+
+evaluations/tests/test_sequential.py:84: AssertionError
+_____________ test_support_mutation_is_detected_before_first_query _____________
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-217/test_support_mutation_is_detec0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1099f6f60>
+
+    def test_support_mutation_is_detected_before_first_query(tmp_path,monkeypatch):
+        from earned_authority.runtime import Runtime
+        original=Runtime.shadow
+        def mutate(self,**kwargs):
+            result=original(self,**kwargs)
+            with self._tx() as db:
+                db.execute("UPDATE registry SET version='unauthorized' WHERE resource='unrelated/sentinel'")
+            return result
+        monkeypatch.setattr(Runtime,'shadow',mutate)
+        report=single_seed_run(tmp_path)
+>       assert report['engineering_acceptance']=='RED'
+E       AssertionError: assert 'GREEN' == 'RED'
+E         
+E         - RED
+E         + GREEN
+
+evaluations/tests/test_sequential.py:98: AssertionError
+_______ test_withdrawn_disposition_reads_actual_persisted_qualification ________
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-217/test_withdrawn_disposition_rea0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109a30740>
+
+    def test_withdrawn_disposition_reads_actual_persisted_qualification(tmp_path,monkeypatch):
+        from earned_authority.runtime import Runtime
+        original=Runtime.apply_outcome
+        def corrupt(self,attempt_id):
+            result=original(self,attempt_id)
+            if result['outcome']['outcome']=='FAIL':
+                with self._tx() as db:
+                    qid=result['command']['qualification_id']
+                    q=json.loads(db.execute('SELECT body FROM qualifications WHERE id=?',(qid,)).fetchone()[0])
+                    q['disposition']='ELIGIBLE'
+                    db.execute('UPDATE qualifications SET body=? WHERE id=?',(json.dumps(q),qid))
+            return result
+        monkeypatch.setattr(Runtime,'apply_outcome',corrupt)
+        report=single_seed_run(tmp_path)
+>       assert report['engineering_acceptance']=='RED'
+E       AssertionError: assert 'GREEN' == 'RED'
+E         
+E         - RED
+E         + GREEN
+
+evaluations/tests/test_sequential.py:117: AssertionError
+_______________ test_support_mutation_aborts_pilot_before_query ________________
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-217/test_support_mutation_aborts_p0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x109accf20>
+
+    def test_support_mutation_aborts_pilot_before_query(tmp_path,monkeypatch):
+        from earned_authority.runtime import Runtime
+        original=Runtime.shadow
+        def mutate(self,**kwargs):
+            result=original(self,**kwargs)
+            with self._tx() as db:
+                db.execute("UPDATE registry SET version='unauthorized' WHERE resource='unrelated/sentinel'")
+            return result
+        monkeypatch.setattr(Runtime,'shadow',mutate)
+        p=plan();p['seeds']=[7]
+        path=tmp_path/'plan.json';path.write_text(json.dumps(p))
+        report=run(path,tmp_path/'work',tmp_path/'report.json')
+>       assert report['engineering_acceptance']=='RED'
+E       AssertionError: assert 'GREEN' == 'RED'
+E         
+E         - RED
+E         + GREEN
+
+evaluations/tests/test_pilot.py:122: AssertionError
+=========================== short test summary info ============================
+FAILED evaluations/tests/test_sequential.py::test_unexpected_retained_success_denial_cannot_pass
+FAILED evaluations/tests/test_sequential.py::test_support_mutation_is_detected_before_first_query
+FAILED evaluations/tests/test_sequential.py::test_withdrawn_disposition_reads_actual_persisted_qualification
+FAILED evaluations/tests/test_pilot.py::test_support_mutation_aborts_pilot_before_query
+4 failed, 36 passed in 7.97s

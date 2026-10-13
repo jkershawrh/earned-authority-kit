@@ -85,12 +85,60 @@
       "expected": "AMBER",
       "actual": "AMBER",
       "passed": true
+    },
+    {
+      "check": "complete_sequential_development_passes",
+      "expected": "GREEN",
+      "actual": "GREEN",
+      "passed": true
+    },
+    {
+      "check": "partial_sequence_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "changed_sequence_source_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "false_recovery_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "deleted_retained_failure_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "preparation_write_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "typed_retained_alias_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
+    },
+    {
+      "check": "pilot_preparation_write_does_not_pass",
+      "expected": "AMBER",
+      "actual": "AMBER",
+      "passed": true
     }
   ],
-  "finished_at_ms": 1791914923859,
+  "finished_at_ms": 1791916883811,
   "source_hashes": {
-    "tools/report.py": "sha256:bebf247be3b1d15ed25f736b987bec693b7388a6b42cd131017e50b1adb68367",
-    "tools/verify_report_provenance.py": "sha256:97f687835b4f5cf572fff1db9c017401cda7b81beaa707a74d58c920d3d88c93"
+    "tools/report.py": "sha256:5f984dcfc24702e9d79a11f43fd91bb3e8fada28d74eee3f09ab42c612fd0273",
+    "tools/verify_report_provenance.py": "sha256:1f1c89bdac3596859559cca173a0ebef8c34279f9ff353b8c706b06759e6cd5d"
   },
   "artifacts": {
     "reports/multi-resource-reference-combined.json": "sha256:c15c8c7512cfb2f61db04e24ac6a2b6ffd568d4614fd25aad20fe14234179d4c",

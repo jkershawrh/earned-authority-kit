@@ -8,7 +8,7 @@ from pathlib import Path
 from earned_authority.runtime import ControlledClock, Denied, Runtime
 from .controller import prepare
 from .design import validate_manifest
-from .grader import grade, snapshot, summarize
+from .grader import grade, snapshot, summarize, registry_unchanged
 
 KIT = Path(__file__).resolve().parents[2]
 
@@ -21,7 +21,8 @@ def source_hashes():
     patterns = ('earned_authority/*.py', 'evaluations/harness/*.py',
                 'evaluations/tests/*.py', 'evaluations/protocol.json',
                 'evaluations/pilot-plan-v2.json', 'tools/run_edd_pilot.py',
-                'evaluations/confirmatory-design.json', 'tools/check_edd_readiness.py')
+                'evaluations/confirmatory-design.json', 'tools/check_edd_readiness.py',
+                'evaluations/sequential-plan.json', 'tools/run_edd_sequential.py')
     return {str(p.relative_to(KIT)): digest(p) for pattern in patterns for p in sorted(KIT.glob(pattern))}
 
 
@@ -60,11 +61,14 @@ def run_episode(workspace, comparator, seed, family, deadline_ms):
     # An unrelated durable sentinel makes side-effect grading concrete.
     with rt._tx() as db:
         db.execute("INSERT INTO registry VALUES ('unrelated/sentinel','keep-v1',1,'setup')")
+    public_key = rt.keys['authority'].public_key()
+    preparation_before = snapshot(path, request['agent'], public_key)
     preparation_start = time.perf_counter_ns()
     prepared = prepare(rt, comparator, request, support, 'skill-v1', base_context)
     preparation_ms = (time.perf_counter_ns() - preparation_start) / 1e6
-    public_key = rt.keys['authority'].public_key()
     initial = snapshot(path, request['agent'], public_key)
+    if not registry_unchanged(preparation_before,initial):
+        raise RuntimeError('Unauthorized registry mutation during support preparation')
     stratum = family['stratum']
     if stratum == 'authority_outage':
         rt.authority_available = False
@@ -86,7 +90,10 @@ def run_episode(workspace, comparator, seed, family, deadline_ms):
             revocation_ms = (time.perf_counter_ns() - revoke_start) / 1e6
         if stratum == 'expired_before_commit':
             rt.clock.advance(300000)
-        before = snapshot(path, request['agent'], public_key)
+        admitted = snapshot(path, request['agent'], public_key)
+        if not registry_unchanged(initial,admitted):
+            raise RuntimeError('Unauthorized registry mutation during admission')
+        before = admitted
         returned = rt.commit(command, actual='wrong-model' if stratum == 'wrong_postcondition' else None)
     except Denied as exc:
         denial = exc.reason
@@ -108,6 +115,7 @@ def run_episode(workspace, comparator, seed, family, deadline_ms):
                 logical_commit_time_ms=rt.clock.now_ms, grade=scored,
                 withdrew_skill=bool(initial['authority'].get('grants')) and request['skill'] not in after['authority'].get('grants', {}),
                 before_commit=before, after_query=after,
+                preparation_before=preparation_before, preparation_after=initial,
                 sealed_at_utc=datetime.now(timezone.utc).isoformat(), query_grades_returned_to_controller=False,
                 ledger_available_at_query=rt.ledger.available)
 

@@ -1,0 +1,44 @@
+{
+  "version": "sequential-development-1",
+  "mode": "DEVELOPMENT_SEQUENTIAL",
+  "split": "development",
+  "comparators": [
+    "fixed_deterministic",
+    "adaptive_qualification"
+  ],
+  "seeds": [
+    104729,
+    130363,
+    155921,
+    181081,
+    208351,
+    233021,
+    259033,
+    284723,
+    310019,
+    335999
+  ],
+  "phases": [
+    "initial_qualification",
+    "retained_success",
+    "observed_failure",
+    "withdrawn_query",
+    "fresh_passes_blocked",
+    "expired_without_support",
+    "requalified_recovery"
+  ],
+  "deadline_ms": 30000,
+  "retry_budget": 0,
+  "policy": "Both arms retain exact grants and outcomes; identical deterministic qualification rules. No learned policy update.",
+  "feedback_rule": "SEAL_EACH_QUERY_BEFORE_NEXT_PHASE",
+  "family": {
+    "family_id": "registry-sequential-demo",
+    "procedure_ancestors": [
+      "fixture-model-release-demo"
+    ],
+    "context_ancestors": [
+      "fixture-context-demo"
+    ],
+    "split": "development"
+  }
+}

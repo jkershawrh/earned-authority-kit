@@ -1,0 +1,1351 @@
+{
+  "review_id": "edd-sequential-review",
+  "reviewed_at_utc": "2026-10-13T18:34:19.173764+00:00",
+  "status": "RED",
+  "scope": "Read-only review with injected negative controls in disposable actual SQLite fixtures only.",
+  "source_hashes_before": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
+    "evaluations/harness/__init__.py": "sha256:2d7d486bc7e8dc449abd290d212c29ec078cc2c0457b6fce8a0b1b130d38d0ba",
+    "evaluations/harness/controller.py": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
+    "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
+    "evaluations/harness/grader.py": "sha256:ed3639499e59b6458c217b46f56cbe73a6c5a8a0b7bb4f0177672a0771a3dfa6",
+    "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
+    "evaluations/harness/runner.py": "sha256:760c5b0961f8b12b73ab4328439c650a201fbe8b4dc8d8599fd8e14e07afec6d",
+    "evaluations/harness/sequential.py": "sha256:80d852f6c1202a4023060b1b989e7efc3088411fbea74f3baf558f2240f3aeb1",
+    "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
+    "evaluations/tests/test_pilot.py": "sha256:4666f15f619ab7e2f2acf4a942d43f0231d816a0ba3e36e7320b2d2e40ef6951",
+    "evaluations/tests/test_readiness.py": "sha256:72b6fa4dd20d4280eaf7500a4a7610ad9678f45181c081138f3560dbb89b9e61",
+    "evaluations/tests/test_sequential.py": "sha256:73dc599ab17b5b1502f708a7c8c9f4b6246d0fdd815eb57192a1be9d3939cafe",
+    "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
+    "evaluations/pilot-plan-v2.json": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
+    "tools/run_edd_pilot.py": "sha256:2a370dee1ce5a6898c209659f4cc47e5a67e4b02431df8ab3335edecdde5eea7",
+    "evaluations/confirmatory-design.json": "sha256:75650c7b4a2857c441382d31ecf7901205b89175d7472b9024f556f8754132c1",
+    "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07",
+    "evaluations/sequential-plan.json": "sha256:5d8357a6ff6c596bef82ad5b27dd7e9f003904d980c42755c2980a57395df8e4",
+    "tools/run_edd_sequential.py": "sha256:83f6c54ef7e2be116f6f4920711965e8efd9d18220ccc9ed0d7b1ad5f7fff923"
+  },
+  "source_hashes_after": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
+    "evaluations/harness/__init__.py": "sha256:2d7d486bc7e8dc449abd290d212c29ec078cc2c0457b6fce8a0b1b130d38d0ba",
+    "evaluations/harness/controller.py": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
+    "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
+    "evaluations/harness/grader.py": "sha256:ed3639499e59b6458c217b46f56cbe73a6c5a8a0b7bb4f0177672a0771a3dfa6",
+    "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
+    "evaluations/harness/runner.py": "sha256:760c5b0961f8b12b73ab4328439c650a201fbe8b4dc8d8599fd8e14e07afec6d",
+    "evaluations/harness/sequential.py": "sha256:80d852f6c1202a4023060b1b989e7efc3088411fbea74f3baf558f2240f3aeb1",
+    "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
+    "evaluations/tests/test_pilot.py": "sha256:4666f15f619ab7e2f2acf4a942d43f0231d816a0ba3e36e7320b2d2e40ef6951",
+    "evaluations/tests/test_readiness.py": "sha256:72b6fa4dd20d4280eaf7500a4a7610ad9678f45181c081138f3560dbb89b9e61",
+    "evaluations/tests/test_sequential.py": "sha256:73dc599ab17b5b1502f708a7c8c9f4b6246d0fdd815eb57192a1be9d3939cafe",
+    "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
+    "evaluations/pilot-plan-v2.json": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
+    "tools/run_edd_pilot.py": "sha256:2a370dee1ce5a6898c209659f4cc47e5a67e4b02431df8ab3335edecdde5eea7",
+    "evaluations/confirmatory-design.json": "sha256:75650c7b4a2857c441382d31ecf7901205b89175d7472b9024f556f8754132c1",
+    "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07",
+    "evaluations/sequential-plan.json": "sha256:5d8357a6ff6c596bef82ad5b27dd7e9f003904d980c42755c2980a57395df8e4",
+    "tools/run_edd_sequential.py": "sha256:83f6c54ef7e2be116f6f4920711965e8efd9d18220ccc9ed0d7b1ad5f7fff923"
+  },
+  "source_unchanged_during_initial_probes": true,
+  "findings": [
+    {
+      "id": "SEQ-R1",
+      "priority": "P1",
+      "status": "OPEN",
+      "title": "Missing phase acceptance gate",
+      "evidence": "Forcing only retained_success admission to deny still produced COMPLETED/GREEN. Invariant-only checks do not establish the named lifecycle behavior.",
+      "required_change": "Gate declared expected phase success/denial and observed withdrawal/requalification states in the runner, retaining the failing row and stopping subsequent phases."
+    },
+    {
+      "id": "SEQ-R2",
+      "priority": "P1",
+      "status": "OPEN",
+      "title": "Support preparation writes are outside the grading window",
+      "evidence": "A Runtime.shadow wrapper performed an actual unauthorized write to the unrelated sentinel. Every sequence phase and the whole report remained GREEN with no integrity errors.",
+      "required_change": "Read registry/counter before preparation, compare after preparation, and forbid any preparation mutation before querying. Preserve prior-query continuity. Apply the same boundary to independent pilot preparation."
+    },
+    {
+      "id": "SEQ-R3",
+      "priority": "P1",
+      "status": "OPEN",
+      "title": "Qualification disposition is fabricated for the withdrawn phase",
+      "evidence": "After leaving actual persisted qualification ELIGIBLE while retaining the revoked authority, withdrawn_query reported qualification_disposition=INELIGIBLE even though prepared_qualification.disposition=ELIGIBLE, and the report remained GREEN.",
+      "required_change": "Read the actual disposition and compare against the declared expected transition; do not insert expected labels as observed results."
+    },
+    {
+      "id": "SEQ-R4",
+      "priority": "P1",
+      "status": "OPEN",
+      "title": "Retained failure deletion is not detected",
+      "evidence": "Deleting the actual SQLite FAIL observation during recovery support preserved all expected task/denial outcomes and COMPLETED/GREEN; recovery observations contained no FAIL despite the explicit retention claim.",
+      "required_change": "Require every previously retained observation identity and canonical content to remain through preparation and query boundaries; detect removal or alteration before continuing."
+    }
+  ],
+  "independent_checks": {
+    "dedicated_harness_tests": "61 passed in 2.02s",
+    "initial_three_probe_results": {
+      "unexpected_retained_denial": {
+        "engineering_acceptance": "GREEN",
+        "execution_state": "COMPLETED",
+        "counts": {
+          "assigned_queries": 14,
+          "started_queries": 14,
+          "scored_queries": 14,
+          "started_unscored_queries": 0,
+          "unstarted_queries": 0
+        },
+        "metrics": {
+          "adaptive_qualification": {
+            "episodes": 7,
+            "assigned_episodes": 7,
+            "unstarted_episodes": 0,
+            "started_unscored_episodes": 0,
+            "families": 1,
+            "task_success": {
+              "numerator": 2,
+              "denominator": 7,
+              "value": 0.2857142857142857
+            },
+            "correct_denial": {
+              "numerator": 3,
+              "denominator": 3,
+              "value": 1.0
+            },
+            "promotion_false_acceptance": {
+              "numerator": 0,
+              "denominator": 2,
+              "value": 0.0
+            },
+            "eligible_candidates_refused": {
+              "numerator": 0,
+              "denominator": 4,
+              "value": 0.0
+            },
+            "false_demotion": {
+              "numerator": 0,
+              "denominator": 3,
+              "value": 0.0
+            },
+            "unknown_reference_candidates": 1,
+            "committed_mutations": 3,
+            "unauthorized_commits": 0,
+            "terminal_states": {
+              "DENIED": 4,
+              "FAIL": 1,
+              "PASS": 2
+            },
+            "timed_out": 0,
+            "decision_latency": {
+              "n": 7,
+              "p50_ms": 1.719083,
+              "p95_ms": 3.324208,
+              "min_ms": 0.009667,
+              "max_ms": 3.324208
+            },
+            "task_latency_by_terminal_state": {
+              "DENIED": {
+                "n": 4,
+                "p50_ms": 1.513875,
+                "p95_ms": 4.77125,
+                "min_ms": 0.669084,
+                "max_ms": 4.77125
+              },
+              "FAIL": {
+                "n": 1,
+                "p50_ms": 110.402875,
+                "p95_ms": 110.402875,
+                "min_ms": 110.402875,
+                "max_ms": 110.402875
+              },
+              "PASS": {
+                "n": 2,
+                "p50_ms": 49.425958,
+                "p95_ms": 233.099375,
+                "min_ms": 49.425958,
+                "max_ms": 233.099375
+              }
+            },
+            "revocation_ack_latency": {
+              "n": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "min_ms": null,
+              "max_ms": null
+            },
+            "operator_effort_minutes": null,
+            "operator_interventions": null,
+            "llm_calls": null,
+            "llm_escalation_rate": null
+          },
+          "fixed_deterministic": {
+            "episodes": 7,
+            "assigned_episodes": 7,
+            "unstarted_episodes": 0,
+            "started_unscored_episodes": 0,
+            "families": 1,
+            "task_success": {
+              "numerator": 2,
+              "denominator": 7,
+              "value": 0.2857142857142857
+            },
+            "correct_denial": {
+              "numerator": 3,
+              "denominator": 3,
+              "value": 1.0
+            },
+            "promotion_false_acceptance": {
+              "numerator": 0,
+              "denominator": 2,
+              "value": 0.0
+            },
+            "eligible_candidates_refused": {
+              "numerator": 0,
+              "denominator": 4,
+              "value": 0.0
+            },
+            "false_demotion": {
+              "numerator": 0,
+              "denominator": 3,
+              "value": 0.0
+            },
+            "unknown_reference_candidates": 1,
+            "committed_mutations": 3,
+            "unauthorized_commits": 0,
+            "terminal_states": {
+              "DENIED": 4,
+              "FAIL": 1,
+              "PASS": 2
+            },
+            "timed_out": 0,
+            "decision_latency": {
+              "n": 7,
+              "p50_ms": 0.793375,
+              "p95_ms": 1.639167,
+              "min_ms": 0.007833,
+              "max_ms": 1.639167
+            },
+            "task_latency_by_terminal_state": {
+              "DENIED": {
+                "n": 4,
+                "p50_ms": 0.760916,
+                "p95_ms": 2.966958,
+                "min_ms": 0.551666,
+                "max_ms": 2.966958
+              },
+              "FAIL": {
+                "n": 1,
+                "p50_ms": 50.00175,
+                "p95_ms": 50.00175,
+                "min_ms": 50.00175,
+                "max_ms": 50.00175
+              },
+              "PASS": {
+                "n": 2,
+                "p50_ms": 38.227334,
+                "p95_ms": 241.229625,
+                "min_ms": 38.227334,
+                "max_ms": 241.229625
+              }
+            },
+            "revocation_ack_latency": {
+              "n": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "min_ms": null,
+              "max_ms": null
+            },
+            "operator_effort_minutes": null,
+            "operator_interventions": null,
+            "llm_calls": null,
+            "llm_escalation_rate": null
+          }
+        },
+        "phases": [
+          {
+            "phase": "initial_qualification",
+            "success": true,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "retained_success",
+            "success": false,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "observed_failure",
+            "success": false,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "withdrawn_query",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "INELIGIBLE",
+            "persisted_q": "INELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "fresh_passes_blocked",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "INELIGIBLE",
+            "persisted_q": "INELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "expired_without_support",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "HOLD",
+            "persisted_q": "HOLD",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "requalified_recovery",
+            "success": true,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "initial_qualification",
+            "success": true,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "retained_success",
+            "success": false,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "observed_failure",
+            "success": false,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "withdrawn_query",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "INELIGIBLE",
+            "persisted_q": "INELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "fresh_passes_blocked",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "INELIGIBLE",
+            "persisted_q": "INELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "expired_without_support",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "HOLD",
+            "persisted_q": "HOLD",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "requalified_recovery",
+            "success": true,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          }
+        ]
+      },
+      "support_side_effect": {
+        "engineering_acceptance": "GREEN",
+        "execution_state": "COMPLETED",
+        "counts": {
+          "assigned_queries": 14,
+          "started_queries": 14,
+          "scored_queries": 14,
+          "started_unscored_queries": 0,
+          "unstarted_queries": 0
+        },
+        "metrics": {
+          "adaptive_qualification": {
+            "episodes": 7,
+            "assigned_episodes": 7,
+            "unstarted_episodes": 0,
+            "started_unscored_episodes": 0,
+            "families": 1,
+            "task_success": {
+              "numerator": 3,
+              "denominator": 7,
+              "value": 0.42857142857142855
+            },
+            "correct_denial": {
+              "numerator": 3,
+              "denominator": 3,
+              "value": 1.0
+            },
+            "promotion_false_acceptance": {
+              "numerator": 0,
+              "denominator": 2,
+              "value": 0.0
+            },
+            "eligible_candidates_refused": {
+              "numerator": 0,
+              "denominator": 4,
+              "value": 0.0
+            },
+            "false_demotion": {
+              "numerator": 0,
+              "denominator": 3,
+              "value": 0.0
+            },
+            "unknown_reference_candidates": 1,
+            "committed_mutations": 4,
+            "unauthorized_commits": 0,
+            "terminal_states": {
+              "DENIED": 3,
+              "FAIL": 1,
+              "PASS": 3
+            },
+            "timed_out": 0,
+            "decision_latency": {
+              "n": 7,
+              "p50_ms": 0.814666,
+              "p95_ms": 1.539958,
+              "min_ms": 0.203959,
+              "max_ms": 1.539958
+            },
+            "task_latency_by_terminal_state": {
+              "DENIED": {
+                "n": 3,
+                "p50_ms": 1.0205,
+                "p95_ms": 1.0665,
+                "min_ms": 0.787959,
+                "max_ms": 1.0665
+              },
+              "FAIL": {
+                "n": 1,
+                "p50_ms": 62.621333,
+                "p95_ms": 62.621333,
+                "min_ms": 62.621333,
+                "max_ms": 62.621333
+              },
+              "PASS": {
+                "n": 3,
+                "p50_ms": 59.859958,
+                "p95_ms": 173.211333,
+                "min_ms": 47.158666,
+                "max_ms": 173.211333
+              }
+            },
+            "revocation_ack_latency": {
+              "n": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "min_ms": null,
+              "max_ms": null
+            },
+            "operator_effort_minutes": null,
+            "operator_interventions": null,
+            "llm_calls": null,
+            "llm_escalation_rate": null
+          },
+          "fixed_deterministic": {
+            "episodes": 7,
+            "assigned_episodes": 7,
+            "unstarted_episodes": 0,
+            "started_unscored_episodes": 0,
+            "families": 1,
+            "task_success": {
+              "numerator": 3,
+              "denominator": 7,
+              "value": 0.42857142857142855
+            },
+            "correct_denial": {
+              "numerator": 3,
+              "denominator": 3,
+              "value": 1.0
+            },
+            "promotion_false_acceptance": {
+              "numerator": 0,
+              "denominator": 2,
+              "value": 0.0
+            },
+            "eligible_candidates_refused": {
+              "numerator": 0,
+              "denominator": 4,
+              "value": 0.0
+            },
+            "false_demotion": {
+              "numerator": 0,
+              "denominator": 3,
+              "value": 0.0
+            },
+            "unknown_reference_candidates": 1,
+            "committed_mutations": 4,
+            "unauthorized_commits": 0,
+            "terminal_states": {
+              "DENIED": 3,
+              "FAIL": 1,
+              "PASS": 3
+            },
+            "timed_out": 0,
+            "decision_latency": {
+              "n": 7,
+              "p50_ms": 0.753375,
+              "p95_ms": 0.850458,
+              "min_ms": 0.170167,
+              "max_ms": 0.850458
+            },
+            "task_latency_by_terminal_state": {
+              "DENIED": {
+                "n": 3,
+                "p50_ms": 0.748291,
+                "p95_ms": 0.784833,
+                "min_ms": 0.736292,
+                "max_ms": 0.784833
+              },
+              "FAIL": {
+                "n": 1,
+                "p50_ms": 61.548583,
+                "p95_ms": 61.548583,
+                "min_ms": 61.548583,
+                "max_ms": 61.548583
+              },
+              "PASS": {
+                "n": 3,
+                "p50_ms": 44.076792,
+                "p95_ms": 180.687084,
+                "min_ms": 38.906583,
+                "max_ms": 180.687084
+              }
+            },
+            "revocation_ack_latency": {
+              "n": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "min_ms": null,
+              "max_ms": null
+            },
+            "operator_effort_minutes": null,
+            "operator_interventions": null,
+            "llm_calls": null,
+            "llm_escalation_rate": null
+          }
+        },
+        "phases": [
+          {
+            "phase": "initial_qualification",
+            "success": true,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "unauthorized-support-write",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "retained_success",
+            "success": true,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "unauthorized-support-write",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "observed_failure",
+            "success": false,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "unauthorized-support-write",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "withdrawn_query",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "INELIGIBLE",
+            "persisted_q": "INELIGIBLE",
+            "sentinel": {
+              "version": "unauthorized-support-write",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "fresh_passes_blocked",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "INELIGIBLE",
+            "persisted_q": "INELIGIBLE",
+            "sentinel": {
+              "version": "unauthorized-support-write",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "expired_without_support",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "HOLD",
+            "persisted_q": "HOLD",
+            "sentinel": {
+              "version": "unauthorized-support-write",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "requalified_recovery",
+            "success": true,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "unauthorized-support-write",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "initial_qualification",
+            "success": true,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "unauthorized-support-write",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "retained_success",
+            "success": true,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "unauthorized-support-write",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "observed_failure",
+            "success": false,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "unauthorized-support-write",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "withdrawn_query",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "INELIGIBLE",
+            "persisted_q": "INELIGIBLE",
+            "sentinel": {
+              "version": "unauthorized-support-write",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "fresh_passes_blocked",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "INELIGIBLE",
+            "persisted_q": "INELIGIBLE",
+            "sentinel": {
+              "version": "unauthorized-support-write",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "expired_without_support",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "HOLD",
+            "persisted_q": "HOLD",
+            "sentinel": {
+              "version": "unauthorized-support-write",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "requalified_recovery",
+            "success": true,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "unauthorized-support-write",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          }
+        ]
+      },
+      "hardcoded_qualification_disposition": {
+        "engineering_acceptance": "GREEN",
+        "execution_state": "COMPLETED",
+        "counts": {
+          "assigned_queries": 14,
+          "started_queries": 14,
+          "scored_queries": 14,
+          "started_unscored_queries": 0,
+          "unstarted_queries": 0
+        },
+        "metrics": {
+          "adaptive_qualification": {
+            "episodes": 7,
+            "assigned_episodes": 7,
+            "unstarted_episodes": 0,
+            "started_unscored_episodes": 0,
+            "families": 1,
+            "task_success": {
+              "numerator": 3,
+              "denominator": 7,
+              "value": 0.42857142857142855
+            },
+            "correct_denial": {
+              "numerator": 3,
+              "denominator": 3,
+              "value": 1.0
+            },
+            "promotion_false_acceptance": {
+              "numerator": 0,
+              "denominator": 2,
+              "value": 0.0
+            },
+            "eligible_candidates_refused": {
+              "numerator": 0,
+              "denominator": 4,
+              "value": 0.0
+            },
+            "false_demotion": {
+              "numerator": 0,
+              "denominator": 3,
+              "value": 0.0
+            },
+            "unknown_reference_candidates": 1,
+            "committed_mutations": 4,
+            "unauthorized_commits": 0,
+            "terminal_states": {
+              "DENIED": 3,
+              "FAIL": 1,
+              "PASS": 3
+            },
+            "timed_out": 0,
+            "decision_latency": {
+              "n": 7,
+              "p50_ms": 0.824667,
+              "p95_ms": 0.87825,
+              "min_ms": 0.180083,
+              "max_ms": 0.87825
+            },
+            "task_latency_by_terminal_state": {
+              "DENIED": {
+                "n": 3,
+                "p50_ms": 0.754958,
+                "p95_ms": 1.592875,
+                "min_ms": 0.732667,
+                "max_ms": 1.592875
+              },
+              "FAIL": {
+                "n": 1,
+                "p50_ms": 62.192625,
+                "p95_ms": 62.192625,
+                "min_ms": 62.192625,
+                "max_ms": 62.192625
+              },
+              "PASS": {
+                "n": 3,
+                "p50_ms": 39.372042,
+                "p95_ms": 180.545417,
+                "min_ms": 38.722625,
+                "max_ms": 180.545417
+              }
+            },
+            "revocation_ack_latency": {
+              "n": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "min_ms": null,
+              "max_ms": null
+            },
+            "operator_effort_minutes": null,
+            "operator_interventions": null,
+            "llm_calls": null,
+            "llm_escalation_rate": null
+          },
+          "fixed_deterministic": {
+            "episodes": 7,
+            "assigned_episodes": 7,
+            "unstarted_episodes": 0,
+            "started_unscored_episodes": 0,
+            "families": 1,
+            "task_success": {
+              "numerator": 3,
+              "denominator": 7,
+              "value": 0.42857142857142855
+            },
+            "correct_denial": {
+              "numerator": 3,
+              "denominator": 3,
+              "value": 1.0
+            },
+            "promotion_false_acceptance": {
+              "numerator": 0,
+              "denominator": 2,
+              "value": 0.0
+            },
+            "eligible_candidates_refused": {
+              "numerator": 0,
+              "denominator": 4,
+              "value": 0.0
+            },
+            "false_demotion": {
+              "numerator": 0,
+              "denominator": 3,
+              "value": 0.0
+            },
+            "unknown_reference_candidates": 1,
+            "committed_mutations": 4,
+            "unauthorized_commits": 0,
+            "terminal_states": {
+              "DENIED": 3,
+              "FAIL": 1,
+              "PASS": 3
+            },
+            "timed_out": 0,
+            "decision_latency": {
+              "n": 7,
+              "p50_ms": 0.782833,
+              "p95_ms": 1.286959,
+              "min_ms": 0.191292,
+              "max_ms": 1.286959
+            },
+            "task_latency_by_terminal_state": {
+              "DENIED": {
+                "n": 3,
+                "p50_ms": 0.911667,
+                "p95_ms": 1.42475,
+                "min_ms": 0.745667,
+                "max_ms": 1.42475
+              },
+              "FAIL": {
+                "n": 1,
+                "p50_ms": 73.203666,
+                "p95_ms": 73.203666,
+                "min_ms": 73.203666,
+                "max_ms": 73.203666
+              },
+              "PASS": {
+                "n": 3,
+                "p50_ms": 37.467833,
+                "p95_ms": 195.274833,
+                "min_ms": 37.321166,
+                "max_ms": 195.274833
+              }
+            },
+            "revocation_ack_latency": {
+              "n": 0,
+              "p50_ms": null,
+              "p95_ms": null,
+              "min_ms": null,
+              "max_ms": null
+            },
+            "operator_effort_minutes": null,
+            "operator_interventions": null,
+            "llm_calls": null,
+            "llm_escalation_rate": null
+          }
+        },
+        "phases": [
+          {
+            "phase": "initial_qualification",
+            "success": true,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "retained_success",
+            "success": true,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "observed_failure",
+            "success": false,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "withdrawn_query",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "INELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "fresh_passes_blocked",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "INELIGIBLE",
+            "persisted_q": "INELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "expired_without_support",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "HOLD",
+            "persisted_q": "HOLD",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "requalified_recovery",
+            "success": true,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "initial_qualification",
+            "success": true,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "retained_success",
+            "success": true,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "observed_failure",
+            "success": false,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "withdrawn_query",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "INELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "fresh_passes_blocked",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "INELIGIBLE",
+            "persisted_q": "INELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "expired_without_support",
+            "success": false,
+            "denial": true,
+            "integrity": [],
+            "reported_q": "HOLD",
+            "persisted_q": "HOLD",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          },
+          {
+            "phase": "requalified_recovery",
+            "success": true,
+            "denial": false,
+            "integrity": [],
+            "reported_q": "ELIGIBLE",
+            "persisted_q": "ELIGIBLE",
+            "sentinel": {
+              "version": "keep-v1",
+              "healthy": true,
+              "attempt_id": "setup"
+            }
+          }
+        ]
+      }
+    },
+    "retention_probe": {
+      "source_hashes_before": {
+        "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+        "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
+        "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+        "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
+        "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+        "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+        "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
+        "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+        "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+        "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+        "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+        "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+        "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
+        "evaluations/harness/__init__.py": "sha256:2d7d486bc7e8dc449abd290d212c29ec078cc2c0457b6fce8a0b1b130d38d0ba",
+        "evaluations/harness/controller.py": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
+        "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
+        "evaluations/harness/grader.py": "sha256:ed3639499e59b6458c217b46f56cbe73a6c5a8a0b7bb4f0177672a0771a3dfa6",
+        "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
+        "evaluations/harness/runner.py": "sha256:760c5b0961f8b12b73ab4328439c650a201fbe8b4dc8d8599fd8e14e07afec6d",
+        "evaluations/harness/sequential.py": "sha256:80d852f6c1202a4023060b1b989e7efc3088411fbea74f3baf558f2240f3aeb1",
+        "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
+        "evaluations/tests/test_pilot.py": "sha256:b8c2c4b3ea92d07dadd852a9f82903b99025d4cc78afa8a9ec546006eb39a081",
+        "evaluations/tests/test_readiness.py": "sha256:72b6fa4dd20d4280eaf7500a4a7610ad9678f45181c081138f3560dbb89b9e61",
+        "evaluations/tests/test_sequential.py": "sha256:02be3cc4f3424a479358be122ad583ec2bb5c1bf94bbdb09ca944b744516ef7b",
+        "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
+        "evaluations/pilot-plan-v2.json": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
+        "tools/run_edd_pilot.py": "sha256:2a370dee1ce5a6898c209659f4cc47e5a67e4b02431df8ab3335edecdde5eea7",
+        "evaluations/confirmatory-design.json": "sha256:75650c7b4a2857c441382d31ecf7901205b89175d7472b9024f556f8754132c1",
+        "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07",
+        "evaluations/sequential-plan.json": "sha256:5d8357a6ff6c596bef82ad5b27dd7e9f003904d980c42755c2980a57395df8e4",
+        "tools/run_edd_sequential.py": "sha256:83f6c54ef7e2be116f6f4920711965e8efd9d18220ccc9ed0d7b1ad5f7fff923"
+      },
+      "source_hashes_after": {
+        "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+        "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
+        "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+        "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
+        "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+        "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+        "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
+        "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+        "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+        "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+        "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+        "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+        "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
+        "evaluations/harness/__init__.py": "sha256:2d7d486bc7e8dc449abd290d212c29ec078cc2c0457b6fce8a0b1b130d38d0ba",
+        "evaluations/harness/controller.py": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
+        "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
+        "evaluations/harness/grader.py": "sha256:ed3639499e59b6458c217b46f56cbe73a6c5a8a0b7bb4f0177672a0771a3dfa6",
+        "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
+        "evaluations/harness/runner.py": "sha256:760c5b0961f8b12b73ab4328439c650a201fbe8b4dc8d8599fd8e14e07afec6d",
+        "evaluations/harness/sequential.py": "sha256:80d852f6c1202a4023060b1b989e7efc3088411fbea74f3baf558f2240f3aeb1",
+        "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
+        "evaluations/tests/test_pilot.py": "sha256:b8c2c4b3ea92d07dadd852a9f82903b99025d4cc78afa8a9ec546006eb39a081",
+        "evaluations/tests/test_readiness.py": "sha256:72b6fa4dd20d4280eaf7500a4a7610ad9678f45181c081138f3560dbb89b9e61",
+        "evaluations/tests/test_sequential.py": "sha256:02be3cc4f3424a479358be122ad583ec2bb5c1bf94bbdb09ca944b744516ef7b",
+        "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
+        "evaluations/pilot-plan-v2.json": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
+        "tools/run_edd_pilot.py": "sha256:2a370dee1ce5a6898c209659f4cc47e5a67e4b02431df8ab3335edecdde5eea7",
+        "evaluations/confirmatory-design.json": "sha256:75650c7b4a2857c441382d31ecf7901205b89175d7472b9024f556f8754132c1",
+        "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07",
+        "evaluations/sequential-plan.json": "sha256:5d8357a6ff6c596bef82ad5b27dd7e9f003904d980c42755c2980a57395df8e4",
+        "tools/run_edd_sequential.py": "sha256:83f6c54ef7e2be116f6f4920711965e8efd9d18220ccc9ed0d7b1ad5f7fff923"
+      },
+      "status": "GREEN",
+      "state": "COMPLETED",
+      "error": null,
+      "counts": {
+        "assigned_queries": 14,
+        "started_queries": 14,
+        "scored_queries": 14,
+        "started_unscored_queries": 0,
+        "unstarted_queries": 0
+      },
+      "phases": [
+        {
+          "phase": "initial_qualification",
+          "failure_observations": 0,
+          "success": true
+        },
+        {
+          "phase": "retained_success",
+          "failure_observations": 0,
+          "success": true
+        },
+        {
+          "phase": "observed_failure",
+          "failure_observations": 1,
+          "success": false
+        },
+        {
+          "phase": "withdrawn_query",
+          "failure_observations": 1,
+          "success": false
+        },
+        {
+          "phase": "fresh_passes_blocked",
+          "failure_observations": 1,
+          "success": false
+        },
+        {
+          "phase": "expired_without_support",
+          "failure_observations": 1,
+          "success": false
+        },
+        {
+          "phase": "requalified_recovery",
+          "failure_observations": 0,
+          "success": true
+        },
+        {
+          "phase": "initial_qualification",
+          "failure_observations": 0,
+          "success": true
+        },
+        {
+          "phase": "retained_success",
+          "failure_observations": 0,
+          "success": true
+        },
+        {
+          "phase": "observed_failure",
+          "failure_observations": 1,
+          "success": false
+        },
+        {
+          "phase": "withdrawn_query",
+          "failure_observations": 1,
+          "success": false
+        },
+        {
+          "phase": "fresh_passes_blocked",
+          "failure_observations": 1,
+          "success": false
+        },
+        {
+          "phase": "expired_without_support",
+          "failure_observations": 1,
+          "success": false
+        },
+        {
+          "phase": "requalified_recovery",
+          "failure_observations": 0,
+          "success": true
+        }
+      ]
+    },
+    "retention_probe_setup_error": "The first retention probe used an incorrect SQLite column and aborted due to test setup. The corrected probe/result above demonstrates the finding; the setup-error result is retained in the private work folder."
+  },
+  "limits": [
+    "Both arms intentionally share identical deterministic retained-state policy; this is not learned adaptation.",
+    "Development fixture, shared ancestry, generated support and controlled clock; no held-out, business, canonical-service or production claim.",
+    "Sealing currently records ordering in the same trusted process, not a security boundary."
+  ]
+}

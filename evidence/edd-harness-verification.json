@@ -1,213 +1,293 @@
 {
   "status": "PASS",
   "scope": "EDD_HARNESS_AND_LOCAL_SQLITE_FIXTURE_COMPONENTS",
-  "tests_run": 50,
+  "tests_run": 70,
   "cases": [
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_grader.py::test_grader_detects_commit_after_acknowledged_revocation_despite_pass_claim",
+      "test": "evaluations/tests/test_grader.py::test_grader_detects_commit_after_acknowledged_revocation_despite_pass_claim",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_grader.py::test_procedure_pass_claim_cannot_substitute_for_committed_readback",
+      "test": "evaluations/tests/test_grader.py::test_procedure_pass_claim_cannot_substitute_for_committed_readback",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_grader.py::test_success_uses_persisted_target_even_if_returned_outcome_is_fail",
+      "test": "evaluations/tests/test_grader.py::test_success_uses_persisted_target_even_if_returned_outcome_is_fail",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_grader.py::test_grader_rejects_corrupted_commit[expiry]",
+      "test": "evaluations/tests/test_grader.py::test_grader_rejects_corrupted_commit[expiry]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_grader.py::test_grader_rejects_corrupted_commit[signature]",
+      "test": "evaluations/tests/test_grader.py::test_grader_rejects_corrupted_commit[signature]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_grader.py::test_grader_rejects_corrupted_commit[context]",
+      "test": "evaluations/tests/test_grader.py::test_grader_rejects_corrupted_commit[context]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_grader.py::test_grader_rejects_corrupted_commit[qualification]",
+      "test": "evaluations/tests/test_grader.py::test_grader_rejects_corrupted_commit[qualification]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_grader.py::test_grader_rejects_corrupted_commit[attribution]",
+      "test": "evaluations/tests/test_grader.py::test_grader_rejects_corrupted_commit[attribution]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_grader.py::test_grader_rejects_corrupted_commit[unrelated]",
+      "test": "evaluations/tests/test_grader.py::test_grader_rejects_corrupted_commit[unrelated]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_grader.py::test_wrong_target_is_task_failure_but_not_unauthorized_commit",
+      "test": "evaluations/tests/test_grader.py::test_wrong_target_is_task_failure_but_not_unauthorized_commit",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_grader.py::test_actual_registry_change_without_counter_or_attempt_is_detected",
+      "test": "evaluations/tests/test_grader.py::test_actual_registry_change_without_counter_or_attempt_is_detected",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_grader.py::test_unrequested_version_matching_a_grant_cannot_succeed",
+      "test": "evaluations/tests/test_grader.py::test_unrequested_version_matching_a_grant_cannot_succeed",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_grader.py::test_other_qualification_binding_with_matching_digest_cannot_succeed",
+      "test": "evaluations/tests/test_grader.py::test_other_qualification_binding_with_matching_digest_cannot_succeed",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_grader.py::test_error_on_forbidden_request_is_not_a_correct_denial",
+      "test": "evaluations/tests/test_grader.py::test_error_on_forbidden_request_is_not_a_correct_denial",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_grader.py::test_map_key_cannot_hide_other_skill_in_grant_and_qualification",
+      "test": "evaluations/tests/test_grader.py::test_map_key_cannot_hide_other_skill_in_grant_and_qualification",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_grader.py::test_boolean_revision_cannot_alias_integer_authority_revision",
+      "test": "evaluations/tests/test_grader.py::test_boolean_revision_cannot_alias_integer_authority_revision",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_pilot_blocks_undeclared_or_held_out_execution[mode-CONFIRMATORY]",
+      "test": "evaluations/tests/test_pilot.py::test_pilot_blocks_undeclared_or_held_out_execution[mode-CONFIRMATORY]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_pilot_blocks_undeclared_or_held_out_execution[split-held_out]",
+      "test": "evaluations/tests/test_pilot.py::test_pilot_blocks_undeclared_or_held_out_execution[split-held_out]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_pilot_blocks_undeclared_or_held_out_execution[seeds-value2]",
+      "test": "evaluations/tests/test_pilot.py::test_pilot_blocks_undeclared_or_held_out_execution[seeds-value2]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_pilot_blocks_undeclared_or_held_out_execution[seeds-value3]",
+      "test": "evaluations/tests/test_pilot.py::test_pilot_blocks_undeclared_or_held_out_execution[seeds-value3]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_pilot_blocks_undeclared_or_held_out_execution[retry_budget-1]",
+      "test": "evaluations/tests/test_pilot.py::test_pilot_blocks_undeclared_or_held_out_execution[retry_budget-1]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_pilot_blocks_undeclared_or_held_out_execution[deadline_ms-0]",
+      "test": "evaluations/tests/test_pilot.py::test_pilot_blocks_undeclared_or_held_out_execution[deadline_ms-0]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_digest_renamed_family_cannot_cross_partitions",
+      "test": "evaluations/tests/test_pilot.py::test_digest_renamed_family_cannot_cross_partitions",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_null_quantiles_and_nearest_rank",
+      "test": "evaluations/tests/test_pilot.py::test_null_quantiles_and_nearest_rank",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[stable-True-True]",
+      "test": "evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[stable-True-True]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[new_version-True-False]",
+      "test": "evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[new_version-True-False]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[new_context-True-False]",
+      "test": "evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[new_context-True-False]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[known_failure-False-False]",
+      "test": "evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[known_failure-False-False]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[unknown_support-False-False]",
+      "test": "evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[unknown_support-False-False]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[revoked_before_commit-False-False]",
+      "test": "evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[revoked_before_commit-False-False]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[expired_before_commit-False-False]",
+      "test": "evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[expired_before_commit-False-False]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[authority_outage-False-False]",
+      "test": "evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[authority_outage-False-False]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[ledger_outage-True-True]",
+      "test": "evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[ledger_outage-True-True]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[wrong_postcondition-False-False]",
+      "test": "evaluations/tests/test_pilot.py::test_real_fixture_episode_grading[wrong_postcondition-False-False]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_reuse_is_rejected_without_overwriting_prior_evidence",
+      "test": "evaluations/tests/test_pilot.py::test_reuse_is_rejected_without_overwriting_prior_evidence",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_denials_stay_in_legitimate_denominator",
+      "test": "evaluations/tests/test_pilot.py::test_denials_stay_in_legitimate_denominator",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_missing_evidence_and_dependency_outage_remain_legitimate_failures[authority_outage]",
+      "test": "evaluations/tests/test_pilot.py::test_missing_evidence_and_dependency_outage_remain_legitimate_failures[authority_outage]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_missing_evidence_and_dependency_outage_remain_legitimate_failures[unknown_support]",
+      "test": "evaluations/tests/test_pilot.py::test_missing_evidence_and_dependency_outage_remain_legitimate_failures[unknown_support]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_hard_gate_stops_after_first_violation_and_retains_partial_report",
+      "test": "evaluations/tests/test_pilot.py::test_hard_gate_stops_after_first_violation_and_retains_partial_report",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_controller_inputs_do_not_encode_private_stratum_labels",
+      "test": "evaluations/tests/test_pilot.py::test_controller_inputs_do_not_encode_private_stratum_labels",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_pilot.py::test_preparation_crash_is_started_unscored_and_retains_assigned_denominator",
+      "test": "evaluations/tests/test_pilot.py::test_preparation_crash_is_started_unscored_and_retains_assigned_denominator",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_draft_names_each_open_prerequisite_without_authorizing_execution",
+      "test": "evaluations/tests/test_pilot.py::test_support_mutation_aborts_pilot_before_query",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[True]",
+      "test": "evaluations/tests/test_pilot.py::test_admission_mutation_is_independently_detected",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[nan]",
+      "test": "evaluations/tests/test_readiness.py::test_draft_names_each_open_prerequisite_without_authorizing_execution",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[inf]",
+      "test": "evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[True]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[-0.1]",
+      "test": "evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[nan]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[1.1]",
+      "test": "evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[inf]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[None]",
+      "test": "evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[-0.1]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_declared_readiness_cannot_enable_missing_execution_adapter",
+      "test": "evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[1.1]",
       "outcome": "PASS"
     },
     {
-      "test": "outputs/earned-authority-kit/evaluations/tests/test_readiness.py::test_copied_pilot_ancestry_prevents_declared_holdout_readiness",
+      "test": "evaluations/tests/test_readiness.py::test_invalid_threshold_cannot_pass[None]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_readiness.py::test_declared_readiness_cannot_enable_missing_execution_adapter",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_readiness.py::test_copied_pilot_ancestry_prevents_declared_holdout_readiness",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_sequence_rejects_unfrozen_design[mode-CONFIRMATORY]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_sequence_rejects_unfrozen_design[split-held_out]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_sequence_rejects_unfrozen_design[seeds-value2]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_sequence_rejects_unfrozen_design[seeds-value3]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_sequence_rejects_unfrozen_design[phases-value4]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_sequence_rejects_unfrozen_design[retry_budget-1]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_retained_failure_blocks_recovery_until_window_expires[fixed_deterministic]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_retained_failure_blocks_recovery_until_window_expires[adaptive_qualification]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_sequence_hard_stop_preserves_assigned_query_denominators",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_sequence_retains_started_unscored_query_on_preparation_crash",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_sequence_fresh_paths_required",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_unexpected_retained_success_denial_cannot_pass",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_support_mutation_is_detected_before_first_query",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_withdrawn_disposition_reads_actual_persisted_qualification",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_recovery_cannot_delete_retained_failure_observations",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_admission_cannot_mutate_unrelated_registry",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_new_support_observations_must_survive_query",
+      "outcome": "PASS"
+    },
+    {
+      "test": "evaluations/tests/test_sequential.py::test_observation_retention_preserves_types",
       "outcome": "PASS"
     }
   ],
   "exit_code": 0,
   "collection_errors": [],
-  "started_at_ms": 1791914630743,
-  "finished_at_ms": 1791914631692,
+  "started_at_ms": 1791916654890,
+  "finished_at_ms": 1791916657172,
   "source_hashes_before": {
     "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
     "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
@@ -225,17 +305,21 @@
     "evaluations/harness/__init__.py": "sha256:2d7d486bc7e8dc449abd290d212c29ec078cc2c0457b6fce8a0b1b130d38d0ba",
     "evaluations/harness/controller.py": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
     "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
-    "evaluations/harness/grader.py": "sha256:ed3639499e59b6458c217b46f56cbe73a6c5a8a0b7bb4f0177672a0771a3dfa6",
+    "evaluations/harness/grader.py": "sha256:da20cca667bf56d3063fc0a874687bf779284b358310ff1c311c450e7885e1ac",
     "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
-    "evaluations/harness/runner.py": "sha256:15c24a25eb125ae0108309e97b586c70a7d295eb79a52724532d2b946d1d5ab8",
+    "evaluations/harness/runner.py": "sha256:e8df9c0b399d8b8096956e41686451c7e1622b06d4a67b673ade0e73b907e6b0",
+    "evaluations/harness/sequential.py": "sha256:b7b696b5399b3bb609d04d9ce51087a6975220de0e5ac2630340073f5bfca0b3",
     "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
-    "evaluations/tests/test_pilot.py": "sha256:4666f15f619ab7e2f2acf4a942d43f0231d816a0ba3e36e7320b2d2e40ef6951",
+    "evaluations/tests/test_pilot.py": "sha256:83aa40ffc3af227db90fb8c745140670eb8247ea1f9a0ee3ad7af98b08a6e631",
     "evaluations/tests/test_readiness.py": "sha256:72b6fa4dd20d4280eaf7500a4a7610ad9678f45181c081138f3560dbb89b9e61",
+    "evaluations/tests/test_sequential.py": "sha256:1072e15d7fa4f77a0383a1c46fc6dfe07ad17c09cf10076c09ca3592baff8e1a",
     "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
     "evaluations/pilot-plan-v2.json": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
     "tools/run_edd_pilot.py": "sha256:2a370dee1ce5a6898c209659f4cc47e5a67e4b02431df8ab3335edecdde5eea7",
     "evaluations/confirmatory-design.json": "sha256:75650c7b4a2857c441382d31ecf7901205b89175d7472b9024f556f8754132c1",
-    "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07"
+    "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07",
+    "evaluations/sequential-plan.json": "sha256:5d8357a6ff6c596bef82ad5b27dd7e9f003904d980c42755c2980a57395df8e4",
+    "tools/run_edd_sequential.py": "sha256:83f6c54ef7e2be116f6f4920711965e8efd9d18220ccc9ed0d7b1ad5f7fff923"
   },
   "source_hashes": {
     "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
@@ -254,21 +338,25 @@
     "evaluations/harness/__init__.py": "sha256:2d7d486bc7e8dc449abd290d212c29ec078cc2c0457b6fce8a0b1b130d38d0ba",
     "evaluations/harness/controller.py": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
     "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
-    "evaluations/harness/grader.py": "sha256:ed3639499e59b6458c217b46f56cbe73a6c5a8a0b7bb4f0177672a0771a3dfa6",
+    "evaluations/harness/grader.py": "sha256:da20cca667bf56d3063fc0a874687bf779284b358310ff1c311c450e7885e1ac",
     "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
-    "evaluations/harness/runner.py": "sha256:15c24a25eb125ae0108309e97b586c70a7d295eb79a52724532d2b946d1d5ab8",
+    "evaluations/harness/runner.py": "sha256:e8df9c0b399d8b8096956e41686451c7e1622b06d4a67b673ade0e73b907e6b0",
+    "evaluations/harness/sequential.py": "sha256:b7b696b5399b3bb609d04d9ce51087a6975220de0e5ac2630340073f5bfca0b3",
     "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
-    "evaluations/tests/test_pilot.py": "sha256:4666f15f619ab7e2f2acf4a942d43f0231d816a0ba3e36e7320b2d2e40ef6951",
+    "evaluations/tests/test_pilot.py": "sha256:83aa40ffc3af227db90fb8c745140670eb8247ea1f9a0ee3ad7af98b08a6e631",
     "evaluations/tests/test_readiness.py": "sha256:72b6fa4dd20d4280eaf7500a4a7610ad9678f45181c081138f3560dbb89b9e61",
+    "evaluations/tests/test_sequential.py": "sha256:1072e15d7fa4f77a0383a1c46fc6dfe07ad17c09cf10076c09ca3592baff8e1a",
     "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
     "evaluations/pilot-plan-v2.json": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
     "tools/run_edd_pilot.py": "sha256:2a370dee1ce5a6898c209659f4cc47e5a67e4b02431df8ab3335edecdde5eea7",
     "evaluations/confirmatory-design.json": "sha256:75650c7b4a2857c441382d31ecf7901205b89175d7472b9024f556f8754132c1",
-    "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07"
+    "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07",
+    "evaluations/sequential-plan.json": "sha256:5d8357a6ff6c596bef82ad5b27dd7e9f003904d980c42755c2980a57395df8e4",
+    "tools/run_edd_sequential.py": "sha256:83f6c54ef7e2be116f6f4920711965e8efd9d18220ccc9ed0d7b1ad5f7fff923"
   },
   "source_unchanged_during_run": true,
   "artifacts": {
-    "evidence/edd-harness-green.log": "sha256:749bbcfa3b1d97e4740db61a1b3904469856eb33cc9928c48b383e23dffb55ec",
+    "evidence/edd-harness-green.log": "sha256:7fa0778fd4e69c6fac4c52a7f997cf795b9a43736be95b3c956b7055953e3c65",
     "evidence/edd-grader-red.log": "sha256:672bb3cf183607cbee4629be879b7baf91d9d9a354a1fd82bcbb3372fe6abb10",
     "tools/verify_edd.py": "sha256:748373ad30712381fc64ddc9bdff06faf5a447bbd3046b336d11bbe0fc0e617a"
   },

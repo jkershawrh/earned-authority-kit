@@ -68,4 +68,6 @@ Before running the pilot, complete the manifest and leakage review, implement in
 
 ## Executable development pilot
 
-[PILOT.md](PILOT.md) documents the separate development harness and reports/edd-pilot-004.json. It runs 300 fixture episodes with independent persisted-state grading and three declared automatic policies. The 50 dedicated harness tests are separate from the 514-test baseline. The human baseline, confirmatory protocol, risk budget, held-out split and business-value evaluation remain unexecuted/AMBER. The machine-readable draft above is not relabelled as completed by this pilot.
+[PILOT.md](PILOT.md) documents the separate development harness and reports/edd-pilot-007.json. It runs 300 fixture episodes with independent persisted-state grading and three declared automatic policies. The 70 dedicated harness tests are separate from the 514-test baseline. The human baseline, confirmatory protocol, risk budget, held-out split and business-value evaluation remain unexecuted/AMBER. The machine-readable draft above is not relabelled as completed by this pilot.
+
+[SEQUENTIAL.md](SEQUENTIAL.md) records 20 retained-state sequences and 140 graded queries. Both deterministic arms share the same observations and retention rules. Lifecycle engineering passes; adaptive business value remains unproven.

@@ -1,0 +1,30 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________ test_recovery_cannot_delete_retained_failure_observations ___________
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-220/test_recovery_cannot_delete_re0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x107822ba0>
+
+    def test_recovery_cannot_delete_retained_failure_observations(tmp_path,monkeypatch):
+        from earned_authority.runtime import Runtime
+        original=Runtime.shadow
+        def delete_failure(self,**kwargs):
+            result=original(self,**kwargs)
+            if '-query-6-support-' in kwargs['attempt_id']:
+                with self._tx() as db:
+                    for attempt,body in db.execute('SELECT attempt_id,body FROM observations').fetchall():
+                        if json.loads(body)['outcome']=='FAIL':
+                            db.execute('DELETE FROM observations WHERE attempt_id=?',(attempt,))
+            return result
+        monkeypatch.setattr(Runtime,'shadow',delete_failure)
+        report=single_seed_run(tmp_path)
+>       assert report['engineering_acceptance']=='RED'
+E       AssertionError: assert 'GREEN' == 'RED'
+E         
+E         - RED
+E         + GREEN
+
+evaluations/tests/test_sequential.py:134: AssertionError
+=========================== short test summary info ============================
+FAILED evaluations/tests/test_sequential.py::test_recovery_cannot_delete_retained_failure_observations
+1 failed, 14 deselected in 1.29s

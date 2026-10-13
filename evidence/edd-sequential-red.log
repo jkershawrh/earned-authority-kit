@@ -1,0 +1,16 @@
+
+==================================== ERRORS ====================================
+____________ ERROR collecting evaluations/tests/test_sequential.py _____________
+ImportError while importing test module '/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/evaluations/tests/test_sequential.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/Users/jkershaw/.local/share/uv/python/cpython-3.12.13-macos-aarch64-none/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+evaluations/tests/test_sequential.py:4: in <module>
+    from evaluations.harness.sequential import PHASES, validate_plan, run, run_sequence
+E   ModuleNotFoundError: No module named 'evaluations.harness.sequential'
+=========================== short test summary info ============================
+ERROR evaluations/tests/test_sequential.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.07s

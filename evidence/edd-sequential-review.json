@@ -1,0 +1,671 @@
+{
+  "review_id": "edd-sequential-review",
+  "reviewed_at_utc": "2026-10-13T18:38:53.419687+00:00",
+  "status": "GREEN",
+  "gate": "REVIEWED_DEVELOPMENT_SEQUENTIAL_HARNESS_CONTROLS",
+  "scope": "Independent read-only review with actual disposable local SQLite execution and injected negative controls. No canonical service or held-out business evidence.",
+  "code_edits": false,
+  "source_hashes_before": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
+    "evaluations/harness/__init__.py": "sha256:2d7d486bc7e8dc449abd290d212c29ec078cc2c0457b6fce8a0b1b130d38d0ba",
+    "evaluations/harness/controller.py": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
+    "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
+    "evaluations/harness/grader.py": "sha256:da20cca667bf56d3063fc0a874687bf779284b358310ff1c311c450e7885e1ac",
+    "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
+    "evaluations/harness/runner.py": "sha256:e8df9c0b399d8b8096956e41686451c7e1622b06d4a67b673ade0e73b907e6b0",
+    "evaluations/harness/sequential.py": "sha256:b7b696b5399b3bb609d04d9ce51087a6975220de0e5ac2630340073f5bfca0b3",
+    "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
+    "evaluations/tests/test_pilot.py": "sha256:83aa40ffc3af227db90fb8c745140670eb8247ea1f9a0ee3ad7af98b08a6e631",
+    "evaluations/tests/test_readiness.py": "sha256:72b6fa4dd20d4280eaf7500a4a7610ad9678f45181c081138f3560dbb89b9e61",
+    "evaluations/tests/test_sequential.py": "sha256:1072e15d7fa4f77a0383a1c46fc6dfe07ad17c09cf10076c09ca3592baff8e1a",
+    "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
+    "evaluations/pilot-plan-v2.json": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
+    "tools/run_edd_pilot.py": "sha256:2a370dee1ce5a6898c209659f4cc47e5a67e4b02431df8ab3335edecdde5eea7",
+    "evaluations/confirmatory-design.json": "sha256:75650c7b4a2857c441382d31ecf7901205b89175d7472b9024f556f8754132c1",
+    "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07",
+    "evaluations/sequential-plan.json": "sha256:5d8357a6ff6c596bef82ad5b27dd7e9f003904d980c42755c2980a57395df8e4",
+    "tools/run_edd_sequential.py": "sha256:83f6c54ef7e2be116f6f4920711965e8efd9d18220ccc9ed0d7b1ad5f7fff923"
+  },
+  "source_hashes_after": {
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
+    "evaluations/harness/__init__.py": "sha256:2d7d486bc7e8dc449abd290d212c29ec078cc2c0457b6fce8a0b1b130d38d0ba",
+    "evaluations/harness/controller.py": "sha256:178c96e84e979c7ccba58c9c9e6d165f6e45692fc6684727f210536548bc07af",
+    "evaluations/harness/design.py": "sha256:e37a21c66d5f6680bdfa52d8a464a62cfab7b18407af7d57a4b70cf2bc0bf5e1",
+    "evaluations/harness/grader.py": "sha256:da20cca667bf56d3063fc0a874687bf779284b358310ff1c311c450e7885e1ac",
+    "evaluations/harness/readiness.py": "sha256:193a3f0428d01a5fbd822537ff4adb30e755016ae80b3d954913a57851dab876",
+    "evaluations/harness/runner.py": "sha256:e8df9c0b399d8b8096956e41686451c7e1622b06d4a67b673ade0e73b907e6b0",
+    "evaluations/harness/sequential.py": "sha256:b7b696b5399b3bb609d04d9ce51087a6975220de0e5ac2630340073f5bfca0b3",
+    "evaluations/tests/test_grader.py": "sha256:2f7b587ea4046d808d2d1a7012942dee7017e9ed4b8e2040b514e58e1ebb0ccb",
+    "evaluations/tests/test_pilot.py": "sha256:83aa40ffc3af227db90fb8c745140670eb8247ea1f9a0ee3ad7af98b08a6e631",
+    "evaluations/tests/test_readiness.py": "sha256:72b6fa4dd20d4280eaf7500a4a7610ad9678f45181c081138f3560dbb89b9e61",
+    "evaluations/tests/test_sequential.py": "sha256:1072e15d7fa4f77a0383a1c46fc6dfe07ad17c09cf10076c09ca3592baff8e1a",
+    "evaluations/protocol.json": "sha256:a1bc7dd47ad1b2e3a5e2fa2fe1e8152591faeb3c1a492560ae919dd3dd8008be",
+    "evaluations/pilot-plan-v2.json": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
+    "tools/run_edd_pilot.py": "sha256:2a370dee1ce5a6898c209659f4cc47e5a67e4b02431df8ab3335edecdde5eea7",
+    "evaluations/confirmatory-design.json": "sha256:75650c7b4a2857c441382d31ecf7901205b89175d7472b9024f556f8754132c1",
+    "tools/check_edd_readiness.py": "sha256:eb1e5e527d713e514f88619342a2a523717c5a917b27df3b36db9d1e95398d07",
+    "evaluations/sequential-plan.json": "sha256:5d8357a6ff6c596bef82ad5b27dd7e9f003904d980c42755c2980a57395df8e4",
+    "tools/run_edd_sequential.py": "sha256:83f6c54ef7e2be116f6f4920711965e8efd9d18220ccc9ed0d7b1ad5f7fff923"
+  },
+  "source_unchanged_during_checks": true,
+  "findings": [
+    {
+      "id": "SEQ-R1",
+      "priority": "P1",
+      "status": "RESOLVED",
+      "title": "Missing phase acceptance gate",
+      "evidence": "Forcing only retained_success admission to deny still produced COMPLETED/GREEN. Invariant-only checks do not establish the named lifecycle behavior.",
+      "required_change": "Gate declared expected phase success/denial and observed withdrawal/requalification states in the runner, retaining the failing row and stopping subsequent phases.",
+      "resolution": "Each phase is gated against declared success/denial, disposition, deadline and failure-withdrawal expectations before the next phase.",
+      "independent_verification": "negative_control_unexpected_retained_denial"
+    },
+    {
+      "id": "SEQ-R2",
+      "priority": "P1",
+      "status": "RESOLVED",
+      "title": "Support preparation writes are outside the grading window",
+      "evidence": "A Runtime.shadow wrapper performed an actual unauthorized write to the unrelated sentinel. Every sequence phase and the whole report remained GREEN with no integrity errors.",
+      "required_change": "Read registry/counter before preparation, compare after preparation, and forbid any preparation mutation before querying. Preserve prior-query continuity. Apply the same boundary to independent pilot preparation.",
+      "resolution": "Both runners preserve a registry/counter snapshot before support preparation and reject changes. The sequential runner also preserves registry continuity between sealed phases.",
+      "independent_verification": "negative_control_support_side_effect"
+    },
+    {
+      "id": "SEQ-R3",
+      "priority": "P1",
+      "status": "RESOLVED",
+      "title": "Qualification disposition is fabricated for the withdrawn phase",
+      "evidence": "After leaving actual persisted qualification ELIGIBLE while retaining the revoked authority, withdrawn_query reported qualification_disposition=INELIGIBLE even though prepared_qualification.disposition=ELIGIBLE, and the report remained GREEN.",
+      "required_change": "Read the actual disposition and compare against the declared expected transition; do not insert expected labels as observed results.",
+      "resolution": "The withdrawn phase reads the persisted disposition; the failure phase also checks stored INELIGIBLE state, actual withdrawal and acknowledgement.",
+      "independent_verification": "negative_control_hardcoded_qualification_disposition"
+    },
+    {
+      "id": "SEQ-R4",
+      "priority": "P1",
+      "status": "RESOLVED",
+      "title": "Retained failure deletion is not detected",
+      "evidence": "Deleting the actual SQLite FAIL observation during recovery support preserved all expected task/denial outcomes and COMPLETED/GREEN; recovery observations contained no FAIL despite the explicit retention claim.",
+      "required_change": "Require every previously retained observation identity and canonical content to remain through preparation and query boundaries; detect removal or alteration before continuing.",
+      "resolution": "Previously retained observation identities and exact content must survive preparation and queries; deleting the old failure stops recovery.",
+      "independent_verification": "negative_control_failure_deleted_during_recovery"
+    },
+    {
+      "id": "SEQ-R5",
+      "priority": "P1",
+      "status": "RESOLVED",
+      "title": "Admission mutation can escape the grading window",
+      "evidence": "An actual unrelated sentinel mutation inside admit is incorporated into a replacement before snapshot; the corrected runner still returned COMPLETED/GREEN.",
+      "required_change": "Preserve and compare the registry/counter baseline across admission and maintain continuity from the prior sealed phase.",
+      "resolution": "Both runners compare pre-admission registry/counter state to the admitted snapshot before moving the commit grading boundary.",
+      "independent_verification": "negative_control_admission_side_effect"
+    },
+    {
+      "id": "SEQ-R6",
+      "priority": "P1",
+      "status": "RESOLVED",
+      "title": "New support observations can be deleted during their first query",
+      "evidence": "Deleting all three newly added support observations after query0 left only the query observation. Because retention compared pre-support observations, the entire run returned COMPLETED/GREEN.",
+      "required_change": "Capture post-preparation observations and require that exact evidence to survive the query.",
+      "resolution": "Post-support observations are captured and must survive the following query, including the first three support observations.",
+      "independent_verification": "negative_control_new_support_deleted_during_query"
+    },
+    {
+      "id": "SEQ-R7",
+      "priority": "P1",
+      "status": "RESOLVED",
+      "title": "Python equality permits typed observation alteration",
+      "evidence": "Changing the retained FAIL observed_at_ms from integer 1000000 to floating-point 1000000.0 passed retained_observations and the entire run returned COMPLETED/GREEN.",
+      "required_change": "Use canonical typed content equality for retention, including report provenance checks.",
+      "resolution": "Retention uses typed canonical content equality and treats malformed payloads as failed retention, rejecting integer/float or boolean/integer substitutions.",
+      "independent_verification": "negative_control_retained_numeric_type_changed"
+    }
+  ],
+  "open_blockers": [],
+  "independent_checks": {
+    "dedicated_test_command": "work/ledger-venv/bin/python -m pytest evaluations/tests -q",
+    "dedicated_test_exit_code": 0,
+    "dedicated_tests_passed": 70,
+    "dedicated_test_output": "70 passed in 4.70s",
+    "direct_probes_passed": 20,
+    "direct_probes_failed": 0,
+    "direct_probes": [
+      {
+        "name": "normal_two_arm_sequence_matches_seven_phases",
+        "passed": true,
+        "observed": {
+          "status": "GREEN",
+          "counts": {
+            "assigned_queries": 14,
+            "started_queries": 14,
+            "scored_queries": 14,
+            "started_unscored_queries": 0,
+            "unstarted_queries": 0
+          },
+          "successes": {
+            "fixed_deterministic": [
+              true,
+              true,
+              false,
+              false,
+              false,
+              false,
+              true
+            ],
+            "adaptive_qualification": [
+              true,
+              true,
+              false,
+              false,
+              false,
+              false,
+              true
+            ]
+          }
+        }
+      },
+      {
+        "name": "all_requested_tasks_and_denials_retained",
+        "passed": true,
+        "observed": {
+          "fixed_deterministic": {
+            "task_success": {
+              "numerator": 3,
+              "denominator": 7,
+              "value": 0.42857142857142855
+            },
+            "correct_denial": {
+              "numerator": 3,
+              "denominator": 3,
+              "value": 1.0
+            },
+            "llm_calls": null,
+            "operator_effort_minutes": null
+          },
+          "adaptive_qualification": {
+            "task_success": {
+              "numerator": 3,
+              "denominator": 7,
+              "value": 0.42857142857142855
+            },
+            "correct_denial": {
+              "numerator": 3,
+              "denominator": 3,
+              "value": 1.0
+            },
+            "llm_calls": null,
+            "operator_effort_minutes": null
+          }
+        }
+      },
+      {
+        "name": "fixed_and_adaptive_have_identical_retained_policy_results",
+        "passed": true,
+        "observed": {
+          "fixed_deterministic": [
+            {
+              "phase": "initial_qualification",
+              "qualification_disposition": "ELIGIBLE",
+              "terminal_state": "PASS",
+              "denial_reason": null
+            },
+            {
+              "phase": "retained_success",
+              "qualification_disposition": "ELIGIBLE",
+              "terminal_state": "PASS",
+              "denial_reason": null
+            },
+            {
+              "phase": "observed_failure",
+              "qualification_disposition": "ELIGIBLE",
+              "terminal_state": "FAIL",
+              "denial_reason": null
+            },
+            {
+              "phase": "withdrawn_query",
+              "qualification_disposition": "INELIGIBLE",
+              "terminal_state": "DENIED",
+              "denial_reason": "REVOKED_AUTHORITY"
+            },
+            {
+              "phase": "fresh_passes_blocked",
+              "qualification_disposition": "INELIGIBLE",
+              "terminal_state": "DENIED",
+              "denial_reason": "REVOKED_AUTHORITY"
+            },
+            {
+              "phase": "expired_without_support",
+              "qualification_disposition": "HOLD",
+              "terminal_state": "DENIED",
+              "denial_reason": "REVOKED_AUTHORITY"
+            },
+            {
+              "phase": "requalified_recovery",
+              "qualification_disposition": "ELIGIBLE",
+              "terminal_state": "PASS",
+              "denial_reason": null
+            }
+          ],
+          "adaptive_qualification": [
+            {
+              "phase": "initial_qualification",
+              "qualification_disposition": "ELIGIBLE",
+              "terminal_state": "PASS",
+              "denial_reason": null
+            },
+            {
+              "phase": "retained_success",
+              "qualification_disposition": "ELIGIBLE",
+              "terminal_state": "PASS",
+              "denial_reason": null
+            },
+            {
+              "phase": "observed_failure",
+              "qualification_disposition": "ELIGIBLE",
+              "terminal_state": "FAIL",
+              "denial_reason": null
+            },
+            {
+              "phase": "withdrawn_query",
+              "qualification_disposition": "INELIGIBLE",
+              "terminal_state": "DENIED",
+              "denial_reason": "REVOKED_AUTHORITY"
+            },
+            {
+              "phase": "fresh_passes_blocked",
+              "qualification_disposition": "INELIGIBLE",
+              "terminal_state": "DENIED",
+              "denial_reason": "REVOKED_AUTHORITY"
+            },
+            {
+              "phase": "expired_without_support",
+              "qualification_disposition": "HOLD",
+              "terminal_state": "DENIED",
+              "denial_reason": "REVOKED_AUTHORITY"
+            },
+            {
+              "phase": "requalified_recovery",
+              "qualification_disposition": "ELIGIBLE",
+              "terminal_state": "PASS",
+              "denial_reason": null
+            }
+          ]
+        }
+      },
+      {
+        "name": "retained_qualification_then_fresh_recovery_fixed_deterministic",
+        "passed": true,
+        "observed": {
+          "initial_qid": "qualification-a90854a48772428e861d578b02c9dd72",
+          "recovery_qid": "qualification-da4ceab75c584463b096650af4dac6f9",
+          "failure_preserved": true,
+          "withdrawal_acknowledged": true
+        }
+      },
+      {
+        "name": "retained_qualification_then_fresh_recovery_adaptive_qualification",
+        "passed": true,
+        "observed": {
+          "initial_qid": "qualification-9a5440cab6fd4b55be6a7124d745ac72",
+          "recovery_qid": "qualification-ccc2ed22190b4463a69e59a28c208ff2",
+          "failure_preserved": true,
+          "withdrawal_acknowledged": true
+        }
+      },
+      {
+        "name": "negative_control_unexpected_retained_denial",
+        "passed": true,
+        "observed": {
+          "status": "RED",
+          "state": "ABORTED",
+          "error": "RuntimeError: Expected lifecycle transition failed; sequence stopped",
+          "counts": {
+            "assigned_queries": 14,
+            "started_queries": 2,
+            "scored_queries": 2,
+            "started_unscored_queries": 0,
+            "unstarted_queries": 12
+          },
+          "task_denominators": {
+            "adaptive_qualification": 7,
+            "fixed_deterministic": 7
+          }
+        }
+      },
+      {
+        "name": "negative_control_support_side_effect",
+        "passed": true,
+        "observed": {
+          "status": "RED",
+          "state": "ABORTED",
+          "error": "RuntimeError: Unauthorized registry mutation during support preparation",
+          "counts": {
+            "assigned_queries": 14,
+            "started_queries": 1,
+            "scored_queries": 0,
+            "started_unscored_queries": 1,
+            "unstarted_queries": 13
+          },
+          "task_denominators": {
+            "adaptive_qualification": 7,
+            "fixed_deterministic": 7
+          }
+        }
+      },
+      {
+        "name": "negative_control_hardcoded_qualification_disposition",
+        "passed": true,
+        "observed": {
+          "status": "RED",
+          "state": "ABORTED",
+          "error": "RuntimeError: Expected lifecycle transition failed; sequence stopped",
+          "counts": {
+            "assigned_queries": 14,
+            "started_queries": 3,
+            "scored_queries": 3,
+            "started_unscored_queries": 0,
+            "unstarted_queries": 11
+          },
+          "task_denominators": {
+            "adaptive_qualification": 7,
+            "fixed_deterministic": 7
+          }
+        }
+      },
+      {
+        "name": "negative_control_failure_deleted_during_recovery",
+        "passed": true,
+        "observed": {
+          "status": "RED",
+          "state": "ABORTED",
+          "error": "RuntimeError: Retained observation removed or altered during preparation",
+          "counts": {
+            "assigned_queries": 14,
+            "started_queries": 7,
+            "scored_queries": 6,
+            "started_unscored_queries": 1,
+            "unstarted_queries": 7
+          },
+          "task_denominators": {
+            "adaptive_qualification": 7,
+            "fixed_deterministic": 7
+          }
+        }
+      },
+      {
+        "name": "negative_control_admission_side_effect",
+        "passed": true,
+        "observed": {
+          "status": "RED",
+          "state": "ABORTED",
+          "error": "RuntimeError: Hard invariant or critical query error; sequence stopped",
+          "counts": {
+            "assigned_queries": 14,
+            "started_queries": 1,
+            "scored_queries": 1,
+            "started_unscored_queries": 0,
+            "unstarted_queries": 13
+          },
+          "task_denominators": {
+            "adaptive_qualification": 7,
+            "fixed_deterministic": 7
+          }
+        }
+      },
+      {
+        "name": "negative_control_new_support_deleted_during_query",
+        "passed": true,
+        "observed": {
+          "status": "RED",
+          "state": "ABORTED",
+          "error": "RuntimeError: Retained observation removed or altered during query",
+          "counts": {
+            "assigned_queries": 14,
+            "started_queries": 1,
+            "scored_queries": 1,
+            "started_unscored_queries": 0,
+            "unstarted_queries": 13
+          },
+          "task_denominators": {
+            "adaptive_qualification": 7,
+            "fixed_deterministic": 7
+          }
+        }
+      },
+      {
+        "name": "negative_control_retained_numeric_type_changed",
+        "passed": true,
+        "observed": {
+          "status": "RED",
+          "state": "ABORTED",
+          "error": "RuntimeError: Retained observation removed or altered during preparation",
+          "counts": {
+            "assigned_queries": 14,
+            "started_queries": 7,
+            "scored_queries": 6,
+            "started_unscored_queries": 1,
+            "unstarted_queries": 7
+          },
+          "task_denominators": {
+            "adaptive_qualification": 7,
+            "fixed_deterministic": 7
+          }
+        }
+      },
+      {
+        "name": "independent_pilot_rejects_support_writes",
+        "passed": true,
+        "observed": {
+          "status": "RED",
+          "error": "RuntimeError: Unauthorized registry mutation during support preparation",
+          "counts": {
+            "executed_episodes": 0,
+            "scored_episodes": 0,
+            "started_episodes": 1,
+            "expected_episodes": 30,
+            "started_unscored_episodes": 1,
+            "unstarted_episodes": 29,
+            "shared_procedure_ancestries": 1,
+            "shared_context_ancestries": 1
+          }
+        }
+      },
+      {
+        "name": "independent_pilot_rejects_admission_writes",
+        "passed": true,
+        "observed": {
+          "status": "RED",
+          "error": "RuntimeError: Hard invariant failed; further mutation episodes stopped",
+          "counts": {
+            "executed_episodes": 1,
+            "scored_episodes": 1,
+            "started_episodes": 1,
+            "expected_episodes": 30,
+            "started_unscored_episodes": 0,
+            "unstarted_episodes": 29,
+            "shared_procedure_ancestries": 1,
+            "shared_context_ancestries": 1
+          }
+        }
+      },
+      {
+        "name": "each_phase_sealed_before_next_starts",
+        "passed": true,
+        "observed": [
+          [
+            "start",
+            0
+          ],
+          [
+            "sealed",
+            0
+          ],
+          [
+            "start",
+            1
+          ],
+          [
+            "sealed",
+            1
+          ],
+          [
+            "start",
+            2
+          ],
+          [
+            "sealed",
+            2
+          ],
+          [
+            "start",
+            3
+          ],
+          [
+            "sealed",
+            3
+          ],
+          [
+            "start",
+            4
+          ],
+          [
+            "sealed",
+            4
+          ],
+          [
+            "start",
+            5
+          ],
+          [
+            "sealed",
+            5
+          ],
+          [
+            "start",
+            6
+          ],
+          [
+            "sealed",
+            6
+          ]
+        ]
+      },
+      {
+        "name": "retention_requires_exact_typed_unique_content",
+        "passed": true,
+        "observed": {
+          "rejections": [
+            true,
+            true,
+            true,
+            true
+          ]
+        }
+      },
+      {
+        "name": "started_unscored_failure_keeps_assigned_denominators",
+        "passed": true,
+        "observed": {
+          "counts": {
+            "assigned_queries": 14,
+            "started_queries": 1,
+            "scored_queries": 0,
+            "started_unscored_queries": 1,
+            "unstarted_queries": 13
+          },
+          "status": "RED"
+        }
+      },
+      {
+        "name": "unfrozen_and_held_out_plans_rejected",
+        "passed": true,
+        "observed": [
+          true,
+          true,
+          true,
+          true,
+          true
+        ]
+      },
+      {
+        "name": "sequential_cli_rejects_holdout_before_outputs",
+        "passed": true,
+        "observed": {
+          "exit_code": 1,
+          "stderr": "Traceback (most recent call last):\n  File \"/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tools/run_edd_sequential.py\", line 15, in <module>\n    r=run(a.plan,a.workspace,a.report)\n      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/evaluations/harness/sequential.py\", line 143, in run\n    plan=validate_plan(json.loads(plan_path.read_text()))\n         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/evaluations/harness/sequential.py\", line 24, in validate_plan\n    raise ValueError('Only the frozen development sequence is supported')\nValueError: Only the frozen development sequence is supported\n"
+        }
+      },
+      {
+        "name": "existing_report_is_preserved",
+        "passed": true,
+        "observed": {
+          "blocked": true
+        }
+      }
+    ]
+  },
+  "historical_reviews": {
+    "evidence/edd-sequential-review-initial.json": "sha256:00c09bdfb79f8c9192664720599c63eb86509190307d0c99b2ac6fb8214fe2e3",
+    "evidence/edd-sequential-review-initial.md": "sha256:c344f0e49adafa6c348f83381734dc2e6b1f72bbad7963dec0ae6c6a23f20ecd",
+    "evidence/edd-sequential-review-intermediate.json": "sha256:8c1fa608f669b0b5c4f923e1531c55ef924fa3bff202baccf0f9b62868af84e0",
+    "evidence/edd-sequential-review-intermediate.md": "sha256:29455b72058d458a15b42b5c476d877191c6fe1b4f7a8a883e8677eed986822c",
+    "evidence/edd-harness-review-before-sequential.json": "sha256:dc17578cedc2ad575bd827bf09b53c824d1882a0747101cabf98a3788b3d58bd",
+    "evidence/edd-harness-review-before-sequential.md": "sha256:1ab69b83ba9ece3e70b55486c9e7a0c529673d4ca453b5584f96a42ce7386217"
+  },
+  "independent_probe_script_sha256": "sha256:851b6896e0d948201a4a2f1d43089ee47df3f3b46fc1fb981ff7ab34c084a664",
+  "assessments": [
+    {
+      "area": "State retention and recovery",
+      "result": "The same exact qualification/grant serves retained success. A wrong postcondition causes observed failure, stored INELIGIBLE state and acknowledged withdrawal. New passes cannot override retained fresh failure. Expiry alone produces HOLD. Fresh support after expiry creates a fresh qualification and recovers, preserving the original FAIL observation."
+    },
+    {
+      "area": "Independent grading and hard stops",
+      "result": "Registry continuity is enforced through preparation and admission; only commit may mutate. Seven actual SQLite negative controls now abort RED, including missing lifecycle transitions and evidence deletion/alteration."
+    },
+    {
+      "area": "Denominators and interrupted work",
+      "result": "Every requested task remains legitimate in the sequential denominator. A normal single-seed run produces 3/7 task success and 3/3 correct denials per arm. Early abort preserves both arms and all fourteen assigned queries, distinguishing started-unscored and unstarted work."
+    },
+    {
+      "area": "Feedback and comparator fairness",
+      "result": "Each query is sealed before the next phase starts. Public Runtime outcomes persist and influence later qualification; private read-only grades are not passed to the policy. Fixed and adaptive intentionally use identical deterministic retained-state rules and show equivalent results in the probes."
+    },
+    {
+      "area": "Plan and execution scope",
+      "result": "Only the fixed development family, phase order, policy, feedback rule and zero-retry design are accepted. Held-out CLI input is rejected before creating output. Existing reports are preserved."
+    }
+  ],
+  "limits": [
+    "Local SQLite fixture behavior only; no canonical-service integration, deployment performance, production safety or robotics acceptance follows.",
+    "Both comparators share the same deterministic retained-state policy. The result demonstrates a lifecycle mechanism, not learned-policy improvement or adaptive business advantage.",
+    "Generated support and a shared procedure/context ancestry do not establish independent observations from a business population or statistical adequacy.",
+    "The grader and controller remain in one trusted process. Sealing records ordering, not an isolation boundary against hostile code or privileged filesystem mutation.",
+    "Logical expiry uses a controlled clock; elapsed deadlines are retrospective checks and do not preempt a hung call.",
+    "Human effort, real operator performance, cost and instrumented LLM use remain unmeasured; their values are not measured zero.",
+    "Held-out and confirmatory execution remain blocked. Business outcome thresholds, risk budgets, independent data and confirmatory sample adequacy remain AMBER."
+  ],
+  "recommendation": "Use distinct final source-bound sequential and independent pilot reports. Preserve the initial/intermediate RED evidence and prior historical runs. Limit the GREEN gate to these reviewed development harness controls."
+}

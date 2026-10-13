@@ -105,3 +105,36 @@ def test_preparation_crash_is_started_unscored_and_retains_assigned_denominator(
     assert report['counts']['unstarted_episodes'] == 299
     assert sum(m['started_unscored_episodes'] for m in report['metrics'].values()) == 1
     assert all(m['task_success']['denominator'] == 70 for m in report['metrics'].values())
+
+
+def test_support_mutation_aborts_pilot_before_query(tmp_path,monkeypatch):
+    from earned_authority.runtime import Runtime
+    original=Runtime.shadow
+    def mutate(self,**kwargs):
+        result=original(self,**kwargs)
+        with self._tx() as db:
+            db.execute("UPDATE registry SET version='unauthorized' WHERE resource='unrelated/sentinel'")
+        return result
+    monkeypatch.setattr(Runtime,'shadow',mutate)
+    p=plan();p['seeds']=[7]
+    path=tmp_path/'plan.json';path.write_text(json.dumps(p))
+    report=run(path,tmp_path/'work',tmp_path/'report.json')
+    assert report['engineering_acceptance']=='RED'
+    assert report['counts']['started_unscored_episodes']==1
+    assert report['counts']['executed_episodes']==0
+
+
+def test_admission_mutation_is_independently_detected(tmp_path,monkeypatch):
+    from earned_authority.runtime import Runtime
+    original=Runtime.admit
+    def mutate(self,**kwargs):
+        command=original(self,**kwargs)
+        with self._tx() as db:
+            db.execute("UPDATE registry SET version='unauthorized' WHERE resource='unrelated/sentinel'")
+        return command
+    monkeypatch.setattr(Runtime,'admit',mutate)
+    p=plan();p['seeds']=[7]
+    path=tmp_path/'plan.json';path.write_text(json.dumps(p))
+    report=run(path,tmp_path/'work',tmp_path/'report.json')
+    assert report['engineering_acceptance']=='RED'
+    assert report['episodes'][0]['grade']['unauthorized_commits']>0

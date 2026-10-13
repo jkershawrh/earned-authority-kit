@@ -73,11 +73,45 @@ def missing_foundation_check(t,*args):
 run_case('missing_foundation_race_check_does_not_pass',missing_foundation_check,row='POL-01')
 run_case('complete_development_pilot_passes',lambda *args:None,'GREEN',row='EDD-PILOT')
 def incomplete_pilot(t,*args):
-    p=t/'reports/edd-pilot-004.json';d=json.loads(p.read_text());d['episodes'].pop();p.write_text(json.dumps(d))
+    p=t/'reports/edd-pilot-007.json';d=json.loads(p.read_text());d['episodes'].pop();p.write_text(json.dumps(d))
 run_case('partial_pilot_does_not_pass',incomplete_pilot,row='EDD-PILOT')
 def changed_grader(t,*args):
     p=t/'evaluations/harness/grader.py';p.write_text(p.read_text()+'\n')
 run_case('changed_pilot_grader_does_not_pass',changed_grader,row='EDD-PILOT')
+run_case('complete_sequential_development_passes',lambda *args:None,'GREEN',row='EDD-SEQUENTIAL')
+def partial_sequence(t,*args):
+    p=t/'reports/edd-sequential-003.json';d=json.loads(p.read_text());d['queries'].pop();p.write_text(json.dumps(d))
+run_case('partial_sequence_does_not_pass',partial_sequence,row='EDD-SEQUENTIAL')
+def changed_sequence(t,*args):
+    p=t/'evaluations/harness/sequential.py';p.write_text(p.read_text()+'\n')
+run_case('changed_sequence_source_does_not_pass',changed_sequence,row='EDD-SEQUENTIAL')
+def false_recovery(t,*args):
+    p=t/'reports/edd-sequential-003.json';d=json.loads(p.read_text())
+    next(q for q in d['queries'] if q['phase_index']==4)['qualification_disposition']='ELIGIBLE'
+    p.write_text(json.dumps(d))
+run_case('false_recovery_does_not_pass',false_recovery,row='EDD-SEQUENTIAL')
+def deleted_retained_failure(t,*args):
+    p=t/'reports/edd-sequential-003.json';d=json.loads(p.read_text())
+    q=next(q for q in d['queries'] if q['phase_index']==6)
+    q['observations_after']=[o for o in q['observations_after'] if o['outcome']!='FAIL']
+    p.write_text(json.dumps(d))
+run_case('deleted_retained_failure_does_not_pass',deleted_retained_failure,row='EDD-SEQUENTIAL')
+def preparation_write(t,*args):
+    p=t/'reports/edd-sequential-003.json';d=json.loads(p.read_text())
+    d['queries'][0]['preparation_after']['registry']['unrelated/sentinel']['version']='altered'
+    p.write_text(json.dumps(d))
+run_case('preparation_write_does_not_pass',preparation_write,row='EDD-SEQUENTIAL')
+def typed_retained_alias(t,*args):
+    p=t/'reports/edd-sequential-003.json';d=json.loads(p.read_text())
+    q=next(q for q in d['queries'] if q['phase_index']==6)
+    o=next(o for o in q['observations_after'] if o['outcome']=='FAIL');o['observed_at_ms']=float(o['observed_at_ms'])
+    p.write_text(json.dumps(d))
+run_case('typed_retained_alias_does_not_pass',typed_retained_alias,row='EDD-SEQUENTIAL')
+def pilot_preparation_write(t,*args):
+    p=t/'reports/edd-pilot-007.json';d=json.loads(p.read_text())
+    d['episodes'][0]['preparation_after']['registry']['unrelated/sentinel']['version']='altered'
+    p.write_text(json.dumps(d))
+run_case('pilot_preparation_write_does_not_pass',pilot_preparation_write,row='EDD-PILOT')
 module.ROOT = ROOT
 report={'status':'PASS','scope':'READINESS_REPORT_PROVENANCE_NEGATIVE_CONTROLS','checks':checks,
         'finished_at_ms':time.time_ns()//1000000,
