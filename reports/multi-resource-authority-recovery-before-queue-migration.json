@@ -1,0 +1,450 @@
+{
+  "run_id": "authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e",
+  "environment": "REAL_LOCAL_SERVICES",
+  "started_at": "2026-10-13T15:35:58.588712+00:00",
+  "scope": "Real canonical authority and ledger; separate coordinator processes, explicit os._exit checkpoints, actual forwarding-proxy response loss and SQLite read-only write rejection. Bounded recovery tests, not universal distributed safety.",
+  "checks": [
+    {
+      "check": "intent_is_durable_before_any_remote_mutation",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "granted_recovered_exactly_once_operation-13cfa3d5b5b441f7b92bec1a45ea1309",
+      "passed": true,
+      "evidence": {
+        "operation_id": "operation-13cfa3d5b5b441f7b92bec1a45ea1309",
+        "authority_revision": 1
+      }
+    },
+    {
+      "check": "repeat_reconciliation_changes_no_revision_or_event_operation-13cfa3d5b5b441f7b92bec1a45ea1309",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "caller_retry_reuses_exact_operation",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "dispatch_marker_survives_exit_before_rpc",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "granted_recovered_exactly_once_operation-a92cb708232f45cfb6774108e942f54f",
+      "passed": true,
+      "evidence": {
+        "operation_id": "operation-a92cb708232f45cfb6774108e942f54f",
+        "authority_revision": 1
+      }
+    },
+    {
+      "check": "repeat_reconciliation_changes_no_revision_or_event_operation-a92cb708232f45cfb6774108e942f54f",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "remote_issue_survives_coordinator_exit_without_local_event",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "granted_recovered_exactly_once_operation-f520c1aaae5f4493994dee53ffd640c5",
+      "passed": true,
+      "evidence": {
+        "operation_id": "operation-f520c1aaae5f4493994dee53ffd640c5",
+        "authority_revision": 2
+      }
+    },
+    {
+      "check": "repeat_reconciliation_changes_no_revision_or_event_operation-f520c1aaae5f4493994dee53ffd640c5",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "issue_recovery_preserves_unaffected_grant",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "event_and_applied_marker_are_atomic",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "granted_recovered_exactly_once_operation-30734b89c64e4ab98db2cc3d7aeb786d",
+      "passed": true,
+      "evidence": {
+        "operation_id": "operation-30734b89c64e4ab98db2cc3d7aeb786d",
+        "authority_revision": 1
+      }
+    },
+    {
+      "check": "repeat_reconciliation_changes_no_revision_or_event_operation-30734b89c64e4ab98db2cc3d7aeb786d",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "canonical_revoke_committed_before_local_event_False",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "revoked_recovered_exactly_once_operation-7acabc4f09e344eba59de4fc25a1322e",
+      "passed": true,
+      "evidence": {
+        "operation_id": "operation-7acabc4f09e344eba59de4fc25a1322e",
+        "authority_revision": 2
+      }
+    },
+    {
+      "check": "repeat_reconciliation_changes_no_revision_or_event_operation-7acabc4f09e344eba59de4fc25a1322e",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "selective_or_empty_aggregate_survives_recovery_False",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "canonical_revoke_committed_before_local_event_True",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "revoked_recovered_exactly_once_operation-238c3f2b72624c8d99aa9b921cbcb991",
+      "passed": true,
+      "evidence": {
+        "operation_id": "operation-238c3f2b72624c8d99aa9b921cbcb991",
+        "authority_revision": 3
+      }
+    },
+    {
+      "check": "repeat_reconciliation_changes_no_revision_or_event_operation-238c3f2b72624c8d99aa9b921cbcb991",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "selective_or_empty_aggregate_survives_recovery_True",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "withdrawal_ack_survives_exit_before_queue_delete",
+      "passed": false,
+      "evidence": {}
+    }
+  ],
+  "child_processes": [
+    {
+      "sequence": 1,
+      "action": "grant",
+      "expected_exit_code": 23,
+      "exit_code": 23,
+      "checkpoint": {
+        "stage": "intent_committed",
+        "operation_id": "operation-13cfa3d5b5b441f7b92bec1a45ea1309",
+        "pid": 18169,
+        "time_ns": 1791905760068947000
+      },
+      "outcome": null,
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-1.log"
+    },
+    {
+      "sequence": 2,
+      "action": "recover",
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "checkpoint": {
+        "stage": "event_committed",
+        "operation_id": "operation-13cfa3d5b5b441f7b92bec1a45ea1309",
+        "pid": 18171,
+        "time_ns": 1791905760517278000
+      },
+      "outcome": {
+        "outcome": "RETURNED",
+        "pid": 18171
+      },
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-2.log"
+    },
+    {
+      "sequence": 3,
+      "action": "recover",
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "checkpoint": null,
+      "outcome": {
+        "outcome": "RETURNED",
+        "pid": 18172
+      },
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-3.log"
+    },
+    {
+      "sequence": 4,
+      "action": "grant",
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "checkpoint": null,
+      "outcome": {
+        "outcome": "RETURNED",
+        "pid": 18175
+      },
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-4.log"
+    },
+    {
+      "sequence": 5,
+      "action": "grant",
+      "expected_exit_code": 23,
+      "exit_code": 23,
+      "checkpoint": {
+        "stage": "dispatch_committed",
+        "operation_id": "operation-a92cb708232f45cfb6774108e942f54f",
+        "pid": 18196,
+        "time_ns": 1791905764111377000
+      },
+      "outcome": null,
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-5.log"
+    },
+    {
+      "sequence": 6,
+      "action": "recover",
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "checkpoint": {
+        "stage": "event_committed",
+        "operation_id": "operation-a92cb708232f45cfb6774108e942f54f",
+        "pid": 18199,
+        "time_ns": 1791905764818630000
+      },
+      "outcome": {
+        "outcome": "RETURNED",
+        "pid": 18199
+      },
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-6.log"
+    },
+    {
+      "sequence": 7,
+      "action": "recover",
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "checkpoint": null,
+      "outcome": {
+        "outcome": "RETURNED",
+        "pid": 18224
+      },
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-7.log"
+    },
+    {
+      "sequence": 8,
+      "action": "grant",
+      "expected_exit_code": 23,
+      "exit_code": 23,
+      "checkpoint": {
+        "stage": "remote_committed",
+        "operation_id": "operation-f520c1aaae5f4493994dee53ffd640c5",
+        "pid": 18237,
+        "time_ns": 1791905767301940000
+      },
+      "outcome": null,
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-8.log"
+    },
+    {
+      "sequence": 9,
+      "action": "recover",
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "checkpoint": {
+        "stage": "event_committed",
+        "operation_id": "operation-f520c1aaae5f4493994dee53ffd640c5",
+        "pid": 18242,
+        "time_ns": 1791905768072139000
+      },
+      "outcome": {
+        "outcome": "RETURNED",
+        "pid": 18242
+      },
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-9.log"
+    },
+    {
+      "sequence": 10,
+      "action": "recover",
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "checkpoint": null,
+      "outcome": {
+        "outcome": "RETURNED",
+        "pid": 18243
+      },
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-10.log"
+    },
+    {
+      "sequence": 11,
+      "action": "grant",
+      "expected_exit_code": 23,
+      "exit_code": 23,
+      "checkpoint": {
+        "stage": "event_committed",
+        "operation_id": "operation-30734b89c64e4ab98db2cc3d7aeb786d",
+        "pid": 18260,
+        "time_ns": 1791905770353325000
+      },
+      "outcome": null,
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-11.log"
+    },
+    {
+      "sequence": 12,
+      "action": "recover",
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "checkpoint": null,
+      "outcome": {
+        "outcome": "RETURNED",
+        "pid": 18261
+      },
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-12.log"
+    },
+    {
+      "sequence": 13,
+      "action": "revoke",
+      "expected_exit_code": 23,
+      "exit_code": 23,
+      "checkpoint": {
+        "stage": "remote_committed",
+        "operation_id": "operation-7acabc4f09e344eba59de4fc25a1322e",
+        "pid": 18272,
+        "time_ns": 1791905771980514000
+      },
+      "outcome": null,
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-13.log"
+    },
+    {
+      "sequence": 14,
+      "action": "recover",
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "checkpoint": {
+        "stage": "event_committed",
+        "operation_id": "operation-7acabc4f09e344eba59de4fc25a1322e",
+        "pid": 18274,
+        "time_ns": 1791905772324027000
+      },
+      "outcome": {
+        "outcome": "RETURNED",
+        "pid": 18274
+      },
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-14.log"
+    },
+    {
+      "sequence": 15,
+      "action": "recover",
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "checkpoint": null,
+      "outcome": {
+        "outcome": "RETURNED",
+        "pid": 18276
+      },
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-15.log"
+    },
+    {
+      "sequence": 16,
+      "action": "revoke",
+      "expected_exit_code": 23,
+      "exit_code": 23,
+      "checkpoint": {
+        "stage": "remote_committed",
+        "operation_id": "operation-238c3f2b72624c8d99aa9b921cbcb991",
+        "pid": 18307,
+        "time_ns": 1791905775622039000
+      },
+      "outcome": null,
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-16.log"
+    },
+    {
+      "sequence": 17,
+      "action": "recover",
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "checkpoint": {
+        "stage": "event_committed",
+        "operation_id": "operation-238c3f2b72624c8d99aa9b921cbcb991",
+        "pid": 18308,
+        "time_ns": 1791905776281436000
+      },
+      "outcome": {
+        "outcome": "RETURNED",
+        "pid": 18308
+      },
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-17.log"
+    },
+    {
+      "sequence": 18,
+      "action": "recover",
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "checkpoint": null,
+      "outcome": {
+        "outcome": "RETURNED",
+        "pid": 18312
+      },
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-18.log"
+    },
+    {
+      "sequence": 19,
+      "action": "reevaluate",
+      "expected_exit_code": 23,
+      "exit_code": 23,
+      "checkpoint": {
+        "stage": "withdrawal_completed",
+        "operation_id": "withdrawal-d7a82d315001cb6c06103995e9f069fe380ea184fd52d0e0ff30bac6ad755ccd",
+        "pid": 18324,
+        "time_ns": 1791905778315724000
+      },
+      "outcome": null,
+      "log": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e-child-19.log"
+    }
+  ],
+  "state_path": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e.sqlite",
+  "execution_state": "ABORTED",
+  "acceptance_color": "RED",
+  "error": "AssertionError: withdrawal_ack_survives_exit_before_queue_delete",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tools/validate_authority_recovery.py\", line 339, in run\n    check(\"withdrawal_ack_survives_exit_before_queue_delete\", pending == 1 and journal(agent, opid)[\"state\"] == \"APPLIED\"\n  File \"/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tools/validate_authority_recovery.py\", line 208, in check\n    raise AssertionError(name)\nAssertionError: withdrawal_ack_survives_exit_before_queue_delete\n",
+  "finished_at": "2026-10-13T15:36:18.367189+00:00",
+  "source_hashes_before": {
+    "tools/validate_authority_recovery.py": "sha256:69aba38d762895bf44961f23f9ac443bf11e57398ae28766555b9ec08a185387",
+    "tools/validate_connected.py": "sha256:88d8fd6688b79164ae2f39e8f03eeb5efed47e130e47b2faef209bdb32da0865",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a"
+  },
+  "source_hashes": {
+    "tools/validate_authority_recovery.py": "sha256:69aba38d762895bf44961f23f9ac443bf11e57398ae28766555b9ec08a185387",
+    "tools/validate_connected.py": "sha256:88d8fd6688b79164ae2f39e8f03eeb5efed47e130e47b2faef209bdb32da0865",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a"
+  }
+}

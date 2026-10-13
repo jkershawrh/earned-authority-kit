@@ -10,6 +10,7 @@ from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 from cryptography.hazmat.primitives import serialization
 from earned_authority.passport_client import PassportClient, PAYLOAD_HEADER, REVISION_HEADER
 from earned_authority.runtime import Denied, FixtureLedger, Runtime
+from earned_authority.grants import grants_for_skill, unique_grant
 
 
 def configure_unit_evidence_ledger(runtime):
@@ -210,11 +211,11 @@ class ConnectedDeadlineAndWithdrawalBoundary(unittest.TestCase):
     def test_unaffected_scope_keeps_exact_absolute_expiry_on_replacement(self):
         read = self.qualification('read-health')
         before = self.rt.grant(read['qualification_id'], action='read', resource='urn:dataset/health', ttl_ms=10000)
-        expiry = before['grants']['read-health']['expires_at_ms']
+        expiry = unique_grant(before, 'read-health')['expires_at_ms']
         self.rt.clock.advance(125)
         release = self.qualification()
         after = self.rt.grant(release['qualification_id'], ttl_ms=10000)
-        self.assertEqual(expiry, after['grants']['read-health']['expires_at_ms'])
+        self.assertEqual(expiry, unique_grant(after, 'read-health')['expires_at_ms'])
 
     def test_delayed_old_withdrawal_does_not_revoke_requalified_grant(self):
         q = self.qualification()
@@ -229,7 +230,7 @@ class ConnectedDeadlineAndWithdrawalBoundary(unittest.TestCase):
             # processes it, deletes it, and requalifies before it resumes.
             if not new_grant:
                 revoke(*args, **kwargs)
-                with self.rt._tx() as db: db.execute('DELETE FROM withdrawals')
+                with self.rt._tx() as db: db.execute('DELETE FROM withdrawal_causes')
                 fresh = self.qualification(context={'model_version': 'model-v3'})
                 new_grant['qualification_id'] = fresh['qualification_id']
                 self.rt.grant(fresh['qualification_id'], ttl_ms=10000)
@@ -237,5 +238,5 @@ class ConnectedDeadlineAndWithdrawalBoundary(unittest.TestCase):
         self.rt.revoke = delayed_drainer
         self.rt.drain_withdrawals()
         current = self.rt.authority()
-        self.assertIn('release-model', current['grants'])
-        self.assertEqual(new_grant['qualification_id'], current['grants']['release-model']['qualification_id'])
+        self.assertTrue(grants_for_skill(current, 'release-model'))
+        self.assertEqual(new_grant['qualification_id'], unique_grant(current, 'release-model')['qualification_id'])

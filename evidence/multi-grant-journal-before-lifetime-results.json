@@ -1,0 +1,95 @@
+{
+  "scope": "Component regressions: real local SQLite and writer signatures, stateful UNIT Passport transport seam; no canonical service, live BDD, or production claim.",
+  "status": "PASS",
+  "changed_implementation": [
+    "earned_authority/authority_journal.py"
+  ],
+  "new_tests": [
+    "tests/test_multi_grant_journal.py"
+  ],
+  "source_hashes_at_report": {
+    "earned_authority/authority_journal.py": "sha256:852a6a70c6038e99efbc622e8fe5006cf6586c63d816c3e2a50226a83221080c",
+    "tests/test_multi_grant_journal.py": "sha256:6c382469254aa79bebb9f35fbd43c3fc14244f44f0a385e69764293be1ca787b",
+    "earned_authority/connected.py": "sha256:8fd17d3988ee6a0b0d68233c8fb07c93af0990c9e5d4d815c9d2b7d969e0cd8d",
+    "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
+    "tests/test_authority_journal.py": "sha256:212c83084dabcda38979b1e5a651f7ff2f683319761de084ea68dabf7be3b30c",
+    "tests/test_connected_security.py": "sha256:845dae0a80d6eb3735a97f3d446d13f1bb82ab3d62009a98848551560aaef051",
+    "tests/test_connected_binding.py": "sha256:fed6280491e8be459593c21bf08df7e720bc34870e6937fc46a907c5b9d5e04a",
+    "tests/test_policy_windows.py": "sha256:24673e074d34153bc8452ede830a459ae4d950ad17f563cb89ab0d1e6db7cddd",
+    "tests/test_multi_resource_grants.py": "sha256:ab94df145b4f2243c1e2acf6caa893316fc2d4c62da1a0fb4c8f0fa388be3c56"
+  },
+  "results": {
+    "initial_api_red": {
+      "failed": 18,
+      "passed": 2,
+      "log": "multi-grant-journal-red.log",
+      "baseline": "Reconstructed pre-change journal loaded from work/multi-grant-journal-baseline/authority_journal.py, with removed_targets API and event addition removed. The current shared source was not overwritten."
+    },
+    "target_binding_red": {
+      "failed": 20,
+      "passed": 22,
+      "log": "multi-grant-journal-target-binding-red.log",
+      "baseline": "Actual current source before target/prior/result scope validation was added."
+    },
+    "focused_green": {
+      "passed": 59,
+      "failed": 0,
+      "log": "multi-grant-journal-green.log",
+      "modules": [
+        "test_multi_grant_journal",
+        "test_authority_journal"
+      ]
+    },
+    "integration_green": {
+      "passed": 139,
+      "subtests_passed": 13,
+      "failed": 0,
+      "log": "multi-grant-journal-integration-green.log",
+      "modules": [
+        "test_multi_grant_journal",
+        "test_authority_journal",
+        "test_connected_security",
+        "test_connected_binding",
+        "test_policy_windows",
+        "test_multi_resource_grants"
+      ]
+    }
+  },
+  "fixture_note": "The first attempted red run had fixture setup errors because the unit seed omitted its required operation ID. It is retained separately and is not counted as a demonstrated behavioral failure.",
+  "guarantees_tested": [
+    "Full removed_targets copy retained in signed intent and REVOKED event after reply loss and recovery; no duplicate revision/event.",
+    "Supplied target set exactly matches the complete prior normalized skill set including derived canonical scope IDs; predecessor CAS tuple matches.",
+    "Replacement excludes targets, preserves all other live bindings and outer action/resource; expired unrelated grants may be omitted.",
+    "Target metadata is immutable, including its signed order, and unsigned stored tampering blocks recovery.",
+    "Historical operations that omit removed_targets stay absent and readable; no inferred historical list."
+  ],
+  "not_claimed": [
+    "Current authorization from historical receipts",
+    "Canonical service validation for this increment",
+    "Complete live multi-resource BDD coverage",
+    "Distributed or production readiness"
+  ],
+  "logs": {
+    "multi-grant-journal-fixture-setup-error.log": {
+      "path": "evidence/multi-grant-journal-fixture-setup-error.log",
+      "sha256": "sha256:775984a2c70a9ff0c71db95af8c2ff96dd5d3ff4580017dcd9caf8eba9de1992"
+    },
+    "multi-grant-journal-red.log": {
+      "path": "evidence/multi-grant-journal-red.log",
+      "sha256": "sha256:c61017b6b05d5fe397a0d2e4c5ae0c2932c5f0db319dfd647aee93e16f448f8a"
+    },
+    "multi-grant-journal-target-binding-red.log": {
+      "path": "evidence/multi-grant-journal-target-binding-red.log",
+      "sha256": "sha256:30bc0d82b2424428cc3aeaf25db23bd8591e15d0aa5db569c66717bcb6391c9f"
+    },
+    "multi-grant-journal-green.log": {
+      "path": "evidence/multi-grant-journal-green.log",
+      "sha256": "sha256:edde487c3e6fa2f24bd616864e0b6ce744241f8e9cadfad3fb6f8552a35f3912"
+    },
+    "multi-grant-journal-integration-green.log": {
+      "path": "evidence/multi-grant-journal-integration-green.log",
+      "sha256": "sha256:a4e2f759c9940013cb8b0d9527ad705996e18acf8eb11605e727e819392297f1"
+    }
+  },
+  "initial_api_red_baseline_sha256": "sha256:289d449b197f49b94372a43e6022e0274c8971ec3f3acb94fed03ebf8b47d1af"
+}

@@ -9,7 +9,8 @@ import copy
 import fcntl
 import json
 from contextlib import contextmanager
-from .contracts import canonical_digest
+from .contracts import canonical_digest, load_unique_json
+from .grants import iter_grants
 from .runtime import Denied, ident
 
 PENDING={'PREPARED','DISPATCHED'}
@@ -85,7 +86,54 @@ class AuthorityJournal:
         if any(o['state'] in PENDING for o in records):
             raise Denied('AUTHORITY_OPERATION_PENDING')
 
-    def _new_authority_operation(self,*,operation_id,agent,kind,request,prior_authority,invocation,skill,qualification_id=None,qualification_digest=None,policy_digest=None,grant_expires_at_ms=None,reason=None,target_grant_id=None,target_qualification_id=None):
+    def _validate_removed_target_request(self,operation,targets):
+        """Bind new removal metadata to the prior aggregate and its replacement.
+
+        The caller has authenticated this canonical snapshot. No current read is
+        substituted here: Passport CAS decides whether its exact tuple can apply.
+        Historical intents without target metadata retain their original shape.
+        """
+        raw=operation['prior_authority'];request=operation['request']
+        prior=self._normalize(raw,operation['agent_id'])
+        if (request['expected_agent_revision']!=prior['revision'] or
+                request['expected_active_passport_id']!=(prior['passport_id'] or '')):
+            raise ValueError('removal predecessor tuple mismatch')
+        grants=iter_grants(prior)
+        expected={g['grant_id']:g for g in grants if g['skill']==operation['skill']}
+        supplied={g['grant_id']:g for g in targets}
+        if canonical_digest(supplied)!=canonical_digest(expected):
+            raise ValueError('removed targets differ from complete prior skill')
+        others={g['grant_id']:g for g in grants if g['skill']!=operation['skill']}
+        required={gid for gid,g in others.items() if g['expires_at_ms']>operation['created_at_ms']}
+        if request['action']=='REVOKE':
+            if required:raise ValueError('revocation would discard another live skill')
+            return
+        if request['action']!='ISSUE':raise ValueError('unknown removal transition')
+        passport_ttl=request['issue']['ttl_seconds']
+        if type(passport_ttl) is not int or passport_ttl<=0:raise ValueError('invalid containing lifetime')
+        prior_scopes={s['scope_id']:s for s in raw['subject']['scope_set']}
+        seen=set();binding='earned_authority_binding_v1'
+        for scope in request['issue']['requested_scopes']:
+            if set(scope['context_constraints'])!={binding}:raise ValueError('unknown replacement binding')
+            grant=load_unique_json(scope['context_constraints'][binding]);gid=grant['grant_id']
+            if gid not in others or gid in seen:raise ValueError('replacement retains target or invents grant')
+            old=others[gid];body={k:v for k,v in old.items() if k!='canonical_scope_id'}
+            if canonical_digest(grant)!=canonical_digest(body):raise ValueError('replacement changes retained binding')
+            old_scope=prior_scopes[old['canonical_scope_id']]
+            if any(scope[k]!=old_scope[k] for k in ('action_class','resource_pattern')):
+                raise ValueError('replacement changes outer scope binding')
+            scope_ttl=scope['scope_ttl_seconds']
+            if type(scope_ttl) is not int or scope_ttl<0:raise ValueError('invalid scope lifetime')
+            # Canonical Passport uses the containing TTL for zero, and caps an
+            # explicit scope TTL at it. The immutable inner expiry must fit both
+            # at preparation time; later dispatch never extends that inner bound.
+            effective_ttl=passport_ttl if scope_ttl==0 else min(scope_ttl,passport_ttl)
+            if operation['created_at_ms']+effective_ttl*1000<old['expires_at_ms']:
+                raise ValueError('replacement shortens retained absolute expiry')
+            seen.add(gid)
+        if not required<=seen:raise ValueError('replacement drops another live grant')
+
+    def _new_authority_operation(self,*,operation_id,agent,kind,request,prior_authority,invocation,skill,qualification_id=None,qualification_digest=None,policy_digest=None,grant_expires_at_ms=None,reason=None,target_grant_id=None,target_qualification_id=None,removed_targets=None):
         self._authority_durability()
         oid=operation_id or ident('authority-op')
         if not isinstance(oid,str) or not oid or len(oid)>128:raise Denied('INVALID_OPERATION_ID')
@@ -97,6 +145,32 @@ class AuthorityJournal:
                    'target_grant_id':target_grant_id,'target_qualification_id':target_qualification_id,
                    'created_at_ms':self.clock.now_ms,'event_id':ident('event'),'state':'PREPARED',
                    'prior_withdrawal_event_id':None,'requalification_event_id':None}
+        if removed_targets is not None:
+            # This describes the exact freshly selected removal set. It is part
+            # of the immutable signed intent, not a field inferred on recovery.
+            # Historical v1 operations that omit it keep their original shape.
+            try:
+                fields={'grant_id','skill','version','context','skill_digest','context_digest',
+                        'qualification_id','qualification_digest','policy_digest','action','resource','expires_at_ms'}
+                if kind!='REVOKE' or not isinstance(removed_targets,list) or not removed_targets:
+                    raise ValueError('removed targets require a nonempty revoke list')
+                targets=copy.deepcopy(removed_targets)
+                ids=set()
+                for target in targets:
+                    if not isinstance(target,dict) or not fields<=target.keys():raise ValueError('incomplete removed target')
+                    if any(not isinstance(target[k],str) or not target[k].strip() for k in fields-{'context','expires_at_ms'}):
+                        raise ValueError('invalid removed target binding')
+                    if target['skill']!=skill or target['grant_id'] in ids:raise ValueError('wrong skill or duplicate target')
+                    if type(target['expires_at_ms']) is not int or target['expires_at_ms']<=0:raise ValueError('invalid target expiry')
+                    ids.add(target['grant_id'])
+                if target_grant_id is not None or target_qualification_id is not None:
+                    if not any(t['grant_id']==target_grant_id and t['qualification_id']==target_qualification_id for t in targets):
+                        raise ValueError('removed targets do not contain exact anchor')
+                canonical_digest(targets)
+                self._validate_removed_target_request(operation,targets)
+            except (TypeError,ValueError,KeyError,Denied) as exc:
+                raise Denied('AUTHORITY_INTENT_BINDING_MISMATCH') from exc
+            operation['removed_targets']=targets
         with self._tx() as db:
             self._assert_authority_ready(db,agent)
             if any(o['operation_id']==oid for o in self._read_authority_operations(db)):raise Denied('IDEMPOTENCY_CONFLICT')
@@ -153,6 +227,7 @@ class AuthorityJournal:
                                 prior_withdrawal_event_id=fresh['prior_withdrawal_event_id'])
                 self._event(db,'GRANTED',fresh['agent_id'],fresh['operation_id'],qualification_id=fresh['qualification_id'],authority=authority,**fields)
             else:
+                if 'removed_targets' in fresh:fields['removed_targets']=copy.deepcopy(fresh['removed_targets'])
                 self._event(db,'REVOKED',fresh['agent_id'],fresh['invocation']['attempt_id'] or fresh['operation_id'],
                             reason=fresh['reason'],target_grant_id=fresh['target_grant_id'],target_qualification_id=fresh['target_qualification_id'],**fields)
             applied=self._store_authority_operation(db,{**fresh,'state':'APPLIED','receipt':receipt,'recorded_at_ms':self.clock.now_ms,'last_error':None})

@@ -4,9 +4,9 @@ This kit demonstrates earned authority for a disposable model registry. It conne
 
 ## What the observed runs establish
 
-The current [fresh reconstruction report](../reports/observation-reference-combined.json) records 123 passing checks in a separate workspace on the same host: policy 8, service interfaces 7, lifecycle 23, fault/race 17, authority-operation recovery 41, retained-state restart 6 and historical operation evidence 21. Its seven child reports retain exact source hashes and observed results. The [service BDD report](../reports/service-bdd-live-008.json) separately records 52 passing executed cases, fully covering 36 of 37 scenarios; one remains partial. A clean workspace is not an independently operated installation on a different machine. Earlier connected and clean-reference reports are retained as historical runs.
+The current [fresh reconstruction report](../reports/multi-resource-reference-combined.json) records 123 passing checks in a separate workspace on the same host: policy 8, service interfaces 7, lifecycle 23, fault/race 17, authority-operation recovery 41, retained-state restart 6 and historical operation evidence 21. Its seven child reports retain exact source hashes and observed results. The [service BDD report](../reports/service-bdd-live-013.json) separately records 52 passing executed cases, fully covering all 37 implemented scenarios. A clean workspace is not an independently operated installation on a different machine. Earlier connected and clean-reference reports are retained as historical runs.
 
-These runs exercise qualification, signed grants, current authority checks, bounded execution, independent registry readback, selective withdrawal, requalification, receipt verification and the specific injected faults named in the reports. Component tests additionally exercise signer/persistence failure, canonical field binding and concurrent mutations. They do not imply every possible fault was tested. The 37 local fixture BDD scenarios are not asserted to have all run against real services. Hardware robotics remains deferred.
+These runs exercise qualification, signed grants, current authority checks, bounded execution, independent registry readback, selective withdrawal, requalification, receipt verification and the specific injected faults named in the reports. Component tests additionally exercise signer/persistence failure, canonical field binding and concurrent mutations. They do not imply every possible fault was tested. All 37 implemented behavior specifications have explicit real-service bindings in the separate current BDD report. Hardware robotics remains deferred.
 
 ## Local registry durability and authority audit are different boundaries
 
@@ -80,7 +80,7 @@ The recorded schedule covers durable intent and dispatch boundaries; canonical i
 
 Some adversarial details remain component-only: invalidating a prepared intent before dispatch, conservative cancellation after unchanged-revision precondition refusal, and cancellation after monotonic advancement with an absent receipt. Do not infer live coverage for those branches from the 41-check total. Read the exact named checks and fault mechanism in each report before expanding an acceptance claim.
 
-Key/state backup restoration, revision rollback resistance, receipt-retention policy, key rotation and cross-host failure recovery remain separate follow-on design and acceptance work. A successful ordinary restart does not establish rollback protection. The full real-service 37-scenario BDD corpus and evaluation-driven comparison also remain unasserted unless separately recorded.
+Key/state backup restoration, revision rollback resistance, receipt-retention policy, key rotation and cross-host failure recovery remain separate follow-on design and acceptance work. A successful ordinary restart does not establish rollback protection. The implemented 37-scenario BDD corpus has current explicit local service evidence. The evaluation-driven business comparison remains unrun.
 
 ## Original source preservation
 

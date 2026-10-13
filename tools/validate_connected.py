@@ -15,6 +15,7 @@ from earned_authority.connected import ConnectedRuntime,FoundationPolicy
 from earned_authority.passport_client import PassportClient
 from earned_authority.qualification_client import QualificationClient
 from earned_authority.runtime import Denied,ident
+from earned_authority.grants import grants_for_skill,unique_grant
 from deploy.ledger.validate import read_config,client_from_config
 from cryptography.hazmat.primitives import serialization
 
@@ -75,7 +76,7 @@ def run(args):
         check('qualification_does_not_issue_authority',not rt.authority(agent)['grants'])
         deny('real_opa_policy_denial',lambda:rt.grant(q['qualification_id'],agent=agent,resource='model/experimental'),'POLICY_DENIED')
         a=rt.grant(q['qualification_id'],agent=agent)
-        check('canonical_signed_grant',a['revision']>0 and q['qualification_id']==a['grants']['release-model']['qualification_id'],revision=a['revision'])
+        check('canonical_signed_grant',a['revision']>0 and q['qualification_id']==unique_grant(a,'release-model')['qualification_id'],revision=a['revision'])
         cmd=admit();result=rt.commit(cmd)
         check('fenced_commit_and_independent_pass',rt.mutation_count==1 and result['outcome']['outcome']=='PASS',attempt_id=result['attempt_id'])
         check('canonical_ledger_records_real_lifecycle',result['delivery']=='RECORDED' and result['receipt'] is not None)
@@ -101,17 +102,17 @@ def run(args):
         newq=qualify()
         rt.grant(newq['qualification_id'],agent=agent)
         fail=rt.commit(admit(),actual='wrong-version')
-        check('known_failure_demotes_and_withdraws',fail['outcome']['outcome']=='FAIL' and 'release-model' not in rt.authority(agent)['grants'])
+        check('known_failure_demotes_and_withdraws',fail['outcome']['outcome']=='FAIL' and not grants_for_skill(rt.authority(agent),'release-model'))
         historical=export_runtime(rt,qualification_ids=[newq['qualification_id']],agent=agent,attempt_ids=[fail['attempt_id']],include_authority=False)
         consume_bundle(historical,trust=RuntimeTrust(rt),now_ms=rt.clock.now_ms)
         check('historical_wire_preserves_prior_qualification_binding',True)
         deny('next_mutation_after_failure_denied',lambda:admit())
-        check('failure_preserves_other_skill','read-health' in rt.authority(agent)['grants'])
+        check('failure_preserves_other_skill',bool(grants_for_skill(rt.authority(agent),'read-health')))
         # Reopen all consumer adapters against the same durable state.
         mutations=rt.mutation_count
         rt.passport.close();rt.ledger.close();rt.close()
         rt=build_runtime(args,state)
-        check('restart_preserves_outcomes_and_demotion',rt.mutation_count==mutations and rt.attempts(fail['attempt_id'])['outcome']['outcome']=='FAIL' and 'release-model' not in rt.authority(agent)['grants'])
+        check('restart_preserves_outcomes_and_demotion',rt.mutation_count==mutations and rt.attempts(fail['attempt_id'])['outcome']['outcome']=='FAIL' and not grants_for_skill(rt.authority(agent),'release-model'))
         context={**context,'model_version':'model-v4'}
         q4=qualify();rt.grant(q4['qualification_id'],agent=agent)
         paused=admit();ready=threading.Event();go=threading.Event()

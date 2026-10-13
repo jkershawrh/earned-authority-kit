@@ -7,6 +7,7 @@ import json
 import pytest
 from earned_authority.connected import FoundationPolicy, BINDING
 from earned_authority.runtime import Denied
+from earned_authority.grants import unique_grant
 from test_connected_evidence import rt, qualify, CONTEXT
 
 DEMO={"not_before_ms":4102444800000,"not_after_ms":4102444860000}
@@ -80,7 +81,7 @@ def test_future_window_allow_does_not_schedule_or_issue_immediate_authority(read
 def test_active_window_is_signed_and_caps_scope_exactly(ready):
     rt,q=ready;window={'not_before_ms':rt.clock.now_ms,'not_after_ms':rt.clock.now_ms+5123}
     a=rt.grant(q['qualification_id'],requested_window=window,operation_id='window-operation')
-    grant=a['grants']['release-model'];assert grant['requested_window']==window
+    grant=unique_grant(a, 'release-model');assert grant['requested_window']==window
     assert grant['expires_at_ms']==window['not_after_ms']
     signed=json.loads(a['canonical']['subject']['scope_set'][0]['context_constraints'][BINDING])
     assert signed['requested_window']==window
@@ -108,7 +109,7 @@ def test_preflight_rechecks_window_after_synchronous_policy(ready):
 
 def test_legacy_grant_keeps_prior_invocation_and_signed_shape(ready):
     rt,q=ready;a=rt.grant(q['qualification_id'])
-    assert 'requested_window' not in a['grants']['release-model']
+    assert 'requested_window' not in unique_grant(a, 'release-model')
     assert 'requested_window' not in rt.authority_operations()[0]['invocation']
 
 
@@ -132,7 +133,7 @@ def test_prepared_window_grant_recovery_after_expiry_cancels_without_issuance(re
     rt.recover_authority_intents()
     operation=rt.authority_operations()[0]
     assert operation['state']=='CANCELLED' and operation['last_error']=='EXPIRED_SCOPE'
-    assert rt.passport.issues==0 and rt.authority()['grants']=={} and rt.mutation_count==0
+    assert rt.passport.issues==0 and rt.authority()['grants']==[] and rt.mutation_count==0
     assert not any(r['event']['event_type']=='GRANTED' for r in rt.events())
 
 

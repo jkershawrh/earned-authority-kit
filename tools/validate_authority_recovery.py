@@ -19,6 +19,7 @@ import time
 from validate_connected import build_runtime, ROOT
 from earned_authority.runtime import Denied, ident
 from earned_authority.contracts import canonical_digest
+from earned_authority.grants import iter_grants, grants_for_skill, unique_grant
 from deploy.ledger.validate import read_config
 
 
@@ -301,11 +302,11 @@ def run(args):
                  "crash_stage": "remote_committed"}, expected_exit=23)
         committed = rt.authority(agent)
         check("remote_issue_survives_coordinator_exit_without_local_event", committed["revision"] == before["revision"] + 1
-              and "release-model" in committed["grants"] and not events(agent, opid)
+              and bool(grants_for_skill(committed, "release-model")) and not events(agent, opid)
               and rt.passport.operation(agent, opid) is not None)
         execute({"action": "recover", "agent": agent})
         settled_once(agent, opid, committed["revision"], "GRANTED")
-        check("issue_recovery_preserves_unaffected_grant", rt.authority(agent)["grants"]["read-health"]["grant_id"] == before["grants"]["read-health"]["grant_id"])
+        check("issue_recovery_preserves_unaffected_grant", unique_grant(rt.authority(agent), "read-health")["grant_id"] == unique_grant(before, "read-health")["grant_id"])
 
         agent, q, _, before = prepare("event-commit")
         opid = ident("operation")
@@ -320,13 +321,13 @@ def run(args):
             execute({"action": "revoke", "agent": agent, "operation_id": opid, "crash_stage": "remote_committed"}, expected_exit=23)
             committed = rt.authority(agent)
             check("canonical_revoke_committed_before_local_event_" + str(selective), committed["revision"] == before["revision"] + 1
-                  and "release-model" not in committed["grants"] and not events(agent, opid)
+                  and not grants_for_skill(committed, "release-model") and not events(agent, opid)
                   and rt.passport.operation(agent, opid) is not None)
             execute({"action": "recover", "agent": agent})
             settled_once(agent, opid, committed["revision"], "REVOKED")
             check("selective_or_empty_aggregate_survives_recovery_" + str(selective),
-                  (committed["grants"].get("read-health", {}).get("grant_id") == before["grants"].get("read-health", {}).get("grant_id"))
-                  and (selective or not rt.authority(agent)["grants"]))
+                  (unique_grant(committed, "read-health")["grant_id"] == unique_grant(before, "read-health")["grant_id"]
+                   if selective else not grants_for_skill(committed, "read-health") and not rt.authority(agent)["grants"]))
 
         agent, q, _, before = prepare("withdrawal-queue-ack", release=True, read=True)
         crashed = execute({"action": "reevaluate", "agent": agent, "crash_stage": "withdrawal_completed"}, expected_exit=23)
@@ -334,17 +335,17 @@ def run(args):
         opid = checkpoint["operation_id"]
         committed = rt.authority(agent)
         with rt._db() as db:
-            pending = db.execute("SELECT COUNT(*) FROM withdrawals WHERE agent=?", (agent,)).fetchone()[0]
+            pending = db.execute("SELECT COUNT(*) FROM withdrawal_causes WHERE agent=?", (agent,)).fetchone()[0]
         check("withdrawal_ack_survives_exit_before_queue_delete", pending == 1 and journal(agent, opid)["state"] == "APPLIED"
-              and committed["revision"] == before["revision"] + 1 and "release-model" not in committed["grants"])
+              and committed["revision"] == before["revision"] + 1 and not grants_for_skill(committed, "release-model"))
         event_ids = [row["event"]["event_id"] for row in events(agent)]
         execute({"action": "drain", "agent": agent})
         with rt._db() as db:
-            pending = db.execute("SELECT COUNT(*) FROM withdrawals WHERE agent=?", (agent,)).fetchone()[0]
+            pending = db.execute("SELECT COUNT(*) FROM withdrawal_causes WHERE agent=?", (agent,)).fetchone()[0]
         check("restart_clears_acknowledged_withdrawal_without_second_revision_or_event", pending == 0
               and rt.authority(agent)["revision"] == committed["revision"]
               and [row["event"]["event_id"] for row in events(agent)] == event_ids
-              and rt.authority(agent)["grants"]["read-health"]["grant_id"] == before["grants"]["read-health"]["grant_id"])
+              and unique_grant(rt.authority(agent), "read-health")["grant_id"] == unique_grant(before, "read-health")["grant_id"])
         settled_once(agent, opid, committed["revision"], "REVOKED")
 
         agent, q, _, before = prepare("historical-issue", read=True)
@@ -353,27 +354,28 @@ def run(args):
                  "crash_stage": "remote_committed"}, expected_exit=23)
         prior_revision = rt.authority(agent)["revision"]
         current = rt.passport.current(agent, require_valid=False)
-        rt.passport.issue(agent, rt._requests(before["grants"]), 300, current, "later independent canonical replacement", operation_id=ident("replacement"))
+        rt.passport.issue(agent, rt._requests(list(iter_grants(before))), 300, current, "later independent canonical replacement", operation_id=ident("replacement"))
         replacement_revision = rt.authority(agent)["revision"]
         execute({"action": "recover", "agent": agent})
         settled_once(agent, opid, prior_revision, "GRANTED")
         check("historical_issue_proof_never_restores_superseded_authority", replacement_revision == prior_revision + 1
-              and rt.authority(agent)["revision"] == replacement_revision and "release-model" not in rt.authority(agent)["grants"])
+              and rt.authority(agent)["revision"] == replacement_revision and not grants_for_skill(rt.authority(agent), "release-model"))
 
         agent, q, _, before = prepare("historical-revoke", release=True, read=True)
         opid = ident("operation")
         execute({"action": "revoke", "agent": agent, "operation_id": opid, "crash_stage": "remote_committed"}, expected_exit=23)
         prior_revision = rt.authority(agent)["revision"]
-        replacement_grants = json.loads(json.dumps(before["grants"]))
-        replacement_grants["release-model"]["grant_id"] = ident("replacement-grant")
+        replacement_grants = json.loads(json.dumps(list(iter_grants(before))))
+        replacement_release = unique_grant({"grants": replacement_grants}, "release-model")
+        replacement_release["grant_id"] = ident("replacement-grant")
         current = rt.passport.current(agent, require_valid=False)
         rt.passport.issue(agent, rt._requests(replacement_grants), 300, current, "later replacement after old withdrawal", operation_id=ident("replacement"))
         replacement_revision = rt.authority(agent)["revision"]
         execute({"action": "recover", "agent": agent})
         settled_once(agent, opid, prior_revision, "REVOKED")
         check("historical_revoke_never_withdraws_later_replacement", rt.authority(agent)["revision"] == replacement_revision
-              and rt.authority(agent)["grants"]["release-model"]["grant_id"] == replacement_grants["release-model"]["grant_id"]
-              and rt.authority(agent)["grants"]["read-health"]["grant_id"] == before["grants"]["read-health"]["grant_id"])
+              and unique_grant(rt.authority(agent), "release-model")["grant_id"] == replacement_release["grant_id"]
+              and unique_grant(rt.authority(agent), "read-health")["grant_id"] == unique_grant(before, "read-health")["grant_id"])
 
         agent, q, _, before = prepare("local-durability")
         opid = ident("operation")

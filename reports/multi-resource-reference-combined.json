@@ -1,0 +1,190 @@
+{
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "environment": "REAL_LOCAL_SERVICES",
+  "command_exit_code": 0,
+  "command": [
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/ledger-venv/bin/python",
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/run-multi-resource-validation.py"
+  ],
+  "preparation_command": [
+    "python3",
+    "deploy/reference/bootstrap.py",
+    "--workspace",
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference",
+    "--instance",
+    "ea-multi-resource",
+    "--port-offset",
+    "10000"
+  ],
+  "lifecycle_commands": [
+    {
+      "stage": "start",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "start"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "policy",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/validate_policy.py",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/multi-policy.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "services",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "validate-services",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/multi-services.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "connected",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "validate-connected",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/multi-connected.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "adversarial",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "validate-adversarial",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/multi-adversarial.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "authority_recovery",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "validate-authority-recovery",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/multi-authority-recovery.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "restore",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/validate_restore.py",
+        "--prior-report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/multi-connected.json",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/multi-restore.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "authority_recovery_restored",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/tools/validate_authority_recovery.py",
+        "--config",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/reference.env",
+        "--ledger-config",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-runtime/local.env",
+        "--state-dir",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation",
+        "--verify-existing-report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/multi-authority-recovery.json",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/multi-authority-recovery-restored.json"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "completed_at": "2026-10-13T15:49:06.544840+00:00",
+  "components": {
+    "policy": {
+      "report": "reports/multi-resource-reference-policy.json",
+      "status": "GREEN",
+      "checks": 8,
+      "source_stable": true
+    },
+    "services": {
+      "report": "reports/multi-resource-reference-services.json",
+      "status": "GREEN",
+      "checks": 7,
+      "source_stable": true
+    },
+    "connected": {
+      "report": "reports/multi-resource-reference-connected.json",
+      "status": "GREEN",
+      "checks": 23,
+      "source_stable": true
+    },
+    "adversarial": {
+      "report": "reports/multi-resource-reference-adversarial.json",
+      "status": "GREEN",
+      "checks": 17,
+      "source_stable": true
+    },
+    "authority_recovery": {
+      "report": "reports/multi-resource-reference-authority-recovery.json",
+      "status": "GREEN",
+      "checks": 41,
+      "source_stable": true
+    },
+    "restore": {
+      "report": "reports/multi-resource-reference-restore.json",
+      "status": "GREEN",
+      "checks": 6,
+      "source_stable": true
+    },
+    "authority_recovery_restored": {
+      "report": "reports/multi-resource-reference-authority-recovery-restored.json",
+      "status": "GREEN",
+      "checks": 21,
+      "source_stable": true
+    }
+  },
+  "artifacts": {
+    "reports/multi-resource-reference-policy.json": "sha256:1e5e46d8f440914a726a07249996213fc1a14f7595e7a5ffd4166c45a0f2fdea",
+    "reports/multi-resource-reference-services.json": "sha256:4e79652521661991de48098de421a0f60d166c0e338ba10f1587fe673c33a181",
+    "reports/multi-resource-reference-connected.json": "sha256:2145b521c207e2973a948307f727e4a1c40b8f0139e22f5abeaac0aede86b305",
+    "reports/multi-resource-reference-adversarial.json": "sha256:a869646fdee9f581232bfeda46525a2d573c0c13b5077e833533a3e5bbafb8f0",
+    "reports/multi-resource-reference-authority-recovery.json": "sha256:a8b7ad8e8be9fe9d8c6fd11f91ce90253bfa3ad61aa3b8ec152d3ee1e777c731",
+    "reports/multi-resource-reference-restore.json": "sha256:326eee734e8088a4e904ca76f87edd77a33a1685dfa20cd4e566d93d70cb09e3",
+    "reports/multi-resource-reference-authority-recovery-restored.json": "sha256:bded07e6b80081c15aa9a5e195b1a8cdf8e8f4c249dddaddc31beb29f2996cbf",
+    "reports/multi-resource-reference-bootstrap.json": "sha256:829bda9aae4734c143719249517966639fd1164bccbb8b71e4be03c512b8a124",
+    "reports/multi-resource-reference-build-manifest.json": "sha256:97048c2f69212a5edc2a2f302c89b2c88e726d7366f389919598a0920c53d343",
+    "reports/multi-resource-reference-images.json": "sha256:f5dc824ef19d725a22e3aa02b1b37ae117504970b720d0f24999db97e54ab135",
+    "reports/service-bdd-live-013.json": "sha256:7377049e19989df1d063c70625bc19e28ea4fceea8840d90e7a87c20a0e406fd"
+  },
+  "source_manifest_sha256": "b1d8f2e4bb7fdd8ee3b6b906eccb7c89132d951fe1bf88b5e88ca065ceb91d3a",
+  "scope": "Same host; independently fetched and patched canonical sources, distinct virtual environment, keys, state, networks, ports and volumes. Prepared with the documented bootstrap; reran all seven documented validation stages after the final diagnostic retention-check update, then actual full stack restart and readback of existing operation and ledger evidence. Earlier queue-query and expired-credential retention-check failures remain preserved; all stages were rerun against the final deployment tools. The retention check compares signed current diagnostic snapshots and does not authorize execution. Behavior-scenario acceptance is recorded separately.",
+  "limits": [
+    "Not a different host or independent human installer",
+    "No statistical held-out product-value claim",
+    "No backup/disk-loss recovery claim",
+    "No hardware or production deployment claim",
+    "No universal distributed atomicity or safety claim"
+  ],
+  "full_behavior_run": {
+    "report": "reports/service-bdd-live-013.json",
+    "sha256": "sha256:7377049e19989df1d063c70625bc19e28ea4fceea8840d90e7a87c20a0e406fd",
+    "cases": 52,
+    "scenarios": 37,
+    "workspace": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference",
+    "scope": "The same full behavior run in this isolated workspace; not additional trials."
+  }
+}

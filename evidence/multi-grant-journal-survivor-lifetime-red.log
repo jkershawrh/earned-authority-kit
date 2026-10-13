@@ -1,0 +1,61 @@
+..........................................FFF....                        [100%]
+=================================== FAILURES ===================================
+_ test_containing_lifetimes_cannot_shorten_survivor_absolute_expiry[scope_ttl] _
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x1083ec320>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+case = 'scope_ttl'
+
+    @pytest.mark.parametrize('case', ['scope_ttl', 'passport_ttl', 'zero_scope_fallback'])
+    def test_containing_lifetimes_cannot_shorten_survivor_absolute_expiry(prepared, case):
+        rt, passport, targets, _, args = longer_survivor(prepared)
+        issue = args['request']['issue']
+        if case == 'scope_ttl': issue['requested_scopes'][0]['scope_ttl_seconds'] = 1
+        else:
+            issue['ttl_seconds'] = 300  # Valid canonical minimum, but too short here.
+            if case == 'zero_scope_fallback': issue['requested_scopes'][0]['scope_ttl_seconds'] = 0
+>       with pytest.raises(Denied, match='AUTHORITY_INTENT_BINDING_MISMATCH'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_multi_grant_journal.py:276: Failed
+_ test_containing_lifetimes_cannot_shorten_survivor_absolute_expiry[passport_ttl] _
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x1083d5160>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+case = 'passport_ttl'
+
+    @pytest.mark.parametrize('case', ['scope_ttl', 'passport_ttl', 'zero_scope_fallback'])
+    def test_containing_lifetimes_cannot_shorten_survivor_absolute_expiry(prepared, case):
+        rt, passport, targets, _, args = longer_survivor(prepared)
+        issue = args['request']['issue']
+        if case == 'scope_ttl': issue['requested_scopes'][0]['scope_ttl_seconds'] = 1
+        else:
+            issue['ttl_seconds'] = 300  # Valid canonical minimum, but too short here.
+            if case == 'zero_scope_fallback': issue['requested_scopes'][0]['scope_ttl_seconds'] = 0
+>       with pytest.raises(Denied, match='AUTHORITY_INTENT_BINDING_MISMATCH'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_multi_grant_journal.py:276: Failed
+_ test_containing_lifetimes_cannot_shorten_survivor_absolute_expiry[zero_scope_fallback] _
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x1083d6870>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+case = 'zero_scope_fallback'
+
+    @pytest.mark.parametrize('case', ['scope_ttl', 'passport_ttl', 'zero_scope_fallback'])
+    def test_containing_lifetimes_cannot_shorten_survivor_absolute_expiry(prepared, case):
+        rt, passport, targets, _, args = longer_survivor(prepared)
+        issue = args['request']['issue']
+        if case == 'scope_ttl': issue['requested_scopes'][0]['scope_ttl_seconds'] = 1
+        else:
+            issue['ttl_seconds'] = 300  # Valid canonical minimum, but too short here.
+            if case == 'zero_scope_fallback': issue['requested_scopes'][0]['scope_ttl_seconds'] = 0
+>       with pytest.raises(Denied, match='AUTHORITY_INTENT_BINDING_MISMATCH'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'earned_authority.runtime.Denied'>
+
+tests/test_multi_grant_journal.py:276: Failed
+=========================== short test summary info ============================
+FAILED tests/test_multi_grant_journal.py::test_containing_lifetimes_cannot_shorten_survivor_absolute_expiry[scope_ttl]
+FAILED tests/test_multi_grant_journal.py::test_containing_lifetimes_cannot_shorten_survivor_absolute_expiry[passport_ttl]
+FAILED tests/test_multi_grant_journal.py::test_containing_lifetimes_cannot_shorten_survivor_absolute_expiry[zero_scope_fallback]
+3 failed, 46 passed in 0.63s

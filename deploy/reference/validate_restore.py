@@ -34,7 +34,8 @@ def main():
     agent = prior["agent_id"]
     report = {"environment": "REAL_LOCAL_SERVICES", "started_at": datetime.now(timezone.utc).isoformat(),
               "prior_report": str(args.prior_report), "agent_id": agent, "checks": [],
-              "scope": "Same-host full process/container restart with durable volumes and installer-managed keys retained; not backup disaster recovery or second-person acceptance"}
+              "authorizes_execution": False,
+              "scope": "Same-host full process/container restart with durable volumes and installer-managed keys retained. Signed current snapshot retention is diagnostic data, including expired credentials; it does not establish current permission, backup disaster recovery or second-person acceptance."}
     def check(name, passed, **evidence):
         report["checks"].append({"check": name, "passed": bool(passed), "evidence": evidence})
         if not passed:
@@ -43,7 +44,10 @@ def main():
         rt = module.build_runtime(settings, state)
         try:
             identity = rt.policy.request("/v1/identity/agents/" + agent)
-            authority = rt.authority(agent)
+            # A restart can outlast a demo credential. Authenticate the current
+            # canonical envelope and exact revision, without claiming it is
+            # currently usable. Execution still uses authority(require_valid=True).
+            authority = rt._normalize(rt.passport.current(agent, require_valid=False), agent)
             events = rt.events()
             verified = [rt.ledger.verify(row["receipt"], row["event"]) for row in events]
             return {"identity": identity, "authority": authority, "mutations": rt.mutation_count,

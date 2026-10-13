@@ -1,0 +1,179 @@
+{
+  "review_type": "INDEPENDENT_READ_ONLY_BOUNDARY_REVIEW",
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "acceptance_scope": "Reviewed source and named local unit/contract regressions only; no live service or production acceptance.",
+  "completed_at": "2026-10-13T15:29:51.770940+00:00",
+  "findings": [
+    {
+      "id": "MR-REVOKE-ANCHOR-PAIR",
+      "status": "RESOLVED",
+      "origin": "INDEPENDENT_UNIT_REPRODUCTION",
+      "before": "Supplying a qualification-only withdrawal anchor removed both current read grants despite naming a different qualification.",
+      "resolution": "The public revoke boundary requires both nonempty string anchor fields or neither, before any reconciliation, RPC or event write.",
+      "regression": "test_incomplete_or_invalid_withdrawal_anchor_cannot_revoke"
+    },
+    {
+      "id": "MR-KNOWN-FAILURE-PRECEDENCE",
+      "status": "RESOLVED",
+      "origin": "INDEPENDENT_UNIT_REPRODUCTION",
+      "before": "Reevaluation during a Passport outage changed INELIGIBLE/KNOWN_FAILURE into HOLD/STALE_EVIDENCE while retaining a recorded failure count.",
+      "resolution": "Reevaluation preserves an INELIGIBLE qualification and its reason/revision, and queues the stronger cause for every affected scope.",
+      "regression": "test_reevaluation_cannot_weaken_confirmed_failure_during_outage"
+    },
+    {
+      "id": "MR-TYPED-HOLD-CONTEXT",
+      "status": "RESOLVED",
+      "origin": "INDEPENDENT_UNIT_REPRODUCTION",
+      "before": "The hold diagnostic matched context boolean true with integer 1 through Python equality.",
+      "resolution": "Removed-scope diagnostics require the exact canonical context digest. A differently typed new request receives the generic revoked response.",
+      "regression": "test_hold_diagnostic_requires_exact_typed_context"
+    },
+    {
+      "id": "MR-INNER-EXPIRY-TYPE",
+      "status": "RESOLVED",
+      "origin": "INDEPENDENT_UNIT_REPRODUCTION",
+      "before": "A floating inner expiry above the outer bound was accepted after clamping changed it to an integer.",
+      "resolution": "The original signed inner expiry must be an exact integer before any bound is applied.",
+      "regression": "test_noninteger_inner_expiry_cannot_hide_behind_outer_cap"
+    },
+    {
+      "id": "MR-SURVIVOR-CONTAINING-LIFETIME",
+      "status": "RESOLVED",
+      "origin": "INDEPENDENT_UNIT_REPRODUCTION",
+      "before": "An unchanged retained read binding with a one-second requested scope TTL passed journal validation; applying it shortened the effective expiry from 1300000 to 1001000.",
+      "resolution": "Journal preparation checks both containing Passport TTL and effective scope TTL against each retained absolute expiry at intent creation, including zero-TTL fallback and the containing cap.",
+      "regressions": [
+        "test_containing_lifetimes_cannot_shorten_survivor_absolute_expiry",
+        "test_zero_fallback_and_scope_cap_accept_a_sufficient_passport_ttl",
+        "test_ceil_safe_replacement_preserves_exact_expiry_at_fractional_second"
+      ]
+    },
+    {
+      "id": "MR-COMPLETE-REMOVAL-SET",
+      "status": "RESOLVED",
+      "origin": "READ_ONLY_SOURCE_AND_REGRESSION_REVIEW",
+      "before": "Shape-only target descriptions were insufficient to bind a signed removal claim to the complete prior skill and actual replacement request.",
+      "resolution": "The journal compares the full target set to normalized prior authority and validates the exact preserved bindings, predecessor CAS tuple, and removal request. Historical intents without target metadata retain their original format.",
+      "regressions": [
+        "test_targets_must_exactly_describe_the_complete_prior_skill",
+        "test_resulting_scope_set_must_remove_targets_and_preserve_other_live_grants",
+        "test_historical_operation_without_targets_stays_without_targets"
+      ]
+    },
+    {
+      "id": "MR-WIRE-RECORD-IDENTITY",
+      "status": "RESOLVED",
+      "origin": "READ_ONLY_SOURCE_AND_REGRESSION_REVIEW",
+      "before": "Selecting the first present identity-like field could treat lifecycle events sharing a qualification as the same record.",
+      "resolution": "The wire consumer selects identity by explicit record kind; full multiresource export includes every grant, qualification and exact attempt/event proof.",
+      "regression": "test_complete_wire_export_has_both_grants_qualifications_and_attempts"
+    }
+  ],
+  "unresolved_findings": [],
+  "verification": {
+    "command": [
+      "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/ledger-venv/bin/python",
+      "-m",
+      "pytest",
+      "tests/test_multi_resource_grants.py",
+      "tests/test_multi_grant_journal.py",
+      "tests/test_wire_contracts.py",
+      "tests/test_attempt_checks.py",
+      "tests/test_connected_binding.py",
+      "tests/test_connected_security.py",
+      "tests/test_connected_evidence.py",
+      "tests/test_policy_windows.py",
+      "tests/test_authority_observations.py",
+      "tests/test_evidence_wire.py",
+      "-q",
+      "--junitxml=/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-review-tests.xml"
+    ],
+    "exit_code": 0,
+    "passed_tests": 220,
+    "passed_subtests": 19,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "elapsed_seconds": 12.73,
+    "sources_stable": true,
+    "evidence_type": "UNIT_AND_CONTRACT_WITH_EXPLICIT_SERVICE_SEAMS",
+    "test_log_sha256": "sha256:f96c3b15e2d68018519e15f0e5dc95e10fa0bd389e4563b8ccaf15b7c6d8c3cf"
+  },
+  "source_hashes_before": {
+    "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
+    "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
+    "contracts/lifecycle-event.schema.json": "sha256:3c9b88bfe5a4fd5300786e0fd57656e660fa49db134b0cd0245a86dd1697a16d",
+    "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
+    "contracts/qualification.schema.json": "sha256:2a4a4f6921a3f839b6b4a554f0c8fa019600d14411d5cfd8355f119aa28449b3",
+    "contracts/unknown-reconciliation-result.schema.json": "sha256:6193e4fcadc9a2ee7f89b043306aaf088124a272adc9227f5453e56881faf8e6",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:53cff72d68e82b51fc18d0eea4d2858c50d7071eda7e64b890c77ec59a44153b",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
+    "tests/test_attempt_checks.py": "sha256:ed71a1981280a9d4988bf8b88d9cdc9fe0fae52c4f46858231480c4cf82c0b1d",
+    "tests/test_authority_observations.py": "sha256:772677efcc28d42cce20eb3d04fcde35b80bd18762973ea53eb20efd10696812",
+    "tests/test_connected_binding.py": "sha256:fed6280491e8be459593c21bf08df7e720bc34870e6937fc46a907c5b9d5e04a",
+    "tests/test_connected_evidence.py": "sha256:d390ede7119b60249d8dc4d6114700ef44f6edd6f774d5d925ed1629feff8e1e",
+    "tests/test_connected_security.py": "sha256:845dae0a80d6eb3735a97f3d446d13f1bb82ab3d62009a98848551560aaef051",
+    "tests/test_evidence_wire.py": "sha256:f1307829d72eeecb2a7feb87a5a9e904c246910e5275c99a247c178e2cc4db85",
+    "tests/test_multi_grant_journal.py": "sha256:0d9365d819736eb242586800a51389462e36484f4b7c604c2892c621ad259536",
+    "tests/test_multi_resource_grants.py": "sha256:37590ca2a1026fbb8c3163ab0b17158ea232388298a07548d7b362c0d0008003",
+    "tests/test_policy_windows.py": "sha256:24673e074d34153bc8452ede830a459ae4d950ad17f563cb89ab0d1e6db7cddd",
+    "tests/test_wire_contracts.py": "sha256:69b1d2a86b3decb724d832de0caf601d67ab89a227b075df936e86afcadbe280"
+  },
+  "source_hashes": {
+    "contracts/attempt.schema.json": "sha256:b5adee171a33fdc0c518312a52e297e31a39c6b31a6a18eebe7b2de3597060c3",
+    "contracts/authority.schema.json": "sha256:e7cca86a39aea2ebd27414255944e4f64b5ed05779b2eed4cd2da75f0c48fb41",
+    "contracts/lifecycle-event.schema.json": "sha256:3c9b88bfe5a4fd5300786e0fd57656e660fa49db134b0cd0245a86dd1697a16d",
+    "contracts/outcome.schema.json": "sha256:177a52a458baac6830f00ad13ed3fe908ddaf793b72ab94f9c2d5eebbee4256c",
+    "contracts/qualification.schema.json": "sha256:2a4a4f6921a3f839b6b4a554f0c8fa019600d14411d5cfd8355f119aa28449b3",
+    "contracts/unknown-reconciliation-result.schema.json": "sha256:6193e4fcadc9a2ee7f89b043306aaf088124a272adc9227f5453e56881faf8e6",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:53cff72d68e82b51fc18d0eea4d2858c50d7071eda7e64b890c77ec59a44153b",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
+    "tests/test_attempt_checks.py": "sha256:ed71a1981280a9d4988bf8b88d9cdc9fe0fae52c4f46858231480c4cf82c0b1d",
+    "tests/test_authority_observations.py": "sha256:772677efcc28d42cce20eb3d04fcde35b80bd18762973ea53eb20efd10696812",
+    "tests/test_connected_binding.py": "sha256:fed6280491e8be459593c21bf08df7e720bc34870e6937fc46a907c5b9d5e04a",
+    "tests/test_connected_evidence.py": "sha256:d390ede7119b60249d8dc4d6114700ef44f6edd6f774d5d925ed1629feff8e1e",
+    "tests/test_connected_security.py": "sha256:845dae0a80d6eb3735a97f3d446d13f1bb82ab3d62009a98848551560aaef051",
+    "tests/test_evidence_wire.py": "sha256:f1307829d72eeecb2a7feb87a5a9e904c246910e5275c99a247c178e2cc4db85",
+    "tests/test_multi_grant_journal.py": "sha256:0d9365d819736eb242586800a51389462e36484f4b7c604c2892c621ad259536",
+    "tests/test_multi_resource_grants.py": "sha256:37590ca2a1026fbb8c3163ab0b17158ea232388298a07548d7b362c0d0008003",
+    "tests/test_policy_windows.py": "sha256:24673e074d34153bc8452ede830a459ae4d950ad17f563cb89ab0d1e6db7cddd",
+    "tests/test_wire_contracts.py": "sha256:69b1d2a86b3decb724d832de0caf601d67ab89a227b075df936e86afcadbe280"
+  },
+  "other_reviewed_boundaries": [
+    "Complete list iteration and exact slot selection; no hidden skill-only projection.",
+    "Fresh aggregate CAS upsert retains unrelated grant identity, binding and absolute expiry.",
+    "Composite withdrawal migration and exact-row deletion preserve independent causes.",
+    "Stale anchor reconciliation does not remove a replacement; current anchored demotion removes all same-skill scopes.",
+    "Distinct qualification evidence is audited across sibling scopes; unavailable evidence is not a fabricated task failure.",
+    "Legacy fixture maps and historical journal records retain their supported format."
+  ],
+  "limits": [
+    "Temporary UNIT reproductions used stateful service seams and local signed persistence; this report did not start services.",
+    "Fresh current-source live BDD and deployment acceptance are recorded separately and are not established here.",
+    "Trusted local host, signer provisioning and clock assumptions remain.",
+    "No independent-host, statistical product-value, hardware safety or universal distributed-atomicity claim."
+  ]
+}

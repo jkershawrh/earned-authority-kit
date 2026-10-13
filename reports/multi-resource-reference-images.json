@@ -1,0 +1,21 @@
+{
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "completed_at": "2026-10-13T15:49:06.543835+00:00",
+  "images": [
+    {
+      "container": "ea-multi-resource-foundation-bff",
+      "image_tag": "localhost/earned-authority-foundation-bff:reference",
+      "running_image_id": "cf6dded102b17fbb4a8f37efaa6fef1950fd16395b1e86ef44a22723606c993c",
+      "expected_image_id": "cf6dded102b17fbb4a8f37efaa6fef1950fd16395b1e86ef44a22723606c993c",
+      "matched": true
+    },
+    {
+      "container": "ea-multi-resource-foundation-gateway",
+      "image_tag": "localhost/earned-authority-foundation-gateway:reference",
+      "running_image_id": "dc3c116114c8c1cbfe2da8626d00b5676761e17354db838cef5ac395b046c963",
+      "expected_image_id": "dc3c116114c8c1cbfe2da8626d00b5676761e17354db838cef5ac395b046c963",
+      "matched": true
+    }
+  ]
+}

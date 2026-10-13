@@ -1,0 +1,684 @@
+EEEEEEEEEEEEEEEEEEEE                                                     [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of test_exact_full_targets_are_signed_and_isolated_from_caller_mutation _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_exact_full_targets_are_si0')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_lost_reply_restart_preserves_complete_targets_and_one_event _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_lost_reply_restart_preser0')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[remove_field] _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_persisted_target_metadata0')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[remove_target] _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_persisted_target_metadata1')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[change_context] _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_persisted_target_metadata2')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[change_id] _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_persisted_target_metadata3')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[add_target] _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_persisted_target_metadata4')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[reorder] _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_persisted_target_metadata5')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_____ ERROR at setup of test_unsigned_stored_target_tamper_blocks_recovery _____
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_unsigned_stored_target_ta0')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_historical_operation_without_targets_stays_without_targets _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_historical_operation_with0')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_existing_legacy_record_cannot_be_enriched_with_invented_targets _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_existing_legacy_record_ca0')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_invalid_target_description_never_persists_an_intent[not_list] _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_invalid_target_descriptio0')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_invalid_target_description_never_persists_an_intent[empty] _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_invalid_target_descriptio1')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_invalid_target_description_never_persists_an_intent[duplicate_id] _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_invalid_target_descriptio2')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_invalid_target_description_never_persists_an_intent[missing_id] _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_invalid_target_descriptio3')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_invalid_target_description_never_persists_an_intent[missing_full_field] _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_invalid_target_descriptio4')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_invalid_target_description_never_persists_an_intent[wrong_skill] _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_invalid_target_descriptio5')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_invalid_target_description_never_persists_an_intent[missing_anchor] _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_invalid_target_descriptio6')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_invalid_target_description_never_persists_an_intent[wrong_anchor_qualification] _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_invalid_target_descriptio7')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+_ ERROR at setup of test_invalid_target_description_never_persists_an_intent[grant_operation] _
+
+tmp_path = PosixPath('/private/var/folders/qh/kgyp2lln3nb8t1rt2yc1rr4w0000gn/T/pytest-of-jkershaw/pytest-142/test_invalid_target_descriptio8')
+
+    @pytest.fixture
+    def prepared(tmp_path):
+        passport = OperationPassport()
+        rt = JournalRuntime(tmp_path / 'journal.sqlite', passport)
+        targets = [grant('release-a', 'release-model', 'model/a'),
+                   grant('release-b', 'release-model', 'model/b')]
+        retained = grant('read-a', 'read-health', 'urn:dataset/health')
+>       passport.issue('agent-a', scopes(targets + [retained]), 300, passport.current('agent-a'), 'unit seed')
+
+tests/test_multi_grant_journal.py:51: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_authority_journal.py:36: in issue
+    request=issue_operation_request(agent,scopes,ttl,current,reason,operation_id)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+earned_authority/passport_client.py:101: in issue_operation_request
+    return _operation_request({'operation_id':operation_id,'agent_id':agent,'action':'ISSUE',
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+request = {'action': 'ISSUE', 'agent_id': 'agent-a', 'expected_active_passport_id': '', 'expected_agent_revision': 0, ...}
+
+    def _operation_request(request):
+        """Closed request normalization shared by journal storage and dispatch."""
+        r=copy.deepcopy(request)
+        fields={'operation_id','agent_id','action','expected_active_passport_id','expected_agent_revision','issue','revoke'}
+>       if set(r)!=fields or not isinstance(r['operation_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}',r['operation_id']): raise Denied('INVALID_OPERATION_REQUEST')
+                                                                                                                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       earned_authority.runtime.Denied: INVALID_OPERATION_REQUEST
+
+earned_authority/passport_client.py:71: Denied
+=========================== short test summary info ============================
+ERROR tests/test_multi_grant_journal.py::test_exact_full_targets_are_signed_and_isolated_from_caller_mutation
+ERROR tests/test_multi_grant_journal.py::test_lost_reply_restart_preserves_complete_targets_and_one_event
+ERROR tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[remove_field]
+ERROR tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[remove_target]
+ERROR tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[change_context]
+ERROR tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[change_id]
+ERROR tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[add_target]
+ERROR tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[reorder]
+ERROR tests/test_multi_grant_journal.py::test_unsigned_stored_target_tamper_blocks_recovery
+ERROR tests/test_multi_grant_journal.py::test_historical_operation_without_targets_stays_without_targets
+ERROR tests/test_multi_grant_journal.py::test_existing_legacy_record_cannot_be_enriched_with_invented_targets
+ERROR tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[not_list]
+ERROR tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[empty]
+ERROR tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[duplicate_id]
+ERROR tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[missing_id]
+ERROR tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[missing_full_field]
+ERROR tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[wrong_skill]
+ERROR tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[missing_anchor]
+ERROR tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[wrong_anchor_qualification]
+ERROR tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[grant_operation]
+20 errors in 0.54s

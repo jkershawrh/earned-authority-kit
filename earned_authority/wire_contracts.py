@@ -9,6 +9,7 @@ import copy
 from dataclasses import dataclass, field
 
 from .contracts import canonical_digest, validate
+from .grants import iter_grants
 
 VERSION = '0.1.0-draft.1'
 KINDS = {'qualification', 'authority', 'attempt', 'outcome', 'lifecycle-event'}
@@ -113,7 +114,7 @@ def _map(kind, inputs):
         require(a['status'] == 'ACTIVE' and a['passport_id'] and a['grants'],
                 'only an actual active credential can be exported; revoked tombstones have none')
         grants = []
-        for _, g in sorted(a['grants'].items()):
+        for g in sorted(iter_grants(a),key=lambda g:g['grant_id']):
             _skill_binding(g)
             item = {k: g[k] for k in ('grant_id', 'skill_digest', 'context_digest', 'qualification_id',
                                       'qualification_digest', 'policy_digest', 'resource', 'expires_at_ms')}
@@ -223,7 +224,7 @@ def export_runtime(runtime, *, qualification_ids=(), agent='agent-a', attempt_id
         if authority:
             require(authority['status'] == 'ACTIVE' and authority['grants'] and authority['passport_id'],
                     'no active credential to export')
-            qids.update(g['qualification_id'] for g in authority['grants'].values())
+            qids.update(g['qualification_id'] for g in iter_grants(authority))
         outcomes = set()
         for qid in sorted(qids):
             q = runtime.qualification(qid)
@@ -344,8 +345,10 @@ def consume_bundle(bundle, *, trust, now_ms):
             require(canonical_digest(primary) == record['source_digest'], 'primary source digest mismatch')
             value = record['value']; validate(kind, value)
             require(value == _map(kind, inputs), 'normalized record differs from its authenticated producer')
-            identity = (kind, value.get('qualification_id') or value.get('passport_id') or
-                        value.get('observation_id') or value.get('event_id') or value.get('attempt_id'))
+            identity_field = {'qualification': 'qualification_id', 'authority': 'passport_id',
+                              'outcome': 'observation_id', 'lifecycle-event': 'event_id',
+                              'attempt': 'attempt_id'}[kind]
+            identity = (kind, value[identity_field])
             require(identity not in seen, 'duplicate wire record')
             seen.add(identity); indexed.setdefault(kind, []).append((value, primary))
             if kind=='attempt':

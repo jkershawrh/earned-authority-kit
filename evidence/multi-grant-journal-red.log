@@ -1,0 +1,341 @@
+FFFFFFFFF..FFFFFFFFF                                                     [100%]
+=================================== FAILURES ===================================
+_____ test_exact_full_targets_are_signed_and_isolated_from_caller_mutation _____
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x109805160>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+
+    def test_exact_full_targets_are_signed_and_isolated_from_caller_mutation(prepared):
+        rt, _, targets, _, args = prepared
+        expected = copy.deepcopy(targets)
+>       operation = rt._new_authority_operation(**args, removed_targets=targets)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:68: TypeError
+_______ test_lost_reply_restart_preserves_complete_targets_and_one_event _______
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x109822f90>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+
+    def test_lost_reply_restart_preserves_complete_targets_and_one_event(prepared):
+        rt, passport, targets, retained, args = prepared
+>       operation = rt._new_authority_operation(**args, removed_targets=targets)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:79: TypeError
+_ test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[remove_field] _
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x109823d10>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+edit = 'remove_field'
+
+    @pytest.mark.parametrize('edit', ['remove_field', 'remove_target', 'change_context', 'change_id', 'add_target', 'reorder'])
+    def test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition(prepared, edit):
+        rt, _, targets, _, args = prepared
+>       operation = rt._new_authority_operation(**args, removed_targets=targets)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:104: TypeError
+_ test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[remove_target] _
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x109823380>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+edit = 'remove_target'
+
+    @pytest.mark.parametrize('edit', ['remove_field', 'remove_target', 'change_context', 'change_id', 'add_target', 'reorder'])
+    def test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition(prepared, edit):
+        rt, _, targets, _, args = prepared
+>       operation = rt._new_authority_operation(**args, removed_targets=targets)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:104: TypeError
+_ test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[change_context] _
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x109821250>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+edit = 'change_context'
+
+    @pytest.mark.parametrize('edit', ['remove_field', 'remove_target', 'change_context', 'change_id', 'add_target', 'reorder'])
+    def test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition(prepared, edit):
+        rt, _, targets, _, args = prepared
+>       operation = rt._new_authority_operation(**args, removed_targets=targets)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:104: TypeError
+_ test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[change_id] _
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x1098217f0>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+edit = 'change_id'
+
+    @pytest.mark.parametrize('edit', ['remove_field', 'remove_target', 'change_context', 'change_id', 'add_target', 'reorder'])
+    def test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition(prepared, edit):
+        rt, _, targets, _, args = prepared
+>       operation = rt._new_authority_operation(**args, removed_targets=targets)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:104: TypeError
+_ test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[add_target] _
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x109821820>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+edit = 'add_target'
+
+    @pytest.mark.parametrize('edit', ['remove_field', 'remove_target', 'change_context', 'change_id', 'add_target', 'reorder'])
+    def test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition(prepared, edit):
+        rt, _, targets, _, args = prepared
+>       operation = rt._new_authority_operation(**args, removed_targets=targets)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:104: TypeError
+_ test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[reorder] _
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x1098869f0>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+edit = 'reorder'
+
+    @pytest.mark.parametrize('edit', ['remove_field', 'remove_target', 'change_context', 'change_id', 'add_target', 'reorder'])
+    def test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition(prepared, edit):
+        rt, _, targets, _, args = prepared
+>       operation = rt._new_authority_operation(**args, removed_targets=targets)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:104: TypeError
+______________ test_unsigned_stored_target_tamper_blocks_recovery ______________
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x109887260>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+
+    def test_unsigned_stored_target_tamper_blocks_recovery(prepared):
+        rt, passport, targets, _, args = prepared
+>       operation = rt._new_authority_operation(**args, removed_targets=targets)
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:127: TypeError
+______ test_invalid_target_description_never_persists_an_intent[not_list] ______
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x109886ed0>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+case = 'not_list'
+
+    @pytest.mark.parametrize('case', ['not_list', 'empty', 'duplicate_id', 'missing_id', 'missing_full_field', 'wrong_skill', 'missing_anchor', 'wrong_anchor_qualification', 'grant_operation'])
+    def test_invalid_target_description_never_persists_an_intent(prepared, case):
+        rt, _, targets, _, args = prepared
+        targets = copy.deepcopy(targets)
+        if case == 'not_list': targets = {'targets': targets}
+        elif case == 'empty': targets = []
+        elif case == 'duplicate_id': targets[1]['grant_id'] = targets[0]['grant_id']
+        elif case == 'missing_id': del targets[0]['grant_id']
+        elif case == 'missing_full_field': del targets[1]['resource']
+        elif case == 'wrong_skill': targets[1]['skill'] = 'unrelated-skill'
+        elif case == 'missing_anchor': args['target_grant_id'] = 'missing'
+        elif case == 'wrong_anchor_qualification': args['target_qualification_id'] = 'other-qualification'
+        else: args['kind'] = 'GRANT'
+        with pytest.raises(Denied, match='AUTHORITY_INTENT_BINDING_MISMATCH'):
+>           rt._new_authority_operation(**args, removed_targets=targets)
+E           TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:173: TypeError
+_______ test_invalid_target_description_never_persists_an_intent[empty] ________
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x109887b60>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+case = 'empty'
+
+    @pytest.mark.parametrize('case', ['not_list', 'empty', 'duplicate_id', 'missing_id', 'missing_full_field', 'wrong_skill', 'missing_anchor', 'wrong_anchor_qualification', 'grant_operation'])
+    def test_invalid_target_description_never_persists_an_intent(prepared, case):
+        rt, _, targets, _, args = prepared
+        targets = copy.deepcopy(targets)
+        if case == 'not_list': targets = {'targets': targets}
+        elif case == 'empty': targets = []
+        elif case == 'duplicate_id': targets[1]['grant_id'] = targets[0]['grant_id']
+        elif case == 'missing_id': del targets[0]['grant_id']
+        elif case == 'missing_full_field': del targets[1]['resource']
+        elif case == 'wrong_skill': targets[1]['skill'] = 'unrelated-skill'
+        elif case == 'missing_anchor': args['target_grant_id'] = 'missing'
+        elif case == 'wrong_anchor_qualification': args['target_qualification_id'] = 'other-qualification'
+        else: args['kind'] = 'GRANT'
+        with pytest.raises(Denied, match='AUTHORITY_INTENT_BINDING_MISMATCH'):
+>           rt._new_authority_operation(**args, removed_targets=targets)
+E           TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:173: TypeError
+____ test_invalid_target_description_never_persists_an_intent[duplicate_id] ____
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x109884a40>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+case = 'duplicate_id'
+
+    @pytest.mark.parametrize('case', ['not_list', 'empty', 'duplicate_id', 'missing_id', 'missing_full_field', 'wrong_skill', 'missing_anchor', 'wrong_anchor_qualification', 'grant_operation'])
+    def test_invalid_target_description_never_persists_an_intent(prepared, case):
+        rt, _, targets, _, args = prepared
+        targets = copy.deepcopy(targets)
+        if case == 'not_list': targets = {'targets': targets}
+        elif case == 'empty': targets = []
+        elif case == 'duplicate_id': targets[1]['grant_id'] = targets[0]['grant_id']
+        elif case == 'missing_id': del targets[0]['grant_id']
+        elif case == 'missing_full_field': del targets[1]['resource']
+        elif case == 'wrong_skill': targets[1]['skill'] = 'unrelated-skill'
+        elif case == 'missing_anchor': args['target_grant_id'] = 'missing'
+        elif case == 'wrong_anchor_qualification': args['target_qualification_id'] = 'other-qualification'
+        else: args['kind'] = 'GRANT'
+        with pytest.raises(Denied, match='AUTHORITY_INTENT_BINDING_MISMATCH'):
+>           rt._new_authority_operation(**args, removed_targets=targets)
+E           TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:173: TypeError
+_____ test_invalid_target_description_never_persists_an_intent[missing_id] _____
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x1098870b0>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+case = 'missing_id'
+
+    @pytest.mark.parametrize('case', ['not_list', 'empty', 'duplicate_id', 'missing_id', 'missing_full_field', 'wrong_skill', 'missing_anchor', 'wrong_anchor_qualification', 'grant_operation'])
+    def test_invalid_target_description_never_persists_an_intent(prepared, case):
+        rt, _, targets, _, args = prepared
+        targets = copy.deepcopy(targets)
+        if case == 'not_list': targets = {'targets': targets}
+        elif case == 'empty': targets = []
+        elif case == 'duplicate_id': targets[1]['grant_id'] = targets[0]['grant_id']
+        elif case == 'missing_id': del targets[0]['grant_id']
+        elif case == 'missing_full_field': del targets[1]['resource']
+        elif case == 'wrong_skill': targets[1]['skill'] = 'unrelated-skill'
+        elif case == 'missing_anchor': args['target_grant_id'] = 'missing'
+        elif case == 'wrong_anchor_qualification': args['target_qualification_id'] = 'other-qualification'
+        else: args['kind'] = 'GRANT'
+        with pytest.raises(Denied, match='AUTHORITY_INTENT_BINDING_MISMATCH'):
+>           rt._new_authority_operation(**args, removed_targets=targets)
+E           TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:173: TypeError
+_ test_invalid_target_description_never_persists_an_intent[missing_full_field] _
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x109885010>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+case = 'missing_full_field'
+
+    @pytest.mark.parametrize('case', ['not_list', 'empty', 'duplicate_id', 'missing_id', 'missing_full_field', 'wrong_skill', 'missing_anchor', 'wrong_anchor_qualification', 'grant_operation'])
+    def test_invalid_target_description_never_persists_an_intent(prepared, case):
+        rt, _, targets, _, args = prepared
+        targets = copy.deepcopy(targets)
+        if case == 'not_list': targets = {'targets': targets}
+        elif case == 'empty': targets = []
+        elif case == 'duplicate_id': targets[1]['grant_id'] = targets[0]['grant_id']
+        elif case == 'missing_id': del targets[0]['grant_id']
+        elif case == 'missing_full_field': del targets[1]['resource']
+        elif case == 'wrong_skill': targets[1]['skill'] = 'unrelated-skill'
+        elif case == 'missing_anchor': args['target_grant_id'] = 'missing'
+        elif case == 'wrong_anchor_qualification': args['target_qualification_id'] = 'other-qualification'
+        else: args['kind'] = 'GRANT'
+        with pytest.raises(Denied, match='AUTHORITY_INTENT_BINDING_MISMATCH'):
+>           rt._new_authority_operation(**args, removed_targets=targets)
+E           TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:173: TypeError
+____ test_invalid_target_description_never_persists_an_intent[wrong_skill] _____
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x109887830>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+case = 'wrong_skill'
+
+    @pytest.mark.parametrize('case', ['not_list', 'empty', 'duplicate_id', 'missing_id', 'missing_full_field', 'wrong_skill', 'missing_anchor', 'wrong_anchor_qualification', 'grant_operation'])
+    def test_invalid_target_description_never_persists_an_intent(prepared, case):
+        rt, _, targets, _, args = prepared
+        targets = copy.deepcopy(targets)
+        if case == 'not_list': targets = {'targets': targets}
+        elif case == 'empty': targets = []
+        elif case == 'duplicate_id': targets[1]['grant_id'] = targets[0]['grant_id']
+        elif case == 'missing_id': del targets[0]['grant_id']
+        elif case == 'missing_full_field': del targets[1]['resource']
+        elif case == 'wrong_skill': targets[1]['skill'] = 'unrelated-skill'
+        elif case == 'missing_anchor': args['target_grant_id'] = 'missing'
+        elif case == 'wrong_anchor_qualification': args['target_qualification_id'] = 'other-qualification'
+        else: args['kind'] = 'GRANT'
+        with pytest.raises(Denied, match='AUTHORITY_INTENT_BINDING_MISMATCH'):
+>           rt._new_authority_operation(**args, removed_targets=targets)
+E           TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:173: TypeError
+___ test_invalid_target_description_never_persists_an_intent[missing_anchor] ___
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x109885f10>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+case = 'missing_anchor'
+
+    @pytest.mark.parametrize('case', ['not_list', 'empty', 'duplicate_id', 'missing_id', 'missing_full_field', 'wrong_skill', 'missing_anchor', 'wrong_anchor_qualification', 'grant_operation'])
+    def test_invalid_target_description_never_persists_an_intent(prepared, case):
+        rt, _, targets, _, args = prepared
+        targets = copy.deepcopy(targets)
+        if case == 'not_list': targets = {'targets': targets}
+        elif case == 'empty': targets = []
+        elif case == 'duplicate_id': targets[1]['grant_id'] = targets[0]['grant_id']
+        elif case == 'missing_id': del targets[0]['grant_id']
+        elif case == 'missing_full_field': del targets[1]['resource']
+        elif case == 'wrong_skill': targets[1]['skill'] = 'unrelated-skill'
+        elif case == 'missing_anchor': args['target_grant_id'] = 'missing'
+        elif case == 'wrong_anchor_qualification': args['target_qualification_id'] = 'other-qualification'
+        else: args['kind'] = 'GRANT'
+        with pytest.raises(Denied, match='AUTHORITY_INTENT_BINDING_MISMATCH'):
+>           rt._new_authority_operation(**args, removed_targets=targets)
+E           TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:173: TypeError
+_ test_invalid_target_description_never_persists_an_intent[wrong_anchor_qualification] _
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x10965e240>, <test_authority_journal.OperationPassport object at ...cation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'REVOKE', 'operation_id': 'remove-multiple', ...})
+case = 'wrong_anchor_qualification'
+
+    @pytest.mark.parametrize('case', ['not_list', 'empty', 'duplicate_id', 'missing_id', 'missing_full_field', 'wrong_skill', 'missing_anchor', 'wrong_anchor_qualification', 'grant_operation'])
+    def test_invalid_target_description_never_persists_an_intent(prepared, case):
+        rt, _, targets, _, args = prepared
+        targets = copy.deepcopy(targets)
+        if case == 'not_list': targets = {'targets': targets}
+        elif case == 'empty': targets = []
+        elif case == 'duplicate_id': targets[1]['grant_id'] = targets[0]['grant_id']
+        elif case == 'missing_id': del targets[0]['grant_id']
+        elif case == 'missing_full_field': del targets[1]['resource']
+        elif case == 'wrong_skill': targets[1]['skill'] = 'unrelated-skill'
+        elif case == 'missing_anchor': args['target_grant_id'] = 'missing'
+        elif case == 'wrong_anchor_qualification': args['target_qualification_id'] = 'other-qualification'
+        else: args['kind'] = 'GRANT'
+        with pytest.raises(Denied, match='AUTHORITY_INTENT_BINDING_MISMATCH'):
+>           rt._new_authority_operation(**args, removed_targets=targets)
+E           TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:173: TypeError
+__ test_invalid_target_description_never_persists_an_intent[grant_operation] ___
+
+prepared = (<test_multi_grant_journal.JournalRuntime object at 0x109821d30>, <test_authority_journal.OperationPassport object at ...ocation': {'attempt_id': 'failed-attempt', 'kind': 'REVOKE'}, 'kind': 'GRANT', 'operation_id': 'remove-multiple', ...})
+case = 'grant_operation'
+
+    @pytest.mark.parametrize('case', ['not_list', 'empty', 'duplicate_id', 'missing_id', 'missing_full_field', 'wrong_skill', 'missing_anchor', 'wrong_anchor_qualification', 'grant_operation'])
+    def test_invalid_target_description_never_persists_an_intent(prepared, case):
+        rt, _, targets, _, args = prepared
+        targets = copy.deepcopy(targets)
+        if case == 'not_list': targets = {'targets': targets}
+        elif case == 'empty': targets = []
+        elif case == 'duplicate_id': targets[1]['grant_id'] = targets[0]['grant_id']
+        elif case == 'missing_id': del targets[0]['grant_id']
+        elif case == 'missing_full_field': del targets[1]['resource']
+        elif case == 'wrong_skill': targets[1]['skill'] = 'unrelated-skill'
+        elif case == 'missing_anchor': args['target_grant_id'] = 'missing'
+        elif case == 'wrong_anchor_qualification': args['target_qualification_id'] = 'other-qualification'
+        else: args['kind'] = 'GRANT'
+        with pytest.raises(Denied, match='AUTHORITY_INTENT_BINDING_MISMATCH'):
+>           rt._new_authority_operation(**args, removed_targets=targets)
+E           TypeError: AuthorityJournal._new_authority_operation() got an unexpected keyword argument 'removed_targets'
+
+tests/test_multi_grant_journal.py:173: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_multi_grant_journal.py::test_exact_full_targets_are_signed_and_isolated_from_caller_mutation
+FAILED tests/test_multi_grant_journal.py::test_lost_reply_restart_preserves_complete_targets_and_one_event
+FAILED tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[remove_field]
+FAILED tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[remove_target]
+FAILED tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[change_context]
+FAILED tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[change_id]
+FAILED tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[add_target]
+FAILED tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[reorder]
+FAILED tests/test_multi_grant_journal.py::test_unsigned_stored_target_tamper_blocks_recovery
+FAILED tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[not_list]
+FAILED tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[empty]
+FAILED tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[duplicate_id]
+FAILED tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[missing_id]
+FAILED tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[missing_full_field]
+FAILED tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[wrong_skill]
+FAILED tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[missing_anchor]
+FAILED tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[wrong_anchor_qualification]
+FAILED tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[grant_operation]
+18 failed, 2 passed in 0.25s

@@ -1,0 +1,254 @@
+{
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "completed_at": "2026-10-13T15:51:17.078868+00:00",
+  "scope": "Gracefully stop only the fresh ea-multi-resource stack owned by this increment; preserve all prior stacks, unrelated resources, durable volumes, keys, signed state, receipts and logs.",
+  "commands": [
+    {
+      "environment": {
+        "EA_WORKSPACE": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference"
+      },
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "stop"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "stopped_containers": [
+    {
+      "id": "cd1595a250c36879b0c4ef785274fad79e4623acb7a9b81e2613df58737f5fba",
+      "names": [
+        "ea-multi-resource-ledger-db"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "d78bbb06371dce5adda32d508902cae0812ef6f3abcbcbb605f0e5c6e3a21a3f",
+      "names": [
+        "ea-multi-resource-ledger-service"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "98a1ed889ef9f625fc084004b7a32585205ecd4e7ef77cb329e65016faf9874e",
+      "names": [
+        "ea-multi-resource-foundation-db"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "ed291cc422ac34d878772b0033905ff27b14599f96c66505585a11ae9a1640db",
+      "names": [
+        "ea-multi-resource-jwks"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "0f6601e834702eb830563cb9251e05b80a8a77b063ad50ccb3647d888d36e890",
+      "names": [
+        "ea-multi-resource-opa"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "681036d27ee6dc8423e65f04697c6d239295773d14fd669225e16eb8da7a4725",
+      "names": [
+        "ea-multi-resource-foundation-bff"
+      ],
+      "state": "exited"
+    },
+    {
+      "id": "b0d6db39f923544276ee58d72cb14d7504613e3302edaff2861e94f96ad56650",
+      "names": [
+        "ea-multi-resource-foundation-gateway"
+      ],
+      "state": "exited"
+    }
+  ],
+  "stopped_host_passport_processes": [
+    {
+      "stack": "ea-multi-resource",
+      "pid": 23228,
+      "state": "EXITED"
+    }
+  ],
+  "retained_volumes": [
+    {
+      "name": "ea-multi-resource-ledger-data",
+      "mountpoint": "/var/home/core/.local/share/containers/storage/volumes/ea-multi-resource-ledger-data/_data",
+      "created_at": "2026-10-13T10:25:06.472994128-05:00"
+    },
+    {
+      "name": "ea-multi-resource-foundation-data",
+      "mountpoint": "/var/home/core/.local/share/containers/storage/volumes/ea-multi-resource-foundation-data/_data",
+      "created_at": "2026-10-13T10:26:53.775166031-05:00"
+    }
+  ],
+  "retained_files": [
+    {
+      "stack": "ea-multi-resource",
+      "files": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/reference.env",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-runtime/local.env",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/passport/state.json",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/passport/ed25519.pem",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/passport/ed25519-public.pem",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-runtime/writer-private.pem",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-runtime/writer-public.pem"
+      ],
+      "logs_retained": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime",
+      "all_preserved_byte_for_byte": true
+    }
+  ],
+  "retained_local_registry_and_journal_state": {
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/evidence-reference/work/reference-runtime/connected-validation/authority-recovery-cbb4e27d85ca4a6ea475453f43b3a88b.sqlite": {
+      "bytes": 1708032,
+      "evidence_report": "reports/evidence-reference-v2-authority-recovery.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-4b4a2c38c98d43f3ae7a5efbfe66810e.sqlite": {
+      "bytes": 1130496,
+      "evidence_report": "reports/multi-resource-authority-recovery-before-queue-migration.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/evidence-reference/work/reference-runtime/connected-validation/adversarial-6c6f6d705f37452c9d84a79d13b3fb74.sqlite": {
+      "bytes": 1064960,
+      "evidence_report": "reports/evidence-reference-adversarial.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/reference-runtime/connected-validation/authority-recovery-2615ad51968f41ffbaec002221c882c4.sqlite": {
+      "bytes": 1716224,
+      "evidence_report": "reports/observation-reference-pre-final-authority-recovery.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/evidence-reference/work/reference-runtime/connected-validation/authority-recovery-948b93625eb248088f4fe4c58cf73baf.sqlite": {
+      "bytes": 1708032,
+      "evidence_report": "reports/evidence-reference-authority-recovery.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/reference-runtime/connected-validation/authority-recovery-94344e53a77a488da775f93b8ddf71a9.sqlite": {
+      "bytes": 1708032,
+      "evidence_report": "reports/boundary-reference-authority-recovery.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/operation-reference/work/reference-runtime/connected-validation/authority-recovery-af686357bea644288e9ad8071b3a5f82.sqlite": {
+      "bytes": 1683456,
+      "evidence_report": "reports/operations-reference-authority-recovery.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/connected-5ee5e44eb7c5436f9c2713ebc760afc4.sqlite": {
+      "bytes": 851968,
+      "evidence_report": "reports/multi-resource-before-diagnostic-restore-connected.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/reference-runtime/connected-validation/connected-ce36ba9520624c67968062d7428a9324.sqlite": {
+      "bytes": 823296,
+      "evidence_report": "reports/observation-reference-pre-final-connected.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/evidence-reference/work/reference-runtime/connected-validation/adversarial-cae308dae085422287ac1f03976613c7.sqlite": {
+      "bytes": 1064960,
+      "evidence_report": "reports/evidence-reference-v2-adversarial.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/connected-07f9e3f3841046ff938751a5c40b7f67.sqlite": {
+      "bytes": 851968,
+      "evidence_report": "reports/multi-resource-reference-connected.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/reference-runtime/connected-validation/adversarial-e6195b38463848739f147cef8d636b12.sqlite": {
+      "bytes": 552960,
+      "evidence_report": "reports/clean-reference-combined-adversarial.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/operation-reference/work/reference-runtime/connected-validation/connected-f9ebae9a78904f1092fb2fbac9d3c56b.sqlite": {
+      "bytes": 761856,
+      "evidence_report": "reports/operations-reference-connected.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/reference-runtime/connected-validation/adversarial-3ee8aeb7becb48dd97f0f0babbc5f204.sqlite": {
+      "bytes": 1118208,
+      "evidence_report": "reports/observation-reference-v2-adversarial.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/reference-runtime/connected-validation/authority-recovery-bcc9cffaa30e497cb032b0d5fdb4d9c0.sqlite": {
+      "bytes": 1716224,
+      "evidence_report": "reports/observation-reference-v2-authority-recovery.json"
+    },
+    "work/connected-runs/connected-1170d93c55dd40df943964f4afb15124.sqlite": {
+      "bytes": 270336,
+      "evidence_report": "reports/connected-second-run.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/reference-runtime/connected-validation/connected-9d598304a6174a5f9ced8ccf6848f897.sqlite": {
+      "bytes": 335872,
+      "evidence_report": "reports/clean-reference-connected.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/reference-runtime/connected-validation/connected-90d6f90852244802a21a998afd7979c2.sqlite": {
+      "bytes": 823296,
+      "evidence_report": "reports/observation-reference-v2-connected.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/adversarial-64a5b0b0e2a74831bd112a066526c60c.sqlite": {
+      "bytes": 1159168,
+      "evidence_report": "reports/multi-resource-before-diagnostic-restore-adversarial.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/operation-reference/work/reference-runtime/connected-validation/adversarial-27938259c82144959643f9ca32e1b021.sqlite": {
+      "bytes": 1040384,
+      "evidence_report": "reports/operations-reference-adversarial.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/observation-reference/work/reference-runtime/connected-validation/adversarial-ca27b1604ef745f7b9706b6fbb3707ad.sqlite": {
+      "bytes": 1118208,
+      "evidence_report": "reports/observation-reference-pre-final-adversarial.json"
+    },
+    "work/connected-runs/connected-f5e4b4ae7a354eaca502573ed439c9e0.sqlite": {
+      "bytes": 335872,
+      "evidence_report": "reports/connected-lifecycle.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/authority-recovery-validation/authority-recovery-8fac0b0f8b1b4c7aaddb4b2363569c8c.sqlite": {
+      "bytes": 1683456,
+      "evidence_report": "reports/authority-recovery-original.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-e8e27dfccd764ade8cc6b43537494e91.sqlite": {
+      "bytes": 1732608,
+      "evidence_report": "reports/multi-resource-reference-authority-recovery.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/evidence-reference/work/reference-runtime/connected-validation/connected-caaee00461364d24a92d401c3d78c3f9.sqlite": {
+      "bytes": 786432,
+      "evidence_report": "reports/evidence-reference-connected.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/reference-runtime/connected-validation/adversarial-7fd988c9a61f497998bcdaf5482898d5.sqlite": {
+      "bytes": 1064960,
+      "evidence_report": "reports/boundary-reference-adversarial.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/authority-recovery-eaa4061062984cc4a5812a8050721832.sqlite": {
+      "bytes": 1732608,
+      "evidence_report": "reports/multi-resource-before-diagnostic-restore-authority-recovery.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/connected-validation/adversarial-2f8182a9ea7d43e998b16cd0b6e76d3f.sqlite": {
+      "bytes": 1159168,
+      "evidence_report": "reports/multi-resource-reference-adversarial.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/clean-reference/work/reference-runtime/connected-validation/connected-c6c895d61ae54621a18600d331154b4e.sqlite": {
+      "bytes": 335872,
+      "evidence_report": "reports/clean-reference-combined-connected.json"
+    },
+    "work/clean-reference/work/reference-runtime/adversarial-validation/adversarial-c0a090e154a64735a71774a9b4907bba.sqlite": {
+      "bytes": 552960,
+      "evidence_report": "reports/clean-reference-adversarial.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/boundary-reference/work/reference-runtime/connected-validation/connected-23b960bbc4c540a1b27f165638382626.sqlite": {
+      "bytes": 786432,
+      "evidence_report": "reports/boundary-reference-connected.json"
+    },
+    "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/evidence-reference/work/reference-runtime/connected-validation/connected-168f01c8d8404f33a99d6f2b8d199374.sqlite": {
+      "bytes": 786432,
+      "evidence_report": "reports/evidence-reference-v2-connected.json"
+    },
+    "work/connected-runs/adversarial-afc3491bc12f48af8d218334c7571431.sqlite": {
+      "bytes": 552960,
+      "evidence_report": "reports/connected-adversarial.json"
+    }
+  },
+  "unrelated_containers_unchanged": true,
+  "unrelated_container_count": 68,
+  "restart_instructions": [
+    {
+      "environment": {
+        "EA_WORKSPACE": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference"
+      },
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "restore"
+      ]
+    }
+  ],
+  "limits": "Graceful shutdown and retained local state verified; no backup or disk-loss recovery claim."
+}

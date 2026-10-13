@@ -1,0 +1,102 @@
+{
+  "review_type": "INDEPENDENT_RESTORE_DIAGNOSTIC_REVIEW",
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "authorizes_execution": false,
+  "completed_at": "2026-10-13T15:48:40.886964+00:00",
+  "scope": "Read-only source review, eight direct Python cryptographic/client probes and existing UNIT regressions. This review did not start, stop or restart services and does not replace the separately running deployment validation.",
+  "findings": [],
+  "conclusion": "No blocking correctness issue found in the reviewed change. Snapshot retention accepts an expired but authentic current credential without treating it as usable authority.",
+  "verified_boundaries": [
+    "Installer-managed public key remains the trust anchor; the remote response cannot select its own trusted signer.",
+    "require_valid=False still runs _snapshot and verify_envelope: signature, exact agent, canonical shape, bound revision, all wire credential/scope fields and stored ACTIVE status remain checked.",
+    "Canonical GetAgentPassport reads the active pointer, credential and current revision under one service read lock; poisoned state fails unavailable.",
+    "ConnectedRuntime.authority() still calls PassportClient.current() with default require_valid=True; admission/commit use that path and retain local credential/scope expiry checks.",
+    "The restore report explicitly sets authorizes_execution=false and describes credential retention as diagnostics."
+  ],
+  "caveats": [
+    "The diagnostic call intentionally skips VerifyPassport, including expiry and registry eligibility checks. Stored ACTIVE pointer status must not be read as currently valid permission.",
+    "An empty NOT_FOUND aggregate carries a revision asserted by the trusted local service; it contains no signed active credential.",
+    "This verifies same-host persistence across restart. It does not establish backups, disk-loss recovery, independent-host installation or authorization at a later time.",
+    "Freshness relies on the configured trusted loopback service and local host assumptions; the old signature alone is not proof of current authority."
+  ],
+  "verification": {
+    "checks": [
+      {
+        "check": "expired_current_signed_snapshot_available_without_validity_rpc",
+        "passed": true,
+        "expires_ts": 2000,
+        "comparison_now_ms": 1000000
+      },
+      {
+        "check": "default_current_still_requires_validity_rpc_and_rejects_expiry",
+        "passed": true
+      },
+      {
+        "check": "execution_authority_path_keeps_default_validity_requirement",
+        "passed": true
+      },
+      {
+        "check": "diagnostic_bad_signature_rejected",
+        "passed": true,
+        "reason": "INVALID_CANONICAL_AUTHORITY"
+      },
+      {
+        "check": "diagnostic_unpinned_key_rejected",
+        "passed": true,
+        "reason": "INVALID_CANONICAL_AUTHORITY"
+      },
+      {
+        "check": "diagnostic_current_revision_mismatch_rejected",
+        "passed": true,
+        "reason": "INVALID_CANONICAL_AUTHORITY"
+      },
+      {
+        "check": "diagnostic_wire_status_revoked_rejected",
+        "passed": true,
+        "reason": "REVOKED_AUTHORITY"
+      },
+      {
+        "check": "diagnostic_wire_scope_mismatch_rejected",
+        "passed": true,
+        "reason": "INVALID_CANONICAL_AUTHORITY"
+      }
+    ],
+    "passed_direct_probes": 8,
+    "existing_test_command": [
+      "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/ledger-venv/bin/python",
+      "-m",
+      "pytest",
+      "tests/test_passport_client.py",
+      "tests/test_connected_security.py",
+      "-q"
+    ],
+    "existing_tests_passed": 19,
+    "exit_code": 0,
+    "sources_stable": true,
+    "total_executed_checks_and_tests": 27
+  },
+  "source_hashes_before": {
+    "deploy/reference/validate_restore.py": "sha256:736fe5309698ec5c56ec13f8d974cae8644886150bf90b1e48a358f6c963aa80",
+    "tools/validate_connected.py": "sha256:88d8fd6688b79164ae2f39e8f03eeb5efed47e130e47b2faef209bdb32da0865",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "tests/test_passport_client.py": "sha256:d86ff13cf90f3fdae60f68de7ab85af51d1ca55777245c72478d531a361153b7",
+    "tests/test_connected_security.py": "sha256:845dae0a80d6eb3735a97f3d446d13f1bb82ab3d62009a98848551560aaef051"
+  },
+  "source_hashes": {
+    "deploy/reference/validate_restore.py": "sha256:736fe5309698ec5c56ec13f8d974cae8644886150bf90b1e48a358f6c963aa80",
+    "tools/validate_connected.py": "sha256:88d8fd6688b79164ae2f39e8f03eeb5efed47e130e47b2faef209bdb32da0865",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
+    "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
+    "tests/test_passport_client.py": "sha256:d86ff13cf90f3fdae60f68de7ab85af51d1ca55777245c72478d531a361153b7",
+    "tests/test_connected_security.py": "sha256:845dae0a80d6eb3735a97f3d446d13f1bb82ab3d62009a98848551560aaef051"
+  },
+  "canonical_source_review_hashes": {
+    "work/passport-track/internal/service/service.go": "sha256:3503b5de6c693023db9ffd01e02d89a9fa5a5992c72719cb5d1410cd953df694",
+    "work/passport-track/internal/grpc/server.go": "sha256:95b67a7ab1fad133d9d0ce65e43710dbb1031cba300049a1d5d2b9d20275248e"
+  },
+  "probe_script_sha256": "sha256:0b8c759c63f101637a543fd496958b7714dc0cf16633ef7f1d78cd4746345c27"
+}

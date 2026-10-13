@@ -1,0 +1,69 @@
+{
+  "started_at": "2026-10-13T15:33:40.352627+00:00",
+  "workspace": "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference",
+  "commands": [
+    {
+      "stage": "start",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "start"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "policy",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/validate_policy.py",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/multi-policy.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "services",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "validate-services",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/multi-services.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "connected",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "validate-connected",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/multi-connected.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "adversarial",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "validate-adversarial",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/multi-adversarial.json"
+      ],
+      "exit_code": 0
+    },
+    {
+      "stage": "authority_recovery",
+      "argv": [
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/ledger-venv/bin/python",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/outputs/earned-authority-kit/deploy/reference/reference.py",
+        "validate-authority-recovery",
+        "--report",
+        "/Users/jkershaw/Documents/Codex/2026-10-09/i-v/work/multi-resource-reference/work/reference-runtime/multi-authority-recovery.json"
+      ],
+      "exit_code": 1
+    }
+  ]
+}

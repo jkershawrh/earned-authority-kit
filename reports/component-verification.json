@@ -1,42 +1,45 @@
 {
   "scope": "LOCAL_COMPONENT_TESTS_AND_CANONICAL_IN_PROCESS_ADAPTERS",
-  "started_at_ms": 1791610800179,
-  "finished_at_ms": 1791610815790,
-  "tests_run": 437,
+  "started_at_ms": 1791905525892,
+  "finished_at_ms": 1791905551153,
+  "tests_run": 514,
   "failures": 0,
   "errors": 0,
   "skipped": 0,
   "exit_code": 0,
   "source_hashes_before": {
     "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
-    "earned_authority/authority_journal.py": "sha256:289d449b197f49b94372a43e6022e0274c8971ec3f3acb94fed03ebf8b47d1af",
+    "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
     "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
-    "earned_authority/connected.py": "sha256:bec79d5495744611a4d2c539e76ca7e8824b0f15ab649f2063ed8d775843796c",
+    "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
     "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
     "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
     "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
     "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
     "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
     "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
     "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
-    "earned_authority/wire_contracts.py": "sha256:6f81d2809c367eb882d0eb78e70fad540ca75458f773a3d66d5f6ee66bb53c5c",
+    "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
     "tests/test_attempt_checks.py": "sha256:ed71a1981280a9d4988bf8b88d9cdc9fe0fae52c4f46858231480c4cf82c0b1d",
     "tests/test_authority_journal.py": "sha256:212c83084dabcda38979b1e5a651f7ff2f683319761de084ea68dabf7be3b30c",
-    "tests/test_authority_observations.py": "sha256:41db09cd31a82169a436611bb7a198cc1e095e9f22ae6e29158607e0929d0664",
-    "tests/test_connected_binding.py": "sha256:e60d9378ade1725c7dd858529b2f3b2696181c583d85d8edc064e408288f4ce5",
-    "tests/test_connected_evidence.py": "sha256:b558926ae3fbb2b55a64fd57956a10d2e7e4fd33d2ce4ef360eed1477e1ad21a",
-    "tests/test_connected_security.py": "sha256:26bed459d5180330404f2937aa2045cc843be058ff048f4870b55b9eef170a77",
+    "tests/test_authority_observations.py": "sha256:772677efcc28d42cce20eb3d04fcde35b80bd18762973ea53eb20efd10696812",
+    "tests/test_connected_binding.py": "sha256:fed6280491e8be459593c21bf08df7e720bc34870e6937fc46a907c5b9d5e04a",
+    "tests/test_connected_evidence.py": "sha256:d390ede7119b60249d8dc4d6114700ef44f6edd6f774d5d925ed1629feff8e1e",
+    "tests/test_connected_security.py": "sha256:845dae0a80d6eb3735a97f3d446d13f1bb82ab3d62009a98848551560aaef051",
     "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
     "tests/test_evidence_admission.py": "sha256:47c59f09d7a8cf3236e9e46f0581b7c1fb9c5e809329316e280252da613c31f9",
     "tests/test_evidence_boundary.py": "sha256:403f53cb0b9a6fbd00a94688bbde80b43a720e73028255e4cfa4b0bd8cf4a5e0",
-    "tests/test_evidence_wire.py": "sha256:df555f550c4d5e1ef4303ef573ae30eda53fc513625ab617787634249bf3c245",
+    "tests/test_evidence_wire.py": "sha256:f1307829d72eeecb2a7feb87a5a9e904c246910e5275c99a247c178e2cc4db85",
     "tests/test_execution_boundary.py": "sha256:1811ef8b07274fc78b561e66923bf0850e6b6ff916e1bd40135b464cb916ba11",
     "tests/test_hold_diagnostics.py": "sha256:b4709f4388a917e7c091a030ba36a3fe5c40df21b07a5e5eb2d554ef8e2af4b1",
     "tests/test_ledger_client.py": "sha256:6a05dce90f5dfa0627c188000ad12951dbbb96e7df7f7f149cd4e640438765f2",
     "tests/test_lifecycle_bdd.py": "sha256:a376b2d47c059aea4ae5ffc79ef007eb9eff7eed1964702ec643a564c4866cdc",
+    "tests/test_multi_grant_journal.py": "sha256:0d9365d819736eb242586800a51389462e36484f4b7c604c2892c621ad259536",
+    "tests/test_multi_resource_grants.py": "sha256:7721718b9784f1c45c835d86dfe598fdbd07de83fd6405df1e5e003d0ab4d8f0",
     "tests/test_passport_client.py": "sha256:d86ff13cf90f3fdae60f68de7ab85af51d1ca55777245c72478d531a361153b7",
     "tests/test_passport_operations.py": "sha256:7e158bc68d3e548f6f0756e758ff904ead8acbf2f5a2a9f79b4d7db777f6cf80",
-    "tests/test_policy_windows.py": "sha256:5fe2fd527931cafe1eb28dbf68d11d7b210500276f2da5e039ae0048a49be8b5",
+    "tests/test_policy_windows.py": "sha256:24673e074d34153bc8452ede830a459ae4d950ad17f563cb89ab0d1e6db7cddd",
     "tests/test_qualification_client.py": "sha256:fa875d69b98440ce13545e17517f986cc4c045cbecf214c316cbe34bde9392b1",
     "tests/test_reconciliation_wire.py": "sha256:b9cb6efee8f9afae333a327b76e6651c7dce06f5064d9768de48ba8996d69d6d",
     "tests/test_rubric.py": "sha256:845e476cc97af2be8c4f913a60b1cae6ae76f0a0c81a217f4b581c5712a213db",
@@ -70,34 +73,37 @@
   },
   "source_hashes": {
     "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
-    "earned_authority/authority_journal.py": "sha256:289d449b197f49b94372a43e6022e0274c8971ec3f3acb94fed03ebf8b47d1af",
+    "earned_authority/authority_journal.py": "sha256:d36e2d0f54a5af2faf46b659799b96c60884167e7beb50622b9b9fe840db37b1",
     "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
-    "earned_authority/connected.py": "sha256:bec79d5495744611a4d2c539e76ca7e8824b0f15ab649f2063ed8d775843796c",
+    "earned_authority/connected.py": "sha256:39ec6ab660f1d9501db1e041340bfa1c47e6e61d306108852829c3344b0284f2",
     "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
     "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:0cb1faf94ae1aa42a62528bd99c827192c9e7c16ab330bce05e55dadd3f3ca0e",
     "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
     "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
     "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
     "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
     "earned_authority/runtime.py": "sha256:74ed8a439661e981a956ff95906ea72847b595a2d3e4e1846695c3946ba1a002",
-    "earned_authority/wire_contracts.py": "sha256:6f81d2809c367eb882d0eb78e70fad540ca75458f773a3d66d5f6ee66bb53c5c",
+    "earned_authority/wire_contracts.py": "sha256:c61f6d373a20d9ac626b73535fdb856dd68e20f11d7c6b7443e782217c325508",
     "tests/test_attempt_checks.py": "sha256:ed71a1981280a9d4988bf8b88d9cdc9fe0fae52c4f46858231480c4cf82c0b1d",
     "tests/test_authority_journal.py": "sha256:212c83084dabcda38979b1e5a651f7ff2f683319761de084ea68dabf7be3b30c",
-    "tests/test_authority_observations.py": "sha256:41db09cd31a82169a436611bb7a198cc1e095e9f22ae6e29158607e0929d0664",
-    "tests/test_connected_binding.py": "sha256:e60d9378ade1725c7dd858529b2f3b2696181c583d85d8edc064e408288f4ce5",
-    "tests/test_connected_evidence.py": "sha256:b558926ae3fbb2b55a64fd57956a10d2e7e4fd33d2ce4ef360eed1477e1ad21a",
-    "tests/test_connected_security.py": "sha256:26bed459d5180330404f2937aa2045cc843be058ff048f4870b55b9eef170a77",
+    "tests/test_authority_observations.py": "sha256:772677efcc28d42cce20eb3d04fcde35b80bd18762973ea53eb20efd10696812",
+    "tests/test_connected_binding.py": "sha256:fed6280491e8be459593c21bf08df7e720bc34870e6937fc46a907c5b9d5e04a",
+    "tests/test_connected_evidence.py": "sha256:d390ede7119b60249d8dc4d6114700ef44f6edd6f774d5d925ed1629feff8e1e",
+    "tests/test_connected_security.py": "sha256:845dae0a80d6eb3735a97f3d446d13f1bb82ab3d62009a98848551560aaef051",
     "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
     "tests/test_evidence_admission.py": "sha256:47c59f09d7a8cf3236e9e46f0581b7c1fb9c5e809329316e280252da613c31f9",
     "tests/test_evidence_boundary.py": "sha256:403f53cb0b9a6fbd00a94688bbde80b43a720e73028255e4cfa4b0bd8cf4a5e0",
-    "tests/test_evidence_wire.py": "sha256:df555f550c4d5e1ef4303ef573ae30eda53fc513625ab617787634249bf3c245",
+    "tests/test_evidence_wire.py": "sha256:f1307829d72eeecb2a7feb87a5a9e904c246910e5275c99a247c178e2cc4db85",
     "tests/test_execution_boundary.py": "sha256:1811ef8b07274fc78b561e66923bf0850e6b6ff916e1bd40135b464cb916ba11",
     "tests/test_hold_diagnostics.py": "sha256:b4709f4388a917e7c091a030ba36a3fe5c40df21b07a5e5eb2d554ef8e2af4b1",
     "tests/test_ledger_client.py": "sha256:6a05dce90f5dfa0627c188000ad12951dbbb96e7df7f7f149cd4e640438765f2",
     "tests/test_lifecycle_bdd.py": "sha256:a376b2d47c059aea4ae5ffc79ef007eb9eff7eed1964702ec643a564c4866cdc",
+    "tests/test_multi_grant_journal.py": "sha256:0d9365d819736eb242586800a51389462e36484f4b7c604c2892c621ad259536",
+    "tests/test_multi_resource_grants.py": "sha256:7721718b9784f1c45c835d86dfe598fdbd07de83fd6405df1e5e003d0ab4d8f0",
     "tests/test_passport_client.py": "sha256:d86ff13cf90f3fdae60f68de7ab85af51d1ca55777245c72478d531a361153b7",
     "tests/test_passport_operations.py": "sha256:7e158bc68d3e548f6f0756e758ff904ead8acbf2f5a2a9f79b4d7db777f6cf80",
-    "tests/test_policy_windows.py": "sha256:5fe2fd527931cafe1eb28dbf68d11d7b210500276f2da5e039ae0048a49be8b5",
+    "tests/test_policy_windows.py": "sha256:24673e074d34153bc8452ede830a459ae4d950ad17f563cb89ab0d1e6db7cddd",
     "tests/test_qualification_client.py": "sha256:fa875d69b98440ce13545e17517f986cc4c045cbecf214c316cbe34bde9392b1",
     "tests/test_reconciliation_wire.py": "sha256:b9cb6efee8f9afae333a327b76e6651c7dce06f5064d9768de48ba8996d69d6d",
     "tests/test_rubric.py": "sha256:845e476cc97af2be8c4f913a60b1cae6ae76f0a0c81a217f4b581c5712a213db",
@@ -1264,6 +1270,314 @@
       "outcome": "PASS"
     },
     {
+      "test": "tests/test_multi_grant_journal.py::test_exact_full_targets_are_signed_and_isolated_from_caller_mutation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_lost_reply_restart_preserves_complete_targets_and_one_event",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[remove_field]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[remove_target]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[change_context]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[change_id]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[add_target]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_persisted_target_metadata_cannot_be_rebound_even_by_state_transition[reorder]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_unsigned_stored_target_tamper_blocks_recovery",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_historical_operation_without_targets_stays_without_targets",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_existing_legacy_record_cannot_be_enriched_with_invented_targets",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[not_list]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[empty]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[duplicate_id]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[missing_id]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[missing_full_field]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[wrong_skill]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[missing_anchor]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[wrong_anchor_qualification]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_invalid_target_description_never_persists_an_intent[grant_operation]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_targets_must_exactly_describe_the_complete_prior_skill[missing_sibling]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_targets_must_exactly_describe_the_complete_prior_skill[invented_sibling]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_targets_must_exactly_describe_the_complete_prior_skill[changed_resource]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_targets_must_exactly_describe_the_complete_prior_skill[changed_scope_id]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_targets_must_exactly_describe_the_complete_prior_skill[missing_scope_id]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_targets_must_exactly_describe_the_complete_prior_skill[changed_expiry]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_targets_must_exactly_describe_the_complete_prior_skill[changed_qualification]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_targets_must_exactly_describe_the_complete_prior_skill[extra_field]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_targets_must_exactly_describe_the_complete_prior_skill[wrong_prior_revision]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_targets_must_exactly_describe_the_complete_prior_skill[wrong_prior_passport]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_resulting_scope_set_must_remove_targets_and_preserve_other_live_grants[retained_target]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_resulting_scope_set_must_remove_targets_and_preserve_other_live_grants[missing_live_survivor]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_resulting_scope_set_must_remove_targets_and_preserve_other_live_grants[invented_survivor]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_resulting_scope_set_must_remove_targets_and_preserve_other_live_grants[changed_survivor]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_resulting_scope_set_must_remove_targets_and_preserve_other_live_grants[extended_survivor]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_resulting_scope_set_must_remove_targets_and_preserve_other_live_grants[changed_outer_action]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_resulting_scope_set_must_remove_targets_and_preserve_other_live_grants[changed_outer_resource]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_resulting_scope_set_must_remove_targets_and_preserve_other_live_grants[extra_constraints]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_resulting_scope_set_must_remove_targets_and_preserve_other_live_grants[duplicate_survivor]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_resulting_scope_set_must_remove_targets_and_preserve_other_live_grants[revoke_with_live_survivor]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_complete_target_set_may_start_in_any_order_but_signed_order_is_preserved",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_revoke_can_drop_expired_unrelated_grant",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_containing_lifetimes_cannot_shorten_survivor_absolute_expiry[scope_ttl]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_containing_lifetimes_cannot_shorten_survivor_absolute_expiry[passport_ttl]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_containing_lifetimes_cannot_shorten_survivor_absolute_expiry[zero_scope_fallback]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_zero_fallback_and_scope_cap_accept_a_sufficient_passport_ttl[0]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_zero_fallback_and_scope_cap_accept_a_sufficient_passport_ttl[600]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_zero_fallback_and_scope_cap_accept_a_sufficient_passport_ttl[601]",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_grant_journal.py::test_ceil_safe_replacement_preserves_exact_expiry_at_fractional_second",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_add_resource_preserves_full_original_binding_and_expiry",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_audit_all_good_distinct_qualifications",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_audit_bad_second_qualification_removes_all_siblings",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_both_resources_execute_with_their_exact_grant",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_command_cannot_borrow_other_resource_grant",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_complete_wire_export_has_both_grants_qualifications_and_attempts",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_concurrent_expected_revision_has_one_winner",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_delayed_replaced_anchor_does_not_remove_sibling",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_digest_and_outer_scope_mismatches_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_duplicate_grant_scope_and_slot_denied",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_exact_selection_rejects_wrong_dimensions",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_hold_diagnostic_covers_each_removed_resource",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_hold_diagnostic_requires_exact_typed_context",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_incomplete_or_invalid_withdrawal_anchor_cannot_revoke",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_legacy_queue_migrates_without_losing_binding",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_lost_response_restart_recovers_both_without_double_revision",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_noninteger_inner_expiry_cannot_hide_behind_outer_cap",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_old_executable_retains_exact_revision_denial",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_procedure_revision_includes_grant_selection_source",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_reevaluate_holds_both_distinct_qualifications",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_reevaluation_cannot_weaken_confirmed_failure_during_outage",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_same_slot_replaces_only_that_resource",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_skill_only_lookup_denies_ambiguity",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_skill_wide_revoke_preserves_other_skill",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_stale_update_then_fresh_recompute_preserves_release_revocation",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_two_queued_causes_retained_when_one_anchor_replaced",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_typed_context_does_not_equate_boolean_and_integer",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_multi_resource_grants.py::MultiResourceGrants::test_version_change_cannot_coexist_in_one_logical_slot",
+      "outcome": "PASS"
+    },
+    {
       "test": "tests/test_passport_client.py::PassportConsumer::test_active_read_revision_mismatch_denied",
       "outcome": "PASS"
     },
@@ -1935,6 +2249,14 @@
     },
     "test_lifecycle_bdd": {
       "count": 52,
+      "status": "PASS"
+    },
+    "test_multi_grant_journal": {
+      "count": 49,
+      "status": "PASS"
+    },
+    "test_multi_resource_grants": {
+      "count": 28,
       "status": "PASS"
     },
     "test_passport_client": {
