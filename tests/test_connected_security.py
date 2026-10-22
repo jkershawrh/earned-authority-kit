@@ -81,6 +81,7 @@ class PassportVerificationSnapshotBoundary(unittest.TestCase):
         self.client = PassportClient.__new__(PassportClient)
         self.client.grpc = grpc
         self.client.public_key = pem
+        self.client.historical_public_keys = ()
         self.client.timeout = 1
         self.client.pb = SimpleNamespace(GetAgentPassportRequest=SimpleNamespace, VerifyPassportRequest=SimpleNamespace)
         self.client.stub = SimpleNamespace(GetAgentPassport=RPCCall((SimpleNamespace(passport=self.passport), MetadataCall(self.payload))))

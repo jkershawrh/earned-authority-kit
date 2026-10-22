@@ -50,6 +50,10 @@ def grants_for_skill(authority, skill):
     return tuple(g for g in iter_grants(authority) if g['skill'] == skill)
 
 
+def has_skill(authority, skill):
+    return bool(grants_for_skill(authority, skill))
+
+
 def grant_by_id(authority, grant_id):
     return next((g for g in iter_grants(authority) if g['grant_id'] == grant_id), None)
 
