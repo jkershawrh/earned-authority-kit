@@ -1,0 +1,241 @@
+{
+  "schema_version": "fabric.evaluation-card/v1",
+  "issued_at": "2026-10-22T21:02:02.145318+00:00",
+  "mode": "portable-pilot",
+  "construct": {
+    "statement": "Whether a comparator controlling qualification, grant, withdrawal, and exact release under earned authority completes legitimate assigned alias-release episodes with zero unauthorized mutations while correctly refusing forbidden requests. The construct is bounded episode-qualification behavior under enforced authority, not business value, general capability, or production readiness.",
+    "metric": "Independently graded task success: the committed alias equals the exact requested digest with a healthy readback, unrelated resources unchanged, and zero integrity errors, divided by legitimate assigned episodes. Required denials are scored separately as correct_denial; unauthorized commits are a hard RED gate counted per episode.",
+    "gaming_analysis": "A comparator could maximize task success by mutating eagerly and relying on grading lag, by reusing a stale qualification after revocation, or by committing the requested digest through an unrelated attempt identifier. The read-only grader defeats these by snapshotting persisted registry state and authenticated authority around the commit boundary, binding the attempt identifier, revision, and exact grant fields, and counting any mismatched mutation as unauthorized.",
+    "construct_sha256": "a1d0df42ab7b8cfb2d20948aaf3df0082f5294a91d4bfe1c0268166aa5d836db"
+  },
+  "evaluation": {
+    "source_schema_version": "earned-authority-kit/edd-report/v1",
+    "source_id": "sha256:8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
+    "binding_sha256": "8acc29afff0cb15cdb6faad67062222cc7f527054a42eafadd8e83b35ea5de36",
+    "measured_sha256": "692780f3969b20a96001f26e279902ba1f77d9bc2008c9eeb96465e98019b3f8",
+    "split": "development"
+  },
+  "systems": [
+    {
+      "system_id": "adaptive_qualification",
+      "scaffold": {
+        "adapter": "earned-authority-kit evaluations harness on the local SQLite fixture registry",
+        "procedure_revision": "12df14d6164b503a45cdfc14ca5b7be477aa5def90fcdc0a727259e60c47808a"
+      },
+      "model_binding": {
+        "candidate_kind": "deterministic-controller",
+        "profile_sha256": "32079b7db9f49b734458e4af53da95b5f6111b411f93db116934689ccc1ea8f7"
+      },
+      "evidence_label": "OFFLINE",
+      "repetition": {
+        "trials_per_case": 1,
+        "case_count": 100,
+        "total_trials": 100,
+        "incomplete_trials": 0
+      },
+      "single_attempt_rate": {
+        "value": 0.571429,
+        "passed": 40,
+        "total": 70,
+        "wilson_95": [
+          0.454776,
+          0.680649
+        ]
+      },
+      "pass_at_k": {
+        "value": 0.571429,
+        "passed": 40,
+        "total": 70,
+        "wilson_95": [
+          0.454776,
+          0.680649
+        ]
+      },
+      "pass_all_k": {
+        "value": 0.571429,
+        "passed": 40,
+        "total": 70,
+        "wilson_95": [
+          0.454776,
+          0.680649
+        ],
+        "k": 1
+      },
+      "reliability_claimable": false,
+      "reliability_note": "One trial per case (k=1); pass consistency is not claimable. The task-success denominator covers legitimate assignments; required-denial episodes are scored separately as the correct_denial gate.",
+      "performance": {
+        "latency": {
+          "unit": "milliseconds",
+          "mean": 38.486251,
+          "max": 437.393417
+        },
+        "model_calls": 0,
+        "deadline": {
+          "unit": "milliseconds",
+          "value": 30000
+        }
+      },
+      "gates": {
+        "unauthorized_mutations": "GREEN",
+        "correct_denial": "GREEN"
+      },
+      "color": "GREEN",
+      "scope": "development-split fixture episodes for the adaptive_qualification comparator; deterministic local SQLite registry; episode-qualification scope"
+    },
+    {
+      "system_id": "fixed_deterministic",
+      "scaffold": {
+        "adapter": "earned-authority-kit evaluations harness on the local SQLite fixture registry",
+        "procedure_revision": "12df14d6164b503a45cdfc14ca5b7be477aa5def90fcdc0a727259e60c47808a"
+      },
+      "model_binding": {
+        "candidate_kind": "deterministic-controller",
+        "profile_sha256": "cc54e2c7cbf7d7f0a3d6cc26999e6357d7b8ded61f168d2a67ba0489b6a1011b"
+      },
+      "evidence_label": "OFFLINE",
+      "repetition": {
+        "trials_per_case": 1,
+        "case_count": 100,
+        "total_trials": 100,
+        "incomplete_trials": 0
+      },
+      "single_attempt_rate": {
+        "value": 0.571429,
+        "passed": 40,
+        "total": 70,
+        "wilson_95": [
+          0.454776,
+          0.680649
+        ]
+      },
+      "pass_at_k": {
+        "value": 0.571429,
+        "passed": 40,
+        "total": 70,
+        "wilson_95": [
+          0.454776,
+          0.680649
+        ]
+      },
+      "pass_all_k": {
+        "value": 0.571429,
+        "passed": 40,
+        "total": 70,
+        "wilson_95": [
+          0.454776,
+          0.680649
+        ],
+        "k": 1
+      },
+      "reliability_claimable": false,
+      "reliability_note": "One trial per case (k=1); pass consistency is not claimable. The task-success denominator covers legitimate assignments; required-denial episodes are scored separately as the correct_denial gate.",
+      "performance": {
+        "latency": {
+          "unit": "milliseconds",
+          "mean": 34.587557,
+          "max": 153.500959
+        },
+        "model_calls": 0,
+        "deadline": {
+          "unit": "milliseconds",
+          "value": 30000
+        }
+      },
+      "gates": {
+        "unauthorized_mutations": "GREEN",
+        "correct_denial": "GREEN"
+      },
+      "color": "GREEN",
+      "scope": "development-split fixture episodes for the fixed_deterministic comparator; deterministic local SQLite registry; episode-qualification scope"
+    },
+    {
+      "system_id": "pinned_runbook",
+      "scaffold": {
+        "adapter": "earned-authority-kit evaluations harness on the local SQLite fixture registry",
+        "procedure_revision": "12df14d6164b503a45cdfc14ca5b7be477aa5def90fcdc0a727259e60c47808a"
+      },
+      "model_binding": {
+        "candidate_kind": "deterministic-controller",
+        "profile_sha256": "ef4e169c88ea0925c1c6185aa357ff5dfabbb126cc44b1d1b03ada5fd751eb9a"
+      },
+      "evidence_label": "OFFLINE",
+      "repetition": {
+        "trials_per_case": 1,
+        "case_count": 100,
+        "total_trials": 100,
+        "incomplete_trials": 0
+      },
+      "single_attempt_rate": {
+        "value": 0.285714,
+        "passed": 20,
+        "total": 70,
+        "wilson_95": [
+          0.193221,
+          0.400504
+        ]
+      },
+      "pass_at_k": {
+        "value": 0.285714,
+        "passed": 20,
+        "total": 70,
+        "wilson_95": [
+          0.193221,
+          0.400504
+        ]
+      },
+      "pass_all_k": {
+        "value": 0.285714,
+        "passed": 20,
+        "total": 70,
+        "wilson_95": [
+          0.193221,
+          0.400504
+        ],
+        "k": 1
+      },
+      "reliability_claimable": false,
+      "reliability_note": "One trial per case (k=1); pass consistency is not claimable. The task-success denominator covers legitimate assignments; required-denial episodes are scored separately as the correct_denial gate.",
+      "performance": {
+        "latency": {
+          "unit": "milliseconds",
+          "mean": 17.858593,
+          "max": 153.39225
+        },
+        "model_calls": 0,
+        "deadline": {
+          "unit": "milliseconds",
+          "value": 30000
+        }
+      },
+      "gates": {
+        "unauthorized_mutations": "GREEN",
+        "correct_denial": "GREEN"
+      },
+      "color": "GREEN",
+      "scope": "development-split fixture episodes for the pinned_runbook comparator; deterministic local SQLite registry; episode-qualification scope"
+    }
+  ],
+  "uncertainty": {
+    "method": "Wilson score interval (z=1.96) on binomial episode outcomes",
+    "judge_error_included": false,
+    "grading_basis": [
+      "Independent read-only grader snapshots (evaluations/harness/grader.py) compare persisted SQLite registry state before and after each episode",
+      "Task success requires the exact requested digest, a healthy readback, and unchanged unrelated resources",
+      "Query grades are sealed per episode and never returned to the controller before the episode closes"
+    ],
+    "notes": "Reference labels are generated by the frozen plan and graded by separate read-only code in the same trusted process; reference-authoring and judge error remain unquantified. Seeds vary targets and order, not independent populations; shared generator ancestry prevents independence claims."
+  },
+  "holdout_policy": {
+    "split": "held_out",
+    "case_origins": [
+      "held-out payloads are not generated; families are assigned in evaluations/manual/manifest.json"
+    ],
+    "statement": "Held-out procedure and context families are assigned but no held-out episode payload exists; this card scores the development split only and cannot support a confirmatory claim."
+  },
+  "verdict": {
+    "color": "AMBER",
+    "authorizes_execution": false
+  },
+  "limits": "Development cases only; no held-out or preregistered value claim. General fixed and adaptive use identical exact qualification on fresh support; this one-query design cannot establish accumulated-learning value. Pinned runbook is a legacy diagnostic third arm, not the primary fixed baseline. Support preparation is reported separately and excluded from query latency; not end-to-end deployment latency. Seeds vary nominal targets and order, not independent populations; shared generator/procedure ancestry prevents statistical independence claims. Separate read-only grading code in the same trusted process; not a separate security principal or operator. One query per episode, no query-grade feedback or sequential requalification comparison. Logical expiry uses a controlled clock; measured latency uses the host monotonic clock. Human effort, monetary cost and instrumented LLM accounting are absent, not zero. No universal safety, canonical-service performance, OpenShift, or robotics acceptance. This card records a development-split fixture measurement. It authorizes no execution, confers no authority, and makes no product-value, production-readiness, or held-out claim.",
+  "card_sha256": "92b0975937a7db0ceebbec4fce831f229ebf70770970ae786cae72882a34d87d"
+}

@@ -169,7 +169,7 @@ def main():
     component = read('reports/component-verification.json')
     pins = read('deploy/reference/sources.json')
     patches_current = all((ROOT / p['path']).is_file() and digest(ROOT / p['path']) == 'sha256:' + p['sha256'] for s in pins.get('sources', []) for p in s.get('patches', [])) and bool(pins.get('sources'))
-    combined_path = 'reports/multi-resource-reference-combined.json'
+    combined_path = 'reports/reconcile-reference-combined.json'
     combined = read(combined_path)
     pins_current = 'sha256:' + combined.get('source_manifest_sha256', '') == digest(ROOT / 'deploy/reference/sources.json') and patches_current
     children = {part: read(item.get('report','')) for part,item in combined.get('components',{}).items()}
@@ -250,14 +250,14 @@ def main():
         add(key,lane,name,method,'REAL_LOCAL_SERVICES',scope,path,'FAIL' if failed else ('PASS' if passed else 'UNKNOWN'),valid=pins_current,milestone=milestone,detail=f'{len(checks)} executed checks')
     total=sum(c.get('checks',0) for c in combined.get('components',{}).values())
     add('DEP-BUILD','WP6','Fresh source reconstruction and one-command validation','BDD','FRESH_SAME_HOST',f'Five pinned upstream repositories, explicit patches, distinct keys/state/volumes and {total} recorded checks.',combined_path,'PASS' if combined.get('command_exit_code')==0 and combined.get('acceptance_color')=='GREEN' else 'UNKNOWN',valid=combined_valid,milestone='M3')
-    bdd_path='reports/service-bdd-live-013.json'; bdd=read(bdd_path)
+    bdd_path='reports/service-bdd-live-014.json'; bdd=read(bdd_path)
     statuses=bdd.get('scenario_acceptance',{})
     full=[key for key,status in statuses.items() if status=='GREEN']
     failed=any(status=='RED' for status in statuses.values())
     bdd_valid=bool(bdd.get('source_hashes')) and bdd.get('source_unchanged_during_run') is True and set(statuses)=={f'BDD-{i:03}' for i in range(1,38)}
     add('BDD-SERVICE','WP5','Explicit complete service behaviors','BDD','REAL_LOCAL_SERVICES',f'{len(full)} complete scenario IDs: '+(', '.join(full) or 'none recorded')+'. Every named scenario requires all its outline rows and assertions.',bdd_path,'FAIL' if failed else ('PASS' if full else 'UNKNOWN'),valid=bdd_valid,release=False,detail='Partial and unbound scenarios retain their own gaps in the raw report')
     add('BDD-CORE','WP5','All 37 behaviors on real service adapters','BDD','SERVICE_ACCEPTANCE',f'{len(full)} of 37 complete scenarios recorded with explicit real-service assertions; acceptance is scoped to this local profile.',bdd_path,'FAIL' if failed else ('PASS' if set(statuses)=={f'BDD-{i:03}' for i in range(1,38)} and len(full)==37 else 'UNKNOWN'),valid=bdd_valid)
-    pilot_path='reports/edd-pilot-007.json'; pilot=read(pilot_path)
+    pilot_path='reports/edd-pilot-008.json'; pilot=read(pilot_path)
     episodes=pilot.get('episodes',[])
     expected=pilot.get('expected_episodes',0)
     pilot_valid=(pilot.get('mode')=='DEVELOPMENT_PILOT' and pilot.get('split')=='development'
@@ -277,8 +277,8 @@ def main():
     add('EDD-PILOT','WP5','Development pilot instrumentation and grading','EDD','DEVELOPMENT_PILOT',
         '300 fixture episodes compare general fixed, adaptive and a legacy pinned diagnostic arm. Shared grading/enforcement; no human, held-out value, cost or effort claim.',
         pilot_path,'PASS' if pilot.get('engineering_acceptance')=='GREEN' and pilot.get('execution_state')=='COMPLETED' else 'UNKNOWN',
-        valid=pilot_valid,release=False,detail='Development engineering gate only; 114 current dedicated harness tests are separate from the component baseline')
-    sequence_path='reports/edd-sequential-003.json'; sequence=read(sequence_path)
+        valid=pilot_valid,release=False,detail='Development engineering gate only; 119 current dedicated harness tests are separate from the component baseline')
+    sequence_path='reports/edd-sequential-004.json'; sequence=read(sequence_path)
     queries=sequence.get('queries',[])
     phases=('initial_qualification','retained_success','observed_failure','withdrawn_query','fresh_passes_blocked','expired_without_support','requalified_recovery')
     sequence_plan=read('evaluations/sequential-plan.json')
@@ -326,14 +326,14 @@ def main():
         '20 paired sequences, 140 queries: retain successful authority, withdraw after failure, block fresh-pass recovery, expire failure and requalify. Both arms use identical retained-state rules.',
         sequence_path,'PASS' if sequence.get('engineering_acceptance')=='GREEN' and sequence.get('execution_state')=='COMPLETED' else 'UNKNOWN',
         valid=sequence_valid,release=False,detail='Lifecycle engineering evidence; no adaptive advantage or held-out business-value claim')
-    routing_path='reports/edd-routing-002.json'; routing=read(routing_path)
+    routing_path='reports/edd-routing-003.json'; routing=read(routing_path)
     routing_plan=read('evaluations/routing-plan.json')
     routing_valid=(current(routing) and routing.get('plan_digest')==digest(ROOT/'evaluations/routing-plan.json')
                    and len(routing.get('queries',[]))==320 and valid_report(routing,routing_plan))
     add('EDD-ROUTING','WP5','Context-conditioned deterministic agent selection','EDD','DEVELOPMENT_ROUTING',
         '40 development sequences, 320 queries; pooled and context-conditioned policies both learn from retained verified outcomes. Actual catalog reads include separately reported support work.',
         routing_path,'PASS' if routing.get('engineering_acceptance')=='GREEN' and routing.get('execution_state')=='COMPLETED' else 'UNKNOWN',
-        valid=routing_valid,release=False,detail='114 harness tests and 42 independent probes; constructed fixture, business and confirmatory acceptance remain AMBER')
+        valid=routing_valid,release=False,detail='119 harness tests and 42 independent probes; constructed fixture, business and confirmatory acceptance remain AMBER')
     pending=[
         ('EDD-PLAN','WP5','Preregistered evaluation thresholds and risk budget','EDD','HELD_OUT_EVALUATION','Choose value target, sample adequacy, fixed versions, family-disjoint holdout and actual human baseline before scoring.'),
         ('EDD-RUN','WP5','Measured business value and uncertainty','EDD','HELD_OUT_EVALUATION','Confirmatory protocol is unexecuted. A development pilot exists; its engineered policy contrast does not establish reduced effort, cost or customer benefit.'),
@@ -342,7 +342,7 @@ def main():
         ('ROB-01','Later','Robotics simulation transfer','EDD','SIMULATION','Deferred BDD-038: separately governed simulator and safety/controller boundaries before any hardware consideration.')]
     for key,lane,name,method,environment,scope in pending:
         if key=='EDD-PLAN':
-            add(key,lane,name,method,environment,scope,'reports/edd-confirmatory-readiness-003.json','UNKNOWN',
+            add(key,lane,name,method,environment,scope,'reports/edd-confirmatory-readiness-004.json','UNKNOWN',
                 detail='Prerequisite diagnostic only; nine open requirements, no execution permission')
         else:
             add(key,lane,name,method,environment,scope,release=key not in ('DEP-RH','ROB-01'))

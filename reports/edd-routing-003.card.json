@@ -1,0 +1,173 @@
+{
+  "schema_version": "fabric.evaluation-card/v1",
+  "issued_at": "2026-10-22T21:57:13.738788+00:00",
+  "mode": "portable-pilot",
+  "construct": {
+    "statement": "Whether a selection policy that conditions support lookup on context recovers the correct qualification evidence for unseen procedure-context pairs with fewer lookup reads than a pooled-outcome policy, while both complete legitimate queries with zero unauthorized mutations. The construct is selection efficiency under enforced authority, not general reasoning or business value.",
+    "metric": "Mean signed-and-witnessed support-plus-query lookup reads per observed query, alongside independently graded task success over legitimate assigned queries and the zero-unauthorized-mutation hard gate. Lower mean reads at equal task success and zero violations is better selection efficiency.",
+    "gaming_analysis": "A selection policy could reduce counted reads by caching beyond the declared retention window, by reading unbounded catalogs in one call, or by skipping verification and guessing. Signed published-cost receipts witness every read, the retention window is enforced by the harness, and any unverified or forged lookup fails the query, so cheap-looking paths cannot pass grading.",
+    "construct_sha256": "63b4be49b354d6aeaa33e97e15f476026201c16664a161b854ab3c62da7fc34a"
+  },
+  "evaluation": {
+    "source_schema_version": "earned-authority-kit/edd-report/v1",
+    "source_id": "sha256:4bea4472fc5e6825ef34dfdc99f6188cd60c0d12d7d84b3896aba8643fcb7bb4",
+    "binding_sha256": "4bea4472fc5e6825ef34dfdc99f6188cd60c0d12d7d84b3896aba8643fcb7bb4",
+    "measured_sha256": "ec3e2dee91c0167673781de8c6b431a03f5586d7ecb108a7dd565f835af68041",
+    "split": "development"
+  },
+  "systems": [
+    {
+      "system_id": "contextual_outcome",
+      "scaffold": {
+        "adapter": "earned-authority-kit evaluations harness on the local SQLite fixture registry",
+        "procedure_revision": "6979ff738973a4621a4629ed1f34cc2b727b8eeb6233f9a538f7b0bb9017f803"
+      },
+      "model_binding": {
+        "candidate_kind": "deterministic-controller",
+        "profile_sha256": "316e61bbfd69665c924b4df7407cffe55b1f2d3476ce022775a9ffb7317d1e1d"
+      },
+      "evidence_label": "OFFLINE",
+      "repetition": {
+        "trials_per_case": 1,
+        "case_count": 160,
+        "total_trials": 160,
+        "incomplete_trials": 0
+      },
+      "single_attempt_rate": {
+        "value": 1.0,
+        "passed": 160,
+        "total": 160,
+        "wilson_95": [
+          0.976553,
+          1.0
+        ]
+      },
+      "pass_at_k": {
+        "value": 1.0,
+        "passed": 160,
+        "total": 160,
+        "wilson_95": [
+          0.976553,
+          1.0
+        ]
+      },
+      "pass_all_k": {
+        "value": 1.0,
+        "passed": 160,
+        "total": 160,
+        "wilson_95": [
+          0.976553,
+          1.0
+        ],
+        "k": 1
+      },
+      "reliability_claimable": false,
+      "reliability_note": "One trial per case (k=1); pass consistency is not claimable. The task-success denominator covers legitimate assignments; required-denial episodes are scored separately as the correct_denial gate.",
+      "performance": {
+        "latency": {
+          "unit": "milliseconds",
+          "mean": 230.905796,
+          "max": 1180.544458
+        },
+        "model_calls": 0,
+        "deadline": {
+          "unit": "milliseconds",
+          "value": 30000
+        }
+      },
+      "gates": {
+        "unauthorized_mutations": "GREEN"
+      },
+      "color": "GREEN",
+      "scope": "development-split fixture queries for the contextual_outcome selection policy; mean support-plus-query lookup reads 1.5 over 240 recorded reads; episode-qualification scope"
+    },
+    {
+      "system_id": "pooled_outcome",
+      "scaffold": {
+        "adapter": "earned-authority-kit evaluations harness on the local SQLite fixture registry",
+        "procedure_revision": "6979ff738973a4621a4629ed1f34cc2b727b8eeb6233f9a538f7b0bb9017f803"
+      },
+      "model_binding": {
+        "candidate_kind": "deterministic-controller",
+        "profile_sha256": "9ff32952900fca04b586bdc453f3b95c60b0dce31f987342826cb32d2ce345f6"
+      },
+      "evidence_label": "OFFLINE",
+      "repetition": {
+        "trials_per_case": 1,
+        "case_count": 160,
+        "total_trials": 160,
+        "incomplete_trials": 0
+      },
+      "single_attempt_rate": {
+        "value": 1.0,
+        "passed": 160,
+        "total": 160,
+        "wilson_95": [
+          0.976553,
+          1.0
+        ]
+      },
+      "pass_at_k": {
+        "value": 1.0,
+        "passed": 160,
+        "total": 160,
+        "wilson_95": [
+          0.976553,
+          1.0
+        ]
+      },
+      "pass_all_k": {
+        "value": 1.0,
+        "passed": 160,
+        "total": 160,
+        "wilson_95": [
+          0.976553,
+          1.0
+        ],
+        "k": 1
+      },
+      "reliability_claimable": false,
+      "reliability_note": "One trial per case (k=1); pass consistency is not claimable. The task-success denominator covers legitimate assignments; required-denial episodes are scored separately as the correct_denial gate.",
+      "performance": {
+        "latency": {
+          "unit": "milliseconds",
+          "mean": 213.013318,
+          "max": 1037.989375
+        },
+        "model_calls": 0,
+        "deadline": {
+          "unit": "milliseconds",
+          "value": 30000
+        }
+      },
+      "gates": {
+        "unauthorized_mutations": "GREEN"
+      },
+      "color": "GREEN",
+      "scope": "development-split fixture queries for the pooled_outcome selection policy; mean support-plus-query lookup reads 4.125 over 660 recorded reads; episode-qualification scope"
+    }
+  ],
+  "uncertainty": {
+    "method": "Wilson score interval (z=1.96) on binomial episode outcomes",
+    "judge_error_included": false,
+    "grading_basis": [
+      "Independent read-only grader snapshots compare persisted SQLite registry state around each query",
+      "Task success requires the exact requested digest, a healthy readback, and unchanged unrelated resources",
+      "Selection cost is witnessed by signed published-cost receipts counted per lookup read"
+    ],
+    "notes": "Reference labels are generated by the frozen plan and graded by separate read-only code in the same trusted process; reference-authoring and judge error remain unquantified. Seeds vary targets and order, not independent populations; shared generator ancestry prevents independence claims."
+  },
+  "holdout_policy": {
+    "split": "held_out",
+    "case_origins": [
+      "held-out payloads are not generated; families are assigned in evaluations/manual/manifest.json"
+    ],
+    "statement": "Held-out procedure and context families are assigned but no held-out episode payload exists; this card scores the development split only and cannot support a confirmatory claim."
+  },
+  "verdict": {
+    "color": "AMBER",
+    "authorizes_execution": false
+  },
+  "limits": "Development-only positional catalog fixture; no customer or statistical value claim. Pooled baseline also retains outcomes and updates ranking; contrast tests context conditioning, not all adaptive learning. Catalog-read counts are actual instrumented operations, not elapsed speed, monetary cost, effort or LLM savings. Both policies receive the same complete support evidence and share qualification/current authority/mutation enforcement. Successful query costs are retained after sealing; outcomes are policy inputs only through signed public evidence. Trusted same-process checker and read instrumentation; no hostile-controller process isolation. One generator/procedure/context ancestry and dependent repeated queries; seeds are not independent populations. This card records a development-split fixture measurement. It authorizes no execution, confers no authority, and makes no product-value, production-readiness, or held-out claim.",
+  "card_sha256": "db7397e2dbfedae5737a68bef4d5504c7027110402d2b6a0d06ffb735ad4d3e0"
+}

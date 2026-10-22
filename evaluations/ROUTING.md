@@ -12,7 +12,7 @@ These are local fixture receipts, not canonical ledger attestations. Signatures 
 
 Read counts measure nano-agent catalog accesses. Support reads and query reads are reported separately and combined; router, checker, signing and runtime overhead are excluded. Operator effort, monetary cost and instrumented LLM accounting remain unmeasured. No end-to-end speed or savings claim follows from these counts.
 
-Current executable evidence: [routing report](../reports/edd-routing-002.json), [frozen development plan](routing-plan.json), [independent review](../evidence/edd-routing-review.md). The dedicated suite has 114 passing tests; the independent review has 42 passing probes. Initial and intermediate RED reports and regression logs remain preserved. The unchanged 514-test component baseline and earlier 300-episode/140-query scoped controls are separate evidence sets.
+Current executable evidence: [routing report](../reports/edd-routing-003.json) (002 is the prior scoped snapshot; the reconciled tree re-earned the comparison), [frozen development plan](routing-plan.json), [independent review](../evidence/edd-routing-review.md). The dedicated suite has 119 passing tests; the independent review has 42 passing probes. Initial and intermediate RED reports and regression logs remain preserved. The reconciled 522-test component baseline and earlier 300-episode/140-query scoped controls are separate evidence sets.
 
 The next value gate requires a representative real workload, strong domain-specific baselines, a meaningful-effect and risk threshold, independently frozen holdout families and an actual operator comparison. Business, confirmatory, external reproduction, Red Hat deployment and robotics acceptance remain AMBER.
 

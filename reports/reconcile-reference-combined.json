@@ -1,0 +1,136 @@
+{
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "environment": "REAL_LOCAL_SERVICES",
+  "command_exit_code": 0,
+  "command": [
+    "python3",
+    "deploy/reference/reference.py",
+    "restore",
+    "&&",
+    "deploy/reference lifecycle validations on the retained eak-reference workspace (instance ea-arf, port offset 2000)"
+  ],
+  "lifecycle_commands": [
+    {
+      "stage": "policy",
+      "argv": [
+        "deploy/reference/validate_policy.py",
+        "--report",
+        "reports/reconcile-reference-policy.json"
+      ]
+    },
+    {
+      "stage": "services",
+      "argv": [
+        "deploy/reference/reference.py",
+        "validate-services",
+        "--report",
+        "reports/reconcile-reference-services.json"
+      ]
+    },
+    {
+      "stage": "connected",
+      "argv": [
+        "deploy/reference/reference.py",
+        "validate-connected",
+        "--report",
+        "reports/reconcile-reference-connected.json"
+      ]
+    },
+    {
+      "stage": "adversarial",
+      "argv": [
+        "deploy/reference/reference.py",
+        "validate-adversarial",
+        "--report",
+        "reports/reconcile-reference-adversarial.json"
+      ]
+    },
+    {
+      "stage": "authority_recovery",
+      "argv": [
+        "deploy/reference/reference.py",
+        "validate-authority-recovery",
+        "--report",
+        "reports/reconcile-reference-authority-recovery.json"
+      ]
+    },
+    {
+      "stage": "restore",
+      "argv": [
+        "deploy/reference/validate_restore.py",
+        "--prior-report",
+        "reports/reconcile-reference-connected.json",
+        "--report",
+        "reports/reconcile-reference-restore.json"
+      ]
+    },
+    {
+      "stage": "authority_recovery_restored",
+      "argv": [
+        "tools/validate_authority_recovery.py",
+        "--verify-existing-report",
+        "reports/reconcile-reference-authority-recovery.json",
+        "--report",
+        "reports/reconcile-reference-authority-recovery-restored.json"
+      ]
+    }
+  ],
+  "completed_at": "2026-10-22T21:28:39.830394+00:00",
+  "components": {
+    "policy": {
+      "report": "reports/reconcile-reference-policy.json",
+      "status": "GREEN",
+      "source_stable": true
+    },
+    "services": {
+      "report": "reports/reconcile-reference-services.json",
+      "status": "GREEN",
+      "source_stable": true
+    },
+    "connected": {
+      "report": "reports/reconcile-reference-connected.json",
+      "status": "GREEN",
+      "source_stable": true
+    },
+    "adversarial": {
+      "report": "reports/reconcile-reference-adversarial.json",
+      "status": "GREEN",
+      "source_stable": true
+    },
+    "authority_recovery": {
+      "report": "reports/reconcile-reference-authority-recovery.json",
+      "status": "GREEN",
+      "source_stable": true
+    },
+    "restore": {
+      "report": "reports/reconcile-reference-restore.json",
+      "status": "GREEN",
+      "source_stable": true
+    },
+    "authority_recovery_restored": {
+      "report": "reports/reconcile-reference-authority-recovery-restored.json",
+      "status": "GREEN",
+      "source_stable": true
+    }
+  },
+  "artifacts": {
+    "reports/reconcile-reference-policy.json": "sha256:07178cc63b83fdf4e4260f4dd6e73ce0b9230c5bc161fea7b3da805c594e5940",
+    "reports/reconcile-reference-services.json": "sha256:d6482b26183c9ea546ed76a77d8637b28e54e54e97d18a186fe933f61af57467",
+    "reports/reconcile-reference-connected.json": "sha256:c72cd0f02665c45d8c4df70ed8e3472f06623bfac7ca3fde14ba141105696235",
+    "reports/reconcile-reference-adversarial.json": "sha256:104c1494b8c7abc9a46253c88cc1817b0a2389f8abe730a2ef42c66b517d75a3",
+    "reports/reconcile-reference-authority-recovery.json": "sha256:c2b54ecd8fcfbef86a93c842900655e1520c11d684dc34a37d1e519f96a510a6",
+    "reports/reconcile-reference-restore.json": "sha256:f5472747a7f82a0672b02406b6196fed1752a6e234a695306908cc255bddd780",
+    "reports/reconcile-reference-authority-recovery-restored.json": "sha256:9d72b1ae5999998419dc9fa3d4b8469d5fa3f0567b83470f2732fa433d525769"
+  },
+  "source_manifest_sha256": "79a276ff943f70785f34ce2b1c9392dd0164180f00a83f8284c3584e5b0203db",
+  "scope": "Same host; the retained eak-reference workspace (instance ea-arf, port offset 2000) reconstructed by the installer from the pinned upstream sources with the explicit patches, including the historical-issuer patch. The reconciled reconcile/phase2 kit source executed all seven lifecycle validations against the restored stack with retained volumes and keys. This does not replace multi-resource-reference-combined.json, source-a-combined.json or source-b-combined.json, which remain archived evidence of their own sources.",
+  "limits": [
+    "Not a different host or independent human installer",
+    "Retained-state workspace restored by the installer, not a brand-new bootstrap",
+    "No statistical held-out product-value claim",
+    "No backup/disk-loss recovery claim",
+    "No hardware or production deployment claim",
+    "No universal distributed atomicity or safety claim"
+  ]
+}
