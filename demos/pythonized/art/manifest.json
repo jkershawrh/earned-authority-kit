@@ -1,0 +1,110 @@
+[
+  {
+    "id": "performer",
+    "file": "art/performer.png",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "alpha_range": [
+      0,
+      254
+    ],
+    "tool": "built-in image_gen.imagegen",
+    "reference": null
+  },
+  {
+    "id": "arm",
+    "file": "art/arm.png",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "alpha_range": [
+      0,
+      254
+    ],
+    "tool": "built-in image_gen.imagegen",
+    "reference": "performer",
+    "rig": {
+      "shoulder_pivot_normalized": [
+        0.14,
+        0.5
+      ],
+      "elbow_pivot_normalized": [
+        0.39,
+        0.65
+      ],
+      "layering": "native SVG clips render upper and lower arm from one source image; no bitmap alteration"
+    }
+  },
+  {
+    "id": "inspector",
+    "file": "art/inspector.png",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "alpha_range": [
+      0,
+      254
+    ],
+    "tool": "built-in image_gen.imagegen",
+    "reference": "performer"
+  },
+  {
+    "id": "gate",
+    "file": "art/gate.png",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "alpha_range": [
+      0,
+      254
+    ],
+    "tool": "built-in image_gen.imagegen",
+    "reference": "performer"
+  },
+  {
+    "id": "lock",
+    "file": "art/lock.png",
+    "dimensions": [
+      1536,
+      1024
+    ],
+    "alpha_range": [
+      0,
+      254
+    ],
+    "tool": "built-in image_gen.imagegen",
+    "reference": [
+      "performer",
+      "gate"
+    ]
+  },
+  {
+    "id": "shears",
+    "file": "art/shears.png",
+    "dimensions": [
+      1024,
+      1536
+    ],
+    "alpha_range": [
+      0,
+      254
+    ],
+    "tool": "built-in image_gen.imagegen",
+    "reference": [
+      "performer"
+    ],
+    "rig": {
+      "hinge_normalized": [
+        0.53,
+        0.47
+      ],
+      "layers": "two native SVG clipped groups; source PNG unchanged",
+      "cut_event": "acknowledged explicit revoke or applied independently observed FAIL; not UNKNOWN or PASS"
+    }
+  }
+]

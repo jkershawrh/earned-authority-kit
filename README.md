@@ -6,6 +6,12 @@ This kit connects a deterministic procedure's qualification to bounded authority
 
 Start with [the visual roadmap](roadmap.html), [the parallel work plan](docs/ROADMAP.md), [deployment instructions](deploy/reference/README.md) and [scope and remaining gaps](docs/BOUNDARIES.md). **EDD means evaluation-driven development.** The [evaluation protocol](evaluations/README.md) is drafted but unexecuted; it needs a chosen value target, actual human baseline and preregistered sample/risk criteria.
 
+## Pythonized lifecycle demonstration
+
+An original cut-paper animation treatment is available in [demos/pythonized](demos/pythonized/README.md). It follows qualification, bounded policy grant, mutation fencing, independent readback, selective withdrawal and requalification, using the unchanged M1 local runtime in a disposable temporary registry. Custom artwork and native articulated graphics interpret the kit's documented lifecycle.
+
+Run `python3 demos/pythonized/server.py --port 5184`, then open `http://127.0.0.1:5184`. The local fixture label, evidence inspector and recorded-roadmap boundary remain visible. This frontend does not run the connected canonical services or upgrade broader acceptance.
+
 ## Reproduce the reference
 
 Prerequisites, dependency versions, topology and teardown instructions are in [the deployment runbook](deploy/reference/README.md). From this kit directory:
