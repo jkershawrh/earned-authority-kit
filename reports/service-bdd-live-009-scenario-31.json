@@ -1,0 +1,872 @@
+{
+  "run_id": "service-bdd-d51383ff9d0c4a7195818a2707614d0f",
+  "started_at": "2026-10-12T15:59:25.059161+00:00",
+  "execution_state": "COMPLETED_WITH_GAPS",
+  "environment": "REAL_LOCAL_SERVICES_WITH_EXPLICIT_LOCAL_FAULT_CONTROLS",
+  "acceptance_color": "AMBER",
+  "cases": [
+    {
+      "scenario_id": "BDD-031",
+      "case": "default",
+      "requirements": {
+        "feature": "features/concurrency.feature",
+        "line": 33,
+        "background": [],
+        "steps": [
+          "Given an updater read a passport containing \"release-model\" and \"read-health\" at revision 4",
+          "And another request revoked \"release-model\" at revision 5",
+          "When the updater submits its revision-4 replacement adding another \"read-health\" resource",
+          "Then that stale replacement cannot commit as current authority",
+          "And any recomputed replacement preserves the release revocation",
+          "And the unaffected read-health grants remain available"
+        ]
+      },
+      "execution_state": "PASSED",
+      "acceptance_color": "GREEN",
+      "complete_scenario_candidate": true,
+      "limitation": null,
+      "assertions": [
+        {
+          "assertion": "real canonical agent is active",
+          "passed": true,
+          "evidence": {
+            "actual": "ACTIVE",
+            "expected": "ACTIVE"
+          }
+        },
+        {
+          "assertion": "no initial canonical authority before policy-approved grant",
+          "passed": true,
+          "evidence": {
+            "actual": [],
+            "expected": []
+          }
+        },
+        {
+          "assertion": "fresh qualification is eligible: release-model",
+          "passed": true,
+          "evidence": {
+            "actual": "ELIGIBLE",
+            "expected": "ELIGIBLE"
+          }
+        },
+        {
+          "assertion": "fresh qualification is eligible: read-health",
+          "passed": true,
+          "evidence": {
+            "actual": "ELIGIBLE",
+            "expected": "ELIGIBLE"
+          }
+        },
+        {
+          "assertion": "starting canonical authority revision",
+          "passed": true,
+          "evidence": {
+            "actual": 4,
+            "expected": 4
+          }
+        },
+        {
+          "assertion": "selective revoke revision",
+          "passed": true,
+          "evidence": {
+            "actual": 5,
+            "expected": 5
+          }
+        },
+        {
+          "assertion": "stale changed-resource update cannot restore old aggregate",
+          "passed": true,
+          "evidence": {
+            "reason": "REVISION_CONFLICT",
+            "expected_reason": "REVISION_CONFLICT"
+          }
+        },
+        {
+          "assertion": "stale changed-resource update cannot restore old aggregate: independent registry unchanged",
+          "passed": true,
+          "evidence": {
+            "actual": {
+              "registry": {
+                "version": "model-v1",
+                "healthy": true
+              },
+              "mutations": 0
+            },
+            "expected": {
+              "registry": {
+                "version": "model-v1",
+                "healthy": true
+              },
+              "mutations": 0
+            }
+          }
+        },
+        {
+          "assertion": "release remains revoked",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "unaffected original read resource preserved",
+          "passed": true,
+          "evidence": {
+            "actual": "urn:dataset/health",
+            "expected": "urn:dataset/health"
+          }
+        },
+        {
+          "assertion": "original read binding preserved grant_id",
+          "passed": true,
+          "evidence": {
+            "actual": "grant-918624409b2b4f8da73a20de328b14db",
+            "expected": "grant-918624409b2b4f8da73a20de328b14db"
+          }
+        },
+        {
+          "assertion": "original read binding preserved qualification_id",
+          "passed": true,
+          "evidence": {
+            "actual": "qualification-fc20735265284954a8cb231a260b34ce",
+            "expected": "qualification-fc20735265284954a8cb231a260b34ce"
+          }
+        },
+        {
+          "assertion": "original read binding preserved qualification_digest",
+          "passed": true,
+          "evidence": {
+            "actual": "sha256:ae3a9e4633c41b1a8966ad03a93086d35934d6dd6add96bcd586e274915413f0",
+            "expected": "sha256:ae3a9e4633c41b1a8966ad03a93086d35934d6dd6add96bcd586e274915413f0"
+          }
+        },
+        {
+          "assertion": "original read binding preserved policy_digest",
+          "passed": true,
+          "evidence": {
+            "actual": "sha256:cba16c8345271f6ef2ad493e2597bfcb2618b54760185638c6c0e4be912a470e",
+            "expected": "sha256:cba16c8345271f6ef2ad493e2597bfcb2618b54760185638c6c0e4be912a470e"
+          }
+        },
+        {
+          "assertion": "original read binding preserved expires_at_ms",
+          "passed": true,
+          "evidence": {
+            "actual": 1791821065838,
+            "expected": 1791821065838
+          }
+        },
+        {
+          "assertion": "original read binding preserved context",
+          "passed": true,
+          "evidence": {
+            "actual": {
+              "desired_replicas": 1,
+              "environment": "service-bdd-d51383ff9d0c4a7195818a2707614d0f-031-default",
+              "max_replicas": 2,
+              "model_version": "model-v2"
+            },
+            "expected": {
+              "desired_replicas": 1,
+              "environment": "service-bdd-d51383ff9d0c4a7195818a2707614d0f-031-default",
+              "max_replicas": 2,
+              "model_version": "model-v2"
+            }
+          }
+        },
+        {
+          "assertion": "original read binding preserved action",
+          "passed": true,
+          "evidence": {
+            "actual": "read",
+            "expected": "read"
+          }
+        },
+        {
+          "assertion": "recomputed replacement is revision six",
+          "passed": true,
+          "evidence": {
+            "actual": 6,
+            "expected": 6
+          }
+        },
+        {
+          "assertion": "both read resources are current",
+          "passed": true,
+          "evidence": {
+            "actual": [
+              "urn:dataset/health",
+              "urn:dataset/health-extra"
+            ],
+            "expected": [
+              "urn:dataset/health",
+              "urn:dataset/health-extra"
+            ]
+          }
+        },
+        {
+          "assertion": "original read grant and expiry survive recomputation",
+          "passed": true,
+          "evidence": {
+            "actual": [
+              "grant-918624409b2b4f8da73a20de328b14db",
+              1791821065838,
+              "qualification-fc20735265284954a8cb231a260b34ce"
+            ],
+            "expected": [
+              "grant-918624409b2b4f8da73a20de328b14db",
+              1791821065838,
+              "qualification-fc20735265284954a8cb231a260b34ce"
+            ]
+          }
+        },
+        {
+          "assertion": "added read resource is a distinct grant",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "release remains revoked after recomputation",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "unaffected read remains authorized",
+          "passed": true,
+          "evidence": {
+            "actual": "PASS",
+            "expected": "PASS"
+          }
+        },
+        {
+          "assertion": "read does not mutate registry",
+          "passed": true,
+          "evidence": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "assertion": "second read resource is independently authorized",
+          "passed": true,
+          "evidence": {
+            "actual": "PASS",
+            "expected": "PASS"
+          }
+        },
+        {
+          "assertion": "one read resource cannot borrow the other binding",
+          "passed": true,
+          "evidence": {
+            "reason": "SCOPE_MISMATCH",
+            "expected_reason": "SCOPE_MISMATCH"
+          }
+        },
+        {
+          "assertion": "one read resource cannot borrow the other binding: independent registry unchanged",
+          "passed": true,
+          "evidence": {
+            "actual": {
+              "registry": {
+                "version": "model-v1",
+                "healthy": true
+              },
+              "mutations": 0
+            },
+            "expected": {
+              "registry": {
+                "version": "model-v1",
+                "healthy": true
+              },
+              "mutations": 0
+            }
+          }
+        },
+        {
+          "assertion": "exact actual registry postcondition from independent reader",
+          "passed": true,
+          "evidence": {
+            "actual": {
+              "version": "model-v1",
+              "healthy": true
+            },
+            "expected": {
+              "version": "model-v1",
+              "healthy": true
+            }
+          }
+        },
+        {
+          "assertion": "exact registry mutation count for scenario",
+          "passed": true,
+          "evidence": {
+            "actual": 0,
+            "expected": 0
+          }
+        },
+        {
+          "assertion": "all local events authenticated",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-6510e12abe9245a5a060424ae6f1af7f",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-1a7d570dc1a2409f9142f93471724f8d",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-6833703f43fb4c49ae87c2ae2c296883",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-ad630d4d2f404b2788dfa1594e5405ae",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-84ccff33ce1045c98b42e7ffa6d74a6e",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-2875f550aaa84b2e8aaed4666bc1bcc8",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-44bda4d651254c7a8fa610d30fb53363",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-218b0a753ce84b41ad4eca9c7d71f4c0",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-654568562fbb422a859ba18f8cd388ac",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-6b4d4b7188be46e79105263c5c075a46",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-ef79d67b15034fe6ad0db287650d3675",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-27e475ee7a5c4ee3b63423af34dcc74c",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-dc19e17d386d4b67a1e9e45466bd961f",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-c1f60c80a9d94f3d83034b6742517285",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-31d7bb1cc2794d6391c2cb894444fb6b",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-530a3a43169f44ccb184ce0cd25adcea",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-ab02c35c2b954bbabd0ae379e0a3ae65",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-67cb3d62f6314759bfda8da6fe57522f",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-faf729536547429db8beb6f97f585cb6",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-b43798a99c06451da99a3aaaa348f95e",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-fb3a8b4198a645e8b9bd94d9eb7ba524",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-69967fa3bb984881841092407f9f4715",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-73e25f5ceb3e49c1b009c046c3df1b6f",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-a81a87d76f7744cfa6d329ca3a387966",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-6a7f2d331474477288e5936b7cf02377",
+          "passed": true,
+          "evidence": {}
+        },
+        {
+          "assertion": "canonical receipt verifies: event-d8e76ae4338947d299efb26f9a96fad3",
+          "passed": true,
+          "evidence": {}
+        }
+      ],
+      "faults": [],
+      "receipts": [
+        {
+          "event_id": "event-6510e12abe9245a5a060424ae6f1af7f",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-shadow-cfee11ba65f7463cbbf6d4306c1f1cf0",
+          "entry_id": "97bac862-51ec-43ea-a78d-eed02c899a09",
+          "entry_hash": "6b444c519434752b695053933c0385a0d90e721750d8cec6607ee1aa404a4ff8",
+          "verified": true
+        },
+        {
+          "event_id": "event-1a7d570dc1a2409f9142f93471724f8d",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-shadow-a3670f10caa140228eb15408d69a3f93",
+          "entry_id": "7ea60f05-98e8-4885-a0c1-05c3bb07995e",
+          "entry_hash": "66c524734d90d262bcf7d3a550c3154e2e671142cbd6d13ecb3be5c7bcc06fda",
+          "verified": true
+        },
+        {
+          "event_id": "event-6833703f43fb4c49ae87c2ae2c296883",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-shadow-7b5ea64c367043d5835a313fce1c6415",
+          "entry_id": "98f96f90-2d9f-4bef-8033-e3108ba9169a",
+          "entry_hash": "147dbfe0f440a4417eaec23f8b8e704b39b1cdbe6c94d17c4c7cd237a4ad2300",
+          "verified": true
+        },
+        {
+          "event_id": "event-ad630d4d2f404b2788dfa1594e5405ae",
+          "event_type": "CANONICAL_QUALIFICATION_EVALUATED",
+          "attempt_id": "lifecycle-66b8b404bf2c426f80ca2a7ac6fd385f",
+          "entry_id": "a3dd1194-c7cb-4cab-b663-1fd03f497eff",
+          "entry_hash": "551821a2ea0aaa7f55392031baa8f3754e5941d20f413ccc1cb8745789c190c5",
+          "verified": true
+        },
+        {
+          "event_id": "event-84ccff33ce1045c98b42e7ffa6d74a6e",
+          "event_type": "QUALIFIED",
+          "attempt_id": "lifecycle-3a71fadea2b149f38206559c1ccc8660",
+          "entry_id": "380f0c3f-63b8-4599-a587-bacf608b25ff",
+          "entry_hash": "a1f1e2676a26f507dd01bbedd00e2f189063a91605ef75e53e4f9ea5944851f8",
+          "verified": true
+        },
+        {
+          "event_id": "event-2875f550aaa84b2e8aaed4666bc1bcc8",
+          "event_type": "GRANTED",
+          "attempt_id": "authority-op-fec9f5953d1c4bebb78b59f31dae6be4",
+          "entry_id": "0a2fc7de-f5df-416e-ae6a-b8d3f18ba0ca",
+          "entry_hash": "e141f8a9ce071e7d7d1e3c274005d5a0b728747bd4f5f2f0331c28b8b2a12598",
+          "verified": true
+        },
+        {
+          "event_id": "event-44bda4d651254c7a8fa610d30fb53363",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-shadow-085e54618354448f92aa1671bbb00adf",
+          "entry_id": "e7481473-5719-41cb-991c-6c4cc0f47a7e",
+          "entry_hash": "1a84c7c2a92e5b91d0564f716dc1be4021b55b2e556ba84a5a4d8ef80b2d5f3e",
+          "verified": true
+        },
+        {
+          "event_id": "event-218b0a753ce84b41ad4eca9c7d71f4c0",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-shadow-23c4dce0c6ff4f55bf9d84fddb0e840b",
+          "entry_id": "7d742ec6-99b1-4b2c-bd6f-ebc762a78cff",
+          "entry_hash": "9cac8c6496af5381c37280158925debfab6277d4b009f8aeb138a1a6ab49fd03",
+          "verified": true
+        },
+        {
+          "event_id": "event-654568562fbb422a859ba18f8cd388ac",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-shadow-186e19ed03b74f0c83368a67d21acbe4",
+          "entry_id": "44a124ae-e5a8-4f97-99b7-b2aea542d7c8",
+          "entry_hash": "687399fee7b74ae352beee2558f31366b833350cf0c257acb7963dedd9099642",
+          "verified": true
+        },
+        {
+          "event_id": "event-6b4d4b7188be46e79105263c5c075a46",
+          "event_type": "CANONICAL_QUALIFICATION_EVALUATED",
+          "attempt_id": "lifecycle-cd2e6c0d421640b184a1225d5296c3da",
+          "entry_id": "3f9d3409-478e-4cd9-a469-a201cc60c825",
+          "entry_hash": "2c2f733f9745c5a84f66743c9f05e40569097d0dc04b3e8ea82f3e9b88f93bc6",
+          "verified": true
+        },
+        {
+          "event_id": "event-ef79d67b15034fe6ad0db287650d3675",
+          "event_type": "QUALIFIED",
+          "attempt_id": "lifecycle-f7b869f9a65b48c28ebe40c8788c8e9e",
+          "entry_id": "4f886f7f-7a7d-4f34-b165-04b20dadde29",
+          "entry_hash": "ae670dceb04ab434ec81d4b1ec14f1456b156e3df4efc1f1f6996b147ed0ad90",
+          "verified": true
+        },
+        {
+          "event_id": "event-27e475ee7a5c4ee3b63423af34dcc74c",
+          "event_type": "GRANTED",
+          "attempt_id": "authority-op-18406d429cd0456fa1f9f2665bd2b00e",
+          "entry_id": "25e2818d-0f08-46e9-a539-b12d3abd0280",
+          "entry_hash": "407a46a381130b056ef92dfbde7246ff0b992ae51605fe808a862835f3058327",
+          "verified": true
+        },
+        {
+          "event_id": "event-dc19e17d386d4b67a1e9e45466bd961f",
+          "event_type": "GRANTED",
+          "attempt_id": "authority-op-eceb5ac7e8ab4420bdcb5ba632e1b1e3",
+          "entry_id": "dc7805b6-bda9-4f2d-aaa2-6c86cb68d6e0",
+          "entry_hash": "67f96b08e30731a992bec4b550822f781f81d8c3a905c19012b1cf2b7261e58c",
+          "verified": true
+        },
+        {
+          "event_id": "event-c1f60c80a9d94f3d83034b6742517285",
+          "event_type": "GRANTED",
+          "attempt_id": "authority-op-1a5a1165c3844a838765250102481fa8",
+          "entry_id": "156ce6db-bb70-47fb-8a0c-92986aeb7f3d",
+          "entry_hash": "b2d421c1c9941db9015d702dd5acc0ba4cf5166b887df38ad02a5e54b4a15796",
+          "verified": true
+        },
+        {
+          "event_id": "event-31d7bb1cc2794d6391c2cb894444fb6b",
+          "event_type": "REVOKED",
+          "attempt_id": "authority-op-4aaa262aee654435924e3daf3902b62b",
+          "entry_id": "ca600d34-e1c0-49c4-ae7c-d86e5de7bfb5",
+          "entry_hash": "da961eff7e8a8a05f5ee3977895bef6c1f3f3b288f8780420fb66f0bf6556c52",
+          "verified": true
+        },
+        {
+          "event_id": "event-530a3a43169f44ccb184ce0cd25adcea",
+          "event_type": "GRANTED",
+          "attempt_id": "authority-op-dba6a482c75b4e89902e1ffa1b8fb69e",
+          "entry_id": "0cee2a56-1773-44e3-91e5-f45c926611d7",
+          "entry_hash": "5b6e2f3a5917eb607ba81f67a44eee927a80cebe24e7906d1a3db1f27c4dc588",
+          "verified": true
+        },
+        {
+          "event_id": "event-ab02c35c2b954bbabd0ae379e0a3ae65",
+          "event_type": "QUALIFICATION_CHECKED",
+          "attempt_id": "bdd-attempt-b56341894c0d4dfe9c0151f1c5a29113",
+          "entry_id": "d829f565-7fef-4736-8580-6bf4dec2ae9d",
+          "entry_hash": "61497065b86c1c272a8e6a6433e1eaa47e2cb358ce8cb398ec7bc4dfdb5a0019",
+          "verified": true
+        },
+        {
+          "event_id": "event-67cb3d62f6314759bfda8da6fe57522f",
+          "event_type": "AUTHORIZATION_CHECKED",
+          "attempt_id": "bdd-attempt-b56341894c0d4dfe9c0151f1c5a29113",
+          "entry_id": "ffe4f182-6837-40b9-8de0-64a3be717fa3",
+          "entry_hash": "e1c436105dd431036ac1182064f27297a0a28f65428bfa122ce8401597cb7dc3",
+          "verified": true
+        },
+        {
+          "event_id": "event-faf729536547429db8beb6f97f585cb6",
+          "event_type": "INTENT",
+          "attempt_id": "bdd-attempt-b56341894c0d4dfe9c0151f1c5a29113",
+          "entry_id": "ddb0932a-43c5-4946-97e5-4df87a0a102a",
+          "entry_hash": "a0b0557a186bdd3be2379dc476b26edcdb3c1cd5cccbc6634c4024cd8989f367",
+          "verified": true
+        },
+        {
+          "event_id": "event-b43798a99c06451da99a3aaaa348f95e",
+          "event_type": "COMMITTED",
+          "attempt_id": "bdd-attempt-b56341894c0d4dfe9c0151f1c5a29113",
+          "entry_id": "7412fbaf-05e8-4163-bac5-9d1ba5cad0e1",
+          "entry_hash": "e03a63cd920205cb46e4a067a7a5a2cd2cce2b388be550aabc3e340835bebde3",
+          "verified": true
+        },
+        {
+          "event_id": "event-fb3a8b4198a645e8b9bd94d9eb7ba524",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-attempt-b56341894c0d4dfe9c0151f1c5a29113",
+          "entry_id": "4531789b-8ca6-4da4-8088-b4ac26620b50",
+          "entry_hash": "d32ed1f0ac723e1309f14c8a09cff76dada7f8c45d47f2751c6fa026a27ace2b",
+          "verified": true
+        },
+        {
+          "event_id": "event-69967fa3bb984881841092407f9f4715",
+          "event_type": "QUALIFICATION_CHECKED",
+          "attempt_id": "bdd-attempt-ad568936dd034ab2a9d67e4af043cca0",
+          "entry_id": "77d4ff2a-ee96-4957-bc5d-46f6a3cd4fb8",
+          "entry_hash": "98e2b71f64a6bed955ed92df9acc68cbed224f876387d9d4125b1d7457d1d807",
+          "verified": true
+        },
+        {
+          "event_id": "event-73e25f5ceb3e49c1b009c046c3df1b6f",
+          "event_type": "AUTHORIZATION_CHECKED",
+          "attempt_id": "bdd-attempt-ad568936dd034ab2a9d67e4af043cca0",
+          "entry_id": "978be20b-c247-4207-9140-48883754f3e1",
+          "entry_hash": "d20a78a7c2df095fc364ca25c20b120be887b5ca688ab96167a5047237890867",
+          "verified": true
+        },
+        {
+          "event_id": "event-a81a87d76f7744cfa6d329ca3a387966",
+          "event_type": "INTENT",
+          "attempt_id": "bdd-attempt-ad568936dd034ab2a9d67e4af043cca0",
+          "entry_id": "cd4f480c-10ae-4669-b6be-41c01d2f0bb0",
+          "entry_hash": "798fdb0e7f79995775bdff7d7ecf1dd0d48d524267898a601215e8e5f91dac05",
+          "verified": true
+        },
+        {
+          "event_id": "event-6a7f2d331474477288e5936b7cf02377",
+          "event_type": "COMMITTED",
+          "attempt_id": "bdd-attempt-ad568936dd034ab2a9d67e4af043cca0",
+          "entry_id": "4cccabdd-3fc2-4809-b223-1c2aca3b5c8c",
+          "entry_hash": "d6bfcf1b753418136be067e62353b74bb37025b7b6da7b52598d9e5ee70a4159",
+          "verified": true
+        },
+        {
+          "event_id": "event-d8e76ae4338947d299efb26f9a96fad3",
+          "event_type": "OUTCOME_OBSERVED",
+          "attempt_id": "bdd-attempt-ad568936dd034ab2a9d67e4af043cca0",
+          "entry_id": "6abf320d-46c9-4012-946a-29a093ae00f3",
+          "entry_hash": "630b0677a2a5126a9b26239ab8f99d26334b178cf4c38ef7099a6cdcd4148294",
+          "verified": true
+        }
+      ],
+      "artifacts": [],
+      "state_before": {
+        "registry": {
+          "version": "model-v1",
+          "healthy": true
+        },
+        "mutations": 0
+      },
+      "authority_before": {
+        "agent_id": "agt-idem-210f7df76bb94bacbb28f697572347bd",
+        "revision": 0,
+        "passport_id": null,
+        "grants": [],
+        "expires_at_ms": 0,
+        "status": "REVOKED",
+        "canonical": {
+          "subject": null,
+          "signature": {
+            "redacted_digest": "sha256:1c197daef20de3f47eec5e2f735ec6669869d3180cc29f35be4788511e0af0f8"
+          },
+          "status": "REVOKED",
+          "revision": 0
+        }
+      },
+      "state_after": {
+        "registry": {
+          "version": "model-v1",
+          "healthy": true
+        },
+        "mutations": 0
+      },
+      "authority_after": {
+        "agent_id": "agt-idem-210f7df76bb94bacbb28f697572347bd",
+        "revision": 6,
+        "passport_id": "0ab7335c-32f0-4743-bbb5-23ffad6e2286",
+        "grants": [
+          {
+            "action": "read",
+            "context": {
+              "desired_replicas": 1,
+              "environment": "service-bdd-d51383ff9d0c4a7195818a2707614d0f-031-default",
+              "max_replicas": 2,
+              "model_version": "model-v2"
+            },
+            "context_digest": "sha256:6273a1114c897ed9f8b403d741615f591f72a04e0204c1fc2a2d2dd79e6f819d",
+            "expires_at_ms": 1791821065838,
+            "grant_id": "grant-918624409b2b4f8da73a20de328b14db",
+            "policy_digest": "sha256:cba16c8345271f6ef2ad493e2597bfcb2618b54760185638c6c0e4be912a470e",
+            "qualification_digest": "sha256:ae3a9e4633c41b1a8966ad03a93086d35934d6dd6add96bcd586e274915413f0",
+            "qualification_id": "qualification-fc20735265284954a8cb231a260b34ce",
+            "resource": "urn:dataset/health",
+            "skill": "read-health",
+            "skill_digest": "sha256:afa0481f053ea733ce47f2a109c3e7dd310b018eb188f5cf97428729935c1b5c",
+            "version": "sha256:ef1b7501be8660f0fc3fa9d20545936ff445b8d97a530ddab89a266195659171",
+            "canonical_scope_id": "eaa94fd7-b3fd-4fc3-aa3e-dfff0c618304"
+          },
+          {
+            "action": "read",
+            "context": {
+              "desired_replicas": 1,
+              "environment": "service-bdd-d51383ff9d0c4a7195818a2707614d0f-031-default",
+              "max_replicas": 2,
+              "model_version": "model-v2"
+            },
+            "context_digest": "sha256:6273a1114c897ed9f8b403d741615f591f72a04e0204c1fc2a2d2dd79e6f819d",
+            "expires_at_ms": 1791821066119,
+            "grant_id": "grant-82124027b63b4dd3a2d075b8acadd7d8",
+            "policy_digest": "sha256:cba16c8345271f6ef2ad493e2597bfcb2618b54760185638c6c0e4be912a470e",
+            "qualification_digest": "sha256:ae3a9e4633c41b1a8966ad03a93086d35934d6dd6add96bcd586e274915413f0",
+            "qualification_id": "qualification-fc20735265284954a8cb231a260b34ce",
+            "resource": "urn:dataset/health-extra",
+            "skill": "read-health",
+            "skill_digest": "sha256:afa0481f053ea733ce47f2a109c3e7dd310b018eb188f5cf97428729935c1b5c",
+            "version": "sha256:ef1b7501be8660f0fc3fa9d20545936ff445b8d97a530ddab89a266195659171",
+            "canonical_scope_id": "272050ad-69f5-4584-b66c-e9f7ab229317"
+          }
+        ],
+        "expires_at_ms": 1791821066153,
+        "issued_at_ms": 1791820766153,
+        "status": "ACTIVE",
+        "canonical": {
+          "subject": {
+            "credential_id": "ed25519:e67464dc44e2c908b2898ba92c569e20c78bf30a060bb3d0e02e9a8deb7fddf1",
+            "public_key_pem": {
+              "redacted_digest": "sha256:3942ade11275979870c9d8db7f04a42c0d1a15c4c1de6084d4a8b4a423c8e98b"
+            },
+            "canonical_version": "are.passport.v2",
+            "passport_id": "0ab7335c-32f0-4743-bbb5-23ffad6e2286",
+            "agent_id": "agt-idem-210f7df76bb94bacbb28f697572347bd",
+            "issuance_revision": 6,
+            "passport_type": "STANDARD",
+            "scope_set": [
+              {
+                "scope_id": "eaa94fd7-b3fd-4fc3-aa3e-dfff0c618304",
+                "action_class": "demo.read",
+                "resource_pattern": "urn:dataset/health",
+                "context_constraints": {
+                  "earned_authority_binding_v1": "{\"action\":\"read\",\"context\":{\"desired_replicas\":1,\"environment\":\"service-bdd-d51383ff9d0c4a7195818a2707614d0f-031-default\",\"max_replicas\":2,\"model_version\":\"model-v2\"},\"context_digest\":\"sha256:6273a1114c897ed9f8b403d741615f591f72a04e0204c1fc2a2d2dd79e6f819d\",\"expires_at_ms\":1791821065838,\"grant_id\":\"grant-918624409b2b4f8da73a20de328b14db\",\"policy_digest\":\"sha256:cba16c8345271f6ef2ad493e2597bfcb2618b54760185638c6c0e4be912a470e\",\"qualification_digest\":\"sha256:ae3a9e4633c41b1a8966ad03a93086d35934d6dd6add96bcd586e274915413f0\",\"qualification_id\":\"qualification-fc20735265284954a8cb231a260b34ce\",\"resource\":\"urn:dataset/health\",\"skill\":\"read-health\",\"skill_digest\":\"sha256:afa0481f053ea733ce47f2a109c3e7dd310b018eb188f5cf97428729935c1b5c\",\"version\":\"sha256:ef1b7501be8660f0fc3fa9d20545936ff445b8d97a530ddab89a266195659171\"}"
+                },
+                "granted_ts": 1791820766153,
+                "expires_ts": 1791821066153,
+                "is_escalation": false
+              },
+              {
+                "scope_id": "272050ad-69f5-4584-b66c-e9f7ab229317",
+                "action_class": "demo.read",
+                "resource_pattern": "urn:dataset/health-extra",
+                "context_constraints": {
+                  "earned_authority_binding_v1": "{\"action\":\"read\",\"context\":{\"desired_replicas\":1,\"environment\":\"service-bdd-d51383ff9d0c4a7195818a2707614d0f-031-default\",\"max_replicas\":2,\"model_version\":\"model-v2\"},\"context_digest\":\"sha256:6273a1114c897ed9f8b403d741615f591f72a04e0204c1fc2a2d2dd79e6f819d\",\"expires_at_ms\":1791821066119,\"grant_id\":\"grant-82124027b63b4dd3a2d075b8acadd7d8\",\"policy_digest\":\"sha256:cba16c8345271f6ef2ad493e2597bfcb2618b54760185638c6c0e4be912a470e\",\"qualification_digest\":\"sha256:ae3a9e4633c41b1a8966ad03a93086d35934d6dd6add96bcd586e274915413f0\",\"qualification_id\":\"qualification-fc20735265284954a8cb231a260b34ce\",\"resource\":\"urn:dataset/health-extra\",\"skill\":\"read-health\",\"skill_digest\":\"sha256:afa0481f053ea733ce47f2a109c3e7dd310b018eb188f5cf97428729935c1b5c\",\"version\":\"sha256:ef1b7501be8660f0fc3fa9d20545936ff445b8d97a530ddab89a266195659171\"}"
+                },
+                "granted_ts": 1791820766153,
+                "expires_ts": 1791821066153,
+                "is_escalation": false
+              }
+            ],
+            "issued_by": "earned-authority-coordinator",
+            "reason": "qualification qualification-fc20735265284954a8cb231a260b34ce",
+            "issued_ts": 1791820766153,
+            "expires_ts": 1791821066153,
+            "policy_id_at_issuance": "earned-authority-reference",
+            "policy_ver_at_issuance": "0.1.0"
+          },
+          "signature": {
+            "redacted_digest": "sha256:428593664f5153357246a978d38e20c963cad5f10462e1b2c36a5817d50c6226"
+          },
+          "status": "ACTIVE",
+          "revision": 6
+        }
+      },
+      "authority_after_digest": "sha256:68ce5e8ebf10cf1482107d1aeff32bdf845739429019de64c86ac0f368ca549a"
+    }
+  ],
+  "scope": "Named BDD assertions on actual local canonical services and fenced SQLite registry; no cross-host, product-value or hardware claim.",
+  "source_hashes_before": {
+    "tools/validate_bdd_connected.py": "sha256:7d5c080d835a6ab925b2822c523a30edfc0e37baa8d825c1102a8a6fa1ed01a7",
+    "tools/validate_connected.py": "sha256:2a56eda79e1b5998d79d2328a39ab632fa139eb69b84a675355622a5740dbd0a",
+    "features/bindings.json": "sha256:eb2d1bb46611964a100b5e5515f3f44d72d0cb5f94e08e16121147855da3d13d",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:5e13e8ef0164caa761ad7b91b10d28f4be17d4e7b0c14f88281fc3b977bcdf20",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:d81e95ae9de9ff0be5bdadaa881cc5c8e2466de26b2a0972595e6e5f4a10df2b",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:13be9447151a7b3db7f71749ea1e6829aac7c46e0d227768ad360fad4d6e1a97",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:c8832c91986b46abed3610496560769d818175ad2d8c4d549b484e57db975758",
+    "earned_authority/wire_contracts.py": "sha256:f99ed0e790b1efc0c7f795a9ab64e2d08bd0ea61df2c7875b0fb804031e7d268",
+    "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
+    "features/concurrency.feature": "sha256:a593d6b2ee5ceb79260f97e0dbfd768843c2c7f4fcd5b6705e11797f023f0e27",
+    "features/execution_and_evidence.feature": "sha256:5c03e38759cae3c8d84536efdd463c91492183e72ce0d3941a9b8ae7b8a23ded",
+    "features/future_robot_simulation.feature": "sha256:916435ba5489e20024f589161dc3a4e3a5df5c23f211a211a9baab8a6ea33771",
+    "features/ledger_integrity.feature": "sha256:6f3039c21f36f2b0d052b168d30547d3a5ec76ca39b2046f653a59b3a4e442a6",
+    "features/qualification.feature": "sha256:8545997b35e1600c7f2e63e4e743ca5f3563aa4ef295cb6b395fda614a286629",
+    "features/withdrawal_and_requalification.feature": "sha256:417a22c6940ab6b0fb70e2c0e44d27646da5c18d9ac10e242b7f8a27bc7fa8da"
+  },
+  "EDD": "evaluation-driven development; no preregistered value result",
+  "CUT": "unconfirmed",
+  "fixture_parameter_mapping": {
+    "agent-a": "fresh canonical identity per case",
+    "skill-v1": "actual controller procedure_revision content digest",
+    "demo-a": "fresh isolated context per case",
+    "registry-a/model-a": "model/champion",
+    "qual-policy-v1": "demo3 canonical adapter profile; three fresh independent outcomes",
+    "auth-policy-v1": "actual loaded Foundation/OPA policy revision",
+    "BDD-009 requested window": "Explicit source-configured demo blackout 2100-01-01T00:00:00Z through 00:01:00Z; real OPA evaluation time, no business calendar claim",
+    "BDD-015 cached grant": "Durable last-verified current-authority observation for diagnostics; never an executable authorization fallback",
+    "BDD-016 qualification and authorization records": "Per-attempt consumption checks at mutation boundary; prior evaluation and grant creation records retain their original IDs and timestamps"
+  },
+  "exit_codes": {
+    "0": "prepared inventory or all selected scenarios fully green",
+    "1": "observed failed assertion or runtime operation",
+    "2": "blocked, partial, unbound, or sources changed; acceptance incomplete"
+  },
+  "canonical_source_revisions": {
+    "cascade": "3efd16e053ef2a8a95b1b1ba6c1d1acdd873a3cb",
+    "gcl": "a8ae67ee1198e8b86bf7458119723c0af2d74792"
+  },
+  "source_hashes": {
+    "tools/validate_bdd_connected.py": "sha256:7d5c080d835a6ab925b2822c523a30edfc0e37baa8d825c1102a8a6fa1ed01a7",
+    "tools/validate_connected.py": "sha256:2a56eda79e1b5998d79d2328a39ab632fa139eb69b84a675355622a5740dbd0a",
+    "features/bindings.json": "sha256:eb2d1bb46611964a100b5e5515f3f44d72d0cb5f94e08e16121147855da3d13d",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/authority_journal.py": "sha256:5e13e8ef0164caa761ad7b91b10d28f4be17d4e7b0c14f88281fc3b977bcdf20",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/connected.py": "sha256:d81e95ae9de9ff0be5bdadaa881cc5c8e2466de26b2a0972595e6e5f4a10df2b",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/grants.py": "sha256:13be9447151a7b3db7f71749ea1e6829aac7c46e0d227768ad360fad4d6e1a97",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/runtime.py": "sha256:c8832c91986b46abed3610496560769d818175ad2d8c4d549b484e57db975758",
+    "earned_authority/wire_contracts.py": "sha256:f99ed0e790b1efc0c7f795a9ab64e2d08bd0ea61df2c7875b0fb804031e7d268",
+    "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
+    "features/concurrency.feature": "sha256:a593d6b2ee5ceb79260f97e0dbfd768843c2c7f4fcd5b6705e11797f023f0e27",
+    "features/execution_and_evidence.feature": "sha256:5c03e38759cae3c8d84536efdd463c91492183e72ce0d3941a9b8ae7b8a23ded",
+    "features/future_robot_simulation.feature": "sha256:916435ba5489e20024f589161dc3a4e3a5df5c23f211a211a9baab8a6ea33771",
+    "features/ledger_integrity.feature": "sha256:6f3039c21f36f2b0d052b168d30547d3a5ec76ca39b2046f653a59b3a4e442a6",
+    "features/qualification.feature": "sha256:8545997b35e1600c7f2e63e4e743ca5f3563aa4ef295cb6b395fda614a286629",
+    "features/withdrawal_and_requalification.feature": "sha256:417a22c6940ab6b0fb70e2c0e44d27646da5c18d9ac10e242b7f8a27bc7fa8da"
+  },
+  "source_unchanged_during_run": true,
+  "finished_at": "2026-10-12T15:59:26.569047+00:00",
+  "scenario_acceptance": {
+    "BDD-031": "GREEN"
+  },
+  "counts": {
+    "scenario_ids": 1,
+    "cases": 1,
+    "passed_cases": 1,
+    "failed_cases": 0,
+    "blocked_cases": 0,
+    "unrun_cases": 0,
+    "complete_green_scenarios": 1
+  }
+}

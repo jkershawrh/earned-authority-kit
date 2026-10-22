@@ -1,0 +1,24 @@
+{
+  "source_repository": "/Users/jkershaw/Documents/earned-authority-kit",
+  "snapshot_kind": "current local working tree; uncommitted source changes preserved",
+  "files": {
+    "earned_authority/runtime.py": "sha256:c8832c91986b46abed3610496560769d818175ad2d8c4d549b484e57db975758",
+    "earned_authority/grants.py": "sha256:13be9447151a7b3db7f71749ea1e6829aac7c46e0d227768ad360fad4d6e1a97",
+    "roadmap.html": "sha256:dd712322bd1f6018c70dac5e2b4c8823ba334b6ff4f3b9911f399c5f5619643a",
+    "reports/readiness.json": "sha256:6f7e4b90c8e25608dd3999b6dabb2d840121004917e9b5e6af235f6a50d3f7ea",
+    "features/qualification.feature": "sha256:8545997b35e1600c7f2e63e4e743ca5f3563aa4ef295cb6b395fda614a286629",
+    "features/authority.feature": "sha256:8904f3766309c9bd237beea6747fe84033cbf6014c5eb2f4089b6e39ffe365ee",
+    "features/withdrawal_and_requalification.feature": "sha256:417a22c6940ab6b0fb70e2c0e44d27646da5c18d9ac10e242b7f8a27bc7fa8da"
+  },
+  "verification": {
+    "bridge_tests": 7,
+    "browser_viewports": [
+      "1920x1080",
+      "1440x900",
+      "390x844"
+    ],
+    "runtime": "unchanged M1 LOCAL_FIXTURE",
+    "connected_services_exercised": false,
+    "business_value_evaluation_exercised": false
+  }
+}

@@ -29,6 +29,19 @@ class OperationReceiptVerification(unittest.TestCase):
     def verify(self,body=None,**kwargs):return verify_operation_receipt(self.receipt(body),self.pem,kwargs.get('agent','agent'),kwargs.get('operation_id','op1'),kwargs.get('expected_request',self.request))
     def test_valid_receipt_derives_historical_authority(self):
         got=self.verify();self.assertEqual(self.passport,got['authority']['subject']);self.assertEqual(1,got['authority']['revision'])
+    def test_historical_issuer_verifies_stored_receipt_only_after_it_is_trusted(self):
+        old=Ed25519PrivateKey.generate()
+        old_pem=old.public_key().public_bytes(serialization.Encoding.PEM,serialization.PublicFormat.SubjectPublicKeyInfo).decode()
+        passport=copy.deepcopy(self.passport);passport['public_key_pem']=old_pem;passport['credential_id']='previous-issuer'
+        raw=json.dumps(passport).encode();body=copy.deepcopy(self.body)
+        body['public_key_pem']=old_pem;body['credential_id']='previous-issuer'
+        body['result']['passport_payload_base64']=base64.b64encode(raw).decode()
+        body['result']['passport_signature_base64']=base64.b64encode(old.sign(raw)).decode()
+        payload=json.dumps(body).encode()
+        receipt=SimpleNamespace(canonical_payload=payload,signature=old.sign(payload),credential_id='previous-issuer',public_key_pem=old_pem)
+        with self.assertRaises(Denied):verify_operation_receipt(receipt,self.pem,'agent','op1',self.request)
+        got=verify_operation_receipt(receipt,self.pem,'agent','op1',self.request,historical_public_keys=(old_pem,))
+        self.assertEqual(old_pem,got['public_key_pem']);self.assertEqual(passport,got['authority']['subject'])
     def test_unpinned_receipt_signature_denied(self):
         with self.assertRaises(Denied):verify_operation_receipt(self.receipt(key=Ed25519PrivateKey.generate()),self.pem,'agent','op1')
     def test_other_agent_or_operation_denied(self):
@@ -87,7 +100,7 @@ class OperationClientTransport(unittest.TestCase):
         self.client.pb=SimpleNamespace(ApplyPassportOperationRequest=SimpleNamespace,GetPassportOperationRequest=SimpleNamespace,
             IssuePassportRequest=SimpleNamespace,RevokePassportRequest=SimpleNamespace,ScopeRequest=SimpleNamespace)
         fixture=json.loads((Path(__file__).resolve().parents[1]/'contracts/fixtures/passport-operations-v1.json').read_text())
-        self.vector=fixture['cases'][0];v=self.vector;self.client.public_key=v['public_key_pem']
+        self.vector=fixture['cases'][0];v=self.vector;self.client.public_key=v['public_key_pem'];self.client.historical_public_keys=()
         receipt=SimpleNamespace(canonical_payload=base64.b64decode(v['canonical_payload_base64']),signature=base64.b64decode(v['signature_base64']),credential_id=v['credential_id'],public_key_pem=v['public_key_pem'])
         self.calls=[]
         def with_call(request,**kwargs):

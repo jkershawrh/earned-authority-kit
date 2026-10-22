@@ -1,0 +1,154 @@
+{
+  "environment": "REAL_LOCAL_SERVICES",
+  "started_at": "2026-10-12T18:42:25.564079+00:00",
+  "prior_report": "/Users/jkershaw/Documents/earned-authority-reference-b/work/reference-runtime/authority-recovery.json",
+  "checks": [
+    {
+      "check": "historical_operation_survives_restart_operation-92c133a570404beb9c638fd4c9e0e4bc",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_operation-f359834839714ee892fc6de6765b3287",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_authority-op-a67687dc256543a491886cd947ed6538",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_operation-b236348ccf7d4e288bc09659f750dc7c",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_operation-bc5bb72242974282a45afe72eb0fb6b4",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_authority-op-db65f196d3b14438ba28b993bcabbb01",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_operation-db48acd51c7c4555a4a22a2ebb920aff",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_authority-op-ca0e76aff83140d8ad2b34f2b829dc1b",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_authority-op-3c21b636084848c3888cf04379183bd5",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_operation-ccd85c7860344c47b6187a02d45528c7",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_authority-op-68db5b0fdb874c05907ef6cecd1980f7",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_authority-op-26085519d0134634bb167d43c1326240",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_withdrawal-206cf4dc26e0b92d6717f8c18e796011f6b188ffd4ac95206ef2635c2bced986",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_authority-op-8a17c9513b5b4ebd8bf7ac155ef87d63",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_operation-19f7e8d2ae0c4822af9e27d5dd951990",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_authority-op-e54db3144ecc44a7a9fbbb219f06d51d",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_authority-op-9a2e66fb33af4c88bbb3224f06ca0c88",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_operation-66b6e5288c60422ca26b383e2221c22a",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_operation-4fae1b2601e746b3ae5c046634f79b63",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "historical_operation_survives_restart_operation-466041f04f5f4787a87e6643eaaa8df6",
+      "passed": true,
+      "evidence": {}
+    },
+    {
+      "check": "exact_prior_events_and_ledger_receipts_preserved",
+      "passed": true,
+      "evidence": {
+        "event_count": 101
+      }
+    }
+  ],
+  "scope": "Read back prior historical operation receipts, signed local journal/events and ledger receipts after service restart; does not issue replacement operations",
+  "execution_state": "COMPLETED",
+  "acceptance_color": "GREEN",
+  "source_hashes_before": {
+    "tools/validate_authority_recovery.py": "sha256:723f0f619d4a6e04dc6df1b4dc76d12e59b3ce231a522672de43ccc735b631d1",
+    "tools/validate_connected.py": "sha256:e79460a92420d2e42816b74d18fe684cbb054e90cebbe5960df16060716543da",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/connected.py": "sha256:9d270d8a7d678ffaafda2211683919245cf3b947736c5811b06ec39035ca1723",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/grants.py": "sha256:13be9447151a7b3db7f71749ea1e6829aac7c46e0d227768ad360fad4d6e1a97",
+    "earned_authority/runtime.py": "sha256:c8832c91986b46abed3610496560769d818175ad2d8c4d549b484e57db975758",
+    "earned_authority/authority_journal.py": "sha256:5e13e8ef0164caa761ad7b91b10d28f4be17d4e7b0c14f88281fc3b977bcdf20",
+    "earned_authority/retention.py": "sha256:6e842b428a0af21772dd824583a9928a69f515610c8ec41b5a2b1c13caec94af",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/wire_contracts.py": "sha256:f99ed0e790b1efc0c7f795a9ab64e2d08bd0ea61df2c7875b0fb804031e7d268",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:ac44693dbc163496d7728a880fc493a0b7c3c4ec8611bf6645fe1cd5e9c32659"
+  },
+  "source_hashes": {
+    "tools/validate_authority_recovery.py": "sha256:723f0f619d4a6e04dc6df1b4dc76d12e59b3ce231a522672de43ccc735b631d1",
+    "tools/validate_connected.py": "sha256:e79460a92420d2e42816b74d18fe684cbb054e90cebbe5960df16060716543da",
+    "earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+    "earned_authority/connected.py": "sha256:9d270d8a7d678ffaafda2211683919245cf3b947736c5811b06ec39035ca1723",
+    "earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+    "earned_authority/grants.py": "sha256:13be9447151a7b3db7f71749ea1e6829aac7c46e0d227768ad360fad4d6e1a97",
+    "earned_authority/runtime.py": "sha256:c8832c91986b46abed3610496560769d818175ad2d8c4d549b484e57db975758",
+    "earned_authority/authority_journal.py": "sha256:5e13e8ef0164caa761ad7b91b10d28f4be17d4e7b0c14f88281fc3b977bcdf20",
+    "earned_authority/retention.py": "sha256:6e842b428a0af21772dd824583a9928a69f515610c8ec41b5a2b1c13caec94af",
+    "earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+    "earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+    "earned_authority/wire_contracts.py": "sha256:f99ed0e790b1efc0c7f795a9ab64e2d08bd0ea61df2c7875b0fb804031e7d268",
+    "earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+    "earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+    "earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+    "earned_authority/passport_client.py": "sha256:ac44693dbc163496d7728a880fc493a0b7c3c4ec8611bf6645fe1cd5e9c32659"
+  },
+  "finished_at": "2026-10-12T18:42:26.065741+00:00"
+}

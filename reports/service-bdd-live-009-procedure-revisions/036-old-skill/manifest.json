@@ -1,0 +1,45 @@
+{
+  "change": "Require an actual bool for shadow health input before execution.",
+  "artifacts": [
+    {
+      "kind": "baseline",
+      "directory": "reports/service-bdd-live-009-procedure-revisions/036-old-skill/baseline/earned_authority",
+      "procedure_revision": "sha256:ef1b7501be8660f0fc3fa9d20545936ff445b8d97a530ddab89a266195659171",
+      "sources": {
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/baseline/earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/baseline/earned_authority/authority_journal.py": "sha256:5e13e8ef0164caa761ad7b91b10d28f4be17d4e7b0c14f88281fc3b977bcdf20",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/baseline/earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/baseline/earned_authority/connected.py": "sha256:d81e95ae9de9ff0be5bdadaa881cc5c8e2466de26b2a0972595e6e5f4a10df2b",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/baseline/earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/baseline/earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/baseline/earned_authority/grants.py": "sha256:13be9447151a7b3db7f71749ea1e6829aac7c46e0d227768ad360fad4d6e1a97",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/baseline/earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/baseline/earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/baseline/earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/baseline/earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/baseline/earned_authority/runtime.py": "sha256:c8832c91986b46abed3610496560769d818175ad2d8c4d549b484e57db975758",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/baseline/earned_authority/wire_contracts.py": "sha256:f99ed0e790b1efc0c7f795a9ab64e2d08bd0ea61df2c7875b0fb804031e7d268"
+      }
+    },
+    {
+      "kind": "revised",
+      "directory": "reports/service-bdd-live-009-procedure-revisions/036-old-skill/revised/earned_authority",
+      "procedure_revision": "sha256:1c1634fee6a829136ff50c2904d2a89163f63ec4408e1ae08e3595c8352776d0",
+      "sources": {
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/revised/earned_authority/__init__.py": "sha256:882f6456d60a87a60a9d1cf93cc7464188ed4b150d7726cec782b2a48997cca0",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/revised/earned_authority/authority_journal.py": "sha256:5e13e8ef0164caa761ad7b91b10d28f4be17d4e7b0c14f88281fc3b977bcdf20",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/revised/earned_authority/authority_observations.py": "sha256:cd7dd8e002e414d754e0ecdb1f4c8ceae480e3f8528c8d844f1c6fe52bc7324e",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/revised/earned_authority/connected.py": "sha256:c6c1ffc277008041a953591a7e2bc9e1d9629cb5f08dffb400105c9238f32ac8",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/revised/earned_authority/contracts.py": "sha256:bc7412f8917b6990a83bda082accef585d3d402a60029d868b6549895b490ea4",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/revised/earned_authority/evidence_admission.py": "sha256:f9e223184a78d9ae835d88c8793b07c73964b2d706214aa21236a37c97e35252",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/revised/earned_authority/grants.py": "sha256:13be9447151a7b3db7f71749ea1e6829aac7c46e0d227768ad360fad4d6e1a97",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/revised/earned_authority/ledger_client.py": "sha256:e2427c687eebb0df17f7a5d9714cd7d9c98e7a978a663461657fbbf963df960a",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/revised/earned_authority/passport_client.py": "sha256:fbd38a1c7b66cd7ce355581c9329af52b57620a43939387372e3a21e1156e91a",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/revised/earned_authority/qualification_client.py": "sha256:df05e9b04f1effa3d422c2a26c45c6ea3bfbf4fa20e48af9709b3eef17d275be",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/revised/earned_authority/rubric.py": "sha256:f9a50cb971c0fa7afad542bf9868f43b9c5edc606a1fd3e817001f0e174bdfc2",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/revised/earned_authority/runtime.py": "sha256:c8832c91986b46abed3610496560769d818175ad2d8c4d549b484e57db975758",
+        "reports/service-bdd-live-009-procedure-revisions/036-old-skill/revised/earned_authority/wire_contracts.py": "sha256:f99ed0e790b1efc0c7f795a9ab64e2d08bd0ea61df2c7875b0fb804031e7d268"
+      }
+    }
+  ]
+}

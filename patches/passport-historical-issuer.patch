@@ -1,0 +1,254 @@
+diff --git a/internal/local/durable.go b/internal/local/durable.go
+--- a/internal/local/durable.go
++++ b/internal/local/durable.go
+@@ -23,10 +23,11 @@
+ )
+ 
+ type Ed25519Credentials struct {
+-	private ed25519.PrivateKey
+-	public  ed25519.PublicKey
+-	pem     string
+-	id      string
++	private    ed25519.PrivateKey
++	public     ed25519.PublicKey
++	pem        string
++	id         string
++	historical []ed25519.PublicKey
+ }
+ 
+ func OpenEd25519Credentials(path string) (*Ed25519Credentials, error) {
+@@ -101,19 +102,79 @@
+ func (c *Ed25519Credentials) Sign(payload []byte) (string, string, []byte, error) {
+ 	return c.id, c.pem, ed25519.Sign(c.private, payload), nil
+ }
+-func (c *Ed25519Credentials) Verify(publicKey string, payload, signature []byte) (bool, error) {
++func parseEd25519Public(publicKey string) (ed25519.PublicKey, bool) {
+ 	block, rest := pem.Decode([]byte(publicKey))
+ 	if block == nil || block.Type != "PUBLIC KEY" || len(bytes.TrimSpace(rest)) != 0 {
+-		return false, nil
++		return nil, false
+ 	}
+ 	raw, err := x509.ParsePKIXPublicKey(block.Bytes)
+ 	if err != nil {
+-		return false, nil
++		return nil, false
+ 	}
+ 	key, ok := raw.(ed25519.PublicKey)
+-	if !ok || !bytes.Equal(key, c.public) {
++	if !ok {
++		return nil, false
++	}
++	return key, true
++}
++
++// TrustHistoricalPublicKeys installs an explicit previous-issuer set.
++// A missing file leaves only the current key trusted. Receipts do not add trust.
++func (c *Ed25519Credentials) TrustHistoricalPublicKeys(path string) error {
++	if path == "" {
++		return nil
++	}
++	data, err := os.ReadFile(path)
++	if os.IsNotExist(err) {
++		return nil
++	}
++	if err != nil {
++		return err
++	}
++	rest := data
++	var keys []ed25519.PublicKey
++	for len(bytes.TrimSpace(rest)) != 0 {
++		var block *pem.Block
++		block, rest = pem.Decode(rest)
++		if block == nil {
++			return fmt.Errorf("historical issuer file has trailing data")
++		}
++		if block.Type != "PUBLIC KEY" {
++			return fmt.Errorf("historical issuer file must contain public keys only")
++		}
++		raw, err := x509.ParsePKIXPublicKey(block.Bytes)
++		if err != nil {
++			return err
++		}
++		key, ok := raw.(ed25519.PublicKey)
++		if !ok {
++			return fmt.Errorf("historical issuer key must be Ed25519")
++		}
++		if !bytes.Equal(key, c.public) {
++			keys = append(keys, key)
++		}
++	}
++	c.historical = keys
++	return nil
++}
++
++func (c *Ed25519Credentials) Verify(publicKey string, payload, signature []byte) (bool, error) {
++	key, ok := parseEd25519Public(publicKey)
++	if !ok {
+ 		return false, nil
+ 	}
++	trusted := bytes.Equal(key, c.public)
++	if !trusted {
++		for _, old := range c.historical {
++			if bytes.Equal(key, old) {
++				trusted = true
++				break
++			}
++		}
++	}
++	if !trusted {
++		return false, nil
++	}
+ 	return ed25519.Verify(key, payload, signature), nil
+ }
+ 
+@@ -167,7 +228,9 @@
+ 	}
+ }
+ 
+-type DurableConfig struct{ StatePath, KeyPath, FencePath, RegistryURL, RegistryToken, PolicyID, PolicyVersion string }
++type DurableConfig struct {
++	StatePath, KeyPath, HistoricalKeysPath, FencePath, RegistryURL, RegistryToken, PolicyID, PolicyVersion string
++}
+ 
+ func NewDurableService(c DurableConfig) (*service.Service, func() error, error) {
+ 	if c.StatePath == "" || c.KeyPath == "" || c.RegistryURL == "" || c.PolicyID == "" || c.PolicyVersion == "" {
+@@ -186,6 +249,10 @@
+ 		store.Close()
+ 		return nil, nil, err
+ 	}
++	if err = credentials.TrustHistoricalPublicKeys(c.HistoricalKeysPath); err != nil {
++		store.Close()
++		return nil, nil, err
++	}
+ 	svc, err := service.NewPersistent(RegistryHTTP{BaseURL: c.RegistryURL, Token: c.RegistryToken}, credentials, nil, nil, BundleStub{ID: c.PolicyID, Ver: c.PolicyVersion}, store, c.FencePath)
+ 	if err != nil {
+ 		store.Close()
+diff --git a/internal/local/durable_test.go b/internal/local/durable_test.go
+--- a/internal/local/durable_test.go
++++ b/internal/local/durable_test.go
+@@ -59,6 +59,44 @@
+ 		t.Fatal("world-readable key accepted")
+ 	}
+ }
++
++func TestHistoricalIssuerVerifiesStoredSignature(t *testing.T) {
++	current, err := OpenEd25519Credentials(filepath.Join(t.TempDir(), "current.pem"))
++	if err != nil {
++		t.Fatal(err)
++	}
++	previous, err := OpenEd25519Credentials(filepath.Join(t.TempDir(), "previous.pem"))
++	if err != nil {
++		t.Fatal(err)
++	}
++	_, oldKey, oldSig, err := previous.Sign([]byte("stored-receipt"))
++	if err != nil {
++		t.Fatal(err)
++	}
++	valid, _ := current.Verify(oldKey, []byte("stored-receipt"), oldSig)
++	if valid {
++		t.Fatal("historical signature accepted before the issuer was installed")
++	}
++	path := filepath.Join(t.TempDir(), "historical.pem")
++	if err = os.WriteFile(path, []byte(oldKey), 0600); err != nil {
++		t.Fatal(err)
++	}
++	if err = current.TrustHistoricalPublicKeys(path); err != nil {
++		t.Fatal(err)
++	}
++	valid, err = current.Verify(oldKey, []byte("stored-receipt"), oldSig)
++	if err != nil || !valid {
++		t.Fatal("installed historical issuer rejected a stored signature", err)
++	}
++	_, newKey, newSig, err := current.Sign([]byte("new-operation"))
++	if err != nil || newKey == oldKey {
++		t.Fatal("new operation did not use the current key", err)
++	}
++	valid, err = current.Verify(newKey, []byte("new-operation"), newSig)
++	if err != nil || !valid {
++		t.Fatal("current signature failed", err)
++	}
++}
+ func TestRegistryHTTPFailsClosed(t *testing.T) {
+ 	for _, tc := range []struct {
+ 		name string
+diff --git a/internal/config/config.go b/internal/config/config.go
+--- a/internal/config/config.go
++++ b/internal/config/config.go
+@@ -8,37 +8,39 @@
+ 
+ // Config holds process listen configuration.
+ type Config struct {
+-	Mode          string
+-	StatePath     string
+-	KeyPath       string
+-	FencePath     string
+-	RegistryURL   string
+-	RegistryToken string
+-	PolicyID      string
+-	PolicyVersion string
+-	MutationToken string
+-	BindHost      string
+-	GRPCPort      int
+-	HealthPort    int
+-	MetricsPort   int
++	Mode               string
++	StatePath          string
++	KeyPath            string
++	HistoricalKeysPath string
++	FencePath          string
++	RegistryURL        string
++	RegistryToken      string
++	PolicyID           string
++	PolicyVersion      string
++	MutationToken      string
++	BindHost           string
++	GRPCPort           int
++	HealthPort         int
++	MetricsPort        int
+ }
+ 
+ // Load reads configuration from environment (defaults match k8s deployment).
+ func Load() (Config, error) {
+ 	c := Config{
+-		Mode:          os.Getenv("ARE_PASSPORT_MODE"),
+-		StatePath:     os.Getenv("ARE_PASSPORT_STATE_PATH"),
+-		KeyPath:       os.Getenv("ARE_PASSPORT_KEY_PATH"),
+-		FencePath:     os.Getenv("ARE_PASSPORT_FENCE_LOCK_PATH"),
+-		RegistryURL:   os.Getenv("ARE_PASSPORT_REGISTRY_URL"),
+-		RegistryToken: os.Getenv("ARE_PASSPORT_REGISTRY_TOKEN"),
+-		PolicyID:      os.Getenv("ARE_PASSPORT_POLICY_ID"),
+-		PolicyVersion: os.Getenv("ARE_PASSPORT_POLICY_VERSION"),
+-		MutationToken: os.Getenv("ARE_PASSPORT_MUTATION_TOKEN"),
+-		BindHost:      os.Getenv("ARE_PASSPORT_BIND_HOST"),
+-		GRPCPort:      getenvInt("ARE_PASSPORT_GRPC_PORT", 9094),
+-		HealthPort:    getenvInt("ARE_PASSPORT_HEALTH_PORT", 8080),
+-		MetricsPort:   getenvInt("ARE_PASSPORT_METRICS_PORT", 8085),
++		Mode:               os.Getenv("ARE_PASSPORT_MODE"),
++		StatePath:          os.Getenv("ARE_PASSPORT_STATE_PATH"),
++		KeyPath:            os.Getenv("ARE_PASSPORT_KEY_PATH"),
++		HistoricalKeysPath: os.Getenv("ARE_PASSPORT_HISTORICAL_KEYS_PATH"),
++		FencePath:          os.Getenv("ARE_PASSPORT_FENCE_LOCK_PATH"),
++		RegistryURL:        os.Getenv("ARE_PASSPORT_REGISTRY_URL"),
++		RegistryToken:      os.Getenv("ARE_PASSPORT_REGISTRY_TOKEN"),
++		PolicyID:           os.Getenv("ARE_PASSPORT_POLICY_ID"),
++		PolicyVersion:      os.Getenv("ARE_PASSPORT_POLICY_VERSION"),
++		MutationToken:      os.Getenv("ARE_PASSPORT_MUTATION_TOKEN"),
++		BindHost:           os.Getenv("ARE_PASSPORT_BIND_HOST"),
++		GRPCPort:           getenvInt("ARE_PASSPORT_GRPC_PORT", 9094),
++		HealthPort:         getenvInt("ARE_PASSPORT_HEALTH_PORT", 8080),
++		MetricsPort:        getenvInt("ARE_PASSPORT_METRICS_PORT", 8085),
+ 	}
+ 	if c.Mode == "" {
+ 		c.Mode = "memory"
+diff --git a/cmd/agent-passport/main.go b/cmd/agent-passport/main.go
+--- a/cmd/agent-passport/main.go
++++ b/cmd/agent-passport/main.go
+@@ -43,7 +43,7 @@
+ 	var svc *service.Service
+ 	if cfg.Mode == "durable" {
+ 		var closeService func() error
+-		svc, closeService, err = local.NewDurableService(local.DurableConfig{StatePath: cfg.StatePath, KeyPath: cfg.KeyPath, FencePath: cfg.FencePath, RegistryURL: cfg.RegistryURL, RegistryToken: cfg.RegistryToken, PolicyID: cfg.PolicyID, PolicyVersion: cfg.PolicyVersion})
++		svc, closeService, err = local.NewDurableService(local.DurableConfig{StatePath: cfg.StatePath, KeyPath: cfg.KeyPath, HistoricalKeysPath: cfg.HistoricalKeysPath, FencePath: cfg.FencePath, RegistryURL: cfg.RegistryURL, RegistryToken: cfg.RegistryToken, PolicyID: cfg.PolicyID, PolicyVersion: cfg.PolicyVersion})
+ 		if err != nil {
+ 			return err
+ 		}

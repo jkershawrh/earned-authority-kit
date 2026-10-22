@@ -1,0 +1,107 @@
+{
+  "workspace": "/Users/jkershaw/Documents/earned-authority-reference-a",
+  "instance": "ea-source-a",
+  "port_offset": 8000,
+  "sources": [
+    {
+      "name": "foundation",
+      "url": "https://github.com/srex-dev/are-foundation.git",
+      "revision": "cb4e2209bcbafbbf6229ec5d096edaa296551832",
+      "path": "work/foundation-track",
+      "config_key": "FOUNDATION_SOURCE_DIR",
+      "mode": "canonical gateway and REST BFF processes, real PostgreSQL identity repository, real OPA",
+      "interfaces": [
+        "POST /v1/identity/agents",
+        "GET /v1/identity/agents/{agent_id}",
+        "POST /v1/policy/evaluations",
+        "canonical delegated Passport facade with CAS headers"
+      ],
+      "authority_boundary": "Passport ownership is external; BFF must delegate lifecycle and must not fall back on upstream failure.",
+      "patches": [
+        {
+          "path": "patches/foundation-complete-reference.patch",
+          "sha256": "e1be4068e14a7441ad5e1538a317035c60798944da1a6c83d3039cc105838479"
+        }
+      ],
+      "reconstruction_status": "PINNED_WITH_EXPLICIT_COMPLETE_PATCH"
+    },
+    {
+      "name": "passport",
+      "url": "https://github.com/jkershawrh/agent-passport.git",
+      "revision": "c5e9e4ef780a51647ebafb9f7239e75cd223b596",
+      "path": "work/passport-track",
+      "config_key": "PASSPORT_SOURCE_DIR",
+      "mode": "canonical standalone service with explicit durable reference patch; same host OS as fenced executor",
+      "interfaces": [
+        "are.passport.v1.PassportIssuanceService/ApplyPassportOperation",
+        "GetPassportOperation",
+        "IssuePassport",
+        "GetAgentPassport",
+        "VerifyPassport",
+        "RevokePassport"
+      ],
+      "authority_boundary": "one active aggregate passport, signed exact scopes, durable authority revisions, authenticated CAS mutation; signed historical operation receipts reconcile a local intent without restoring past authority",
+      "patches": [
+        {
+          "path": "patches/canonical-passport-hardening.patch",
+          "sha256": "1f633ff8b4dd0f8e71de5e4a435d2ac5bae205a5e75a6618fa0b052a4cb7cbf7"
+        }
+      ],
+      "reconstruction_status": "PINNED_WITH_EXPLICIT_COMPLETE_PATCH"
+    },
+    {
+      "name": "ledger",
+      "url": "https://github.com/jkershawrh/are-immutable-ledger.git",
+      "revision": "2679c9e0a5430cde9e435339e441a94989d2bcd6",
+      "path": "work/ledger-track",
+      "mode": "unchanged canonical service with real PostgreSQL",
+      "interfaces": [
+        "are.ledger.v1.ImmutableLedgerService/IssueReceipt",
+        "GetEntry",
+        "VerifyProof",
+        "VerifyEntry",
+        "VerifyChain"
+      ],
+      "authority_boundary": "records assertions; does not authorize actions or prove their truth",
+      "patches": [],
+      "reconstruction_status": "PINNED_UNMODIFIED"
+    },
+    {
+      "name": "cascade",
+      "url": "https://github.com/jkershawrh/cascade-compression.git",
+      "revision": "3efd16e053ef2a8a95b1b1ba6c1d1acdd873a3cb",
+      "path": "work/cascade-compression-oss",
+      "config_key": "CASCADE_SOURCE_DIR",
+      "mode": "canonical in-process module, not a substitute service",
+      "interfaces": [
+        "cascade_compression.cascade.promotion.PromotionEngine.validate",
+        "PromotionEngine.check_promotion",
+        "PromotionEngine.demote"
+      ],
+      "authority_boundary": "eligibility only; demo-three-pass profile is a bounded behavior fixture, not statistical adequacy",
+      "patches": [],
+      "reconstruction_status": "PINNED_UNMODIFIED"
+    },
+    {
+      "name": "gcl",
+      "url": "https://github.com/jkershawrh/governed-cognitive-loop.git",
+      "revision": "a8ae67ee1198e8b86bf7458119723c0af2d74792",
+      "path": "work/governed-cognitive-loop-oss",
+      "config_key": "GCL_SOURCE_DIR",
+      "mode": "canonical deterministic FalsificationGate in isolated local subprocess; network disabled",
+      "interfaces": [
+        "gcl.falsification.gate.FalsificationGate"
+      ],
+      "authority_boundary": "advisory constraint check; never authority or independent outcome evidence",
+      "patches": [],
+      "reconstruction_status": "PINNED_UNMODIFIED"
+    }
+  ],
+  "tool_versions": {
+    "go": "go version go1.26.4 darwin/arm64",
+    "python": "Python 3.12.13",
+    "podman": "podman version 5.8.3"
+  },
+  "source_reconstruction": "fresh pinned upstream + verified complete patches",
+  "limits": "Reproduces source inputs and dependencies; does not claim byte-identical release, clean external host, or second-person validation."
+}
