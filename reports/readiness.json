@@ -1,6 +1,6 @@
 {
-  "generated_at_ms": 1791830913169,
-  "kit_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+  "generated_at_ms": 1792684179925,
+  "kit_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
   "overall_integration_readiness": "AMBER",
   "milestones": [
     {
@@ -19,7 +19,7 @@
     {
       "id": "M2",
       "title": "Connected canonical services",
-      "status": "GREEN",
+      "status": "AMBER",
       "scope": "Pinned local stack and specifically executed lifecycle/fault cases.",
       "requirements": [
         "QUAL-01",
@@ -40,7 +40,7 @@
     {
       "id": "M3",
       "title": "Deployable local reference kit",
-      "status": "GREEN",
+      "status": "AMBER",
       "scope": "Fresh same-host reconstruction and full persistent restart.",
       "requirements": [
         "DEP-RESTORE",
@@ -50,7 +50,7 @@
     }
   ],
   "kit_tests": {
-    "tests_run": 451,
+    "tests_run": 457,
     "failures": 0,
     "errors": 0,
     "skipped": 0,
@@ -61,7 +61,7 @@
   "rows": [
     {
       "id": "CON-01",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "CDD"
@@ -81,7 +81,7 @@
     },
     {
       "id": "KIT-01",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -101,7 +101,7 @@
     },
     {
       "id": "BDD-LOCAL",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "BDD"
@@ -121,7 +121,7 @@
     },
     {
       "id": "EXEC-LOCAL",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -141,7 +141,7 @@
     },
     {
       "id": "QUAL-01",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -161,7 +161,7 @@
     },
     {
       "id": "AUTH-CLIENT",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -181,7 +181,7 @@
     },
     {
       "id": "AUTH-OPS",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "CDD"
@@ -201,7 +201,7 @@
     },
     {
       "id": "AUDIT-LOCAL",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -221,7 +221,7 @@
     },
     {
       "id": "LED-01",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -241,7 +241,7 @@
     },
     {
       "id": "EVID-VERIFY",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -261,7 +261,7 @@
     },
     {
       "id": "EVID-GUARD",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "required_methods": [
         "TDD"
@@ -281,15 +281,17 @@
     },
     {
       "id": "POL-01",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "CANONICAL_COMPONENT",
       "required_methods": [
         "TDD"
       ],
       "max_age_ms": 604800000,
-      "status": "GREEN",
-      "reason": "All required methods passed for this revision and environment",
-      "missing_methods": [],
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "TDD"
+      ],
       "lane": "WP1",
       "component": "Foundation binding and authorization-only responses",
       "acceptance": "105 BFF and 38 gateway leaf cases in normal and race runs, plus 15 actual OPA engine tests; repeated cases overlap.",
@@ -301,15 +303,17 @@
     },
     {
       "id": "AUTH-01",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "CANONICAL_COMPONENT",
       "required_methods": [
         "TDD"
       ],
       "max_age_ms": 604800000,
-      "status": "GREEN",
-      "reason": "All required methods passed for this revision and environment",
-      "missing_methods": [],
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "TDD"
+      ],
       "lane": "WP1",
       "component": "Passport operation persistence and races",
       "acceptance": "44 tests / 76 leaf cases in normal and race-detector runs, including legacy-state migration and exact request retries. Runs overlap; they are not independent trials.",
@@ -321,15 +325,17 @@
     },
     {
       "id": "POL-LIVE",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "CDD"
       ],
       "max_age_ms": 604800000,
-      "status": "GREEN",
-      "reason": "All required methods passed for this revision and environment",
-      "missing_methods": [],
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "CDD"
+      ],
       "lane": "WP1",
       "component": "Policy administration and binding",
       "acceptance": "8 live checks: expected policy digest and denied administrative mutations.",
@@ -341,15 +347,17 @@
     },
     {
       "id": "SVC-LIVE",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "CDD"
       ],
       "max_age_ms": 604800000,
-      "status": "GREEN",
-      "reason": "All required methods passed for this revision and environment",
-      "missing_methods": [],
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "CDD"
+      ],
       "lane": "WP1",
       "component": "Canonical service interfaces",
       "acceptance": "7 live checks against Foundation, Passport, OPA and Ledger.",
@@ -361,15 +369,17 @@
     },
     {
       "id": "ARC-LIVE",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
       ],
       "max_age_ms": 604800000,
-      "status": "GREEN",
-      "reason": "All required methods passed for this revision and environment",
-      "missing_methods": [],
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "BDD"
+      ],
       "lane": "WP5",
       "component": "Connected earned-authority arc",
       "acceptance": "23 live checks: qualify, grant, mutate, independent readback, selective withdrawal, refusal, requalification and exported proof consumption.",
@@ -381,15 +391,17 @@
     },
     {
       "id": "FAULT-LIVE",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
       ],
       "max_age_ms": 604800000,
-      "status": "GREEN",
-      "reason": "All required methods passed for this revision and environment",
-      "missing_methods": [],
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "BDD"
+      ],
       "lane": "WP5",
       "component": "Connected fault and race checks",
       "acceptance": "17 live checks including process crash recovery, authority race, expiry, cross-skill binding, missing readback and ledger outage.",
@@ -401,15 +413,17 @@
     },
     {
       "id": "AUDIT-ATOMIC",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
       ],
       "max_age_ms": 604800000,
-      "status": "GREEN",
-      "reason": "All required methods passed for this revision and environment",
-      "missing_methods": [],
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "BDD"
+      ],
       "lane": "WP4",
       "component": "Authority-to-audit process crash recovery",
       "acceptance": "Real process termination, lost RPC reply, local persistence failure and historical receipt reconciliation. Separate service commits; no distributed atomic transaction.",
@@ -421,15 +435,17 @@
     },
     {
       "id": "DEP-RESTORE",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
       ],
       "max_age_ms": 604800000,
-      "status": "GREEN",
-      "reason": "All required methods passed for this revision and environment",
-      "missing_methods": [],
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "BDD"
+      ],
       "lane": "WP6",
       "component": "Persistent full-stack stop and restore",
       "acceptance": "6 checks preserve prior identity, authority revision/scopes, registry mutations and ledger receipts. Same host; no disk-loss claim.",
@@ -441,15 +457,17 @@
     },
     {
       "id": "AUDIT-RESTORE",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
       ],
       "max_age_ms": 604800000,
-      "status": "GREEN",
-      "reason": "All required methods passed for this revision and environment",
-      "missing_methods": [],
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "BDD"
+      ],
       "lane": "WP4",
       "component": "Historical operation receipts after stack restart",
       "acceptance": "Read-only revalidation of prior signed operation receipts, lifecycle events and ledger delivery after retained-state restart.",
@@ -461,15 +479,17 @@
     },
     {
       "id": "DEP-BUILD",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "FRESH_SAME_HOST",
       "required_methods": [
         "BDD"
       ],
       "max_age_ms": 604800000,
-      "status": "GREEN",
-      "reason": "All required methods passed for this revision and environment",
-      "missing_methods": [],
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "BDD"
+      ],
       "lane": "WP6",
       "component": "Fresh source reconstruction and one-command validation",
       "acceptance": "Five pinned upstream repositories, explicit patches, distinct keys/state/volumes and 123 recorded checks.",
@@ -481,15 +501,17 @@
     },
     {
       "id": "BDD-SERVICE",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "REAL_LOCAL_SERVICES",
       "required_methods": [
         "BDD"
       ],
       "max_age_ms": 604800000,
-      "status": "GREEN",
-      "reason": "All required methods passed for this revision and environment",
-      "missing_methods": [],
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "BDD"
+      ],
       "lane": "WP5",
       "component": "Explicit complete service behaviors",
       "acceptance": "37 complete scenario IDs: BDD-001, BDD-002, BDD-003, BDD-004, BDD-005, BDD-006, BDD-007, BDD-008, BDD-009, BDD-010, BDD-011, BDD-012, BDD-013, BDD-014, BDD-015, BDD-016, BDD-017, BDD-018, BDD-019, BDD-020, BDD-021, BDD-022, BDD-023, BDD-024, BDD-025, BDD-026, BDD-027, BDD-028, BDD-029, BDD-030, BDD-031, BDD-032, BDD-033, BDD-034, BDD-035, BDD-036, BDD-037. Every named scenario requires all its outline rows and assertions.",
@@ -501,15 +523,17 @@
     },
     {
       "id": "BDD-CORE",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "SERVICE_ACCEPTANCE",
       "required_methods": [
         "BDD"
       ],
       "max_age_ms": 604800000,
-      "status": "GREEN",
-      "reason": "All required methods passed for this revision and environment",
-      "missing_methods": [],
+      "status": "AMBER",
+      "reason": "Missing current, executed, artifact-verified evidence",
+      "missing_methods": [
+        "BDD"
+      ],
       "lane": "WP5",
       "component": "All 37 behaviors on real service adapters",
       "acceptance": "37 of 37 complete scenarios recorded; fixture and partial assertion passes cannot complete the remainder.",
@@ -521,7 +545,7 @@
     },
     {
       "id": "EDD-PLAN",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "HELD_OUT_EVALUATION",
       "required_methods": [
         "EDD"
@@ -534,16 +558,16 @@
       ],
       "lane": "WP5",
       "component": "Preregistered evaluation thresholds and risk budget",
-      "acceptance": "Choose value target, sample adequacy, fixed versions, family-disjoint holdout and actual human baseline before scoring.",
+      "acceptance": "Development console and family manifest exist. Confirmatory risk budget, sample counts, and a timed human baseline remain unset.",
       "baseline": "AMBER",
       "release_required": true,
       "milestone": null,
-      "implementation": "Acceptance outstanding",
-      "artifact": null
+      "implementation": "Pilot console and family manifest; confirmatory thresholds and a timed operator are unset",
+      "artifact": "evaluations/pilot-plan.json"
     },
     {
       "id": "EDD-RUN",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "HELD_OUT_EVALUATION",
       "required_methods": [
         "EDD"
@@ -565,7 +589,7 @@
     },
     {
       "id": "DEP-EXTERNAL",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "INDEPENDENT_REPRODUCTION",
       "required_methods": [
         "BDD"
@@ -587,7 +611,7 @@
     },
     {
       "id": "DEP-RH",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "OPENSHIFT",
       "required_methods": [
         "BDD"
@@ -609,7 +633,7 @@
     },
     {
       "id": "ROB-01",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "SIMULATION",
       "required_methods": [
         "EDD"
@@ -631,7 +655,7 @@
     },
     {
       "id": "BASE-01",
-      "target_revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "target_revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "HISTORICAL_BASELINE",
       "required_methods": [
         "TDD"
@@ -653,128 +677,128 @@
   "evidence": [
     {
       "requirement_id": "CON-01",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "method": "CDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791830846894,
+      "timestamp_ms": 1792684173213,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:57dcab78e1b1203eaedd45a9c7390bffe4843f53c4fd14da6d6d506aafb71516"
+      "artifact_digest": "sha256:5734b86cdb5c836b06ebfcc2723627a6df04ffcbf399f8640e6b5299fce688a7"
     },
     {
       "requirement_id": "KIT-01",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791830846894,
+      "timestamp_ms": 1792684173213,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:57dcab78e1b1203eaedd45a9c7390bffe4843f53c4fd14da6d6d506aafb71516"
+      "artifact_digest": "sha256:5734b86cdb5c836b06ebfcc2723627a6df04ffcbf399f8640e6b5299fce688a7"
     },
     {
       "requirement_id": "BDD-LOCAL",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "method": "BDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791830846894,
+      "timestamp_ms": 1792684173213,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:57dcab78e1b1203eaedd45a9c7390bffe4843f53c4fd14da6d6d506aafb71516"
+      "artifact_digest": "sha256:5734b86cdb5c836b06ebfcc2723627a6df04ffcbf399f8640e6b5299fce688a7"
     },
     {
       "requirement_id": "EXEC-LOCAL",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791830846894,
+      "timestamp_ms": 1792684173213,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:57dcab78e1b1203eaedd45a9c7390bffe4843f53c4fd14da6d6d506aafb71516"
+      "artifact_digest": "sha256:5734b86cdb5c836b06ebfcc2723627a6df04ffcbf399f8640e6b5299fce688a7"
     },
     {
       "requirement_id": "QUAL-01",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791830846894,
+      "timestamp_ms": 1792684173213,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:57dcab78e1b1203eaedd45a9c7390bffe4843f53c4fd14da6d6d506aafb71516"
+      "artifact_digest": "sha256:5734b86cdb5c836b06ebfcc2723627a6df04ffcbf399f8640e6b5299fce688a7"
     },
     {
       "requirement_id": "AUTH-CLIENT",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791830846894,
+      "timestamp_ms": 1792684173213,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:57dcab78e1b1203eaedd45a9c7390bffe4843f53c4fd14da6d6d506aafb71516"
+      "artifact_digest": "sha256:5734b86cdb5c836b06ebfcc2723627a6df04ffcbf399f8640e6b5299fce688a7"
     },
     {
       "requirement_id": "AUTH-OPS",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "method": "CDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791830846894,
+      "timestamp_ms": 1792684173213,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:57dcab78e1b1203eaedd45a9c7390bffe4843f53c4fd14da6d6d506aafb71516"
+      "artifact_digest": "sha256:5734b86cdb5c836b06ebfcc2723627a6df04ffcbf399f8640e6b5299fce688a7"
     },
     {
       "requirement_id": "AUDIT-LOCAL",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791830846894,
+      "timestamp_ms": 1792684173213,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:57dcab78e1b1203eaedd45a9c7390bffe4843f53c4fd14da6d6d506aafb71516"
+      "artifact_digest": "sha256:5734b86cdb5c836b06ebfcc2723627a6df04ffcbf399f8640e6b5299fce688a7"
     },
     {
       "requirement_id": "LED-01",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791830846894,
+      "timestamp_ms": 1792684173213,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:57dcab78e1b1203eaedd45a9c7390bffe4843f53c4fd14da6d6d506aafb71516"
+      "artifact_digest": "sha256:5734b86cdb5c836b06ebfcc2723627a6df04ffcbf399f8640e6b5299fce688a7"
     },
     {
       "requirement_id": "EVID-VERIFY",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791830846894,
+      "timestamp_ms": 1792684173213,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:57dcab78e1b1203eaedd45a9c7390bffe4843f53c4fd14da6d6d506aafb71516"
+      "artifact_digest": "sha256:5734b86cdb5c836b06ebfcc2723627a6df04ffcbf399f8640e6b5299fce688a7"
     },
     {
       "requirement_id": "EVID-GUARD",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "LOCAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
-      "timestamp_ms": 1791830846894,
+      "timestamp_ms": 1792684173213,
       "executed": true,
       "artifact": "reports/component-verification.json",
-      "artifact_digest": "sha256:57dcab78e1b1203eaedd45a9c7390bffe4843f53c4fd14da6d6d506aafb71516"
+      "artifact_digest": "sha256:5734b86cdb5c836b06ebfcc2723627a6df04ffcbf399f8640e6b5299fce688a7"
     },
     {
       "requirement_id": "POL-01",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "CANONICAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -785,7 +809,7 @@
     },
     {
       "requirement_id": "AUTH-01",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "CANONICAL_COMPONENT",
       "method": "TDD",
       "outcome": "PASS",
@@ -796,7 +820,7 @@
     },
     {
       "requirement_id": "POL-LIVE",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "CDD",
       "outcome": "PASS",
@@ -807,7 +831,7 @@
     },
     {
       "requirement_id": "SVC-LIVE",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "CDD",
       "outcome": "PASS",
@@ -818,7 +842,7 @@
     },
     {
       "requirement_id": "ARC-LIVE",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -829,7 +853,7 @@
     },
     {
       "requirement_id": "FAULT-LIVE",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -840,7 +864,7 @@
     },
     {
       "requirement_id": "AUDIT-ATOMIC",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -851,7 +875,7 @@
     },
     {
       "requirement_id": "DEP-RESTORE",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -862,7 +886,7 @@
     },
     {
       "requirement_id": "AUDIT-RESTORE",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -873,10 +897,10 @@
     },
     {
       "requirement_id": "DEP-BUILD",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "FRESH_SAME_HOST",
       "method": "BDD",
-      "outcome": "PASS",
+      "outcome": "UNKNOWN",
       "timestamp_ms": 1791830546185,
       "executed": true,
       "artifact": "reports/source-b-combined.json",
@@ -884,7 +908,7 @@
     },
     {
       "requirement_id": "BDD-SERVICE",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "REAL_LOCAL_SERVICES",
       "method": "BDD",
       "outcome": "PASS",
@@ -895,7 +919,7 @@
     },
     {
       "requirement_id": "BDD-CORE",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "SERVICE_ACCEPTANCE",
       "method": "BDD",
       "outcome": "PASS",
@@ -905,8 +929,19 @@
       "artifact_digest": "sha256:a37857898113242a0f883e372f9f7207fc63fd15424965e122dd00ed7af4218a"
     },
     {
+      "requirement_id": "EDD-PLAN",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
+      "environment": "HELD_OUT_EVALUATION",
+      "method": "EDD",
+      "outcome": "UNKNOWN",
+      "timestamp_ms": 1792683957333,
+      "executed": true,
+      "artifact": "evaluations/pilot-plan.json",
+      "artifact_digest": "sha256:338efd6d4e82c5a18b8b163265d012a056cb3581d9cc0e5ae92c675d8b753ba8"
+    },
+    {
       "requirement_id": "BASE-01",
-      "revision": "sha256:377220d48913f6ec864d67020bb0bb0aa97fb049580cd9b55a8887f231fb8b6d",
+      "revision": "sha256:2e95e02660c65ada1403352a7844a84d913d8d2c9fd09d1e245163a2625522f3",
       "environment": "HISTORICAL_BASELINE",
       "method": "TDD",
       "outcome": "FAIL",

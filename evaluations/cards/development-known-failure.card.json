@@ -1,0 +1,16 @@
+{
+  "episode_id": "dev-known-failure",
+  "split": "development",
+  "family_id": "fam-dev-release",
+  "seed": 104729,
+  "agent": "agent-a",
+  "skill": "release-model",
+  "version": "skill-v1",
+  "context": "demo-a",
+  "action": "release",
+  "resource": "registry-a/model-a",
+  "requested_digest": "model-v2",
+  "attempt_id": "attempt-dev-known-failure",
+  "deadline_ms": null,
+  "other_resources": ["registry-a/model-b"]
+}

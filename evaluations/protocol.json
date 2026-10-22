@@ -42,7 +42,8 @@
   "comparators": [
     {
       "id": "manual",
-      "description": "A human operator follows the frozen runbook to inspect evidence, request permitted grants or withdrawals, and trigger the deterministic registry operation.",
+      "description": "A human operator follows evaluations/operator-runbook.md to inspect evidence, request permitted grants or withdrawals, and trigger the deterministic registry operation.",
+      "runbook": "evaluations/operator-runbook.md",
       "adaptive_controller": false,
       "llm": false,
       "status": "PLANNED_NOT_EXECUTED",
@@ -89,7 +90,8 @@
     "amendment_rule": "Any change after held-out inspection creates a new protocol version. The inspected cases become development data; use an untouched holdout for confirmatory claims. Report all amendments and exploratory runs."
   },
   "data_splits": {
-    "status": "PLANNED_MANIFEST_NOT_CREATED",
+    "status": "FAMILIES_ASSIGNED_HELD_OUT_CASES_NOT_GENERATED",
+    "manifest": "evaluations/manifest.json",
     "assignment_rule": "Partition by procedure-version family and context family before generating task examples. Related revisions, aliases, copied fixtures, and near-duplicate cases stay in the same partition. Record generator ancestry to prevent leakage across digest-renamed copies.",
     "partitions": [
       {"id": "development", "use": "Implement behavior, debug, and design candidate policies; outcomes are visible.", "count": null},
@@ -237,5 +239,5 @@
     "per_run_manifest": ["protocol_digest", "source_and_artifact_digests", "comparator_id", "episode_and_family_ids", "seed", "split", "fault_schedule_digest", "timestamps_and_clock", "attempt_ids", "authority_revisions", "observation_and_evidence_refs", "metric_numerators_and_denominators", "uncertainty_method", "execution_environment", "operator_actions", "amendments_and_failures"],
     "separation_rule": "A score, a completed run, independent observation, and ledger integrity verification are separate properties. A fixture pass is not observed product value; a valid receipt is not an authorization or proof of truth."
   },
-  "next_gate": "Review and freeze the held-out design, select a risk budget and sample-size plan, implement instrumentation and independent grading, then run the first pilot. No EDD evaluation was executed in this increment."
+  "next_gate": "The manual runbook, development-split console, independent grader, and family manifest exist. Select a confirmatory risk budget and sample-size plan, then time an actual operator. Held-out payloads are not generated. No EDD evaluation was executed in this increment."
 }

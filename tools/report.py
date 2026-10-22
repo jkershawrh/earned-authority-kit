@@ -264,13 +264,17 @@ def main():
     add('BDD-SERVICE','WP5','Explicit complete service behaviors','BDD','REAL_LOCAL_SERVICES',f'{len(full)} complete scenario IDs: '+(', '.join(full) or 'none recorded')+'. Every named scenario requires all its outline rows and assertions.',bdd_path,'FAIL' if failed else ('PASS' if full else 'UNKNOWN'),valid=bdd_valid,release=False,detail='Partial and unbound scenarios retain their own gaps in the raw report')
     add('BDD-CORE','WP5','All 37 behaviors on real service adapters','BDD','SERVICE_ACCEPTANCE',f'{len(full)} of 37 complete scenarios recorded; fixture and partial assertion passes cannot complete the remainder.',bdd_path,'FAIL' if failed else ('PASS' if set(statuses)=={f'BDD-{i:03}' for i in range(1,38)} and len(full)==37 else 'UNKNOWN'),valid=bdd_valid)
     pending=[
-        ('EDD-PLAN','WP5','Preregistered evaluation thresholds and risk budget','EDD','HELD_OUT_EVALUATION','Choose value target, sample adequacy, fixed versions, family-disjoint holdout and actual human baseline before scoring.'),
+        ('EDD-PLAN','WP5','Preregistered evaluation thresholds and risk budget','EDD','HELD_OUT_EVALUATION','Development console and family manifest exist. Confirmatory risk budget, sample counts, and a timed human baseline remain unset.'),
         ('EDD-RUN','WP5','Measured business value and uncertainty','EDD','HELD_OUT_EVALUATION','Protocol is unexecuted. Engineering acceptance does not establish reduced effort, cost or improved completion.'),
         ('DEP-EXTERNAL','WP6','Independent operator / another host','BDD','INDEPENDENT_REPRODUCTION','Clean same-host reconstruction passed; a second person or different host has not reproduced the run.'),
         ('DEP-RH','Later','Red Hat reference profile','BDD','OPENSHIFT','Select deployment target and validate identity, policy, persistence and mutation fencing; no compatibility/support claim.'),
         ('ROB-01','Later','Robotics simulation transfer','EDD','SIMULATION','Deferred BDD-038: separately governed simulator and safety/controller boundaries before any hardware consideration.')]
     for key,lane,name,method,environment,scope in pending:
-        add(key,lane,name,method,environment,scope,release=key not in ('DEP-RH','ROB-01'))
+        if key == 'EDD-PLAN':
+            add(key, lane, name, method, environment, scope, 'evaluations/pilot-plan.json', release=True,
+                detail='Pilot console and family manifest; confirmatory thresholds and a timed operator are unset')
+        else:
+            add(key,lane,name,method,environment,scope,release=key not in ('DEP-RH','ROB-01'))
     redpath='evidence/canonical-passport-results.json'; red=read(redpath).get('checks',{}).get('red',{})
     add('BASE-01','History','Original canonical authority defects','TDD','HISTORICAL_BASELINE','16 retained failing baseline leaf cases; patched target checked separately.',redpath,'FAIL' if red.get('failed',0)>0 else 'UNKNOWN',release=False,baseline='RED',detail='Historical red regression, not current target')
     required=[dict(requirement_id=r['id'],status=r['status']) for r in rows if r['release_required']]

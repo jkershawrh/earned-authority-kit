@@ -4,7 +4,7 @@ Reports are recorded runs, not live status. Source hashes, artifact bindings and
 
 ## Current engineering evidence
 
-- `component-verification.json` and `kit-tests.log`: 451 tests, zero failures/errors/skips, collecting pytest and unittest cases with unchanged source hashes. `component-verification-pre-multi-resource.json` and `readiness-pre-multi-resource.json` keep the earlier 437-test and live-008 snapshots.
+- `component-verification.json` and `kit-tests.log`: 457 tests, zero failures/errors/skips, collecting pytest and unittest cases with unchanged source hashes. `component-verification-pre-multi-resource.json` and `readiness-pre-multi-resource.json` keep the earlier 437-test and live-008 snapshots.
 - `source-b-combined.json`: fresh same-host reconstruction of this source, instance `ea-source-b`, port offset 9000, with the historical-issuer patch and 123 checks across seven SHA-bound children.
 - `receipt-retention.json`: compaction removes disposable archive rows and refuses a receipt cited by an applied journal operation or a local event. Cited receipt growth stays unbounded.
 - `issuer-cutover.json`: after an explicit new issuer key is installed, one stored receipt still verifies under the key that signed it, and a new operation uses the new key.

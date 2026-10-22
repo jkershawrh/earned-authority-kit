@@ -1,8 +1,8 @@
 {
   "scope": "LOCAL_COMPONENT_TESTS_AND_CANONICAL_IN_PROCESS_ADAPTERS",
-  "started_at_ms": 1791830832887,
-  "finished_at_ms": 1791830846894,
-  "tests_run": 451,
+  "started_at_ms": 1792684157211,
+  "finished_at_ms": 1792684173213,
+  "tests_run": 457,
   "failures": 0,
   "errors": 0,
   "skipped": 0,
@@ -29,6 +29,7 @@
     "tests/test_connected_evidence.py": "sha256:af7b72d418e0e848f5fba72f74e8588df552162c9f5877f9fcbfce3790746ebf",
     "tests/test_connected_security.py": "sha256:255c0f39ed9ec9fe0523d2084e8b38628985b5844aa4cf97ffcd95cc7c73a3df",
     "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
+    "tests/test_episode_console.py": "sha256:b419a1c8781b19be0b51109cc1e0e9a19ea08cc83b35a111794c2dabbd65668a",
     "tests/test_evidence_admission.py": "sha256:47c59f09d7a8cf3236e9e46f0581b7c1fb9c5e809329316e280252da613c31f9",
     "tests/test_evidence_boundary.py": "sha256:403f53cb0b9a6fbd00a94688bbde80b43a720e73028255e4cfa4b0bd8cf4a5e0",
     "tests/test_evidence_wire.py": "sha256:792e40d430feea810b6c1a3e2bd8e8050ebf0409d08abc4b053a13cab2cb2e3f",
@@ -94,6 +95,7 @@
     "tests/test_connected_evidence.py": "sha256:af7b72d418e0e848f5fba72f74e8588df552162c9f5877f9fcbfce3790746ebf",
     "tests/test_connected_security.py": "sha256:255c0f39ed9ec9fe0523d2084e8b38628985b5844aa4cf97ffcd95cc7c73a3df",
     "tests/test_contracts.py": "sha256:594e975c44a2c3b3025b51668f6e8f168a6c6e7f5361f9f211d16da8e58bfd0d",
+    "tests/test_episode_console.py": "sha256:b419a1c8781b19be0b51109cc1e0e9a19ea08cc83b35a111794c2dabbd65668a",
     "tests/test_evidence_admission.py": "sha256:47c59f09d7a8cf3236e9e46f0581b7c1fb9c5e809329316e280252da613c31f9",
     "tests/test_evidence_boundary.py": "sha256:403f53cb0b9a6fbd00a94688bbde80b43a720e73028255e4cfa4b0bd8cf4a5e0",
     "tests/test_evidence_wire.py": "sha256:792e40d430feea810b6c1a3e2bd8e8050ebf0409d08abc4b053a13cab2cb2e3f",
@@ -585,6 +587,30 @@
     },
     {
       "test": "tests/test_contracts.py::RuntimeShapeRegressions::test_requested_attempt_cannot_claim_mutation_receipt",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_episode_console.py::EpisodeConsoleTests::test_deadline_blocks_release",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_episode_console.py::EpisodeConsoleTests::test_eligible_release_sets_only_the_requested_alias",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_episode_console.py::EpisodeConsoleTests::test_held_out_family_is_rejected",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_episode_console.py::EpisodeConsoleTests::test_known_failure_withdraws_and_leaves_the_alias",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_episode_console.py::EpisodeConsoleTests::test_procedure_claims_do_not_qualify",
+      "outcome": "PASS"
+    },
+    {
+      "test": "tests/test_episode_console.py::EpisodeConsoleTests::test_trace_records_an_intervention_and_then_closes",
       "outcome": "PASS"
     },
     {
@@ -1971,6 +1997,10 @@
     },
     "test_contracts": {
       "count": 26,
+      "status": "PASS"
+    },
+    "test_episode_console": {
+      "count": 6,
       "status": "PASS"
     },
     "test_evidence_admission": {

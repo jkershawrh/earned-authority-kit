@@ -1,0 +1,16 @@
+{
+  "policy_allow": true,
+  "registry": [
+    {"resource": "registry-a/model-a", "version": "model-v1", "healthy": true},
+    {"resource": "registry-a/model-b", "version": "model-b1", "healthy": true}
+  ],
+  "observations": [
+    {"attempt_id": "shadow-dev-short-1", "expected": "model-v2", "actual": "model-v2"},
+    {"attempt_id": "shadow-dev-short-2", "expected": "model-v2", "actual": "model-v2"}
+  ],
+  "procedure_reports": [
+    {"attempt_id": "claim-dev-short-1", "reported_outcome": "PASS"},
+    {"attempt_id": "claim-dev-short-2", "reported_outcome": "PASS"},
+    {"attempt_id": "claim-dev-short-3", "reported_outcome": "PASS"}
+  ]
+}

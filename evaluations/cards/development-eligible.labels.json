@@ -1,0 +1,7 @@
+{
+  "reference_label": "PERMITTED_RELEASE",
+  "initial": {
+    "registry-a/model-a": "model-v1",
+    "registry-a/model-b": "model-b1"
+  }
+}

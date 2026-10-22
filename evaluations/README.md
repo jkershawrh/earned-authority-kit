@@ -8,7 +8,7 @@ The test asks whether adaptive qualification improves task completion or reduces
 
 ## Three comparisons
 
-1. **Manual:** an actual operator follows a frozen runbook. Record active handling time and interventions. An oracle script is not a manual baseline.
+1. **Manual:** an actual operator follows [the operator runbook](operator-runbook.md) at `tools/episode_console.py`. Record active handling time and interventions. An oracle script is not a manual baseline. The runbook and the development-split console exist. The evaluation remains unpreregistered and unexecuted.
 2. **Fixed deterministic:** a frozen procedure and grant/withdrawal runbook operate without learning from accumulated evaluation outcomes.
 3. **Adaptive qualification:** a frozen controller uses permitted support observations to qualify an exact procedure/context, request policy-approved grants, withdraw affected authority, and requalify it.
 
