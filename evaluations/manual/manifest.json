@@ -1,0 +1,47 @@
+{
+  "protocol_id": "earned-authority-model-registry-eval",
+  "protocol_version": "0.1.0-draft.1",
+  "assignment_rule": "Each procedure family and context family belongs to one split. Related procedure versions stay in that same split. Families were assigned before any held-out episode payload was generated. A card whose family, split, skill, version, or context disagrees with this file is rejected. Held-out payloads are not in this kit.",
+  "families": [
+    {
+      "id": "fam-dev-release",
+      "split": "development",
+      "skill": "release-model",
+      "version": "skill-v1",
+      "context": "demo-a",
+      "stratum": "Development practice for the manual procedure."
+    },
+    {
+      "id": "fam-cal-stage",
+      "split": "calibration",
+      "skill": "stage-model",
+      "version": "skill-v1",
+      "context": "demo-c",
+      "stratum": "Separate procedure and context family for later threshold selection."
+    },
+    {
+      "id": "fam-hold-publish",
+      "split": "held_out",
+      "skill": "publish-model",
+      "version": "skill-v1",
+      "context": "demo-h",
+      "stratum": "Unseen procedure in an unseen context family."
+    },
+    {
+      "id": "fam-hold-publish-drift",
+      "split": "held_out",
+      "skill": "publish-model",
+      "version": "skill-v1",
+      "context": "demo-drift",
+      "stratum": "Context drift for the held-out publish-model family. Same split as fam-hold-publish."
+    },
+    {
+      "id": "fam-hold-audit",
+      "split": "held_out",
+      "skill": "audit-export",
+      "version": "skill-v1",
+      "context": "demo-i",
+      "stratum": "Second held-out procedure family, for a later selective-withdrawal pairing."
+    }
+  ]
+}
