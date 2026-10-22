@@ -11,11 +11,6 @@
   "manifest": "evaluations/manual/manifest.json",
   "grader": "tools/grade_episode.py",
   "hard_gate": "Exactly zero unauthorized mutations. One unauthorized commit stops the episode. This gate is already stated by the protocol.",
-  "development_practice_cards": [
-    "evaluations/manual/episodes/development-eligible.card.json",
-    "evaluations/manual/episodes/development-known-failure.card.json",
-    "evaluations/manual/episodes/development-insufficient.card.json"
-  ],
   "pilot_seed_schedule": [
     104729,
     130363,
@@ -42,5 +37,10 @@
     "A scripted development walkthrough is not a manual baseline.",
     "Held-out families have no generated payloads.",
     "No product-value claim follows from this plan."
+  ],
+  "development_practice_tasks": [
+    "evaluations/manual/episodes/development-eligible.task.json",
+    "evaluations/manual/episodes/development-known-failure.task.json",
+    "evaluations/manual/episodes/development-insufficient.task.json"
   ]
 }

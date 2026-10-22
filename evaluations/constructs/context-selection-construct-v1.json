@@ -1,0 +1,7 @@
+{
+  "schema_version": "fabric.construct-statement/v1",
+  "workload": "earned-authority-kit EDD development routing fixture sequences: the same deterministic release procedure is attempted under context-conditioned versus pooled-outcome support lookup on a disposable model-registry fixture.",
+  "statement": "Whether a selection policy that conditions support lookup on context recovers the correct qualification evidence for unseen procedure-context pairs with fewer lookup reads than a pooled-outcome policy, while both complete legitimate queries with zero unauthorized mutations. The construct is selection efficiency under enforced authority, not general reasoning or business value.",
+  "metric": "Mean signed-and-witnessed support-plus-query lookup reads per observed query, alongside independently graded task success over legitimate assigned queries and the zero-unauthorized-mutation hard gate. Lower mean reads at equal task success and zero violations is better selection efficiency.",
+  "gaming_analysis": "A selection policy could reduce counted reads by caching beyond the declared retention window, by reading unbounded catalogs in one call, or by skipping verification and guessing. Signed published-cost receipts witness every read, the retention window is enforced by the harness, and any unverified or forged lookup fails the query, so cheap-looking paths cannot pass grading."
+}

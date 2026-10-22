@@ -19,7 +19,7 @@ class EpisodeConsoleTests(unittest.TestCase):
     def open(self, stem):
         tmp = tempfile.TemporaryDirectory()
         self.addCleanup(tmp.cleanup)
-        card = load_json(CARDS / f'{stem}.card.json')
+        card = load_json(CARDS / f'{stem}.task.json')
         preparation = load_json(CARDS / f'{stem}.prepare.json')
         labels = load_json(CARDS / f'{stem}.labels.json')
         runtime = open_runtime(Path(tmp.name) / 'episode.sqlite', clock=ControlledClock(now_ms=1_000_000))
@@ -84,7 +84,7 @@ class EpisodeConsoleTests(unittest.TestCase):
         self.assertEqual(runtime.mutation_count, 0)
 
     def test_held_out_family_is_rejected(self):
-        card = load_json(CARDS / 'development-eligible.card.json')
+        card = load_json(CARDS / 'development-eligible.task.json')
         card.update(split='held_out', family_id='fam-hold-publish', skill='publish-model', version='skill-v1', context='demo-h')
         with self.assertRaises(Denied) as raised:
             check_family(card)

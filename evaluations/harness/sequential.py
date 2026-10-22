@@ -185,4 +185,7 @@ def run(plan_path,workspace,report_path):
                           started_unscored_queries=started_count-len(rows),unstarted_queries=len(assignments)-started_count)
     report['metrics']=summarize(rows,assignments)
     report['finished_at_utc']=datetime.now(timezone.utc).isoformat(); persist()
+    # G-07: a completed run emits its evaluation-card/v1 record next to the report.
+    from .cards import emit_report_card
+    emit_report_card(report,report_path,plan_path)
     return report

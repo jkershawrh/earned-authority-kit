@@ -9,6 +9,7 @@ from earned_authority.runtime import ControlledClock, Denied, Runtime
 from .controller import prepare
 from .design import validate_manifest
 from .grader import grade, snapshot, summarize, registry_unchanged
+from .cards import emit_report_card
 
 KIT = Path(__file__).resolve().parents[2]
 
@@ -22,7 +23,8 @@ def source_hashes():
                 'evaluations/tests/*.py', 'evaluations/protocol.json',
                 'evaluations/pilot-plan-v2.json', 'tools/run_edd_pilot.py',
                 'evaluations/confirmatory-design.json', 'tools/check_edd_readiness.py',
-                'evaluations/sequential-plan.json', 'tools/run_edd_sequential.py')
+                'evaluations/sequential-plan.json', 'tools/run_edd_sequential.py',
+                'evaluations/constructs/*.json')
     return {str(p.relative_to(KIT)): digest(p) for pattern in patterns for p in sorted(KIT.glob(pattern))}
 
 
@@ -190,4 +192,8 @@ def run(plan_path, workspace, report_path):
     report['metrics'] = summarize(rows, assignments)
     report['finished_at_utc'] = datetime.now(timezone.utc).isoformat()
     report_path.write_text(json.dumps(report, indent=2) + '\n')
+    # G-07: every completed run emits its evaluation-card/v1 record next to the
+    # report (<report-stem>.card.json). The report file is final before the
+    # card binds its bytes; the report itself stays free of card self-reference.
+    emit_report_card(report, report_path, plan_path)
     return report
