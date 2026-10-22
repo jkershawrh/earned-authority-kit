@@ -8,7 +8,7 @@ The test asks whether adaptive qualification improves task completion or reduces
 
 ## Three comparisons
 
-1. **Manual:** an actual operator follows a frozen runbook. Record active handling time and interventions. An oracle script is not a manual baseline.
+1. **Manual:** an actual operator follows [the operator runbook](manual/operator-runbook.md) at `tools/episode_console.py`. Record active handling time and interventions. An oracle script is not a manual baseline. The runbook, the development-split console, the independent grader and the family manifest exist; the evaluation remains unpreregistered and unexecuted. No episode has been timed.
 2. **Fixed deterministic:** a frozen procedure and grant/withdrawal runbook operate without learning from accumulated evaluation outcomes.
 3. **Adaptive qualification:** a frozen controller uses permitted support observations to qualify an exact procedure/context, request policy-approved grants, withdraw affected authority, and requalify it.
 
@@ -73,3 +73,11 @@ Before running the pilot, complete the manifest and leakage review, implement in
 [SEQUENTIAL.md](SEQUENTIAL.md) records 20 retained-state sequences and 140 graded queries. Both deterministic arms share the same observations and retention rules. Lifecycle engineering passes; adaptive business value remains unproven.
 
 The [context-conditioned selection development comparison](ROUTING.md) adds a pooled-outcome baseline that also updates from retained outcomes. The current independent review passes 114 tests and 42 probes. Earlier single-query and sequential reports retain their original scoped source snapshots. Business and confirmatory acceptance remain AMBER.
+
+## Manual comparator leg (adopted, NOT_EXECUTED)
+
+The manual comparator's implementable tooling now exists under [manual/](manual/): an episode console with the runbook's timed actions (evidence, qualify, grant, release, read, withdraw, lookup, intervene, stop), the [operator runbook](manual/operator-runbook.md) a timed human follows, the [family manifest](manual/manual-pilot-plan.json) with split bindings and held-out rejection, and three development practice episodes as `*.task.json` with private `.labels.json` / `.prepare.json` sidecars that keep grade labels out of the operator's path. This is the missing prerequisite the confirmatory readiness gate `actual_human_baseline_plan` names. It stays **NOT_EXECUTED** until an operator is actually timed; the first timed run will be new evidence under the protocol's amendment rules, never a retroactive claim. A scripted walkthrough of the console is practice, not a manual baseline.
+
+## Evaluation cards (G-07)
+
+"Card" unambiguously means the ecosystem qualification artifact (`fabric.evaluation-card/v1`). The harness's task payloads are `*.task.json`, not cards. Every completed development run — pilot, sequential, routing — emits a self-hashing `evaluation-card/v1` result record next to its report (`<report-stem>.card.json`), binding the frozen plan and measured report by digest, using OFFLINE evidence labels (fixture episodes are deterministic local computation, never LIVE), Wilson 95% intervals on the recorded rates, `reliability_claimable: false` at one trial per case, and `verdict.authorizes_execution: false`. Construct sidecars are authored under [constructs/](constructs/) before runs and bound by digest. Validate cards through the eval-cards platform before notarizing; a receipt proves recording, never truth, and never authorizes anything.

@@ -17,12 +17,19 @@ Reports are recorded runs, not live status. Source hashes, artifact bindings and
 - `../evidence/foundation-demo-window-results.json`: 105 BFF and 38 gateway leaf cases in normal and race runs, plus 15 actual OPA cases. The complete Foundation patch was replayed exactly from its pinned source; the business calendar remains open. `../evidence/canonical-passport-operations-result.json` retains the unchanged Passport component evidence.
 - `report-provenance-checks.json`: isolated controls for missing/stale/expired/shortened/duplicated reports, altered Foundation logs and arbitrary BDD IDs.
 - `observation-reference-cleanup.json`: owned service teardown and retained-state preservation after validation.
+- `receipt-retention.json`: compaction removes disposable archive rows and refuses a receipt cited by an applied journal operation or a local event. Cited receipt growth stays unbounded.
+- `issuer-cutover.json`: after an explicit new issuer key is installed, one stored receipt still verifies under the key that signed it, and a new operation uses the new key.
+- `backup-restore.json`: same-host copy restore of Passport state, the registry SQLite file, and the Ledger volume, followed by a reread of the historical receipts. Not disk repair.
 
 Normal and race-detector tests often exercise the same cases. Multiple successful service runs are repeats. Do not sum them into a unique-test or independent-trial count. This index is not an externally signed attestation.
 
 ## Historical evidence
 
 Earlier reports, including the clean, operations, evidence and boundary reference runs, fixture reports and retained red logs, describe their recorded snapshots. `component-verification-before-observation.json` retains the prior 369-component run. Live007 passed all 52 cases but predates the final commit-event identity check; live008 supplied that historical increment's rerun. The `observation-reference-pre-final-*` reports are historical: the wire consumer changed during that earlier pipeline; all seven stages were rerun for the final aggregate. Service BDD runs 001/002 have narrower coverage. Live003 retains the empty-evidence reason defect fixed before live004. Live005 retains 49 passes and three failed storage-fault precondition assertions; retained SQLite connections prevented the intended permission fault. Live006 fixes the test setup, requires the actual SQLite failure, restores owned database/sidecar modes and passes the target behavior. Runtime source did not change between live005 and live006. Historical artifacts explain corrections without overriding the current matrix.
+
+## Archived Line B evidence (pre-reconciliation)
+
+The `reconcile/phase2` port kept Line B's recorded runs as archived evidence of the source they measured; they are not current gates and their journal wire format (`targets`) is not the reconciled contract. `source-b-combined.json` is the B-line fresh workspace (instance `ea-source-b`, port offset 9000, with the historical-issuer patch); `source-a-combined.json` is the earlier A-line-side reconstruction (instance `ea-source-a`, port offset 8000) recorded during the divergence. `service-bdd-live-009.json` retains the BDD-026 procedure-revision ordering failure fixed before 010; `service-bdd-live-010.json` and `service-bdd-live-011.json` are the prior B-line green runs. `reference-*-011.json` re-ran the 123-check profile on the B-line stack with retained volumes. `component-verification-pre-multi-resource.json`, `kit-tests-pre-multi-resource.log` and `readiness-pre-multi-resource.json` keep the B-line 437-test snapshots. The retention, cutover and restore proofs listed above are current engineering evidence.
 
 ## Acceptance still open
 

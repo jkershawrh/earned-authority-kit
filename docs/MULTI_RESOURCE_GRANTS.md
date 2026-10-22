@@ -2,6 +2,8 @@
 
 Status: **GREEN for the recorded local engineering profile**. Multi-resource support is implemented and BDD-031 is complete in reports/service-bdd-live-013.json. Broader deployment and evaluation gates remain AMBER.
 
+Reconciliation note (Phase 2): this specification is implemented by Line A's contracts, which won wholesale in the `reconcile/phase2` port. The authority journal's removal metadata is the validated `removed_targets` wire format — field-complete, anchor-bound to the prior aggregate, with retained-binding and lifetime-shortening checks enforced at persistence and re-verified at recovery. The parallel Line B implementation's unvalidated `targets` passthrough, its `target_view` projection (which omits digests the journal requires), and its `withdrawals` re-key migration were consciously abandoned; see [RECONCILIATION_ANALYSIS.md](RECONCILIATION_ANALYSIS.md) §2. Line B's ported contribution to this area is limited to the fixture runtime's `select_grant` routing and the `has_skill` helper. Line B's live runs 009–011 remain archived evidence of the abandoned wire format.
+
 ## Gap closed by this increment
 
 BDD-031 requires a stale revision-4 replacement to lose after release authority is revoked at revision 5. A replacement recomputed from revision 5 must then add a second read resource while retaining the first read grant and preserving the release revocation.

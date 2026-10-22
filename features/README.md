@@ -20,6 +20,11 @@ BDD-015 persists an authenticated diagnostic snapshot that cannot authorize
 execution; BDD-016 records attempt-specific consumption checks without rewriting
 prior qualification or issuance history. `reports/bdd-environment-coverage.json` supplies exact
 case pointers. All 37 scenarios are GREEN within the recorded local profile; broader deployment and value gates remain AMBER.
+The Line B runs `reports/service-bdd-live-009.json`, `010` and `011` remain
+archived evidence of the pre-reconciliation B-line source (009 retains the
+earlier BDD-026 procedure-revision failure that 010 fixed); they are not
+current gates. The `reports/reference-*-011.json` files re-ran the 123-check
+profile on the B-line stack with retained volumes.
 Live005 preserves three failed storage-fault precondition assertions: retained
 SQLite connections prevented the intended file-permission failure. Live006 uses
 explicit test cleanup of inactive connections and restores the owned main/WAL/SHM

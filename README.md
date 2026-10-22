@@ -4,7 +4,19 @@ This kit connects a deterministic procedure's qualification to bounded authority
 
 **Three bounded engineering milestones have executable evidence:** a local fixture; connected canonical services; and a fresh same-host reference installation with persistent restart. The latest component run passes **514 tests**, and the fresh-reference deployment passes **123 checks**. The dedicated service behavior run passes 52 executed cases and completes **37 of 37 implemented scenarios**. These counts describe different suites and are not statistical trials. The full roadmap remains **AMBER**: business value has not been evaluated, and independent installation, operations, deployment and robotics gates remain open.
 
-Start with [the visual roadmap](roadmap.html), [the parallel work plan](docs/ROADMAP.md), [deployment instructions](deploy/reference/README.md) and [scope and remaining gaps](docs/BOUNDARIES.md). **EDD means evaluation-driven development.** The [evaluation protocol](evaluations/README.md) is drafted; its confirmatory comparison remains unexecuted and needs a chosen value target, actual human baseline and preregistered sample/risk criteria.
+Start with [the visual roadmap](roadmap.html), [the parallel work plan](docs/ROADMAP.md), [deployment instructions](deploy/reference/README.md) and [scope and remaining gaps](docs/BOUNDARIES.md). **EDD means evaluation-driven development.** The [evaluation protocol](evaluations/README.md) is drafted; its confirmatory comparison remains unexecuted and needs a chosen value target, actual human baseline and preregistered sample/risk criteria. The kit is Apache-2.0 licensed (see [LICENSE](LICENSE)).
+
+## Pythonized lifecycle demonstration
+
+An original cut-paper animation treatment is available in [demos/pythonized](demos/pythonized/README.md). It follows qualification, bounded policy grant, mutation fencing, independent readback, selective withdrawal and requalification, using the unchanged M1 local runtime in a disposable temporary registry. Custom artwork and native articulated graphics interpret the kit's documented lifecycle.
+
+Run `python3 demos/pythonized/server.py --port 5184`, then open `http://127.0.0.1:5184`. The local fixture label, evidence inspector and recorded-roadmap boundary remain visible. This frontend does not run the connected canonical services or upgrade broader acceptance.
+
+## Phase 2 reconciliation
+
+This tree is the `reconcile/phase2` port of the Line A / Line B divergence (decision record: [docs/RECONCILIATION_ANALYSIS.md](docs/RECONCILIATION_ANALYSIS.md)). Line A (origin/main) won wholesale for the grants core, journal, connected adapter, wire contracts and the executed EDD harness. Line B's additive work was ported on top: the Apache-2.0 license, the pythonized demo, the receipt-retention / issuer-cutover / backup-restore proofs with the historical-issuer patch, the fixture runtime's `select_grant` routing, the `has_skill` helper, and the manual comparator tooling under `evaluations/manual/`.
+
+Two contract decisions are explicit: the authority journal's removal metadata is Line A's validated `removed_targets` wire format (Line B's unvalidated `targets` passthrough and its `withdrawals` re-key migration were consciously abandoned — a B-line database is not readable under the reconciled semantics), and Line B's live runs `service-bdd-live-009..011` plus the `source-a-*` / `source-b-*` reconstruction trees remain in place as archived evidence of the source they measured, not as current gates. Episode task payloads under `evaluations/manual/episodes/` are named `*.task.json`; "card" now unambiguously means the ecosystem `evaluation-card/v1` qualification artifact, which the EDD harness emits for every completed run.
 
 ## Reproduce the reference
 
@@ -46,10 +58,11 @@ The current increment records the exact qualification and authorization checks f
 - `earned_authority/`: fixture and connected runtimes, canonical service adapters, signed proof mapping and conservative readiness assessment.
 - `contracts/`: version `0.1.0-draft.1` schemas, canonical byte vectors, synthetic examples and actual producer fixtures.
 - `features/`: 38 behavior specifications; 001–037 have local bindings, 038 is deferred robotics simulation. Connected coverage is separately mapped.
-- `evaluations/`: evaluation-driven development protocol, comparators, metrics and stopping rules; no measured business-value results.
+- `evaluations/`: evaluation-driven development protocol, comparators, metrics and stopping rules; the executed automated development harness (`harness/`, `PILOT.md`, `SEQUENTIAL.md`, `ROUTING.md`) with its `evaluation-card/v1` emitter and construct sidecars (`constructs/`), and the manual comparator leg (`manual/`: console, operator runbook, family manifest, `*.task.json` practice episodes) which stays NOT_EXECUTED until an operator is actually timed. No measured business-value results.
 - `deploy/`: pinned sources, dependency locks, local service profiles and repeatable validation/recovery commands.
 - `patches/` and `evidence/`: reviewable Passport/Foundation patches and retained red/green evidence. Original tracked user source was preserved.
-- `reports/`: [514-test component run](reports/component-verification.json), [fresh-reference run](reports/multi-resource-reference-combined.json), [service behavior run](reports/service-bdd-live-013.json), [environment coverage](reports/bdd-environment-coverage.json) and [readiness matrix](reports/readiness.json).
+- `demos/pythonized/`: the cut-paper lifecycle demonstration; fixture-only, no broader acceptance.
+- `reports/`: [514-test component run](reports/component-verification.json), [fresh-reference run](reports/multi-resource-reference-combined.json), [service behavior run](reports/service-bdd-live-013.json), [environment coverage](reports/bdd-environment-coverage.json) and [readiness matrix](reports/readiness.json). Archived Line B evidence (`source-a-*`, `source-b-*`, `service-bdd-live-009..011`, retention proofs) is listed in [reports/README.md](reports/README.md).
 
 ## Color rules
 
