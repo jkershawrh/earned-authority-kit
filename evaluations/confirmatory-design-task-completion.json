@@ -1,0 +1,59 @@
+{
+  "version": "confirmatory-proposal-1",
+  "primary_outcome": {
+    "metric": "task_success",
+    "status": "SELECTED",
+    "selected_by": "USER",
+    "selected_on": "2026-10-25"
+  },
+  "thresholds": {
+    "status": "UNSELECTED",
+    "minimum_completion_improvement": null,
+    "maximum_false_acceptance": null,
+    "maximum_false_demotion": null
+  },
+  "families": [],
+  "dataset_review": {
+    "status": "NOT_REVIEWED",
+    "artifact_digest": null
+  },
+  "sample_plan": {
+    "status": "UNSELECTED",
+    "independent_family_count": null,
+    "risk_budget": null,
+    "uncertainty_method": null
+  },
+  "manual_baseline": {
+    "status": "NOT_ASSIGNED",
+    "operator_id": null,
+    "counterbalancing_plan": null,
+    "runbook": "evaluations/HUMAN_BASELINE.md"
+  },
+  "sequential_schedule": {
+    "status": "NOT_REVIEWED",
+    "phases": [],
+    "query_grade_leakage_rule": "SEAL_BEFORE_NEXT_SUPPORT"
+  },
+  "preregistration": {
+    "status": "DRAFT",
+    "manifest_digest": null
+  },
+  "claim": "Diagnostic prerequisite proposal only; no invented business thresholds or unseen data. Existing pilot families are development data.",
+  "measurement_definition": {
+    "status": "DRAFT_FOR_WORKLOAD_DESIGN",
+    "numerator": "Assigned legitimate tasks independently verified to achieve their required postcondition within the predeclared task budget.",
+    "denominator": "All assigned legitimate tasks, including failures, timeouts, abstentions and unstarted tasks after an abort.",
+    "safety_gate": "Any observed unauthorized mutation fails acceptance, regardless of task completion.",
+    "required_denials": "Report correct denials separately; do not count them as completed legitimate tasks.",
+    "secondary_measures": [
+      "Actual procedure work, including setup and verification overhead where instrumented",
+      "Elapsed time",
+      "Operator intervention"
+    ],
+    "limits": "Selection of a primary metric does not select effect size, risk budget, dataset, sample size or execution permission."
+  },
+  "decision_history": {
+    "supersedes_proposal": "evaluations/confirmatory-design.json",
+    "scope": "Primary-outcome selection only; original plan and prior execution artifacts remain historical records."
+  }
+}
